@@ -21,17 +21,6 @@ AObject::~AObject()
 
 }
 
-
-bool AObject::initialize()
-{
-	return (true);
-}
-
-void AObject::update(gdl::Clock const &clock, gdl::Input &input)
-{
-
-}
-
 void 		AObject::translate(glm::vec3 const &v)
 {
 	_position += v;
