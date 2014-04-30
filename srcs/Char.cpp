@@ -10,9 +10,10 @@
 
 #include "Char.hpp"
 
-Char::Char()
+Char::Char(int players, int screen)
 {
-
+	_players = players;
+	_screen = screen;
 }
 
 Char::~Char()
@@ -28,7 +29,6 @@ float	Char::getTrans()
 void Char::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_trans = static_cast<float>(clock.getElapsed()) * _speed;
-
 	if (input.getKey(SDLK_UP))
 		translate(glm::vec3(0, 0, 1) * _trans);
 	if (input.getKey(SDLK_DOWN))
@@ -37,6 +37,13 @@ void Char::update(gdl::Clock const &clock, gdl::Input &input)
 		translate(glm::vec3(1, 0, 0) * _trans);
 	if (input.getKey(SDLK_RIGHT))
 		translate(glm::vec3(-1, 0, 0) * _trans);
+	// if (_players == 1)
+	// projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
+	// _transformation = glm::lookAt(glm::vec3(0, 10, -10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	// _shader.bind();
+	// _shader.setUniform("view", _transformation);
+	// _shader.setUniform("projection", projection);
+
 }
 
 void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)

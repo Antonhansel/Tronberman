@@ -16,16 +16,20 @@
 class Char : public AObject
 {
 private:
+	int 			_posx;
+	int 			_posy;
+	int 			_players;
+	int 			_screen;
 	gdl::Texture	_texture;
 	gdl::Geometry	_geometry;
 	float			_speed;
 public:
-	Char();
+	Char(int, int);
 	~Char();
-	void update(gdl::Clock const &clock, gdl::Input &input);
-	bool initialize();
-	void draw(gdl::AShader &shader, gdl::Clock const &clock);	
-	float			getTrans();
+	void 		update(gdl::Clock const &clock, gdl::Input &input);
+	bool 		initialize();
+	void 		draw(gdl::AShader &shader, gdl::Clock const &clock);	
+	float		getTrans();
 };
 
 #endif /*!_CHAR_HPP_*/

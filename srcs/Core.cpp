@@ -17,6 +17,7 @@ Core::Core()
 {
 	_width = 40.5f;
 	_height = 40.5f;
+	_players = 1;
 }
 
 Core::~Core()
@@ -31,14 +32,14 @@ bool	Core::initialize()
 
 	_posx = 0;
 	_posy = 0;
-	if (!_context.start(1600, 1000, "Best Bomberman"))
+	if (!_context.start(1800, 1000, "Best Bomberman!"))
 		return (false);
 	glEnable(GL_DEPTH_TEST);
 	if (!_shader.load("./ressources/shaders/basic.fp", GL_FRAGMENT_SHADER) || 
 	!_shader.load("./ressources/shaders/basic.vp", GL_VERTEX_SHADER) || 
 	!_shader.build())
 		return (false);
-	projection = glm::perspective(60.0f, 1600.0f / 1000.0f, 0.1f, 100.0f);
+	projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
 	_transformation = glm::lookAt(glm::vec3(0, 10, -10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	_shader.bind();
 	_shader.setUniform("view", _transformation);
@@ -53,7 +54,6 @@ bool	Core::initialize()
 		return (false);
 	return (true);
 }
-
 
 bool	Core::drawLimits()
 {
@@ -91,12 +91,12 @@ bool	Core::drawLimits()
 
 bool	Core::drawChar()
 {
-	Char	*Chara = new	Char;
+	Char	*Chara = new	Char(_players, 0);
 	_mychar = Chara;
 	if (Chara->initialize() == false)
 		return (false);
 	_objects.push_back(Chara);
-	return (true);	
+	return (true);
 }
 
 bool	Core::drawFloor()
@@ -141,16 +141,17 @@ void	Core::changeFocus()
 {
 	_shader.bind();
 	if (_input.getKey(SDLK_UP))
-		_posx += 1 * _mychar->getTrans();
+		_posx += _mychar->getTrans();
 	if (_input.getKey(SDLK_DOWN))
-		_posx -= 1 * _mychar->getTrans();
+		_posx -= _mychar->getTrans();
 	if (_input.getKey(SDLK_LEFT))
-		_posy += 1 * _mychar->getTrans();
+		_posy += _mychar->getTrans();
 	if (_input.getKey(SDLK_RIGHT))
-		_posy -= 1* _mychar->getTrans();
-	_transformation = glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
-		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
-	_shader.setUniform("view", _transformation);
+		_posy -= _mychar->getTrans();
+	//_transformation glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
+	//glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
+	_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
+	glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
 }
 
 bool	Core::update()

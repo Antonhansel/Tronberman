@@ -44,6 +44,7 @@ public:
 	bool	drawChar();
 	void	changeFocus();
 private:
+	int 				_players;
 	Char				*_mychar;
 	float 				_posx;
 	float				_posy;
