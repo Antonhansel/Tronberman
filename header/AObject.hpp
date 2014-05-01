@@ -1,13 +1,3 @@
-/*
-** AObject.hpp for AObject in /home/apollo/rendu/bestbomberman/header
-**
-** Made by Antonin Ribeaud
-** Login   <ribeau_a@epitech.net>
-**
-** Started on  Tue Apr  29 16:57:18 2014 Antonin Ribeaud
-** Last update Tue Apr  29 16:57:18 2014 Antonin Ribeaud
-*/
-	
 #ifndef _AOBJECT_HPP_
 # define _AOBJECT_HPP_
 

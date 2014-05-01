@@ -8,23 +8,22 @@
 // Last update Thu May  1 16:24:53 2014 ribeaud antonin
 */
 
-# include "AObject.hpp"
-# include "Core.hpp"
-# include "Floor.hpp"
-# include "Char.hpp"
-# include "Map.hpp"
+#include "AObject.hpp"
+#include "Core.hpp"
+#include "Floor.hpp"
+#include "Char.hpp"
+#include "Map.hpp"
 
 Core::Core()
 {
-	_map = new Map(20, 20);
-	_width = 20.5f;
-	_height = 20.5f;
+	_width = 20;
+	_height = 20;
+	_map = new Map(_width, _height);
 	_players = 1;
 	_posx = 1;
 	_posy = 1;
 	_posx2 = 1;
 	_posy2 = 2;
-
 }
 
 Core::~Core()
@@ -64,20 +63,25 @@ bool	Core::initialize()
 
 bool	Core::drawMap()
 {
-	std::list<Case *> map = _map->getCases();
+	std::map< std::pair<int, int>, Case *> map = _map->getCases();
+	std::pair<int, int>	pos;
 
-	for (std::list<Case *>::iterator it = map.begin(); it != map.end(); it++)
-	{
-		if ((*it)->getTypeCase() == 0)
-		{
-			if (makeCube((*it)->getPosx(), 0, (*it)->getPosy()) == false)
-				return (false);
-		}
-		else if ((*it)->getTypeCase() == 1)
-		{
-
-			if (makeCube((*it)->getPosx(), 0, (*it)->getPosy()) == false)
-				return (false);
+	for (int y(-_height); y <= _height; y++) {
+		for (int x(-_width); x <= _width; x++) {
+			pos = std::make_pair(x, y);
+			if (map[pos] != NULL)
+			{
+				if (map[pos]->getTypeCase() == 0)
+				{
+					if (makeCube(x, 0, y) == false)
+					return (false);
+				}
+				else if (map[pos]->getTypeCase() == 1)
+				{
+					if (makeCube(x, 0, y) == false)
+					return (false);
+				}
+			}
 		}
 	}
 	return (true);
@@ -112,7 +116,7 @@ bool	Core::makeCube(int x, int y, int z)
 
 bool	Core::drawChar()
 {
-	Char	*Chara = new	Char(_players, 1);
+	Char	*Chara = new	Char(_players, 1, _map->getCases());
 	_mychar1 = Chara;
 	if (_mychar1->initialize() == false)
 		return (false);
@@ -120,7 +124,7 @@ bool	Core::drawChar()
 	_mychar1->translate(glm::vec3(_posx, 0, _posy));
 	if (_players == 2)
 	{
-		Char	*Chara = new	Char(_players, 2);
+		Char	*Chara = new	Char(_players, 2, _map->getCases());
 		_mychar2 = Chara;
 		if (_mychar2->initialize() == false)
 			return (false);
