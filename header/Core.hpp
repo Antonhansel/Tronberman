@@ -28,6 +28,8 @@
 # include "Floor.hpp"
 # include "Cube.hpp"
 # include "Char.hpp"
+# include "Sound.hpp"
+# include <SFML/Graphics/Text.hpp>
 
 class Core : public gdl::Game
 {
@@ -44,6 +46,7 @@ public:
 	bool	drawChar();
 	void	changeFocus();
 private:
+	Sound				*_sound;
 	int 				_players;
 	Char				*_mychar;
 	float 				_posx;

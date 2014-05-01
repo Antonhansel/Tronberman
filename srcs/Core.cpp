@@ -15,15 +15,18 @@
 
 Core::Core()
 {
+	_sound = new Sound();
 	_width = 40.5f;
 	_height = 40.5f;
 	_players = 1;
+	_sound->playMusic();
 }
 
 Core::~Core()
 {
 	for (size_t i = 0; i < _objects.size(); ++i)
 		delete _objects[i];
+	delete _sound;
 }
 
 bool	Core::initialize()
@@ -148,6 +151,10 @@ void	Core::changeFocus()
 		_posy += _mychar->getTrans();
 	if (_input.getKey(SDLK_RIGHT))
 		_posy -= _mychar->getTrans();
+	if (_input.getKey(SDLK_RETURN))
+		_sound->playSound(BOMB, 100);
+	if (_input.getKey(SDLK_a))
+		_sound->playSound(BOMB, 100);
 	//_transformation glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
 	//glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
 	_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
