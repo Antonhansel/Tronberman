@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Thu May  1 15:01:01 2014 ribeaud antonin
+## Last update Thu May  1 15:39:56 2014 Flavien Pensato
 ##
 
 NAME		=	bomberman
@@ -18,6 +18,8 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Floor.cpp \
 			srcs/Char.cpp \
 			srcs/Cube.cpp \
+			srcs/Case.cpp \
+			srcs/Map.cpp \
 			srcs/Sound.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)

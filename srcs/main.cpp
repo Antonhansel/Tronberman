@@ -18,22 +18,22 @@
 
 int		main(int argc, char **argv)
 {
-	//	Core 	core;
+	Core 	core;
 
-	Intro	intro;
-	if (intro.initialize() == false)
-		{
-			std::cout << "Error on initializing" << std::endl;
-			return EXIT_FAILURE;
-		}
-	while (intro.update() == true)
-			intro.draw();
-	// if (core.initialize() == false)
+	// Intro	intro;
+	// if (intro.initialize() == false)
 	// 	{
 	// 		std::cout << "Error on initializing" << std::endl;
 	// 		return EXIT_FAILURE;
 	// 	}
-	// while (core.update() == true)
-	// 	core.draw();
+	// while (intro.update() == true)
+	// 		intro.draw();
+	if (core.initialize() == false)
+		{
+			std::cout << "Error on initializing" << std::endl;
+			return EXIT_FAILURE;
+		}
+	while (core.update() == true)
+		core.draw();
 	return EXIT_SUCCESS;
 }

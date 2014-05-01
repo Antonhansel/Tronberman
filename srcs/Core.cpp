@@ -12,9 +12,11 @@
 # include "Core.hpp"
 # include "Floor.hpp"
 # include "Char.hpp"
+# include "Map.hpp"
 
 Core::Core()
 {
+	_map = new Map(20, 20);
 	_width = 20.5f;
 	_height = 20.5f;
 	_players = 1;
@@ -48,11 +50,9 @@ bool	Core::initialize()
 	_shader.bind();
 	_shader.setUniform("view", _transformation);
 	_shader.setUniform("projection", _projection);
-	// if (drawFloor() == false)
-	// 	return (false);
-	if (drawWall() == false)
-		return (false);
-	if (drawLimits() == false)
+	 if (drawFloor() == false)
+	 	return (false);
+	if (drawMap() == false)
 		return (false);
 	if (drawChar() == false)
 		return (false);
@@ -62,36 +62,23 @@ bool	Core::initialize()
 	return (true);
 }
 
-bool	Core::drawLimits()
+bool	Core::drawMap()
 {
-	int 		z;
-	int 		x;
+	std::list<Case *> map = _map->getCases();
 
-	x = _width;
-	z = _height;
-	while (x > -_width)
+	for (std::list<Case *>::iterator it = map.begin(); it != map.end(); it++)
 	{
-		if (makeCube(x, 0, z) == false)
-			return (false);
-		x--;
-	}
-	while (z > -_height)
-	{
-		if (makeCube(x, 0, z) == false)
-			return (false);
-		z--;
-	}
-	while (x < _width)
-	{
-		if (makeCube(x, 0, z) == false)
-			return (false);
-		x++;
-	}
-	while (z < _height)
-	{
-		if (makeCube(x, 0, z) == false)
-			return (false);
-		z++;
+		if ((*it)->getTypeCase() == 0)
+		{
+			if (makeCube((*it)->getPosx(), 0, (*it)->getPosy()) == false)
+				return (false);
+		}
+		else if ((*it)->getTypeCase() == 1)
+		{
+
+			if (makeCube((*it)->getPosx(), 0, (*it)->getPosy()) == false)
+				return (false);
+		}
 	}
 	return (true);
 }
@@ -110,26 +97,6 @@ bool	Core::drawFloor()
 
 	_objects.push_back(floor);
 	return (floor->initialize());
-}
-
-bool	Core::drawWall()
-{
-	int 		z;
-	int 		x;
-
-	x = _height;
-	while (x >= -_height)
-	{
-		z = _width;
-		while (z >= -_width)
-		{
-			if (makeCube(x, 0, z) == false)
-				return (false);
-			z -= 2;
-		}
-		x -= 2;
-	}
-	return (true);
 }
 
 bool	Core::makeCube(int x, int y, int z)

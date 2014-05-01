@@ -29,6 +29,7 @@
 # include "Floor.hpp"
 # include "Cube.hpp"
 # include "Char.hpp"
+# include "Map.hpp"
 
 class Core : public gdl::Game
 {
@@ -39,9 +40,8 @@ public:
 	bool			update();
 	void			draw();
 	bool			makeCube(int, int, int);
-	bool 			drawWall();
 	bool			drawFloor();
-	bool			drawLimits();
+	bool			drawMap();
 	bool			drawChar();
 	bool			drawBackground();
 	void			changeFocus(Char *cur_char);
@@ -58,6 +58,7 @@ private:
 	glm::mat4			_projection;
 	float				_width;
 	float				_height;
+	Map					*_map;
 	gdl::SdlContext		_context;
 	gdl::Clock			_clock;
 	gdl::Input			_input;
