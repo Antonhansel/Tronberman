@@ -1,3 +1,13 @@
+//
+// Map.cpp for Map in /home/apollo/rendu/cpp_bomberman
+// 
+// Made by ribeaud antonin
+// Login   <ribeau_a@epitech.net>
+// 
+// Started on  Thu May  1 16:48:07 2014 ribeaud antonin
+// Last update Thu May  1 16:48:08 2014 ribeaud antonin
+//
+
 #include "Map.hpp"
 #include "Case.hpp"
 
