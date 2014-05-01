@@ -5,14 +5,13 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 13:35:37 2014 Antonin Ribeaud
-** Last update Mon Apr  28 13:35:37 2014 Antonin Ribeaud
+// Last update Thu May  1 13:42:39 2014 ribeaud antonin
 */
 
 # include <iostream>
 # include <map>
 # include <SFML/Audio/Music.hpp>
 # include <SFML/Audio.hpp>
-
 
 enum TypeSound 
 {  

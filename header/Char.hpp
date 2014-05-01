@@ -12,18 +12,20 @@
 # define _CHAR_HPP_
 
 # include "AObject.hpp"
+# include "Model.hh"
 
 class Char : public AObject
 {
 private:
-	int 			_posx;
-	int 			_posy;
+	float 			_posx;
+	float			_posy;
 	int 			_players;
 	int 			_screen;
 	gdl::Texture	_texture;
 	gdl::Geometry	_geometry;
 	float			_speed;
 public:
+	gdl::Model		*_model;
 	Char(int, int);
 	~Char();
 	void 		update(gdl::Clock const &clock, gdl::Input &input);

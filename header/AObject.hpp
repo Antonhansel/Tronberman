@@ -30,18 +30,21 @@ class AObject
 public:
 	AObject();
 	virtual ~AObject();
-	virtual bool 	initialize();
-	virtual void 	update(gdl::Clock const &clock, gdl::Input &input);
+	virtual bool 	initialize() = 0;
+	virtual void 	update(gdl::Clock const &clock, gdl::Input &input) = 0;
 	virtual void 	draw(gdl::AShader &shader, gdl::Clock const &clock) = 0;
 	void 			translate(glm::vec3 const &v);
 	void 			rotate(glm::vec3 const& axis, float angle);
 	void 			scale(glm::vec3 const& scale);
+	void			setPos(float, float);
 	glm::mat4 		getTransformation();
 protected:
 	float		_trans;
-	glm::vec3 _position;
-	glm::vec3 _rotation;
-	glm::vec3 _scale;
+	float		_posx;
+	float		_posy;
+	glm::vec3	_position;
+	glm::vec3	_rotation;
+	glm::vec3	_scale;
 };
 
 #endif /*!_AOBJECT_HPP_*/

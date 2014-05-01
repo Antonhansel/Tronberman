@@ -15,26 +15,24 @@
 
 Core::Core()
 {
-	_sound = new Sound();
-	_width = 40.5f;
-	_height = 40.5f;
+	_width = 20.5f;
+	_height = 20.5f;
 	_players = 1;
-	_sound->playMusic();
+	_posx = 1;
+	_posy = 1;
+	_posx2 = 1;
+	_posy2 = 2;
+
 }
 
 Core::~Core()
 {
 	for (size_t i = 0; i < _objects.size(); ++i)
 		delete _objects[i];
-	delete _sound;
 }
 
 bool	Core::initialize()
 {
-	glm::mat4	projection;
-
-	_posx = 0;
-	_posy = 0;
 	if (!_context.start(1800, 1000, "Best Bomberman!"))
 		return (false);
 	glEnable(GL_DEPTH_TEST);
@@ -42,19 +40,25 @@ bool	Core::initialize()
 	!_shader.load("./ressources/shaders/basic.vp", GL_VERTEX_SHADER) || 
 	!_shader.build())
 		return (false);
-	projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
+	if (_players == 1)
+		_projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
+	else
+		_projection = glm::perspective(60.0f, 900.0f / 500.0f, 0.5f, 100.0f);
 	_transformation = glm::lookAt(glm::vec3(0, 10, -10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	_shader.bind();
 	_shader.setUniform("view", _transformation);
-	_shader.setUniform("projection", projection);
-	if (drawFloor() == false)
-		return (false);
+	_shader.setUniform("projection", _projection);
+	// if (drawFloor() == false)
+	// 	return (false);
 	if (drawWall() == false)
 		return (false);
 	if (drawLimits() == false)
 		return (false);
 	if (drawChar() == false)
 		return (false);
+	if (drawBackground() == false)
+		return (false);
+	std::cout << "Load done!" << std::endl;
 	return (true);
 }
 
@@ -92,14 +96,12 @@ bool	Core::drawLimits()
 	return (true);
 }
 
-bool	Core::drawChar()
+bool 	Core::drawBackground()
 {
-	Char	*Chara = new	Char(_players, 0);
-	_mychar = Chara;
-	if (Chara->initialize() == false)
-		return (false);
-	_objects.push_back(Chara);
-	return (true);
+	AObject	*background = new	Background(_width * 4, _height * 4, 10.0f);
+
+	_objects.push_back(background);
+	return (background->initialize());
 }
 
 bool	Core::drawFloor()
@@ -136,29 +138,72 @@ bool	Core::makeCube(int x, int y, int z)
 	if (cube->initialize() == false)
 		return (false);
 	cube->translate(glm::vec3(x, y, z));
+	cube->setPos(x, z);
 	_objects.push_back(cube);
 	return (true);
 }
 
-void	Core::changeFocus()
+bool	Core::drawChar()
 {
+	Char	*Chara = new	Char(_players, 1);
+	_mychar1 = Chara;
+	if (_mychar1->initialize() == false)
+		return (false);
+	_mychar1->setPos(_posx, _posy);
+	_mychar1->translate(glm::vec3(_posx, 0, _posy));
+	if (_players == 2)
+	{
+		Char	*Chara = new	Char(_players, 2);
+		_mychar2 = Chara;
+		if (_mychar2->initialize() == false)
+			return (false);
+		_mychar2->setPos(_posx2, _posy2);
+		_mychar2->translate(glm::vec3(_posx2, 0, _posy2));
+	}
+	return (true);
+}
+
+void	Core::changeFocus2(Char *cur_char)
+{
+	cur_char->update(_clock, _input);
+	_shader.bind();
+	if (_input.getKey(SDLK_z))
+		_posx2 += cur_char->getTrans();
+	if (_input.getKey(SDLK_s))
+		_posx2 -= cur_char->getTrans();
+	if (_input.getKey(SDLK_q))
+		_posy2 += cur_char->getTrans();
+	if (_input.getKey(SDLK_d))
+		_posy2 -= cur_char->getTrans();
+	glViewport(0,0,1800/2,1000);
+	_shader.setUniform("view", glm::lookAt(glm::vec3(_posy2, 13, -10 + _posx2),
+	glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0)));
+}
+
+void	Core::changeFocus(Char *cur_char)
+{
+	cur_char->update(_clock, _input);
 	_shader.bind();
 	if (_input.getKey(SDLK_UP))
-		_posx += _mychar->getTrans();
+		_posx += cur_char->getTrans();
 	if (_input.getKey(SDLK_DOWN))
-		_posx -= _mychar->getTrans();
+		_posx -= cur_char->getTrans();
 	if (_input.getKey(SDLK_LEFT))
-		_posy += _mychar->getTrans();
+		_posy += cur_char->getTrans();
 	if (_input.getKey(SDLK_RIGHT))
-		_posy -= _mychar->getTrans();
-	if (_input.getKey(SDLK_RETURN))
-		_sound->playSound(BOMB, 100);
-	if (_input.getKey(SDLK_a))
-		_sound->playSound(BOMB, 100);
-	//_transformation glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
-	//glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
-	_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 10, -20 + _posx),
-	glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
+		_posy -= cur_char->getTrans();
+	if (_players == 1)
+	{
+		_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 13, -10 + _posx),
+		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
+		_shader.setUniform("projection", _projection);
+	}
+	else
+	{
+		glViewport(1800/2, 0, 1800/2,1000);
+		_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 13, -10 + _posx),
+		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
+	}
 }
 
 bool	Core::update()
@@ -169,7 +214,6 @@ bool	Core::update()
 	_context.updateInputs(_input);
 	for (size_t i = 0; i < _objects.size(); ++i)
 		_objects[i]->update(_clock, _input);
-	changeFocus();
 	return true;
 }
 
@@ -177,7 +221,19 @@ void	Core::draw()
 {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_shader.bind();
+	changeFocus(_mychar1);
 	for (size_t i = 0; i < _objects.size(); ++i)
 		_objects[i]->draw(_shader, _clock);
+	_mychar1->draw(_shader, _clock);
+	if (_players == 2)
+		{
+		_mychar2->draw(_shader, _clock);
+		//_context.flush();	
+		changeFocus2(_mychar2);
+		for (size_t i = 0; i < _objects.size(); ++i)
+		_objects[i]->draw(_shader, _clock);		
+		_mychar1->draw(_shader, _clock);
+		_mychar2->draw(_shader, _clock);
+		}
 	_context.flush();
 }

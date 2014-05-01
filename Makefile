@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Thu May  1 11:34:08 2014 Mehdi Chouag
+## Last update Thu May  1 15:01:01 2014 ribeaud antonin
 ##
 
 NAME		=	bomberman
@@ -13,6 +13,8 @@ NAME		=	bomberman
 SOURCES		=	srcs/main.cpp \
 			srcs/AObject.cpp \
 			srcs/Core.cpp \
+			srcs/Background.cpp \
+			srcs/Intro.cpp \
 			srcs/Floor.cpp \
 			srcs/Char.cpp \
 			srcs/Cube.cpp \
@@ -22,10 +24,9 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXXFLAGS	+=	-I ./header -I ./bomberlib -g3
 
-LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
 all: $(NAME)
-	eval `export LD_LIBRARY_PATH=bomberlib/`
 
 $(NAME):	$(OBJECTS)
 		g++ $(OBJECTS) -o $(NAME) $(LDFLAGS)

@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue Apr  29 16:48:25 2014 Antonin Ribeaud
-** Last update Tue Apr  29 16:48:25 2014 Antonin Ribeaud
+// Last update Thu May  1 13:43:43 2014 ribeaud antonin
 */
 
 #include "Sound.hpp"

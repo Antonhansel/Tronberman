@@ -38,7 +38,8 @@ void Floor::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 bool	Floor::initialize()
 {
-	if (_texture.load("./ressources/assets/cobblestone.tga") == false)
+	//if (_texture.load("./ressources/assets/cobblestone.tga") == false)
+	if (_texture.load("./ressources/assets/bg.tga") == false)
 	{
 		std::cerr << "Cannot load the floor texture" << std::endl;
 		return (false);

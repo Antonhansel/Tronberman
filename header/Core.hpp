@@ -24,34 +24,38 @@
 # include <OpenGL.hh>
 # include <vector>
 # include <iostream>
+# include "Background.hpp"
 # include "AObject.hpp"
 # include "Floor.hpp"
 # include "Cube.hpp"
 # include "Char.hpp"
-# include "Sound.hpp"
-# include <SFML/Graphics/Text.hpp>
 
 class Core : public gdl::Game
 {
 public:
 	Core();
 	~Core();
-	bool	initialize();
-	bool	update();
-	void	draw();
-	bool	makeCube(int, int, int);
-	bool 	drawWall();
-	bool	drawFloor();
-	bool	drawLimits();
-	bool	drawChar();
-	void	changeFocus();
+	bool			initialize();
+	bool			update();
+	void			draw();
+	bool			makeCube(int, int, int);
+	bool 			drawWall();
+	bool			drawFloor();
+	bool			drawLimits();
+	bool			drawChar();
+	bool			drawBackground();
+	void			changeFocus(Char *cur_char);
+	void			changeFocus2(Char *cur_char);
 private:
-	Sound				*_sound;
 	int 				_players;
-	Char				*_mychar;
+	Char				*_mychar1;
+	Char 				*_mychar2;
 	float 				_posx;
 	float				_posy;
+	float				_posx2;
+	float				_posy2;
 	glm::mat4			_transformation;
+	glm::mat4			_projection;
 	float				_width;
 	float				_height;
 	gdl::SdlContext		_context;

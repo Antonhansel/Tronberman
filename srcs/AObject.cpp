@@ -21,13 +21,10 @@ AObject::~AObject()
 
 }
 
-bool		AObject::initialize()
-{}
-
-void		AObject::update(gdl::Clock const &clock, gdl::Input &input)
+void		AObject::setPos(float width, float height)
 {
-	(void)clock;
-	(void)input;
+	_posx = width;
+	_posy = height;
 }
 
 void 		AObject::translate(glm::vec3 const &v)

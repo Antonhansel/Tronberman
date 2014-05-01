@@ -9,16 +9,21 @@
 */
 
 #include "Char.hpp"
+#include <iostream>
 
 Char::Char(int players, int screen)
 {
+	std::string model;
+
+	model = "./ressources/assets/marvin.fbx";
 	_players = players;
 	_screen = screen;
+	_model = new gdl::Model;
+	_model->gdl::Model::load(model);
 }
 
 Char::~Char()
 {
-
 }
 
 float	Char::getTrans()
@@ -29,21 +34,30 @@ float	Char::getTrans()
 void Char::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_trans = static_cast<float>(clock.getElapsed()) * _speed;
-	if (input.getKey(SDLK_UP))
+	if (_screen == 1)
+	{
+		if (input.getKey(SDLK_UP))
 		translate(glm::vec3(0, 0, 1) * _trans);
-	if (input.getKey(SDLK_DOWN))
-		translate(glm::vec3(0, 0, -1) * _trans);
-	if (input.getKey(SDLK_LEFT))
-		translate(glm::vec3(1, 0, 0) * _trans);
-	if (input.getKey(SDLK_RIGHT))
-		translate(glm::vec3(-1, 0, 0) * _trans);
-	// if (_players == 1)
-	// projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
-	// _transformation = glm::lookAt(glm::vec3(0, 10, -10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	// _shader.bind();
-	// _shader.setUniform("view", _transformation);
-	// _shader.setUniform("projection", projection);
-
+		if (input.getKey(SDLK_DOWN))
+			translate(glm::vec3(0, 0, -1) * _trans);
+		if (input.getKey(SDLK_LEFT))
+			translate(glm::vec3(1, 0, 0) * _trans);
+		if (input.getKey(SDLK_RIGHT))
+			translate(glm::vec3(-1, 0, 0) * _trans);
+	}
+	else
+	{
+		if (input.getKey(SDLK_z))
+		translate(glm::vec3(0, 0, 1) * _trans);
+		if (input.getKey(SDLK_s))
+			translate(glm::vec3(0, 0, -1) * _trans);
+		if (input.getKey(SDLK_q))
+			translate(glm::vec3(1, 0, 0) * _trans);
+		if (input.getKey(SDLK_d))
+			translate(glm::vec3(-1, 0, 0) * _trans);		
+	}
+  	//_model->gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
+	//_model->gdl::Model::update(clock.getElapsed());
 }
 
 void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -51,17 +65,25 @@ void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)
 	(void)clock;
 	_texture.bind();
 	_geometry.draw(shader, getTransformation(), GL_QUADS);
+	//gdl::Model::Begin();
+ 	//glPushMatrix();
+ 	//_model->gdl::Model::play("Take 001");
+  	//glTranslatef(this->position_->x, 0.0f, this->position_->y);
+  	//glRotatef(this->rotation_->x, 0.0f, 0.0f, 0.0f);
+  	//_model->gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
+  	//glPopMatrix();
+	// 	gdl::Model::End();
 }
 
 bool	Char::initialize()
 {
 	_speed = 10.0f;
-	if (_texture.load("./ressources/assets/face.tga") == false)
+	if (_texture.load("./ressources/assets/char.tga") == false)
 		{
 			std::cerr << "Cannot load the cube texture" << std::endl;
 			return (false);
 		}
-	_geometry.setColor(glm::vec4(1, 0, 0, 1));
+	_geometry.setColor(glm::vec4(1, 1, 1, 1));
 	_geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
@@ -71,7 +93,7 @@ bool	Char::initialize()
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));
 	_geometry.pushUv(glm::vec2(0.0f, 1.0f));
 
-	_geometry.setColor(glm::vec4(1, 1, 0, 1));
+	//_geometry.setColor(glm::vec4(1, 1, 0, 1));
 	_geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
@@ -81,7 +103,7 @@ bool	Char::initialize()
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));
 	_geometry.pushUv(glm::vec2(0.0f, 1.0f));
 
-	_geometry.setColor(glm::vec4(0, 1, 1, 1));
+	//_geometry.setColor(glm::vec4(0, 1, 1, 1));
 	_geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
@@ -91,7 +113,7 @@ bool	Char::initialize()
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));
 	_geometry.pushUv(glm::vec2(0.0f, 1.0f));
 
-	_geometry.setColor(glm::vec4(1, 0, 1, 1));
+	//_geometry.setColor(glm::vec4(1, 0, 1, 1));
 	_geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
@@ -101,7 +123,7 @@ bool	Char::initialize()
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));
 	_geometry.pushUv(glm::vec2(0.0f, 1.0f));
 
-	_geometry.setColor(glm::vec4(0, 1, 0, 1));
+	//_geometry.setColor(glm::vec4(0, 1, 0, 1));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
@@ -111,7 +133,7 @@ bool	Char::initialize()
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));
 	_geometry.pushUv(glm::vec2(0.0f, 1.0f));
 
-	_geometry.setColor(glm::vec4(0, 0, 1, 1));
+	//_geometry.setColor(glm::vec4(0, 0, 1, 1));
 	_geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
 	_geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
 	_geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
