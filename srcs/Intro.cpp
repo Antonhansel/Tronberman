@@ -25,6 +25,7 @@ Intro::~Intro()
 	FMOD_Sound_Release(musique);
 	FMOD_System_Close(system);
 	FMOD_System_Release(system);
+	_context.stop();
 }
 
 bool	Intro::initFmod()

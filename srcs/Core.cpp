@@ -13,6 +13,7 @@
 #include "Floor.hpp"
 #include "Char.hpp"
 #include "Map.hpp"
+#include <unistd.h>
 
 Core::Core()
 {
@@ -30,6 +31,7 @@ Core::~Core()
 {
 	for (size_t i = 0; i < _objects.size(); ++i)
 		delete _objects[i];
+	_context.stop();
 }
 
 bool	Core::initialize()
@@ -85,6 +87,27 @@ bool	Core::drawMap()
 		}
 	}
 	return (true);
+}
+void Core::intro()
+{
+	float i;
+
+	i = 100;
+	_shader.bind();
+	while (i > 0)
+	{
+		_transformation = glm::lookAt(glm::vec3(_posy - i, 10 + i, -10 + _posx + i),
+		glm::vec3(_posy, 0, _posx + i), glm::vec3(0, 1, 0));
+		_shader.setUniform("view", _transformation);
+		glViewport(0,0,1800,1000);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		_shader.bind();
+		for (size_t j = 0; j < _objects.size(); ++j)
+		_objects[j]->draw(_shader, _clock);
+		_context.flush();
+		i--;
+		usleep(5000);
+	}
 }
 
 bool 	Core::drawBackground()

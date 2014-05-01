@@ -13,27 +13,41 @@
 # include "Cube.hpp"
 # include "Intro.hpp"
 
-//Not needed yet
-//# include "Window.hpp"
-
-int		main(int argc, char **argv)
+bool	makeIntro()
 {
+	Intro	*intro;
 
-	Intro	intro;
-	if (intro.initialize() == false)
+	intro = new Intro();
+	if (intro->initialize() == false)
 		{
 			std::cout << "Error on initializing" << std::endl;
-			return EXIT_FAILURE;
+			return (false);
 		}
-	while (intro.update() == true)
-			intro.draw();
+	while (intro->update() == true)
+		intro->draw();
+	delete intro;
+	return (true);	
+}
+
+bool	startGame()
+{
 	Core 	core;
 	if (core.initialize() == false)
 		{
 			std::cout << "Error on initializing" << std::endl;
-			return EXIT_FAILURE;
+			return false;
 		}
+	core.intro();
 	while (core.update() == true)
 		core.draw();
+	return (true);
+}
+
+int		main(int argc, char **argv)
+{
+	if (makeIntro() == false)
+		return (EXIT_FAILURE);
+	if (startGame() == false)
+		return (EXIT_FAILURE);
 	return EXIT_SUCCESS;
 }

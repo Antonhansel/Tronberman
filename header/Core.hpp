@@ -46,6 +46,7 @@ public:
 	bool			drawBackground();
 	void			changeFocus(Char *cur_char);
 	void			changeFocus2(Char *cur_char);
+	void			intro();
 private:
 	int 				_players;
 	Char				*_mychar1;
