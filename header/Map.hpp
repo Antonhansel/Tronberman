@@ -4,8 +4,9 @@
 # include <sstream>
 # include <iostream>
 # include <fstream>
-# include <list>
+# include <map>
 # include <stdlib.h>
+# include <utility>
 # include "Case.hpp"
 
 
@@ -16,17 +17,17 @@ public:
 	Map(const std::string&);
 
 	void				outline();
-	void				spawn_bot();
-	void				draw_wall();
-	std::list<Case *>	getCases();
-	bool				spawn_bot_checking(const int&, const int&);
+	void				spawnBot();
+	void				drawWall();
+	std::map< std::pair<int, int>, Case *>	getCases();
+	bool				spawnBotChecking(const int&, const int&);
 	bool				isEmpty(const int&, const int&);
 	~Map();
 
 private:
 	int					size_x;
 	int					size_y;
-	std::list<Case *>	cases;	
+	std::map< std::pair<int, int>, Case *>	cases;	
 };
 
 #endif /* !MAP_HPP */

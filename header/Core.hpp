@@ -56,8 +56,8 @@ private:
 	float				_posy2;
 	glm::mat4			_transformation;
 	glm::mat4			_projection;
-	float				_width;
-	float				_height;
+	int				_width;
+	int				_height;
 	Map					*_map;
 	gdl::SdlContext		_context;
 	gdl::Clock			_clock;
