@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
-#include <fmodex/fmod.h>
+#include <fmod.h>
  
 #define LARGEUR_FENETRE         512 /* DOIT rester à 512 impérativement car il y a 512 barres (correspondant aux 512 floats) */
 #define HAUTEUR_FENETRE         400 /* Vous pouvez la faire varier celle-là par contre */
