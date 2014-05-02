@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:53:12 2014 Antonin Ribeaud
-// Last update Fri May  2 18:17:47 2014 charly roche
+// Last update Fri May  2 20:28:01 2014 charly roche
 */
 
 /*
@@ -63,6 +63,7 @@ public:
 	bool			initFmod();
 	bool 			genSpiral();
 	bool			drawBackground();
+  float				getEquation(int);
 private:
 	int 				_posx;
 	int 				_posy;
