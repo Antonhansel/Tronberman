@@ -47,7 +47,7 @@ int		main(int argc, char **argv)
 {
 	if (makeIntro() == false)
 		return (EXIT_FAILURE);
-	if (startGame() == false)
-		return (EXIT_FAILURE);
+	// if (startGame() == false)
+	// 	return (EXIT_FAILURE);
 	return EXIT_SUCCESS;
 }
