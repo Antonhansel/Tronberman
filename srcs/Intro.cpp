@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Fri May  2 18:15:15 2014 charly roche
+// Last update Fri May  2 20:05:38 2014 charly roche
 */
 
 # include "Intro.hpp"
@@ -107,15 +107,23 @@ bool    Intro::update()
   for (size_t i = 0; i < _objects.size(); ++i)
     {
 
-      mult = (MAX*MAX-i)*(MAX*MAX-i);
-      mult = -((mult - 2*A*(MAX*MAX-i)) + A*A) / 4000 + 100;
-      y = spectre[MAX*MAX - i]*(MAX*MAX/(i/2 + 1))* mult / 1;
+      // mult = (MAX*MAX-i)*(MAX*MAX-i);
+      // mult = -((mult - 2*A*(MAX*MAX-i)) + A*A) / 4000 + 100;
+      // y = spectre[MAX*MAX - i]*(MAX*MAX/(i/2 + 1))* mult / 1;
+      // if (i < _objects.size() - 1)
+      // 	{
+      // 	  y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
+      // 	  y = (y + y2) / 2;
+      // 	}
+
+      y = spectre[MAX*MAX - i]*(-((i-A)*(i-A)/2800)+100);
       if (i < _objects.size() - 1)
 	{
-	  y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
+	  y2 = spectre[MAX*MAX - i]*(-((i-A)*(i-A)/2800)+100);
 	  y = (y + y2) / 2;
 	}
-      _objects[i]->translate(glm::vec3(0, y, 0));
+ 
+      _objects[i]->translate(glm::vec3(0, y * 2, 0));
     }
   return true;
 }
@@ -137,15 +145,16 @@ void    Intro::draw()
     {
       _objects[i]->draw(_shader, _clock);
 
-      mult = (MAX*MAX-i)*(MAX*MAX-i);
-      mult = -((mult - 2*A*(MAX*MAX-i)) + A*A) / 4000 + 100;
-      y = spectre[MAX*MAX - i]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
+             
+      y = spectre[MAX*MAX - i]*(-((i-A)*(i-A)/2800)+100);
       if (i < _objects.size() - 1)
 	{
-	  y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
+	  // y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;                       
+	  y2 = spectre[MAX*MAX - i]*(-((i-A)*(i-A)/2800)+100);
 	  y = (y + y2) / 2;
 	}
-      _objects[i]->translate(glm::vec3(0, -y, 0));
+
+      _objects[i]->translate(glm::vec3(0, -y * 2, 0));
     }
   _context.flush();
 }
