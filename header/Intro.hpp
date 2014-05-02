@@ -64,6 +64,10 @@ public:
 	bool 			genSpiral();
 	bool			drawBackground();
 private:
+	int 				_posx;
+	int 				_posy;
+	int 				_posz;
+	int 				_posz2;
 	int 				a[MAX][MAX];
 	glm::mat4			_transformation;
 	glm::mat4			_projection;
