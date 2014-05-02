@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:53:12 2014 Antonin Ribeaud
-** Last update Thu May  01 12:53:12 2014 Antonin Ribeaud
+// Last update Fri May  2 18:17:47 2014 charly roche
 */
 
 /*
@@ -42,7 +42,7 @@
 # include <fmod.h>
  
 #define MAX 32 
-#define TAILLE_SPECTRE  4096
+#define TAILLE_SPECTRE  2048
 #define REF_FREQ 1000 /* Fréquence de référence */
 #define REF_FREQ_EQ 171 /* Equivalent de REF_FREQ via FMOD_getSpectrum() */
 #define UP 1
