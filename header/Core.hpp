@@ -46,6 +46,7 @@ public:
 	bool			drawBackground();
 	void			changeFocus(Char *cur_char);
 	void			changeFocus2(Char *cur_char);
+	void			intro();
 private:
 	int 				_players;
 	Char				*_mychar1;
@@ -56,8 +57,8 @@ private:
 	float				_posy2;
 	glm::mat4			_transformation;
 	glm::mat4			_projection;
-	float				_width;
-	float				_height;
+	int				_width;
+	int				_height;
 	Map					*_map;
 	gdl::SdlContext		_context;
 	gdl::Clock			_clock;

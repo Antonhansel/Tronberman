@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Thu May  1 15:39:56 2014 Flavien Pensato
+## Last update Thu May  1 17:06:56 2014 ribeaud antonin
 ##
 
 NAME		=	bomberman
@@ -26,7 +26,7 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXXFLAGS	+=	-I ./header -I ./bomberlib -g3
 
-LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
 all: $(NAME)
 
