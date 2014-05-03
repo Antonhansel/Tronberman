@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Fri May  2 18:15:15 2014 charly roche
+// Last update Fri May  2 20:51:13 2014 charly roche
 */
 
 # include "Intro.hpp"
@@ -58,6 +58,8 @@ bool	Intro::initialize()
 		return (false);
 	_projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
 	_shader.bind();
+	_transformation = glm::lookAt(glm::vec3( -600, -100, 0),
+				      glm::vec3(-100, 0, 0), glm::vec3(0, 1, 0));
 	_shader.setUniform("view", _transformation);
 	_shader.setUniform("projection", _projection);
 	if (drawLimits() == false)
@@ -95,41 +97,19 @@ bool 	Intro::drawBackground()
 
 bool    Intro::update()
 {
-  float y;
-  float y2;
-  int   A;
-  float mult;
-
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
   _context.updateClock(_clock);
   _context.updateInputs(_input);
   FMOD_System_GetChannel(system, 0, &canal);
   FMOD_Channel_GetSpectrum(canal, spectre, TAILLE_SPECTRE, 0, FMOD_DSP_FFT_WINDOW_RECT);
-  A = 400;
   for (size_t i = 0; i < _objects.size(); ++i)
-    {
-
-      mult = (MAX*MAX-i)*(MAX*MAX-i);
-      mult = -((mult - 2*A*(MAX*MAX-i)) + A*A) / 3500 + 100;
-      y = spectre[MAX*MAX - i]*(MAX*MAX/(i/2 + 1))* mult / 1;
-      if (i < _objects.size() - 1)
-	{
-	  y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
-	  y = (y + y2) / 2;
-	}
-      _objects[i]->translate(glm::vec3(0, y, 0));
-    }
+      _objects[i]->translate(glm::vec3(0, getEquation(i), 0));
   return true;
 }
 
 void    Intro::draw()
 {
-  float y;
-  float y2;
-  int A;
-  float        mult;
-
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   if (_input.getKey(SDLK_UP))
     _posx += 1;
@@ -147,24 +127,14 @@ void    Intro::draw()
     _posz2 += 1;
   if (_input.getKey(SDLK_d))
     _posz2 -= 1;
-  _shader.setUniform("view", glm::lookAt(glm::vec3(_posz, 13, _posz2),
+  _shader.setUniform("view", glm::lookAt(glm::vec3(_posz, 10, _posz2),
 					 glm::vec3(_posx, _posy, 0), glm::vec3(0, 1, 0)));
   _shader.setUniform("projection", _projection);
   _shader.bind();
-  A = 400;
   for (size_t i = 0; i < _objects.size(); ++i)
     {
       _objects[i]->draw(_shader, _clock);
-
-      mult = (MAX*MAX-i)*(MAX*MAX-i);
-      mult = -((mult - 2*A*(MAX*MAX-i)) + A*A) / 3500 + 100;
-      y = spectre[MAX*MAX - i]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
-      if (i < _objects.size() - 1)
-	{
-	  y2 = spectre[MAX*MAX - i + 1]*(MAX*MAX/(i/2 + 1))* (mult) / 1;
-	  y = (y + y2) / 2;
-	}
-      _objects[i]->translate(glm::vec3(0, -y, 0));
+      _objects[i]->translate(glm::vec3(0, -getEquation(i), 0));
     }
   _context.flush();
 }
@@ -245,4 +215,20 @@ bool Intro::genSpiral()
           for(c = 0 ; c < MAX ; c++)
           printf("%4d ",a[r][c]);
     }
+}
+
+float		Intro::getEquation(int i)
+{
+  float		y;
+  float		y2;
+  int		coef;
+
+  coef = 510;
+  y = spectre[MAX*MAX - i]*(-((i-coef)*(i-coef)/2800)+100);
+  if (i < _objects.size() - 1)
+    {
+      y2 = spectre[MAX*MAX - i]*(-((i-coef)*(i-coef)/2800)+100);
+      y = (y + y2) / 2;
+    }
+  return (y * 2);
 }
