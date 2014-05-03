@@ -19,7 +19,7 @@ public:
 	Text();
 	~Text();
 private:
-	
+
 };
 
 #endif /*!TEXT_HPP*/

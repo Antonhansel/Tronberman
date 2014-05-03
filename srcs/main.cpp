@@ -12,6 +12,7 @@
 # include "Core.hpp"
 # include "Cube.hpp"
 # include "Intro.hpp"
+# include "Camera.hpp"
 
 bool	makeIntro()
 {
@@ -29,9 +30,10 @@ bool	makeIntro()
 	return (true);	
 }
 
-bool	startGame()
+bool	startGame(Camera &cam)
 {
-	Core 	core;
+	Core 	core(cam);
+
 	if (core.initialize() == false)
 		{
 			std::cout << "Error on initializing" << std::endl;
@@ -45,9 +47,10 @@ bool	startGame()
 
 int		main(int argc, char **argv)
 {
-	if (makeIntro() == false)
-		return (EXIT_FAILURE);
-	// if (startGame() == false)
+	Camera camera;
+	// if (makeIntro() == false)
 	// 	return (EXIT_FAILURE);
+	if (startGame(camera) == false)
+		return (EXIT_FAILURE);
 	return EXIT_SUCCESS;
 }

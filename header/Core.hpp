@@ -24,6 +24,8 @@
 # include <OpenGL.hh>
 # include <vector>
 # include <iostream>
+# include "Camera.hpp"
+# include "Loading.hpp"
 # include "Background.hpp"
 # include "AObject.hpp"
 # include "Floor.hpp"
@@ -34,10 +36,9 @@
 class Core : public gdl::Game
 {
 public:
-	Core();
+	Core(Camera cam);
 	~Core();
 	bool			initialize();
-	bool			update();
 	void			draw();
 	bool			makeCube(int, int, int);
 	bool			drawFloor();
@@ -47,24 +48,28 @@ public:
 	void			changeFocus(Char *cur_char);
 	void			changeFocus2(Char *cur_char);
 	void			intro();
+	bool 			update();
+	bool 			drawLoading();
+	bool 			updateLoading(int);
+	bool 			makeLoading(int);
 private:
-	int 				_players;
-	Char				*_mychar1;
-	Char 				*_mychar2;
-	float 				_posx;
-	float				_posy;
-	float				_posx2;
-	float				_posy2;
-	glm::mat4			_transformation;
-	glm::mat4			_projection;
+	int 			_percent;
+	Camera 			_cam;
+	int 			_players;
+	Char			*_mychar1;
+	Char 			*_mychar2;
+	float 			_posx;
+	float			_posy;
+	float			_posx2;
+	float			_posy2;
 	int				_width;
 	int				_height;
-	Map					*_map;
-	gdl::SdlContext		_context;
-	gdl::Clock			_clock;
-	gdl::Input			_input;
+	Map				*_map;
+	gdl::Clock		_clock;
+	gdl::Input		_input;
 	gdl::BasicShader	_shader;
 	std::vector<AObject*> _objects;
+	std::vector<AObject*> _loading;
 };
 
 #endif /*!_CORE_HPP_*/

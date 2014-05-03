@@ -8,57 +8,90 @@
 // Last update Thu May  1 16:24:53 2014 ribeaud antonin
 */
 
-#include "AObject.hpp"
 #include "Core.hpp"
-#include "Floor.hpp"
-#include "Char.hpp"
-#include "Map.hpp"
 #include <unistd.h>
 
-Core::Core()
+Core::Core(Camera cam)
 {
 	_width = 20;
 	_height = 20;
+	_cam = cam;
 	_map = new Map(_width, _height);
 	_players = 1;
 	_posx = 1;
 	_posy = 1;
 	_posx2 = 1;
 	_posy2 = 2;
+	_percent = 15;
 }
 
 Core::~Core()
 {
 	for (size_t i = 0; i < _objects.size(); ++i)
 		delete _objects[i];
-	_context.stop();
+	_cam.stopContext();
+}
+
+bool 	Core::makeLoading(int percent)
+{
+	AObject	*cube = new	Cube;
+	if (cube->initialize() == false)
+		return (false);
+	cube->translate(glm::vec3(_percent, 0, 0));
+	_loading.push_back(cube);
+	return (true);
+}
+
+bool 	Core::updateLoading(int perc)
+{
+	while (perc != 0)
+	{
+		if (makeLoading(_percent) == false)
+			return (false);
+		_percent--;
+		perc--;
+	}
+	_cam.moveCameraP1(glm::vec3(0, 10, -15), 
+			glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	for (size_t j = 0; j < _loading.size(); ++j)
+		_loading[j]->draw(_shader, _clock);
+	_cam.flushContext();
+	return (true);
+}
+
+bool 	Core::drawLoading()
+{
+	AObject	*loading = new	Loading(_width * 2, _height * 2, 10.0f);
+
+	_loading.push_back(loading);
+	loading->translate(glm::vec3(-_percent, 0, 0));
+	return (loading->initialize());
 }
 
 bool	Core::initialize()
 {
-	if (!_context.start(1800, 1000, "Best Bomberman!"))
+	if (_cam.initScene() == false)
 		return (false);
-	glEnable(GL_DEPTH_TEST);
-	if (!_shader.load("./ressources/shaders/basic.fp", GL_FRAGMENT_SHADER) || 
-	!_shader.load("./ressources/shaders/basic.vp", GL_VERTEX_SHADER) || 
-	!_shader.build())
+	_cam.setPlayer(1);
+	_shader = _cam.getShader();
+	_clock = _cam.getClock();
+	if (drawLoading() == false)
 		return (false);
-	if (_players == 1)
-		_projection = glm::perspective(60.0f, 1800.0f / 1000.0f, 0.1f, 100.0f);
-	else
-		_projection = glm::perspective(60.0f, 900.0f / 500.0f, 0.5f, 100.0f);
-	_transformation = glm::lookAt(glm::vec3(0, 10, -10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	_shader.bind();
-	_shader.setUniform("view", _transformation);
-	_shader.setUniform("projection", _projection);
-	 if (drawFloor() == false)
+	updateLoading(6);
+	if (drawFloor() == false)
 	 	return (false);
+	updateLoading(6);
 	if (drawMap() == false)
 		return (false);
+	updateLoading(6);
 	if (drawChar() == false)
 		return (false);
+	updateLoading(6);
 	if (drawBackground() == false)
 		return (false);
+	updateLoading(6);
+	sleep(1);
+	_cam.setPlayer(_players);
 	std::cout << "Load done!" << std::endl;
 	return (true);
 }
@@ -93,19 +126,14 @@ void Core::intro()
 	float i;
 
 	i = 100;
-	_shader.bind();
 	while (i > 0)
 	{
-		_transformation = glm::lookAt(glm::vec3(_posy - i, 10 + i, -10 + _posx + i),
-		glm::vec3(_posy, 0, _posx + i), glm::vec3(0, 1, 0));
-		_shader.setUniform("view", _transformation);
-		glViewport(0,0,1800,1000);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		_shader.bind();
+		_cam.moveCameraP1(glm::vec3(_posy - i, 10 + i, -10 + _posx +i), 
+			glm::vec3(_posy, 0, _posx + i), glm::vec3(0, 1, 0));
 		for (size_t j = 0; j < _objects.size(); ++j)
-		_objects[j]->draw(_shader, _clock);
-		_context.flush();
+			_objects[j]->draw(_shader, _clock);
 		i--;
+		_cam.flushContext();
 		usleep(5000);
 	}
 }
@@ -160,7 +188,6 @@ bool	Core::drawChar()
 void	Core::changeFocus2(Char *cur_char)
 {
 	cur_char->update(_clock, _input);
-	_shader.bind();
 	if (_input.getKey(SDLK_z))
 		_posx2 += cur_char->getTrans();
 	if (_input.getKey(SDLK_s))
@@ -169,15 +196,13 @@ void	Core::changeFocus2(Char *cur_char)
 		_posy2 += cur_char->getTrans();
 	if (_input.getKey(SDLK_d))
 		_posy2 -= cur_char->getTrans();
-	glViewport(0,0,1800/2,1000);
-	_shader.setUniform("view", glm::lookAt(glm::vec3(_posy2, 13, -10 + _posx2),
-	glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0)));
+	_cam.moveCameraP1(glm::vec3(_posy2, 13, -10 + _posx2), 
+		glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0));
 }
 
 void	Core::changeFocus(Char *cur_char)
 {
 	cur_char->update(_clock, _input);
-	_shader.bind();
 	if (_input.getKey(SDLK_UP))
 		_posx += cur_char->getTrans();
 	if (_input.getKey(SDLK_DOWN))
@@ -186,26 +211,16 @@ void	Core::changeFocus(Char *cur_char)
 		_posy += cur_char->getTrans();
 	if (_input.getKey(SDLK_RIGHT))
 		_posy -= cur_char->getTrans();
-	if (_players == 1)
-	{
-		_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 13, -10 + _posx),
-		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
-		_shader.setUniform("projection", _projection);
-	}
-	else
-	{
-		glViewport(1800/2, 0, 1800/2,1000);
-		_shader.setUniform("view", glm::lookAt(glm::vec3(_posy, 13, -10 + _posx),
-		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0)));
-	}
+	_cam.moveCameraP1(glm::vec3(_posy, 13, -10 + _posx), 
+		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
 }
 
 bool	Core::update()
 {
 	if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
 		return false;
-	_context.updateClock(_clock);
-	_context.updateInputs(_input);
+	_clock = _cam.getClock();
+	_input = _cam.getInput();
 	for (size_t i = 0; i < _objects.size(); ++i)
 		_objects[i]->update(_clock, _input);
 	return true;
@@ -213,8 +228,6 @@ bool	Core::update()
 
 void	Core::draw()
 {	
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	_shader.bind();
 	changeFocus(_mychar1);
 	for (size_t i = 0; i < _objects.size(); ++i)
 		_objects[i]->draw(_shader, _clock);
@@ -222,12 +235,11 @@ void	Core::draw()
 	if (_players == 2)
 		{
 		_mychar2->draw(_shader, _clock);
-		//_context.flush();	
 		changeFocus2(_mychar2);
 		for (size_t i = 0; i < _objects.size(); ++i)
 		_objects[i]->draw(_shader, _clock);		
 		_mychar1->draw(_shader, _clock);
 		_mychar2->draw(_shader, _clock);
 		}
-	_context.flush();
+	_cam.flushContext();
 }

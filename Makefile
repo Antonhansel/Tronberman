@@ -14,12 +14,14 @@ SOURCES		=	srcs/main.cpp \
 			srcs/AObject.cpp \
 			srcs/Core.cpp \
 			srcs/Background.cpp \
+			srcs/Loading.cpp \
 			srcs/Intro.cpp \
 			srcs/Floor.cpp \
 			srcs/Char.cpp \
 			srcs/Cube.cpp \
 			srcs/Case.cpp \
 			srcs/Map.cpp \
+			srcs/Camera.cpp \
 			srcs/Sound.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
