@@ -93,6 +93,8 @@ bool	Core::initialize()
 	sleep(1);
 	_cam.setPlayer(_players);
 	std::cout << "Load done!" << std::endl;
+	for (size_t i = 0; i < _loading.size(); ++i)
+		delete _loading[i];
 	return (true);
 }
 
