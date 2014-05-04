@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Fri May  02 19:25:34 2014 Antonin Ribeaud
-** Last update Fri May  02 19:25:34 2014 Antonin Ribeaud
+// Last update Sat May  3 18:09:26 2014 Mehdi Chouag
 */
 
 #ifndef _CAMERA_HPP_
@@ -25,29 +25,34 @@
 # include <vector>
 # include <iostream>
 
+using namespace gdl;
+using namespace glm;
+
 class Camera
 {
 public:
-	Camera();
-	~Camera();
-	void 			setPlayer(int players);
-	gdl::BasicShader &getShader();
-	void 			stopContext();
-	bool 			initScene();
-	bool 			flushContext();
-	void 			update();
-	bool 			moveCameraP1(glm::vec3, glm::vec3, glm::vec3);
-	bool 			moveCameraP2(glm::vec3, glm::vec3, glm::vec3);
-	gdl::Clock 		&getClock();
-	gdl::Input 		&getInput();
+  Camera(const int, const int);
+  ~Camera();
+  void 			setPlayer(int players);
+  BasicShader		&getShader();
+  void 			stopContext();
+  bool 			initScene();
+  bool 			flushContext();
+  void 			update();
+  bool 			moveCameraP1(vec3, vec3, vec3);
+  bool 			moveCameraP2(vec3, vec3, vec3);
+  Clock 		&getClock();
+  Input 		&getInput();
 private:
-	int 				_players;
-	glm::mat4			_transformation;
-	glm::mat4			_projection;
-	gdl::SdlContext		_context;
-	gdl::Clock			_clock;
-	gdl::BasicShader	_shader;
-	gdl::Input			_input;
+  int			_width;
+  int			_height;
+  int 			_players;
+  mat4			_transformation;
+  mat4			_projection;
+  SdlContext		_context;
+  Clock			_clock;
+  BasicShader		_shader;
+  Input			_input;
 };
 
 #endif /*!_CAMERA_HPP_*/

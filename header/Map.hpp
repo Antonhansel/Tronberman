@@ -7,27 +7,26 @@
 # include <map>
 # include <stdlib.h>
 # include <utility>
-# include "Case.hpp"
-
+# include "AObject.hpp"
+# include "Factory.hpp"
 
 class Map
 {
 public:
-	Map(const int&, const int&);
-	Map(const std::string&);
+  Map(const int&, const int&, std::map< std::pair<float, float>, AObject * > &);
+  Map(const std::string&);
 
-	void				outline();
-	void				spawnBot();
-	void				drawWall();
-	std::map< std::pair<int, int>, Case *>	getCases();
-	bool				spawnBotChecking(const int&, const int&);
-	bool				isEmpty(const int&, const int&);
-	~Map();
-
+  void				outline();
+  void				spawnBot();
+  void				drawWall();
+  bool				spawnBotChecking(const int&, const int&);
+  bool				isEmpty(const int&, const int&);
+  std::map< std::pair<float, float>, AObject *> &getMap();
+  ~Map();
 private:
-	int					size_x;
-	int					size_y;
-	std::map< std::pair<int, int>, Case *>	cases;	
+  std::map< std::pair<float, float>, AObject *> cases;
+  int					size_x;
+  int					size_y;
 };
 
 #endif /* !MAP_HPP */

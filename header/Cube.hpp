@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue Apr  29 16:47:20 2014 Antonin Ribeaud
-** Last update Tue Apr  29 16:47:20 2014 Antonin Ribeaud
+// Last update Sat May  3 22:56:31 2014 Mehdi Chouag
 */
 
 #ifndef _CUBE_HPP_
@@ -16,9 +16,10 @@
 class Cube : public AObject
 {
 private:
-	gdl::Texture	_texture;
-	gdl::Geometry	_geometry;
-	float			_speed;
+  gdl::Texture	_texture;
+  gdl::Geometry	_geometry;
+  float		_speed;
+  type		_type;
 public:
 	Cube();
 	~Cube();

@@ -5,24 +5,22 @@
 ## Login   <ribeau_a@epitech.net>
 ## 
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Thu May  1 17:06:56 2014 ribeaud antonin
+## Last update Sun May  4 02:54:55 2014 Mehdi Chouag
 ##
 
 NAME		=	bomberman
 
 SOURCES		=	srcs/main.cpp \
-			srcs/AObject.cpp \
+			srcs/Menu.cpp \
 			srcs/Core.cpp \
-			srcs/Background.cpp \
-			srcs/Loading.cpp \
-			srcs/Intro.cpp \
-			srcs/Floor.cpp \
 			srcs/Char.cpp \
+			srcs/AObject.cpp \
 			srcs/Cube.cpp \
-			srcs/Case.cpp \
+			srcs/Engine.cpp \
 			srcs/Map.cpp \
-			srcs/Camera.cpp \
-			srcs/Sound.cpp
+			srcs/Floor.cpp \
+			srcs/Background.cpp \
+			srcs/Camera.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
@@ -33,7 +31,7 @@ LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex6
 all: $(NAME)
 
 $(NAME):	$(OBJECTS)
-		g++ $(OBJECTS) -o $(NAME) $(LDFLAGS)
+		g++ $(OBJECTS) -o $(NAME) $(LDFLAGS) -g
 
 clean:
 	rm -f $(OBJECTS)

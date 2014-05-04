@@ -5,243 +5,191 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Thu May  1 16:24:53 2014 ribeaud antonin
+// Last update Sun May  4 03:42:30 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
 #include <unistd.h>
 
-Core::Core(Camera cam)
+Core::Core(Camera *cam)
 {
-	_width = 20;
-	_height = 20;
-	_cam = cam;
-	_map = new Map(_width, _height);
-	_players = 1;
-	_posx = 1;
-	_posy = 1;
-	_posx2 = 1;
-	_posy2 = 2;
-	_percent = 15;
+  _width = 50;
+  _height = 50;
+  _cam = cam;
+  _map = new Map(_width, _height, _objects);
+  _players = 1;
+  _posx = 1;
+  _posy = 1;
+  _posx2 = 1;
+  _posy2 = 2;
+  _percent = 15;
 }
 
 Core::~Core()
 {
-	for (size_t i = 0; i < _objects.size(); ++i)
-		delete _objects[i];
-	_cam.stopContext();
-}
+  std::map< std::pair<float, float>, AObject *>::iterator it;
 
-bool 	Core::makeLoading(int percent)
-{
-	AObject	*cube = new	Cube;
-	if (cube->initialize() == false)
-		return (false);
-	cube->translate(glm::vec3(_percent, 0, 0));
-	_loading.push_back(cube);
-	return (true);
-}
-
-bool 	Core::updateLoading(int perc)
-{
-	while (perc != 0)
-	{
-		if (makeLoading(_percent) == false)
-			return (false);
-		_percent--;
-		perc--;
-	}
-	_cam.moveCameraP1(glm::vec3(0, 10, -15), 
-			glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-	for (size_t j = 0; j < _loading.size(); ++j)
-		_loading[j]->draw(_shader, _clock);
-	_cam.flushContext();
-	return (true);
-}
-
-bool 	Core::drawLoading()
-{
-	AObject	*loading = new	Loading(_width * 2, _height * 2, 10.0f);
-
-	_loading.push_back(loading);
-	loading->translate(glm::vec3(-_percent, 0, 0));
-	return (loading->initialize());
-}
-
-bool	Core::initialize()
-{
-	if (_cam.initScene() == false)
-		return (false);
-	_cam.setPlayer(1);
-	_shader = _cam.getShader();
-	_clock = _cam.getClock();
-	if (drawLoading() == false)
-		return (false);
-	updateLoading(6);
-	if (drawFloor() == false)
-	 	return (false);
-	updateLoading(6);
-	if (drawMap() == false)
-		return (false);
-	updateLoading(6);
-	if (drawChar() == false)
-		return (false);
-	updateLoading(6);
-	if (drawBackground() == false)
-		return (false);
-	updateLoading(6);
-	sleep(1);
-	_cam.setPlayer(_players);
-	std::cout << "Load done!" << std::endl;
-	for (size_t i = 0; i < _loading.size(); ++i)
-		delete _loading[i];
-	return (true);
+  for (it = _objects.begin(); it !=  _objects.end(); ++it)
+    delete (*it).second;
+  delete _map;
+  _cam->stopContext();
 }
 
 bool	Core::drawMap()
 {
-	std::map< std::pair<int, int>, Case *> map = _map->getCases();
-	std::pair<int, int>	pos;
-
-	for (int y(-_height); y <= _height; y++) {
-		for (int x(-_width); x <= _width; x++) {
-			pos = std::make_pair(x, y);
-			if (map[pos] != NULL)
-			{
-				if (map[pos]->getTypeCase() == 0)
-				{
-					if (makeCube(x, 0, y) == false)
-					return (false);
-				}
-				else if (map[pos]->getTypeCase() == 1)
-				{
-					if (makeCube(x, 0, y) == false)
-					return (false);
-				}
-			}
-		}
-	}
-	return (true);
+  _objects = _map->getMap();
+  std::cout << _objects.size() << std::endl;
+  return (true);
 }
-void Core::intro()
-{
-	float i;
 
-	i = 100;
-	while (i > 0)
-	{
-		_cam.moveCameraP1(glm::vec3(_posy - i, 10 + i, -10 + _posx +i), 
-			glm::vec3(_posy, 0, _posx + i), glm::vec3(0, 1, 0));
-		for (size_t j = 0; j < _objects.size(); ++j)
-			_objects[j]->draw(_shader, _clock);
-		i--;
-		_cam.flushContext();
-		usleep(5000);
-	}
+bool	Core::initialize()
+{
+  _cam->setPlayer(1);
+  _shader = _cam->getShader();
+  _clock = _cam->getClock();
+  if (drawMap() == false)
+    return (false);
+  if (drawFloor() == false)
+    return (false);
+  if (drawChar() == false)
+    return (false);
+  if (drawBackground() == false)
+    return (false);
+  _cam->setPlayer(_players);
+  std::cout << "Load done!" << std::endl;
+  for (size_t i = 0; i < _loading.size(); ++i)
+    delete _loading[i];
+  return (true);
+}
+
+void		Core::intro()
+{
+  std::map< std::pair<float, float>, AObject * >::iterator	it;
+  float i;
+
+  i = 100;
+  while (i > 0)
+    {
+      _cam->moveCameraP1(glm::vec3(_posy - i, 10 + i, -10 + _posx +i), 
+			 glm::vec3(_posy, 0, _posx + i), glm::vec3(0, 1, 0));
+      for (it = _objects.begin(); it != _objects.end(); ++it)
+        (*it).second->draw(_shader, _clock);
+      i--;
+      _cam->flushContext();
+      usleep(5000);
+    }
 }
 
 bool 	Core::drawBackground()
 {
-	AObject	*background = new	Background(_width * 4, _height * 4, 10.0f);
+  AObject	*background = new Background(_width * 4, _height * 4, 10.0f);
 
-	_objects.push_back(background);
-	return (background->initialize());
+  _other.push_back(background);
+  return (background->initialize());
 }
 
 bool	Core::drawFloor()
 {
-	AObject	*floor = new	Floor(_width, _height, 10.0f);
+  AObject	*floor = new Floor(_width, _height, 10.0f);
 
-	_objects.push_back(floor);
-	return (floor->initialize());
+  _other.push_back(floor);
+  return (floor->initialize());
 }
 
-bool	Core::makeCube(int x, int y, int z)
-{
-	AObject	*cube = new	Cube;
-	if (cube->initialize() == false)
-		return (false);
-	cube->translate(glm::vec3(x, y, z));
-	cube->setPos(x, z);
-	_objects.push_back(cube);
-	return (true);
+bool		Core::drawChar()
+{  
+  AObject	*chara = create<Char>();
+  std::pair<float, float>	pos;
+
+  if (chara->initialize() == false)
+    return (false);
+  pos = std::make_pair((float)POSX, (float)POSY);
+  chara->setPos(pos);
+  chara->setScreen(1);
+  chara->setPlayer(1);
+  chara->translate(glm::vec3(POSX, 0, POSY));
+  _player[1] = chara;
+  if (_players == 2)
+    {
+      AObject	*chara1 = create<Char>();
+      if (chara1->initialize() == false)
+	return (false);
+      pos = std::make_pair((float)POSX1, (float)POSY1);
+      chara1->setPos(pos);
+      chara1->translate(glm::vec3(POSX1, 0, POSY1));
+      _player[2] = chara1;
+    }
+  return (true);
 }
 
-bool	Core::drawChar()
+void	Core::changeFocus2(AObject *cur_char)
 {
-	Char	*Chara = new	Char(_players, 1, _map->getCases());
-	_mychar1 = Chara;
-	if (_mychar1->initialize() == false)
-		return (false);
-	_mychar1->setPos(_posx, _posy);
-	_mychar1->translate(glm::vec3(_posx, 0, _posy));
-	if (_players == 2)
-	{
-		Char	*Chara = new	Char(_players, 2, _map->getCases());
-		_mychar2 = Chara;
-		if (_mychar2->initialize() == false)
-			return (false);
-		_mychar2->setPos(_posx2, _posy2);
-		_mychar2->translate(glm::vec3(_posx2, 0, _posy2));
-	}
-	return (true);
+  cur_char->update(_clock, _input);
+  if (_input.getKey(SDLK_z))
+    _posx2 += cur_char->getTrans();
+  if (_input.getKey(SDLK_s))
+    _posx2 -= cur_char->getTrans();
+  if (_input.getKey(SDLK_q))
+    _posy2 += cur_char->getTrans();
+  if (_input.getKey(SDLK_d))
+    _posy2 -= cur_char->getTrans();
+  _cam->moveCameraP1(glm::vec3(_posy2, 13, -10 + _posx2), 
+		     glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0));
 }
 
-void	Core::changeFocus2(Char *cur_char)
+void	Core::changeFocus(AObject *cur_char)
 {
-	cur_char->update(_clock, _input);
-	if (_input.getKey(SDLK_z))
-		_posx2 += cur_char->getTrans();
-	if (_input.getKey(SDLK_s))
-		_posx2 -= cur_char->getTrans();
-	if (_input.getKey(SDLK_q))
-		_posy2 += cur_char->getTrans();
-	if (_input.getKey(SDLK_d))
-		_posy2 -= cur_char->getTrans();
-	_cam.moveCameraP1(glm::vec3(_posy2, 13, -10 + _posx2), 
-		glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0));
-}
-
-void	Core::changeFocus(Char *cur_char)
-{
-	cur_char->update(_clock, _input);
-	if (_input.getKey(SDLK_UP))
-		_posx += cur_char->getTrans();
-	if (_input.getKey(SDLK_DOWN))
-		_posx -= cur_char->getTrans();
-	if (_input.getKey(SDLK_LEFT))
-		_posy += cur_char->getTrans();
-	if (_input.getKey(SDLK_RIGHT))
-		_posy -= cur_char->getTrans();
-	_cam.moveCameraP1(glm::vec3(_posy, 13, -10 + _posx), 
-		glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
+  cur_char->update(_clock, _input);
+  if (_input.getKey(SDLK_UP))
+    _posx += cur_char->getTrans();
+  if (_input.getKey(SDLK_DOWN))
+    _posx -= cur_char->getTrans();
+  if (_input.getKey(SDLK_LEFT))
+    _posy += cur_char->getTrans();
+  if (_input.getKey(SDLK_RIGHT))
+    _posy -= cur_char->getTrans();
+  _cam->moveCameraP1(glm::vec3(_posy, 13, -10 + _posx), 
+		     glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
 }
 
 bool	Core::update()
 {
-	if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
-		return false;
-	_clock = _cam.getClock();
-	_input = _cam.getInput();
-	for (size_t i = 0; i < _objects.size(); ++i)
-		_objects[i]->update(_clock, _input);
-	return true;
+  std::map< std::pair<float, float>, AObject * >::iterator	it;
+  std::vector<AObject*>::iterator it1;
+
+  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
+    return false;
+  _clock = _cam->getClock();
+  _input = _cam->getInput();
+  for (it = _objects.begin(); it != _objects.end(); ++it)
+    (*it).second->update(_clock, _input);
+  for (it1 = _other.begin(); it1 != _other.end(); ++it1)
+    (*it1)->update(_clock, _input);
+  return (true);
 }
 
 void	Core::draw()
 {	
-	changeFocus(_mychar1);
-	for (size_t i = 0; i < _objects.size(); ++i)
-		_objects[i]->draw(_shader, _clock);
-	_mychar1->draw(_shader, _clock);
-	if (_players == 2)
-		{
-		_mychar2->draw(_shader, _clock);
-		changeFocus2(_mychar2);
-		for (size_t i = 0; i < _objects.size(); ++i)
-		_objects[i]->draw(_shader, _clock);		
-		_mychar1->draw(_shader, _clock);
-		_mychar2->draw(_shader, _clock);
-		}
-	_cam.flushContext();
+  std::map< std::pair<float, float>, AObject * >::iterator	it;
+  std::map< std::pair<float, float>, AObject * >::iterator	it1;
+  std::vector<AObject*>::iterator it2;
+
+  changeFocus(_player[1]);
+  for (it = _objects.begin(); it != _objects.end(); ++it)
+    (*it).second->draw(_shader, _clock);
+  for (it2 = _other.begin(); it2 != _other.end(); ++it2)
+    (*it2)->draw(_shader, _clock);
+  _player[1]->draw(_shader, _clock);
+  if (_players == 2)
+    {
+      _player[2]->draw(_shader, _clock);
+      changeFocus2(_player[2]);
+      for (it = _objects.begin(); it != _objects.end(); ++it)
+        (*it).second->draw(_shader, _clock);		
+      _player[1]->draw(_shader, _clock);
+      _player[2]->draw(_shader, _clock);
+      for (it2 = _other.begin(); it2 != _other.end(); ++it2)
+	(*it2)->draw(_shader, _clock);
+    }
+  _cam->flushContext();
 }
