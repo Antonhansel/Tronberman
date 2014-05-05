@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Sun May  4 03:24:41 2014 Mehdi Chouag
+// Last update Mon May  5 13:15:39 2014 Mehdi Chouag
 */
 
 #include "Menu.hpp"
@@ -18,6 +18,10 @@ Menu::Menu(Camera *camera) : _camera(camera)
   _height = MAX;
   _shader = _camera->getShader();
   _clock = _camera->getClock();
+  _angle = 0;
+  _posy = 0;
+  _posx = 0;
+  _posz = -30;
   _isLaunch = false;
 }
 
@@ -69,7 +73,7 @@ bool		Menu::makeCube(int x, int y, int z)
 
 bool    Menu::update()
 {
-  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT) )
+  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return (false);
   if (_isLaunch == true)
     return (false);
@@ -92,6 +96,7 @@ void    Menu::draw()
       _objects[i]->draw(_shader, _clock);
       _objects[i]->translate(vec3(0, -getEquation(i), 0));
     }
+  rotate();
   _camera->flushContext();
 }
 
@@ -187,6 +192,17 @@ float		Menu::getEquation(int i)
       y = (y + y2) / 2;
     }
   return (y * 2);
+}
+
+void		Menu::rotate()
+{
+  if (_angle < 315)
+    _angle += 0.2;
+  if (_angle > 180 && _posy < 20)
+    _posy += 0.01;
+  _posx = cos((_angle/180) * PI) * 30;
+  _posz = sin((_angle/180) * PI) * 30;  
+  _camera->moveCameraP1(vec3(_posx, _posy, _posz), vec3(0,0,0), vec3(0,1,0));
 }
 
 bool		Menu::launch() const

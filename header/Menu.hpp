@@ -5,7 +5,7 @@
 // Login   <chouag_m@epitech.net>
 // 
 // Started on  Sat May  3 17:42:13 2014 Mehdi Chouag
-// Last update Sat May  3 21:25:39 2014 Mehdi Chouag
+// Last update Mon May  5 13:15:09 2014 Mehdi Chouag
 //
 
 #ifndef MENU_HPP_
@@ -39,6 +39,7 @@
 #define DOWN 2
 #define LEFT 3
 #define RIGHT 4
+#define PI 3.14159
 
 using namespace gdl;
 using namespace glm;
@@ -57,7 +58,8 @@ public:
   bool			initFmod();
   bool 			genSpiral();
   float		        getEquation(int);
-
+  void			rotate();
+  
 private:
   Camera		*_camera;
   int 			a[MAX][MAX];
@@ -68,6 +70,10 @@ private:
   bool			_isLaunch;
   int			_width;
   int			_height;
+  float			_angle;
+  float			_posy;
+  float			_posz;
+  float			_posx;
 
 private:
   FMOD_SYSTEM 		*system;
