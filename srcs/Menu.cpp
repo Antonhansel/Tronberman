@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Mon May  5 13:15:39 2014 Mehdi Chouag
+// Last update Mon May  5 15:31:56 2014 charly roche
 */
 
 #include "Menu.hpp"
@@ -91,12 +91,12 @@ void    Menu::draw()
   if (_input.getKey(SDLK_p))
     _isLaunch = true;
  _camera->moveCameraP1(vec3(0, 10, 30), vec3(0, 0, 0), vec3(0, 1, 0));
+ rotate();
   for (size_t i = 0; i < _objects.size(); ++i)
     {
       _objects[i]->draw(_shader, _clock);
       _objects[i]->translate(vec3(0, -getEquation(i), 0));
     }
-  rotate();
   _camera->flushContext();
 }
 
@@ -169,8 +169,7 @@ bool Menu::genSpiral()
             }
 	  initial_direction = UP ;
 	}
- 
-    }
+     }
 }
 
 void		Menu::reset()
@@ -186,12 +185,7 @@ float		Menu::getEquation(int i)
 
   coef = 510;
   y = spectre[MAX*MAX - i]*(-((i-coef)*(i-coef)/2800)+100);
-  if (i < _objects.size() - 1)
-    {
-      y2 = spectre[MAX*MAX - i]*(-((i-coef)*(i-coef)/2800)+100);
-      y = (y + y2) / 2;
-    }
-  return (y * 2);
+  return (y);
 }
 
 void		Menu::rotate()
@@ -201,7 +195,9 @@ void		Menu::rotate()
   if (_angle > 180 && _posy < 20)
     _posy += 0.01;
   _posx = cos((_angle/180) * PI) * 30;
-  _posz = sin((_angle/180) * PI) * 30;  
+  _posz = sin((_angle/180) * PI) * 30;
+  //  _shader.setUniform("view", glm::lookAt(glm::vec3(_posx, _posy, _posz),
+  //                                      glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
   _camera->moveCameraP1(vec3(_posx, _posy, _posz), vec3(0,0,0), vec3(0,1,0));
 }
 

@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Fri May  02 19:25:38 2014 Antonin Ribeaud
-// Last update Sat May  3 20:28:24 2014 Mehdi Chouag
+// Last update Mon May  5 15:01:09 2014 charly roche
 */
 
 #include "Camera.hpp"
