@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Mon May  5 15:31:56 2014 charly roche
+// Last update Mon May  5 17:46:18 2014 ribeaud antonin
 */
 
 #include "Menu.hpp"
@@ -25,6 +25,7 @@ Menu::Menu(Camera *camera) : _camera(camera)
   _isLaunch = false;
   _stopintro = false;
   _xend = 0;
+  _inIntro = true;
 }
 
 Menu::~Menu()
@@ -75,6 +76,7 @@ bool		Menu::makeCube(int x, int y, int z)
 
 bool    Menu::update()
 {
+  _camera->setPlayer(1);
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return (false);
   if (_isLaunch == true)
@@ -94,14 +96,46 @@ void    Menu::draw()
     _isLaunch = true;
   if (_input.getKey(SDLK_SPACE))
    _stopintro = true;
- _camera->moveCameraP1(vec3(0, 10, 30), vec3(0, 0, 0), vec3(0, 1, 0));
- rotate();
+  rotate();
   for (size_t i = 0; i < _objects.size(); ++i)
     {
       _objects[i]->draw(_shader, _clock);
       _objects[i]->translate(vec3(0, -getEquation(i), 0));
     }
   _camera->flushContext();
+}
+
+void    Menu::rotate()
+{
+  int   endintro;
+  int   anglemax;
+  int   ymax;
+
+  ymax = 20;
+  anglemax = 315;
+  endintro = 1;
+  if (_stopintro)
+  {
+    endintro = 100;
+    if (_xend < 12)
+    {
+      _posy += 0.2;
+      _xend += 0.2;
+    }
+    else
+      _inIntro = false;
+  }
+  if (_angle < anglemax)
+    _angle = _angle + 0.2 * endintro;
+  if (_angle > 180 && _posy < ymax)
+    _posy = _posy + 0.01 * endintro;
+  if (_angle > anglemax)
+    _angle = anglemax;
+  if (_posy > ymax)
+    _posy = ymax;
+  _posx = cos((_angle/180) * PI) * 30;
+  _posz = sin((_angle/180) * PI) * 30;
+  _camera->moveCameraP1(vec3(_posx + _xend, _posy, _posz - _xend/2), vec3(_xend,0,_xend), vec3(0,1,0));
 }
 
 bool Menu::genSpiral()
@@ -189,37 +223,6 @@ float		Menu::getEquation(int i)
   coef = 510;
   y = spectre[MAX*MAX - i]*(-((i-coef)*(i-coef)/2800)+100);
   return (y);
-}
-
-void		Menu::rotate()
-{
-  int   endintro;
-  int   anglemax;
-  int   ymax;
-
-  ymax = 20;
-  anglemax = 315;
-  endintro = 1;
-  if (_stopintro)
-  {
-    endintro = 100;
-    if (_xend < 12)
-    {
-      _posy += 0.2;
-      _xend += 0.2;
-    }
-  }
-  if (_angle < anglemax)
-    _angle = _angle + 0.2 * endintro;
-  if (_angle > 180 && _posy < ymax)
-    _posy = _posy + 0.01 * endintro;
-  if (_angle > anglemax)
-    _angle = anglemax;
-  if (_posy > ymax)
-    _posy = ymax;
-  _posx = cos((_angle/180) * PI) * 30;
-  _posz = sin((_angle/180) * PI) * 30;
-  _camera->moveCameraP1(vec3(_posx + _xend, _posy, _posz - _xend/2), vec3(_xend,0,_xend), vec3(0,1,0));
 }
 
 bool		Menu::launch() const

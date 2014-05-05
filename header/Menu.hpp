@@ -61,6 +61,7 @@ public:
   void			rotate();
   
 private:
+  bool      _inIntro;
   Camera		*_camera;
   int 			a[MAX][MAX];
   Clock			_clock;

@@ -23,7 +23,7 @@ private:
   float			_posy;
   gdl::Texture		_texture;
   gdl::Geometry		_geometry;
-  gdl::Model		*_model;
+  gdl::Model		_model;
 
 public:
   void		setPlayer(int);

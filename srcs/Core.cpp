@@ -17,7 +17,7 @@ Core::Core(Camera *cam)
   _height = 50;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 2;
+  _players = 1;
   _cam->setPlayer(_players);
   _posx = 1;
   _posy = 1;
