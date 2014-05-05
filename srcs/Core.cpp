@@ -17,7 +17,8 @@ Core::Core(Camera *cam)
   _height = 50;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 1;
+  _players = 2;
+  _cam->setPlayer(_players);
   _posx = 1;
   _posy = 1;
   _posx2 = 1;
@@ -44,7 +45,6 @@ bool	Core::drawMap()
 
 bool	Core::initialize()
 {
-  _cam->setPlayer(1);
   _shader = _cam->getShader();
   _clock = _cam->getClock();
   if (drawMap() == false)
@@ -113,9 +113,11 @@ bool		Core::drawChar()
     {
       AObject	*chara1 = create<Char>();
       if (chara1->initialize() == false)
-	return (false);
+	     return (false);
       pos = std::make_pair((float)POSX1, (float)POSY1);
       chara1->setPos(pos);
+      chara1->setScreen(2);
+      chara1->setPlayer(2);
       chara1->translate(glm::vec3(POSX1, 0, POSY1));
       _player[2] = chara1;
     }
@@ -133,7 +135,7 @@ void	Core::changeFocus2(AObject *cur_char)
     _posy2 += cur_char->getTrans();
   if (_input.getKey(SDLK_d))
     _posy2 -= cur_char->getTrans();
-  _cam->moveCameraP1(glm::vec3(_posy2, 13, -10 + _posx2), 
+  _cam->moveCameraP2(glm::vec3(_posy2, 13, -10 + _posx2), 
 		     glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0));
 }
 
@@ -171,12 +173,15 @@ bool	Core::update()
 void	Core::draw()
 {	
   std::map< std::pair<float, float>, AObject * >::iterator	it;
-  std::map< std::pair<float, float>, AObject * >::iterator	it1;
   std::vector<AObject*>::iterator it2;
 
   changeFocus(_player[1]);
   for (it = _objects.begin(); it != _objects.end(); ++it)
-    (*it).second->draw(_shader, _clock);
+  {
+    if (((*it).first.first - _posy < 30) && ((*it).first.first - _posy > -30)
+        && ((*it).first.second - _posx < 25) && ((*it).first.second - _posx > -15))
+        (*it).second->draw(_shader, _clock);
+  }
   for (it2 = _other.begin(); it2 != _other.end(); ++it2)
     (*it2)->draw(_shader, _clock);
   _player[1]->draw(_shader, _clock);
@@ -185,11 +190,15 @@ void	Core::draw()
       _player[2]->draw(_shader, _clock);
       changeFocus2(_player[2]);
       for (it = _objects.begin(); it != _objects.end(); ++it)
-        (*it).second->draw(_shader, _clock);		
+      {
+         if (((*it).first.first - _posy2 < 30) && ((*it).first.first - _posy2 > -30)
+          && ((*it).first.second - _posx2 < 25) && ((*it).first.second - _posx2 > -15))
+          (*it).second->draw(_shader, _clock);
+      }
       _player[1]->draw(_shader, _clock);
       _player[2]->draw(_shader, _clock);
       for (it2 = _other.begin(); it2 != _other.end(); ++it2)
-	(*it2)->draw(_shader, _clock);
+	     (*it2)->draw(_shader, _clock);
     }
   _cam->flushContext();
 }

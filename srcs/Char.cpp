@@ -78,14 +78,6 @@ void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)
   (void)clock;
   _texture.bind();
   _geometry.draw(shader, getTransformation(), GL_QUADS);
-  //gdl::Model::Begin();
-  //glPushMatrix();
-  //_model->gdl::Model::play("Take 001");
-  //glTranslatef(this->position_->x, 0.0f, this->position_->y);
-  //glRotatef(this->rotation_->x, 0.0f, 0.0f, 0.0f);
-  //_model->gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-  //glPopMatrix();
-  // 	gdl::Model::End();
 }
 
 bool	Char::initialize()

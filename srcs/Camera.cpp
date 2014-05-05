@@ -12,6 +12,7 @@
 
 Camera::Camera(const int width, const int height)
 {
+  _players = 1;
   _width = width;
   _height = height;
 }
@@ -23,6 +24,10 @@ Camera::~Camera()
 void 	Camera::setPlayer(int players)
 {
   _players = players;
+  if (_players == 1)
+    _projection = perspective(60.0f, (float)_width / (float)_height, 0.1f, 100.0f);
+  else
+    _projection = perspective(60.0f, ((float)_width / 2.0f) / ((float)_height / 2.0f), 0.5f, 100.0f);
 }
 
 bool	Camera::initScene()
@@ -71,7 +76,7 @@ bool 	Camera::moveCameraP1(vec3 vec1, vec3 vec2, vec3 vec3)
 bool 	Camera::moveCameraP2(vec3 vec1, vec3 vec2, vec3 vec3)
 {
   glViewport(0,0,_width/2, _height);
-  _shader.setUniform("view", lookAt(vec1, vec2, vec3));
+  _transformation = lookAt(vec1, vec2, vec3);
   _shader.setUniform("view", _transformation);
 }
 

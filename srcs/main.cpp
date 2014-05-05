@@ -16,9 +16,6 @@ int		main(int ac, char **argv)
   
   if (!game.start())
     return (EXIT_FAILURE);
-  else
-    {
-      
-    }
-  return (EXIT_SUCCESS);
+  else 
+  	return (EXIT_SUCCESS);
 }
