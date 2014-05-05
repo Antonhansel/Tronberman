@@ -37,6 +37,7 @@ public:
   void 		update(gdl::Clock const &clock, gdl::Input &input);
   bool 		initialize();
   void 		draw(gdl::AShader &shader, gdl::Clock const &clock);	
+  bool    checkMove(float y, float x);  
   float		getTrans();  
   int 		convertToInt(float);
 };

@@ -52,6 +52,7 @@ public:
   bool			drawFloor();
   bool			drawMap();
   bool			drawChar();
+  bool      drawBot();
   bool			drawBackground();
   void			changeFocus(AObject *);
   void			changeFocus2(AObject *);

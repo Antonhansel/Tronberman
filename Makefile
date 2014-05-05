@@ -18,6 +18,7 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Cube.cpp \
 			srcs/Engine.cpp \
 			srcs/Map.cpp \
+			srcs/Mybot.cpp \
 			srcs/Floor.cpp \
 			srcs/Background.cpp \
 			srcs/Camera.cpp

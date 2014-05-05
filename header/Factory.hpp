@@ -13,6 +13,7 @@
 
 #include "Cube.hpp"
 #include "Char.hpp"
+#include "Mybot.hpp"
 
 template<typename T>
 T	*create()

@@ -53,12 +53,36 @@ bool	Core::initialize()
     return (false);
   if (drawChar() == false)
     return (false);
+  // if (drawBot() == false)
+  //   return (false);
   if (drawBackground() == false)
     return (false);
   _cam->setPlayer(_players);
   std::cout << "Load done!" << std::endl;
   for (size_t i = 0; i < _loading.size(); ++i)
     delete _loading[i];
+  return (true);
+}
+
+bool    Core::drawBot()
+{
+  std::pair<float, float> pos;
+  AObject                 *obj;
+
+  for (int y = (-_height + 16); y < _height; y += 15)
+    {
+      for (int x = (-_width + 16); x < _width; x += 15)
+      {
+        obj = create<Mybot>();
+        if (obj->initialize() == false)
+          return (false);
+        pos = std::make_pair((float)x, (float)y);
+        obj->setType(BOT);
+        obj->setPos(pos);
+        obj->initialize();
+        _player[_player.size() + 1] = obj;
+      }
+    }
   return (true);
 }
 
@@ -107,6 +131,7 @@ bool		Core::drawChar()
   chara->setPos(pos);
   chara->setScreen(1);
   chara->setPlayer(1);
+  chara->setMap(_objects);
   chara->translate(glm::vec3(POSX, 0, POSY));
   _player[1] = chara;
   if (_players == 2)
@@ -184,7 +209,8 @@ void	Core::draw()
   }
   for (it2 = _other.begin(); it2 != _other.end(); ++it2)
     (*it2)->draw(_shader, _clock);
-  _player[1]->draw(_shader, _clock);
+  for (int i = 1; i <= _player.size(); i++)
+    _player[i]->draw(_shader, _clock);
   if (_players == 2)
     {
       _player[2]->draw(_shader, _clock);
