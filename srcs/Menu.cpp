@@ -23,6 +23,8 @@ Menu::Menu(Camera *camera) : _camera(camera)
   _posx = 0;
   _posz = -30;
   _isLaunch = false;
+  _stopintro = false;
+  _xend = 0;
 }
 
 Menu::~Menu()
@@ -90,6 +92,8 @@ void    Menu::draw()
 {
   if (_input.getKey(SDLK_p))
     _isLaunch = true;
+  if (_input.getKey(SDLK_SPACE))
+   _stopintro = true;
  _camera->moveCameraP1(vec3(0, 10, 30), vec3(0, 0, 0), vec3(0, 1, 0));
  rotate();
   for (size_t i = 0; i < _objects.size(); ++i)
@@ -180,7 +184,6 @@ void		Menu::reset()
 float		Menu::getEquation(int i)
 {
   float		y;
-  float		y2;
   int		coef;
 
   coef = 510;
@@ -190,15 +193,33 @@ float		Menu::getEquation(int i)
 
 void		Menu::rotate()
 {
-  if (_angle < 315)
-    _angle += 0.2;
-  if (_angle > 180 && _posy < 20)
-    _posy += 0.01;
+  int   endintro;
+  int   anglemax;
+  int   ymax;
+
+  ymax = 20;
+  anglemax = 315;
+  endintro = 1;
+  if (_stopintro)
+  {
+    endintro = 100;
+    if (_xend < 12)
+    {
+      _posy += 0.2;
+      _xend += 0.2;
+    }
+  }
+  if (_angle < anglemax)
+    _angle = _angle + 0.2 * endintro;
+  if (_angle > 180 && _posy < ymax)
+    _posy = _posy + 0.01 * endintro;
+  if (_angle > anglemax)
+    _angle = anglemax;
+  if (_posy > ymax)
+    _posy = ymax;
   _posx = cos((_angle/180) * PI) * 30;
   _posz = sin((_angle/180) * PI) * 30;
-  //  _shader.setUniform("view", glm::lookAt(glm::vec3(_posx, _posy, _posz),
-  //                                      glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
-  _camera->moveCameraP1(vec3(_posx, _posy, _posz), vec3(0,0,0), vec3(0,1,0));
+  _camera->moveCameraP1(vec3(_posx + _xend, _posy, _posz - _xend/2), vec3(_xend,0,_xend), vec3(0,1,0));
 }
 
 bool		Menu::launch() const

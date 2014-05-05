@@ -68,12 +68,14 @@ private:
   BasicShader		_shader;
   std::vector<AObject*> _objects;
   bool			_isLaunch;
-  int			_width;
-  int			_height;
+  bool      _stopintro;
+  int			  _width;
+  int			  _height;
   float			_angle;
   float			_posy;
   float			_posz;
   float			_posx;
+  float     _xend;
 
 private:
   FMOD_SYSTEM 		*system;
