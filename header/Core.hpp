@@ -56,9 +56,9 @@ public:
   bool			drawBackground();
   void			changeFocus(AObject *);
   void			changeFocus2(AObject *);
-  void			intro();
   bool 			update();
-
+  void      drawAll();
+  bool      makeChar(int, int, int);
 private:
   int 			_percent;
   Camera 		*_cam;
