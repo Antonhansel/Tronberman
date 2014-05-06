@@ -14,6 +14,7 @@
 Char::Char()
 {
   _speed = 10.0f;
+  _map = NULL;
 }
 
 Char::~Char()
@@ -34,7 +35,7 @@ void	Char::setSpeed(float speed)
   _speed = speed;
 }
 
-void	Char::setMap(std::map< std::pair<float, float>, AObject *> &map)
+void	Char::setMap(std::map< std::pair<float, float>, AObject *> *map)
 {
   _map = map;
 }
@@ -71,14 +72,14 @@ if (x < 0)
   pos3 = std::make_pair((float)((int)(y + 0.4)), (float)((int)(x + 0.9)));
   pos4 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
 
-  if (_map.find(pos1) != _map.end())
-    obj1 = _map.find(pos1)->second;
-  if (_map.find(pos2) != _map.end())
-    obj2 = _map.find(pos2)->second;
-  if (_map.find(pos3) != _map.end())
-    obj3 = _map.find(pos3)->second;
-  if (_map.find(pos4) != _map.end())
-    obj4 = _map.find(pos4)->second;
+  if ((*_map).find(pos1) != (*_map).end())
+    obj1 = (*_map).find(pos1)->second;
+  if ((*_map).find(pos2) != (*_map).end())
+    obj2 = (*_map).find(pos2)->second;
+  if ((*_map).find(pos3) != (*_map).end())
+    obj3 = (*_map).find(pos3)->second;
+  if ((*_map).find(pos4) != (*_map).end())
+    obj4 = (*_map).find(pos4)->second;
 
   if (obj1 != NULL && (obj1->getType() == BLOCKD || obj1->getType() == BORDER || obj1->getType() == BOT))
     error = false;
@@ -109,25 +110,21 @@ void Char::update(gdl::Clock const &clock, gdl::Input &input)
   {
     _posx += 1 * _trans;
     translate(glm::vec3(0, 0, 1) * _trans);
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
   }
   if ((input.getKey(SDLK_DOWN) || input.getKey(SDLK_s)) && checkMove(_posy, _posx + (-1 * _trans)) == true)
   {
     _posx += -1 * _trans;
     translate(glm::vec3(0, 0, -1) * _trans);
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
   }
   if ((input.getKey(SDLK_LEFT) || input.getKey(SDLK_q)) && checkMove(_posy + (1 * _trans), _posx) == true)
   {
     _posy += 1 * _trans;
     translate(glm::vec3(1, 0, 0) * _trans);
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
   }
   if ((input.getKey(SDLK_RIGHT) || input.getKey(SDLK_d)) && checkMove(_posy + (-1 * _trans), _posx) == true)
   {
     _posy += -1 * _trans;
-    translate(glm::vec3(-1, 0, 0) * _trans);
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+     translate(glm::vec3(-1, 0, 0) * _trans);
   }
   _model.setCurrentAnim("Take 002");
 }

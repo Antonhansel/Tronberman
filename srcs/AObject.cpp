@@ -88,7 +88,7 @@ void	AObject::setSpeed(float speed)
   _speed = speed;
 }
 
-void	AObject::setMap(std::map< std::pair<float, float>, AObject *> &map)
+void	AObject::setMap(std::map< std::pair<float, float>, AObject *> *map)
 {
   _map = map;
 }

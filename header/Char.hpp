@@ -30,7 +30,7 @@ public:
   void		setPlayer(int);
   void		setScreen(int);
   void		setSpeed(float);
-  void		setMap(std::map< std::pair<float, float>, AObject *>&);
+  void		setMap(std::map< std::pair<float, float>, AObject *> *);
   void    setBombs(std::map< std::pair<float, float>, AObject* >&);
   const std::map< std::pair<float, float>, AObject* >&  getBombs();
 

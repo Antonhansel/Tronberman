@@ -131,7 +131,7 @@ bool		Core::drawChar()
   chara->setPos(pos);
   chara->setScreen(1);
   chara->setPlayer(1);
-  chara->setMap(_objects);
+  chara->setMap(&_objects);
   chara->setBombs(_bombs);
   chara->translate(glm::vec3(POSX, 0, POSY));
   _player[1] = chara;

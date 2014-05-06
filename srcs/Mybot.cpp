@@ -2,7 +2,7 @@
 
 Mybot::Mybot()
 {
-
+  _map = NULL;
 }
 
 Mybot::~Mybot()
@@ -32,14 +32,14 @@ if (x < 0)
   pos3 = std::make_pair((float)((int)(y)), (float)((int)(x + 0.9)));
   pos4 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
 
-  if (_map.find(pos1) != _map.end())
-    obj1 = _map.find(pos1)->second;
-  if (_map.find(pos2) != _map.end())
-    obj2 = _map.find(pos2)->second;
-  if (_map.find(pos3) != _map.end())
-    obj3 = _map.find(pos3)->second;
-  if (_map.find(pos4) != _map.end())
-    obj4 = _map.find(pos4)->second;
+  if ((*_map).find(pos1) != (*_map).end())
+    obj1 = (*_map).find(pos1)->second;
+  if ((*_map).find(pos2) != (*_map).end())
+    obj2 = (*_map).find(pos2)->second;
+  if ((*_map).find(pos3) != (*_map).end())
+    obj3 = (*_map).find(pos3)->second;
+  if ((*_map).find(pos4) != (*_map).end())
+    obj4 = (*_map).find(pos4)->second;
 
   if (obj1 != NULL && (obj1->getType() == BLOCKD || obj1->getType() == BORDER))
     error = false;
@@ -56,27 +56,27 @@ if (x < 0)
 
 void Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
-      if (input.getKey(SDLK_UP) && checkMove(_pos.first, _pos.second + (1 * _trans)) == true)
-      {
-          _pos.second += 1 * _trans;
-          translate(glm::vec3(0, 0, 1) * _trans);
-      }
-      if (input.getKey(SDLK_DOWN) && checkMove(_pos.first, _pos.second + (-1 * _trans)) == true)
-      {
-         _pos.second += -1 * _trans;
-         translate(glm::vec3(0, 0, -1) * _trans);
-      }
-      if (input.getKey(SDLK_LEFT) && checkMove(_pos.first + (1 * _trans), _pos.second) == true)
-      {
-        _pos.first += 1 * _trans;
-        translate(glm::vec3(1, 0, 0) * _trans);
-      }
-      if (input.getKey(SDLK_RIGHT) && checkMove(_pos.first + (-1 * _trans), _pos.second) == true)
-      {
-        _pos.first += -1 * _trans;
-        translate(glm::vec3(-1, 0, 0) * _trans); 
-      }
+  _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  if (input.getKey(SDLK_UP) && checkMove(_pos.first, _pos.second + (1 * _trans)) == true)
+  {
+      _pos.second += 1 * _trans;
+      translate(glm::vec3(0, 0, 1) * _trans);
+  }
+  if (input.getKey(SDLK_DOWN) && checkMove(_pos.first, _pos.second + (-1 * _trans)) == true)
+  {
+     _pos.second += -1 * _trans;
+     translate(glm::vec3(0, 0, -1) * _trans);
+  }
+  if (input.getKey(SDLK_LEFT) && checkMove(_pos.first + (1 * _trans), _pos.second) == true)
+  {
+    _pos.first += 1 * _trans;
+    translate(glm::vec3(1, 0, 0) * _trans);
+  }
+  if (input.getKey(SDLK_RIGHT) && checkMove(_pos.first + (-1 * _trans), _pos.second) == true)
+  {
+    _pos.first += -1 * _trans;
+    translate(glm::vec3(-1, 0, 0) * _trans); 
+  }
 }
 
 void Mybot::draw(gdl::AShader &shader, gdl::Clock const &clock)
