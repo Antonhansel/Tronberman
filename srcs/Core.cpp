@@ -17,7 +17,7 @@ Core::Core(Camera *cam)
   _height = 50;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 1;
+  _players = 2;
   _cam->setPlayer(_players);
   _posx = POSX;
   _posy = POSY;
@@ -144,8 +144,8 @@ void	Core::changeFocus2(AObject *cur_char)
     _posy2 += cur_char->getTrans();
   if (_input.getKey(SDLK_d))
     _posy2 -= cur_char->getTrans();
-  _cam->moveCameraP2(glm::vec3(_posy2, 13, -10 + _posx2), 
-		     glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0));
+  _cam->moveCamera(glm::vec3(_posy2, 13, -10 + _posx2), 
+		     glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0), 2);
 }
 
 void	Core::changeFocus(AObject *cur_char)
@@ -159,13 +159,28 @@ void	Core::changeFocus(AObject *cur_char)
     _posy += cur_char->getTrans();
   if (_input.getKey(SDLK_RIGHT))
     _posy -= cur_char->getTrans();
-  _cam->moveCameraP1(glm::vec3(_posy, 13, -10 + _posx), 
-		     glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0));
+  _cam->moveCamera(glm::vec3(_posy, 13, -10 + _posx), 
+		     glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0), 1);
 }
+
+// void  Core::moveUp(AObject *cur_char)
+// {
+//   cur_char->update(_clock, _input);
+//   _posx += cur_char->getTrans();
+// }
+
+// void  Core::moveDown(AObject *cur_char)
+// {}
+
+// void  Core::moveLeft(AObject *cur_char)
+// {}
+
+// void  Core::moveRight(AObject *cur_char)
+// {}
 
 bool	Core::update()
 {
-  std::map< std::pair<float, float>, AObject * >::iterator	it;
+  //std::map< std::pair<float, float>, AObject * >::iterator	it;
   std::vector<AObject*>::iterator it1;
 
   _clock = _cam->getClock();
@@ -182,7 +197,6 @@ bool	Core::update()
 void  Core::drawAll()
 {
   std::map< std::pair<float, float>, AObject * >::iterator it;
-  std::map< std::pair<float, float>, AObject * >::iterator  it3;
   std::vector<AObject*>::iterator it2;
 
   for (it = _objects.begin(); it != _objects.end(); ++it)

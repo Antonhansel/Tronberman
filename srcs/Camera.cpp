@@ -55,31 +55,28 @@ bool 	Camera::flushContext()
   _context.flush();
 }
 
-bool 	Camera::moveCameraP1(vec3 vec1, vec3 vec2, vec3 vec3)
+bool 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
 {
   if (_players == 1)
-    {
-      glViewport(0, 0, _width, _height);
-      _transformation = lookAt(vec1, vec2, vec3);
-      _shader.setUniform("view", _transformation);
-    }
+  {
+    glViewport(0, 0, _width, _height);
+  }
   else
-    {
+  {
+    if (screen == 1)
       glViewport(_width/2, 0, _width/2, _height);
-      _transformation = lookAt(vec1, vec2, vec3);
-      _shader.setUniform("view", _transformation);
+    else
+    {
+      glViewport(0,0,_width/2, _height);
+      return (true);
     }
+  }
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  _shader.bind();
-}
-
-bool 	Camera::moveCameraP2(vec3 vec1, vec3 vec2, vec3 vec3)
-{
-  glViewport(0,0,_width/2, _height);
   _transformation = lookAt(vec1, vec2, vec3);
   _shader.setUniform("view", _transformation);
+  _shader.bind();
 }
-
+  
 BasicShader &Camera::getShader()
 {
   return (_shader);

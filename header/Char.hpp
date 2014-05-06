@@ -20,12 +20,12 @@
 class Char : public AObject
 {
 private:
-  float			_posx;
-  float			_posy;
+  float			      _posx;
+  float			      _posy;
   gdl::Texture		_texture;
   gdl::Geometry		_geometry;
-  gdl::Model		_model;
-  int       _anim;
+  gdl::Model		  _model;
+  int             _anim;
 
 public:
   void		setPlayer(int);

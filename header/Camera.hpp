@@ -39,8 +39,7 @@ public:
   bool 			initScene();
   bool 			flushContext();
   void 			update();
-  bool 			moveCameraP1(vec3, vec3, vec3);
-  bool 			moveCameraP2(vec3, vec3, vec3);
+  bool 			moveCamera(vec3, vec3, vec3, int);
   Clock 		&getClock();
   Input 		&getInput();
 private:

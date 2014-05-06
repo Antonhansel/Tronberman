@@ -145,7 +145,7 @@ void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)
   glPushMatrix();
   _model.setCurrentAnim(_anim);
   // glTranslatef(this->position_->z, 0.0f, this->position_->x);
-  // glRotatef(this->rotation_->y, 0.0f, 1.0f, 0.0f);
+  //glRotatef(_rotation.y, 0.0f, 0.0f, 10.0f);
   _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
   glPopMatrix();
 }
