@@ -104,46 +104,31 @@ void  Char::checkBombs()
 
 void Char::update(gdl::Clock const &clock, gdl::Input &input)
 {
-  _trans = static_cast<float>(clock.getElapsed()) * _speed;
-  if (_screen == 1)
-    {
-      if (input.getKey(SDLK_UP) && checkMove(_posy, _posx + (1 * _trans)) == true)
-      {
-          _posx += 1 * _trans;
-          translate(glm::vec3(0, 0, 1) * _trans);
-      }
-      if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * _trans)) == true)
-      {
-         _posx += -1 * _trans;
-         translate(glm::vec3(0, 0, -1) * _trans);
-      }
-      if (input.getKey(SDLK_LEFT) && checkMove(_posy + (1 * _trans), _posx) == true)
-      {
-        _posy += 1 * _trans;
-        translate(glm::vec3(1, 0, 0) * _trans);
-      }
-      if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * _trans), _posx) == true)
-      {
-        _posy += -1 * _trans;
-        translate(glm::vec3(-1, 0, 0) * _trans); 
-      }
-      if (input.getKey(SDLK_SPACE) && checkMove(_posy, _posx + (1 * _trans)) == true)
-      {
-        _posx += 1 * _trans;
-        checkBombs();
-      }        
-    }
-  else
-    {
-      if (input.getKey(SDLK_z))
-  translate(glm::vec3(0, 0, 1) * _trans);
-      if (input.getKey(SDLK_s))
-      translate(glm::vec3(0, 0, -1) * _trans);
-      if (input.getKey(SDLK_q))
-  translate(glm::vec3(1, 0, 0) * _trans);
-      if (input.getKey(SDLK_d))
-  translate(glm::vec3(-1, 0, 0) * _trans);    
-    }
+ _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  if ((input.getKey(SDLK_UP) || input.getKey(SDLK_z)) && checkMove(_posy, _posx + (1 * _trans)) == true)
+  {
+    _posx += 1 * _trans;
+    translate(glm::vec3(0, 0, 1) * _trans);
+    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  }
+  if ((input.getKey(SDLK_DOWN) || input.getKey(SDLK_s)) && checkMove(_posy, _posx + (-1 * _trans)) == true)
+  {
+    _posx += -1 * _trans;
+    translate(glm::vec3(0, 0, -1) * _trans);
+    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  }
+  if ((input.getKey(SDLK_LEFT) || input.getKey(SDLK_q)) && checkMove(_posy + (1 * _trans), _posx) == true)
+  {
+    _posy += 1 * _trans;
+    translate(glm::vec3(1, 0, 0) * _trans);
+    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  }
+  if ((input.getKey(SDLK_RIGHT) || input.getKey(SDLK_d)) && checkMove(_posy + (-1 * _trans), _posx) == true)
+  {
+    _posy += -1 * _trans;
+    translate(glm::vec3(-1, 0, 0) * _trans);
+    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+  }
   _model.setCurrentAnim("Take 002");
 }
 

@@ -13,10 +13,10 @@ private:
 public:
 	Mybot();
 	~Mybot();
-	void update(gdl::Clock const &clock, gdl::Input &input);
-	bool initialize();
-	void draw(gdl::AShader &shader, gdl::Clock const &clock);
-	void	setMap(std::map< std::pair<float, float>, AObject * > &);
+	void	update(gdl::Clock const &clock, gdl::Input &input);
+	bool	initialize();
+	void	draw(gdl::AShader &shader, gdl::Clock const &clock);
+	bool	checkMove(float, float);
 };
 
 #endif /* !MYBOT_HPP */
