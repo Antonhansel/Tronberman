@@ -15,6 +15,7 @@
 # include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
+# include "Bombs.hpp"
 
 class Char : public AObject
 {
@@ -30,7 +31,9 @@ public:
   void		setScreen(int);
   void		setSpeed(float);
   void		setMap(std::map< std::pair<float, float>, AObject *>&);
-  
+  void    setBombs(std::map< std::pair<float, float>, AObject* >&);
+  const std::map< std::pair<float, float>, AObject* >&  getBombs();
+
 public:
   Char();
   ~Char();
@@ -40,6 +43,9 @@ public:
   bool    checkMove(float y, float x);  
   float		getTrans();  
   int 		convertToInt(float);
+
+private:
+  void  checkBombs();
 };
 
 #endif /*!_CHAR_HPP_*/

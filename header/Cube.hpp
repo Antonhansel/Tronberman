@@ -25,7 +25,7 @@ public:
 	~Cube();
 	void update(gdl::Clock const &clock, gdl::Input &input);
 	bool initialize();
-	void draw(gdl::AShader &shader, gdl::Clock const &clock);	
+	void draw(gdl::AShader &shader, gdl::Clock const &clock);
 };
 
 #endif /*!CUBE_HPP_*/

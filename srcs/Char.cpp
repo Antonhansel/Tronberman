@@ -39,6 +39,11 @@ void	Char::setMap(std::map< std::pair<float, float>, AObject *> &map)
   _map = map;
 }
 
+void  Char::setBombs(std::map< std::pair<float, float>, AObject* > &bombs)
+{
+  _bombs = bombs;
+}
+
 float	Char::getTrans()
 {
   return (_trans);
@@ -88,6 +93,15 @@ if (x < 0)
   return (error);
 }
 
+void  Char::checkBombs()
+{
+  std::pair<float, float> bpos(_posy, _posx);
+        //pos = std::make_pair(_posy, _posx);
+  _bombs[bpos] = new Bombs();
+  _bombs[bpos]->translate(glm::vec3(_posy, 0, _posx + 1) * _trans);
+  //std::cout << "posY : " << _bombs[bpos]->_posy << " && posX : " << _bombs[bpos]->_posx << std::endl;
+}
+
 void Char::update(gdl::Clock const &clock, gdl::Input &input)
 {
   _trans = static_cast<float>(clock.getElapsed()) * _speed;
@@ -113,6 +127,11 @@ void Char::update(gdl::Clock const &clock, gdl::Input &input)
         _posy += -1 * _trans;
         translate(glm::vec3(-1, 0, 0) * _trans); 
       }
+      if (input.getKey(SDLK_SPACE) && checkMove(_posy, _posx + (1 * _trans)) == true)
+      {
+        _posx += 1 * _trans;
+        checkBombs();
+      }        
     }
   else
     {

@@ -48,6 +48,8 @@ public:
   void			setScreen(int);
   void			setSpeed(float);
   void			setMap(std::map< std::pair<float, float>, AObject *>&);
+  void      setBombs(std::map< std::pair<float, float>, AObject* >&);
+  const std::map< std::pair<float, float>, AObject* >&  getBombs();
 
 protected:
   type		_type;
@@ -59,6 +61,7 @@ protected:
   glm::vec3	_rotation;
   glm::vec3	_scale;
   std::map< std::pair<float, float>, AObject *>	_map;
+  std::map< std::pair<float, float>, AObject* > _bombs;
   float		_speed;
 };
 

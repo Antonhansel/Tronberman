@@ -92,3 +92,14 @@ void	AObject::setMap(std::map< std::pair<float, float>, AObject *> &map)
 {
   _map = map;
 }
+
+void  AObject::setBombs(std::map< std::pair<float, float>, AObject* > &bombs)
+{
+  _bombs = bombs;
+}
+
+const std::map< std::pair<float, float>, AObject* >&  AObject::getBombs()
+{
+  return (_bombs);
+}
+

@@ -132,6 +132,7 @@ bool		Core::drawChar()
   chara->setScreen(1);
   chara->setPlayer(1);
   chara->setMap(_objects);
+  chara->setBombs(_bombs);
   chara->translate(glm::vec3(POSX, 0, POSY));
   _player[1] = chara;
   if (_players == 2)
@@ -198,6 +199,7 @@ bool	Core::update()
 void	Core::draw()
 {	
   std::map< std::pair<float, float>, AObject * >::iterator	it;
+  std::map< std::pair<float, float>, AObject * >::iterator  it3;
   std::vector<AObject*>::iterator it2;
 
   changeFocus(_player[1]);
@@ -209,6 +211,17 @@ void	Core::draw()
   }
   for (it2 = _other.begin(); it2 != _other.end(); ++it2)
     (*it2)->draw(_shader, _clock);
+  //std::cout << "_bombs.size() = " << _bombs.size() << std::endl;
+  _bombs = _player[1]->getBombs();
+  for (it3 = _bombs.begin(); it3 != _bombs.end(); ++it3)
+  {
+    if (((*it3).first.first - _posy < 30) && ((*it3).first.first - _posy > -30)
+        && ((*it3).first.second - _posx < 25) && ((*it3).first.second - _posx > -15))
+    {
+        (*it3).second->draw(_shader, _clock);
+        //std::cout << "Drawing bomb\n";      
+    }
+  }
   for (int i = 1; i <= _player.size(); i++)
     _player[i]->draw(_shader, _clock);
   if (_players == 2)

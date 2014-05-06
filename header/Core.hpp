@@ -74,6 +74,7 @@ private:
   gdl::Input		_input;
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
+  std::map< std::pair<float, float>, AObject* > _bombs;
   std::map<int, AObject*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
