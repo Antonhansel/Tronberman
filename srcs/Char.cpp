@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue Apr  29 21:11:55 2014 Antonin Ribeaud
-// Last update Sun May  4 02:55:08 2014 Mehdi Chouag
+// Last update Wed May  7 19:13:50 2014 ribeaud antonin
 */
 
 #include "Char.hpp"
@@ -68,9 +68,9 @@ if (y < 0)
 if (x < 0)
   x -= 1;
 
-  pos1 = std::make_pair((float)((int)(y + 0.4)), (float)((int)(x)));
+  pos1 = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
   pos2 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
-  pos3 = std::make_pair((float)((int)(y + 0.4)), (float)((int)(x + 0.9)));
+  pos3 = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
   pos4 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
 
   if ((*_map).find(pos1) != (*_map).end())
@@ -133,34 +133,28 @@ void Char::update(gdl::Clock const &clock, gdl::Input &input)
     _posy += -1 * _trans;
      translate(glm::vec3(-1, 0, 0) * _trans);
   }
-}
+  }
 else
-{
-  if (input.getKey(SDLK_z) && checkMove(_posy, _posx + (1 * _trans)) == true)
   {
-    _anim = 2;
-    _posx += 1 * _trans;
-    translate(glm::vec3(0, 0, 1) * _trans);
-  }
-  if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
-  {
+    if (input.getKey(SDLK_z) && checkMove(_posy, _posx + (1 * _trans)) == true)
+    {
       _anim = 2;
-    _posx += -1 * _trans;
-    translate(glm::vec3(0, 0, -1) * _trans);
+      _posx += 1 * _trans;
+      translate(glm::vec3(0, 0, 1) * _trans);
+    }
+    if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
+    {
+        _anim = 2;
+      _posx += -1 * _trans;
+      translate(glm::vec3(0, 0, -1) * _trans);
+    }
+    if (input.getKey(SDLK_q) && checkMove(_posy + (1 * _trans), _posx) == true)
+    {
+        _anim = 2;
+      _posy += 1 * _trans;
+      translate(glm::vec3(1, 0, 0) * _trans);
+    }
   }
-  if (input.getKey(SDLK_q) && checkMove(_posy + (1 * _trans), _posx) == true)
-  {
-      _anim = 2;
-    _posy += 1 * _trans;
-    translate(glm::vec3(1, 0, 0) * _trans);
-  }
-  if (input.getKey(SDLK_d) && checkMove(_posy + (-1 * _trans), _posx) == true)
-  {
-      _anim = 2;
-    _posy += -1 * _trans;
-     translate(glm::vec3(-1, 0, 0) * _trans);
-  }
-}
   if (_anim == 2)
     _anim = 1;
   else
