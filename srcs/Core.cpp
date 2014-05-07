@@ -172,9 +172,6 @@ void  Core::changeFocus(AObject *cur_char, int screen)
 {
   std::pair<float, float> pos;
   pos = cur_char->getPos();
-  std::cout << "SWITCHING CAMERA OF Char" << std::endl;
-  std::cout << pos.first << std::endl;
-  std::cout << pos.second << std::endl;
   _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second), 
     glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
 }
