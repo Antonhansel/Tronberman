@@ -39,7 +39,7 @@
 #define POSY 0
 
 #define POSX1 1
-#define POSY1 1
+#define POSY1 0
 
 
 class Core : public gdl::Game

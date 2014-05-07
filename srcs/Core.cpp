@@ -17,7 +17,7 @@ Core::Core(Camera *cam)
   _height = 50;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 2;
+  _players = 1;
   _cam->setPlayer(_players);
   _posx = POSX;
   _posy = POSY;
@@ -53,8 +53,8 @@ bool	Core::initialize()
     return (false);
   if (drawChar() == false)
     return (false);
-  // if (drawBot() == false)
-  //   return (false);
+  if (drawBot() == false)
+    return (false);
   if (drawBackground() == false)
     return (false);
   _cam->setPlayer(_players);
@@ -80,6 +80,7 @@ bool    Core::drawBot()
         obj->initialize();
         obj->setType(BOT);
         obj->setPos(pos);
+        obj->setMap(&_objects);
         _player[_player.size() + 1] = obj;
       }
     }
@@ -191,6 +192,8 @@ bool	Core::update()
   //   (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
+  for (int i = (_players + 1); i <= _player.size(); i++)
+    _player[i]->update(_clock, _input);
   return (true);
 }
 

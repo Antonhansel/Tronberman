@@ -48,31 +48,63 @@ if (x < 0)
   if (obj3 != NULL && (obj3->getType() == BLOCKD || obj3->getType() == BORDER))
     error = false;
   if (obj4 != NULL && (obj4->getType() == BLOCKD || obj4->getType() == BORDER))
-      error = false;
-  if (error == false)
-    _trans = 0;
+    error = false;
   return (error);
+}
+
+void   Mybot::randomNbr()
+{
+  int   i;
+
+  i = rand() % 100;
+  if (i < 20)
+    _up++;
+  if (i >= 20 && i < 40)
+    _left++;
+  if (i >= 40 && i < 60)
+    _right++;
+  if (i >= 60 && i < 80)
+    _down++;
+
+  if (_up > _down && _up > _left && _up > _right)
+    _direction = UP;
+  else if (_left > _down && _left > _up && _left > _right)
+    _direction = LEFT;
+  else if (_down > _left && _down > _up && _down > _right)
+    _direction = DOWN;
+  else if (_right > _down && _right > _up && _right > _left)
+    _direction = RIGHT;
+
+  if (_down > 10 || _right > 10 || _up > 10 || _left > 10)
+  {
+    _down = 0;
+    _left = 0;
+    _up = 0;
+    _right = 0;
+  }
 }
 
 void Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-  _trans = static_cast<float>(clock.getElapsed()) * _speed;
-  if (input.getKey(SDLK_UP) && checkMove(_pos.first, _pos.second + (1 * _trans)) == true)
+  _trans = static_cast<float>(clock.getElapsed()) * _speed / 2;
+
+  randomNbr();
+  if (_direction == UP && checkMove(_pos.first, _pos.second + (1 * _trans)) == true)
   {
       _pos.second += 1 * _trans;
       translate(glm::vec3(0, 0, 1) * _trans);
   }
-  if (input.getKey(SDLK_DOWN) && checkMove(_pos.first, _pos.second + (-1 * _trans)) == true)
-  {
-     _pos.second += -1 * _trans;
-     translate(glm::vec3(0, 0, -1) * _trans);
-  }
-  if (input.getKey(SDLK_LEFT) && checkMove(_pos.first + (1 * _trans), _pos.second) == true)
+  else if (_direction == LEFT && checkMove(_pos.first + (1 * _trans), _pos.second) == true)
   {
     _pos.first += 1 * _trans;
     translate(glm::vec3(1, 0, 0) * _trans);
   }
-  if (input.getKey(SDLK_RIGHT) && checkMove(_pos.first + (-1 * _trans), _pos.second) == true)
+  else if (_direction == DOWN && checkMove(_pos.first, _pos.second + (-1 * _trans)) == true)
+  {
+     _pos.second += -1 * _trans;
+     translate(glm::vec3(0, 0, -1) * _trans);
+  }
+  else if (_direction == RIGHT && checkMove(_pos.first + (-1 * _trans), _pos.second) == true)
   {
     _pos.first += -1 * _trans;
     translate(glm::vec3(-1, 0, 0) * _trans); 
