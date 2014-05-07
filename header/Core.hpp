@@ -39,7 +39,7 @@
 #define POSY 0
 
 #define POSX1 1
-#define POSY1 1
+#define POSY1 0
 
 
 class Core : public gdl::Game
@@ -56,9 +56,9 @@ public:
   bool			drawBackground();
   void			changeFocus(AObject *);
   void			changeFocus2(AObject *);
-  void			intro();
   bool 			update();
-
+  void      drawAll();
+  bool      makeChar(int, int, int);
 private:
   int 			_percent;
   Camera 		*_cam;
@@ -74,6 +74,7 @@ private:
   gdl::Input		_input;
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
+  std::map< std::pair<float, float>, AObject* > _bombs;
   std::map<int, AObject*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;

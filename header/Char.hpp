@@ -15,22 +15,26 @@
 # include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
+# include "Bombs.hpp"
 
 class Char : public AObject
 {
 private:
-  float			_posx;
-  float			_posy;
+  float			      _posx;
+  float			      _posy;
   gdl::Texture		_texture;
   gdl::Geometry		_geometry;
-  gdl::Model		_model;
+  gdl::Model		  _model;
+  int             _anim;
 
 public:
   void		setPlayer(int);
   void		setScreen(int);
   void		setSpeed(float);
-  void		setMap(std::map< std::pair<float, float>, AObject *>&);
-  
+  void		setMap(std::map< std::pair<float, float>, AObject *> *);
+  void    setBombs(std::map< std::pair<float, float>, AObject* >&);
+  const std::map< std::pair<float, float>, AObject* >&  getBombs();
+
 public:
   Char();
   ~Char();
@@ -40,6 +44,9 @@ public:
   bool    checkMove(float y, float x);  
   float		getTrans();  
   int 		convertToInt(float);
+
+private:
+  void  checkBombs();
 };
 
 #endif /*!_CHAR_HPP_*/

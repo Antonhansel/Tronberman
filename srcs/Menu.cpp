@@ -135,7 +135,7 @@ void    Menu::rotate()
     _posy = ymax;
   _posx = cos((_angle/180) * PI) * 30;
   _posz = sin((_angle/180) * PI) * 30;
-  _camera->moveCameraP1(vec3(_posx + _xend, _posy, _posz - _xend/2), vec3(_xend,0,_xend), vec3(0,1,0));
+  _camera->moveCamera(vec3(_posx + _xend, _posy, _posz - _xend/2), vec3(_xend,0,_xend), vec3(0,1,0), 1);
 }
 
 bool Menu::genSpiral()
