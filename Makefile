@@ -1,9 +1,9 @@
 ##
 ## Makefile for Makefile in /home/apollo/rendu/bestbomberman
-## 
+##
 ## Made by ribeaud antonin
 ## Login   <ribeau_a@epitech.net>
-## 
+##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
 ## Last update Sun May  4 02:54:55 2014 Mehdi Chouag
 ##
@@ -21,10 +21,12 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Mybot.cpp \
 			srcs/Floor.cpp \
 			srcs/Background.cpp \
+			srcs/Networking.cpp \
 			srcs/Camera.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
+CXX 		= clang++
 CXXFLAGS	+=	-I ./header -I ./bomberlib -g3
 
 LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
@@ -32,7 +34,7 @@ LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex6
 all: $(NAME)
 
 $(NAME):	$(OBJECTS)
-		g++ $(OBJECTS) -o $(NAME) $(LDFLAGS) -g
+		$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS) -g
 
 clean:
 	rm -f $(OBJECTS)
