@@ -107,34 +107,66 @@ void  Char::checkBombs()
 void Char::update(gdl::Clock const &clock, gdl::Input &input)
 {
  _trans = static_cast<float>(clock.getElapsed()) * _speed;
-  if ((input.getKey(SDLK_UP) || input.getKey(SDLK_z)) && checkMove(_posy, _posx + (1 * _trans)) == true)
+ if (_players == 1)
+ {
+  if (input.getKey(SDLK_UP) && checkMove(_posy, _posx + (1 * _trans)) == true)
   {
-      _anim = 2;
+    _anim = 2;
     _posx += 1 * _trans;
     translate(glm::vec3(0, 0, 1) * _trans);
   }
-  if ((input.getKey(SDLK_DOWN) || input.getKey(SDLK_s)) && checkMove(_posy, _posx + (-1 * _trans)) == true)
+  if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * _trans)) == true)
   {
       _anim = 2;
     _posx += -1 * _trans;
     translate(glm::vec3(0, 0, -1) * _trans);
   }
-  if ((input.getKey(SDLK_LEFT) || input.getKey(SDLK_q)) && checkMove(_posy + (1 * _trans), _posx) == true)
+  if (input.getKey(SDLK_LEFT) && checkMove(_posy + (1 * _trans), _posx) == true)
   {
       _anim = 2;
     _posy += 1 * _trans;
     translate(glm::vec3(1, 0, 0) * _trans);
   }
-  if ((input.getKey(SDLK_RIGHT) || input.getKey(SDLK_d)) && checkMove(_posy + (-1 * _trans), _posx) == true)
+  if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * _trans), _posx) == true)
   {
       _anim = 2;
     _posy += -1 * _trans;
      translate(glm::vec3(-1, 0, 0) * _trans);
   }
+}
+else
+{
+  if (input.getKey(SDLK_z) && checkMove(_posy, _posx + (1 * _trans)) == true)
+  {
+    _anim = 2;
+    _posx += 1 * _trans;
+    translate(glm::vec3(0, 0, 1) * _trans);
+  }
+  if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
+  {
+      _anim = 2;
+    _posx += -1 * _trans;
+    translate(glm::vec3(0, 0, -1) * _trans);
+  }
+  if (input.getKey(SDLK_q) && checkMove(_posy + (1 * _trans), _posx) == true)
+  {
+      _anim = 2;
+    _posy += 1 * _trans;
+    translate(glm::vec3(1, 0, 0) * _trans);
+  }
+  if (input.getKey(SDLK_d) && checkMove(_posy + (-1 * _trans), _posx) == true)
+  {
+      _anim = 2;
+    _posy += -1 * _trans;
+     translate(glm::vec3(-1, 0, 0) * _trans);
+  }
+}
   if (_anim == 2)
     _anim = 1;
   else
     _anim = 0;
+  _pos.first = _posy;
+  _pos.second = _posx;
 }
 
 void Char::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -157,3 +189,66 @@ bool	Char::initialize()
   scale(glm::vec3(1,2,1));
   return (true);
 }
+
+//   inputmap1[SDLK_UP] = &Core::moveUp;
+//   inputmap1[SDLK_DOWN] = &Core::moveDown;
+//   inputmap1[SDLK_LEFT] = &Core::moveLeft;
+//   inputmap1[SDLK_RIGHT] = &Core::moveUp;
+//   inputmap2[SDLK_z] = &Core::moveUp;
+//   inputmap2[SDLK_s] = &Core::moveDown;
+//   inputmap2[SDLK_q] = &Core::moveLeft;
+//   inputmap2[SDLK_d] = &Core::moveRight;
+// }
+
+// void  Core::changeFocus2(AObject *cur_char)
+// {
+//   cur_char->update(_clock, _input);
+//   if (_input.getKey(SDLK_z))
+//     _posx2 += cur_char->getTrans();
+//   if (_input.getKey(SDLK_s))
+//     _posx2 -= cur_char->getTrans();
+//   if (_input.getKey(SDLK_q))
+//     _posy2 += cur_char->getTrans();
+//   if (_input.getKey(SDLK_d))
+//     _posy2 -= cur_char->getTrans();
+//   _cam->moveCamera(glm::vec3(_posy2, 13, -10 + _posx2), 
+//          glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0), 2);
+// }
+
+// void  Core::changeFocus(AObject *cur_char)
+// {
+  
+// }
+
+// void  Core::moveUp(AObject *cur_char, int &posx, int &posy, int screen)
+// {
+//   cur_char->update(_clock, _input);
+//   posx += cur_char->getTrans();
+//   _cam->moveCamera(glm::vec3(posy, 13, -10 + posx), 
+//          glm::vec3(posy, 0, posx), glm::vec3(0, 1, 0), screen);
+// }
+
+// void  Core::moveDown(AObject *cur_char, int &posx, int &posy, int screen)
+// {
+//   cur_char->update(_clock, _input);
+//   posx -= cur_char->getTrans();
+//   _cam->moveCamera(glm::vec3(posy, 13, -10 + posx), 
+//          glm::vec3(posy, 0, posx), glm::vec3(0, 1, 0), screen);
+// }
+
+// void  Core::moveLeft(AObject *cur_char, int &posx, int &posy, int screen)
+// {
+//   cur_char->update(_clock, _input);
+//   posy += cur_char->getTrans();
+//   _cam->moveCamera(glm::vec3(posy, 13, -10 + posx), 
+//          glm::vec3(posy, 0, posx), glm::vec3(0, 1, 0), screen);
+// }
+
+// void  Core::moveRight(AObject *cur_char, int &posx, int &posy, int screen)
+// {
+//   cur_char->update(_clock, _input);
+//   posy -= cur_char->getTrans();
+//   _cam->moveCamera(glm::vec3(posy, 13, -10 + posx), 
+//          glm::vec3(posy, 0, posx), glm::vec3(0, 1, 0), screen);
+// }
+

@@ -18,8 +18,7 @@ Camera::Camera(const int width, const int height)
 }
 
 Camera::~Camera()
-{
-}
+{}
 
 void 	Camera::setPlayer(int players)
 {
@@ -27,7 +26,7 @@ void 	Camera::setPlayer(int players)
   if (_players == 1)
     _projection = perspective(60.0f, (float)_width / (float)_height, 0.1f, 100.0f);
   else
-    _projection = perspective(60.0f, ((float)_width / 2.0f) / ((float)_height / 2.0f), 0.5f, 100.0f);
+    _projection = perspective(40.0f, (float)_width / (float)_height, 0.1f, 100.0f);
 }
 
 bool	Camera::initScene()
@@ -47,7 +46,7 @@ bool	Camera::initScene()
   _shader.bind();
   _shader.setUniform("view", _transformation);
   _shader.setUniform("projection", _projection);
-  return (true);	
+  return (true);
 }
 
 bool 	Camera::flushContext()
@@ -66,12 +65,10 @@ bool 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
     if (screen == 1)
       glViewport(_width/2, 0, _width/2, _height);
     else
-    {
       glViewport(0,0,_width/2, _height);
-      return (true);
-    }
   }
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  if (_players == 1 || (_players == 2 && screen == 1))
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _transformation = lookAt(vec1, vec2, vec3);
   _shader.setUniform("view", _transformation);
   _shader.bind();

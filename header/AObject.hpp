@@ -52,6 +52,8 @@ public:
   const std::map< std::pair<float, float>, AObject* >&  getBombs();
 
 protected:
+  float   _posx;
+  float   _posy;
   type		_type;
   float		_trans;
   int 			_players;
