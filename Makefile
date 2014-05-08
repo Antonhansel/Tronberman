@@ -28,19 +28,33 @@ SOURCES		=	srcs/main.cpp \
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXX 		= g++
-CXXFLAGS	+=	-I ./header -I ./bomberlib -g3
+CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
 
 LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
 all: $(NAME)
+	@echo -e "\033[34m$(NAME) Up to date !\033[0m"
 
 $(NAME):	$(OBJECTS)
-		$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS) -g
+	@echo -e -n "\033[34mLinking :" $(NAME) "\033[0m"
+	@$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS)
+	@echo -e "\033[32m"[OK]"\033[0m"
+
+%.o: %.cpp
+	@echo -e "\033[34mCompile :" $< "\033[0m"
+	@$(CXX) $(CXXFLAGS) -o $@ -c $<
+	@echo -e "\033[32m"[OK]"\033[0m"
 
 clean:
-	rm -f $(OBJECTS)
+	@echo -e -n "\033[34mDeleting objects...\033[0m"
+	@rm -f $(OBJECTS)
+	@echo -e "\033[32m"[OK]"\033[0m"
 
 fclean:	clean
-		rm -f $(NAME)
+	@echo -e -n "\033[34mDeleting Executable...\033[0m"
+	@rm -f $(NAME)
+	@echo -e "\033[32m"[OK]"\033[0m"
 
 re:		fclean	all
+
+.PHONY: all clean fclean re
