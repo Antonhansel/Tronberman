@@ -208,6 +208,7 @@ bool Menu::genSpiral()
 	  initial_direction = UP ;
 	}
      }
+    return (true);
 }
 
 void		Menu::reset()

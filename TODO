@@ -1,0 +1,8 @@
+-Créer une nouvelle interface pour Char et Bot.
+-Optimiser le chargement des textures (actuellement 1 texture par cube, 1 texture par type de cube dans le futur).
+-Rendre générique l'ajout de joueurs.
+-Collision pour le joueur 2 ne fonctionne pas.
+-Améliorer la génération de map (blocks en dur (comme dans un bomberman classique) + génération des pts de spawns).
+-Plancher sur un système de caméra intelligent (scindage automatique lors de l'éloignement des persos).
+-Système de chargement de maps pré-définie.
+-Système de sauvegarde/chargement de parties.

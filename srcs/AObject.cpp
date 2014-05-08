@@ -78,11 +78,6 @@ void	AObject::setPlayer(int player)
   _players = player; 
 }
 
-void	AObject::setScreen(int screen)
-{
-  _screen = screen;
-}
-
 void	AObject::setSpeed(float speed)
 {
   _speed = speed;
@@ -103,3 +98,7 @@ const std::map< std::pair<float, float>, AObject* >&  AObject::getBombs()
   return (_bombs);
 }
 
+void AObject::setTexture(gdl::Texture *texture)
+{
+  _texture = texture;
+}

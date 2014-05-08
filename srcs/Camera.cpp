@@ -49,12 +49,12 @@ bool	Camera::initScene()
   return (true);
 }
 
-bool 	Camera::flushContext()
+void 	Camera::flushContext()
 {
   _context.flush();
 }
 
-bool 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
+void 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
 {
   if (_players == 1)
   {

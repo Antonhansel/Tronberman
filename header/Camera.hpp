@@ -37,9 +37,9 @@ public:
   BasicShader		&getShader();
   void 			stopContext();
   bool 			initScene();
-  bool 			flushContext();
+  void 			flushContext();
   void 			update();
-  bool 			moveCamera(vec3, vec3, vec3, int);
+  void 			moveCamera(vec3, vec3, vec3, int);
   Clock 		&getClock();
   Input 		&getInput();
 private:

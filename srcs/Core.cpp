@@ -13,8 +13,8 @@
 
 Core::Core(Camera *cam)
 {
-  _width = 25;
-  _height = 25;
+  _width = 30;
+  _height = 30;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
   _players = 2;
@@ -35,10 +35,19 @@ Core::~Core()
   delete _map;
 }
 
+bool Core::drawTextures()
+{
+  if (_textures[BORDER].load("./ressources/assets/block.tga") == false)
+    return (false);
+  return (true);
+}
+
 bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
+  if (drawTextures() == false)
+    return (false);
   if (drawMap() == false)
     return (false);
   if (drawFloor() == false)
@@ -144,7 +153,7 @@ bool	Core::update()
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
-  for (int i = (_players + 1); i <= _player.size(); i++)
+  for (unsigned int i = (_players + 1); i <= _player.size(); i++)
     _player[i]->update(_clock, _input);
   return (true);
 }
@@ -164,7 +173,7 @@ void  Core::drawAll(AObject *cur_char)
     }
   for (it2 = _other.begin(); it2 != _other.end(); ++it2)
     (*it2)->draw(_shader, _clock);
-  for (int i = 1; i <= _player.size(); i++)
+  for (unsigned int i = 1; i <= _player.size(); i++)
     _player[i]->draw(_shader, _clock);
 }
 

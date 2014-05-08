@@ -154,6 +154,12 @@ else
       _posy += 1 * _trans;
       translate(glm::vec3(1, 0, 0) * _trans);
     }
+    if (input.getKey(SDLK_d) && checkMove(_posy + (-1 * _trans), _posx) == true)
+  {
+      _anim = 2;
+    _posy += -1 * _trans;
+     translate(glm::vec3(-1, 0, 0) * _trans);
+  }
   }
   if (_anim == 2)
     _anim = 1;

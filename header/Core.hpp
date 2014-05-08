@@ -68,14 +68,11 @@ public:
   bool			drawChar();
   bool      drawBot();
   bool			drawBackground();
+  bool      drawTextures();
   void			changeFocus(AObject *, int);
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
-  void      moveUp(AObject *, int&, int&, int);
-  void      moveDown(AObject *, int&, int&, int);
-  void      moveLeft(AObject *, int&, int&, int);
-  void      moveRight(AObject *, int&, int&, int);
 
 private:
   std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap1;
@@ -95,6 +92,7 @@ private:
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
   std::map< std::pair<float, float>, AObject* > _bombs;
+  std::map<type, gdl::Texture> _textures;
   std::map<int, AObject*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;

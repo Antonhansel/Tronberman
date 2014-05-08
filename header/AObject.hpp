@@ -45,12 +45,13 @@ public:
   type			getType() const;
   float			getTrans() const;
   void			setPlayer(int);
-  void			setScreen(int);
   void			setSpeed(float);
   void			setMap(std::map< std::pair<float, float>, AObject *> *);
   void      setBombs(std::map< std::pair<float, float>, AObject* >&);
   const std::map< std::pair<float, float>, AObject* >&  getBombs();
 
+  /*TEST*/
+  void  setTexture(gdl::Texture *);
 protected:
   float   _posx;
   float   _posy;
@@ -65,6 +66,7 @@ protected:
   std::map< std::pair<float, float>, AObject *>	*_map;
   std::map< std::pair<float, float>, AObject* > _bombs;
   float		_speed;
+  gdl::Texture *_texture;
 };
 
 #endif /*!_AOBJECT_HPP_*/
