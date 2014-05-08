@@ -27,7 +27,7 @@ SOURCES		=	srcs/main.cpp \
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
-CXX 		= clang++
+CXX 		= g++
 CXXFLAGS	+=	-I ./header -I ./bomberlib -g3
 
 LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
