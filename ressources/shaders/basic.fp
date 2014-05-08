@@ -12,5 +12,5 @@ varying vec2 fUv;
 
 void main(void)
 {
-	gl_FragColor = texture2D(fTexture0, fUv) * fColor;
+	gl_FragColor = texture2D(fTexture0, fUv);
 }
