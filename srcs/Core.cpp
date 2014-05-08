@@ -13,11 +13,11 @@
 
 Core::Core(Camera *cam)
 {
-  _width = 50;
-  _height = 50;
+  _width = 25;
+  _height = 25;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 1;
+  _players = 2;
   _cam->setPlayer(_players);
   _posx = POSX;
   _posy = POSY;
@@ -33,14 +33,6 @@ Core::~Core()
   for (it = _objects.begin(); it !=  _objects.end(); ++it)
     delete (*it).second;
   delete _map;
-  _cam->stopContext();
-}
-
-bool	Core::drawMap()
-{
-  _objects = _map->getMap();
-  std::cout << _objects.size() << std::endl;
-  return (true);
 }
 
 bool	Core::initialize()
@@ -87,6 +79,13 @@ bool    Core::drawBot()
   return (true);
 }
 
+bool  Core::drawMap()
+{
+  _objects = _map->getMap();
+  std::cout << _objects.size() << std::endl;
+  return (true);
+}
+
 bool 	Core::drawBackground()
 {
   AObject	*background = new Background(_width * 4, _height * 4, 10.0f);
@@ -112,7 +111,6 @@ bool   Core::makeChar(int posx, int posy, int screen)
     return (false);
   pos = std::make_pair((float)posx, (float)posy);
   chara->setPos(pos);
-  chara->setScreen(screen);
   chara->setPlayer(screen);
   chara->setMap(&_objects);
   chara->setBombs(_bombs);
@@ -122,8 +120,7 @@ bool   Core::makeChar(int posx, int posy, int screen)
 }
 
 bool		Core::drawChar()
-{  
-
+{
   if (makeChar(POSX, POSY, 1) == false)
     return (false);
   if (_players == 2)
@@ -134,62 +131,17 @@ bool		Core::drawChar()
   return (true);
 }
 
-void	Core::changeFocus2(AObject *cur_char)
-{
-  cur_char->update(_clock, _input);
-  if (_input.getKey(SDLK_z))
-    _posx2 += cur_char->getTrans();
-  if (_input.getKey(SDLK_s))
-    _posx2 -= cur_char->getTrans();
-  if (_input.getKey(SDLK_q))
-    _posy2 += cur_char->getTrans();
-  if (_input.getKey(SDLK_d))
-    _posy2 -= cur_char->getTrans();
-  _cam->moveCamera(glm::vec3(_posy2, 13, -10 + _posx2), 
-		     glm::vec3(_posy2, 0, _posx2), glm::vec3(0, 1, 0), 2);
-}
-
-void	Core::changeFocus(AObject *cur_char)
-{
-  cur_char->update(_clock, _input);
-  if (_input.getKey(SDLK_UP))
-    _posx += cur_char->getTrans();
-  if (_input.getKey(SDLK_DOWN))
-    _posx -= cur_char->getTrans();
-  if (_input.getKey(SDLK_LEFT))
-    _posy += cur_char->getTrans();
-  if (_input.getKey(SDLK_RIGHT))
-    _posy -= cur_char->getTrans();
-  _cam->moveCamera(glm::vec3(_posy, 13, -10 + _posx), 
-		     glm::vec3(_posy, 0, _posx), glm::vec3(0, 1, 0), 1);
-}
-
-// void  Core::moveUp(AObject *cur_char)
-// {
-//   cur_char->update(_clock, _input);
-//   _posx += cur_char->getTrans();
-// }
-
-// void  Core::moveDown(AObject *cur_char)
-// {}
-
-// void  Core::moveLeft(AObject *cur_char)
-// {}
-
-// void  Core::moveRight(AObject *cur_char)
-// {}
-
 bool	Core::update()
 {
-  //std::map< std::pair<float, float>, AObject * >::iterator	it;
+  std::map<int, AObject *>::iterator it;
   std::vector<AObject*>::iterator it1;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
-  // for (it = _objects.begin(); it != _objects.end(); ++it)
-  //   (*it).second->update(_clock, _input);
+  for (it = _player.begin(); it != _player.end(); ++it)
+    (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
   for (int i = (_players + 1); i <= _player.size(); i++)
@@ -197,15 +149,17 @@ bool	Core::update()
   return (true);
 }
 
-void  Core::drawAll()
+void  Core::drawAll(AObject *cur_char)
 {
   std::map< std::pair<float, float>, AObject * >::iterator it;
   std::vector<AObject*>::iterator it2;
+  std::pair<float, float> pos;
 
+  pos = cur_char->getPos();
   for (it = _objects.begin(); it != _objects.end(); ++it)
     {
-      if (((*it).first.first - _posy < 30) && ((*it).first.first - _posy > -30)
-        && ((*it).first.second - _posx < 25) && ((*it).first.second - _posx > -15))
+      if (((*it).first.first - pos.first < 30) && ((*it).first.first - pos.first > -30)
+        && ((*it).first.second - pos.second < 25) && ((*it).first.second - pos.second > -15))
         (*it).second->draw(_shader, _clock);
     }
   for (it2 = _other.begin(); it2 != _other.end(); ++it2)
@@ -214,14 +168,22 @@ void  Core::drawAll()
     _player[i]->draw(_shader, _clock);
 }
 
+void  Core::changeFocus(AObject *cur_char, int screen)
+{
+  std::pair<float, float> pos;
+  pos = cur_char->getPos();
+  _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second), 
+    glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
+}
+
 void	Core::draw()
 {	
-  changeFocus(_player[1]);
-  drawAll();
+  changeFocus(_player[1], 1);
+  drawAll(_player[1]);
   if (_players == 2)
     {
-      changeFocus2(_player[2]);
-      drawAll();
+      changeFocus(_player[2], 2);
+      drawAll(_player[2]);
     }
   _cam->flushContext();
 }

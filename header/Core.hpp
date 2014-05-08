@@ -41,6 +41,20 @@
 #define POSX1 1
 #define POSY1 0
 
+enum cinput
+{
+  NONE = 0,
+  P1UP,
+  P1DOWN,
+  P1RIGHT,
+  P1LEFT,
+  P1BOMB,
+  P2UP,
+  P2DOWN,
+  P2RIGHT,
+  P2LEFT,
+  P2BOMB 
+};
 
 class Core : public gdl::Game
 {
@@ -54,12 +68,18 @@ public:
   bool			drawChar();
   bool      drawBot();
   bool			drawBackground();
-  void			changeFocus(AObject *);
-  void			changeFocus2(AObject *);
+  void			changeFocus(AObject *, int);
   bool 			update();
-  void      drawAll();
+  void      drawAll(AObject *);
   bool      makeChar(int, int, int);
+  void      moveUp(AObject *, int&, int&, int);
+  void      moveDown(AObject *, int&, int&, int);
+  void      moveLeft(AObject *, int&, int&, int);
+  void      moveRight(AObject *, int&, int&, int);
+
 private:
+  std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap1;
+  std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap2;
   int 			_percent;
   Camera 		*_cam;
   int 			_players;
