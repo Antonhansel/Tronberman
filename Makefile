@@ -35,28 +35,46 @@ LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex6
 DEPS := $(OBJECTS:.o=.d)
 
 all: $(NAME)
-	@echo -e "\033[34m$(NAME) Up to date !\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[34m" ; fi
+	@echo "$(NAME) Up to date !"
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 
 $(NAME):	$(OBJECTS)
-	@echo -e -n "\033[34mLinking :" $(NAME) "\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[34m" ; fi
+	@echo -e -n "Linking :" $(NAME)
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 	@$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS)
-	@echo -e "\033[32m"[OK]"\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[32m" ; fi
+	@echo -e [OK]
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 
 %.o: %.cpp
-	@echo -e "\033[34mCompile :" $< "\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[34m" ; fi
+	@echo -e "Compile :" $<
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 	@$(CXX) -MMD -MP $(CXXFLAGS) -o $@ -c $<
-	@echo -e "\033[32m"[OK]"\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[32m" ; fi
+	@echo -e [OK]
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 
 clean:
-	@echo -e -n "\033[34mDeleting objects and dependancies...\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[34m" ; fi
+	@echo -e -n "Deleting objects and dependancies..."
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 	@rm -f $(OBJECTS)
 	@rm -f $(DEPS)
-	@echo -e "\033[32m"[OK]"\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[32m" ; fi
+	@echo -e [OK]
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 
 fclean:	clean
-	@echo -e -n "\033[34mDeleting Executable...\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[34m" ; fi
+	@echo -e -n "Deleting Executable..."
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 	@rm -f $(NAME)
-	@echo -e "\033[32m"[OK]"\033[0m"
+	@if [ -t 1 ]; then echo -e -n "\033[32m" ; fi
+	@echo -e [OK]
+	@if [ -t 1 ]; then echo -e -n "\033[0m" ; fi
 
 re:		fclean	all
 
