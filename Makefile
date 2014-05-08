@@ -32,6 +32,8 @@ CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
 
 LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
+DEPS := $(OBJECTS:.o=.d)
+
 all: $(NAME)
 	@echo -e "\033[34m$(NAME) Up to date !\033[0m"
 
@@ -42,12 +44,13 @@ $(NAME):	$(OBJECTS)
 
 %.o: %.cpp
 	@echo -e "\033[34mCompile :" $< "\033[0m"
-	@$(CXX) $(CXXFLAGS) -o $@ -c $<
+	@$(CXX) -MMD -MP $(CXXFLAGS) -o $@ -c $<
 	@echo -e "\033[32m"[OK]"\033[0m"
 
 clean:
-	@echo -e -n "\033[34mDeleting objects...\033[0m"
+	@echo -e -n "\033[34mDeleting objects and dependancies...\033[0m"
 	@rm -f $(OBJECTS)
+	@rm -f $(DEPS)
 	@echo -e "\033[32m"[OK]"\033[0m"
 
 fclean:	clean
@@ -58,3 +61,5 @@ fclean:	clean
 re:		fclean	all
 
 .PHONY: all clean fclean re
+
+-include $(DEPS)
