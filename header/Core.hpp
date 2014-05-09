@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 13:35:37 2014 Antonin Ribeaud
-// Last update Sun May  4 02:22:46 2014 Mehdi Chouag
+// Last update Sat May 10 01:07:53 2014 Mehdi Chouag
 */
 
 #ifndef _CORE_HPP_
@@ -93,7 +93,7 @@ private:
   std::map< std::pair<float, float>, AObject* > _objects;
   std::map< std::pair<float, float>, AObject* > _bombs;
   std::map<type, gdl::Texture*> _textures;
-  std::map<int, AObject*>	_player;
+  std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
 };

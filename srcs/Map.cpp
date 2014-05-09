@@ -5,14 +5,16 @@
 // Login   <ribeau_a@epitech.net>
 // 
 // Started on  Thu May  1 16:48:07 2014 ribeaud antonin
-// Last update Sun May  4 03:21:00 2014 Mehdi Chouag
+// Last update Sat May 10 01:34:58 2014 Mehdi Chouag
 //
 
 #include "Map.hpp"
 
-Map::Map(const int& x, const int& y, std::map< std::pair<float, float>, AObject * > &map) : 
-  size_x(x), size_y(y), cases(map)
+Map::Map(const int& x, const int& y, std::map< std::pair<float, float>, AObject * > &map)
 {
+  size_x = x; 
+  size_y = y; 
+  cases = map;
   outline();
   drawWall();
 }
@@ -57,12 +59,6 @@ void    Map::drawWall()
   std::pair<float, float> pos;
 
   srand(time(NULL));
-  // pos.first = 0;
-  // pos.second = 0;
-  // cases[pos] = create<Cube>();
-  // cases[pos]->setType(BLOCK);
-  // cases[pos]->setPos(pos);
-  // cases[pos]->initialize();
   for (int y = -size_y; y <= size_y; y++)
     {
       for (int x = -size_x; x <= size_x; x++)
@@ -78,7 +74,7 @@ void    Map::drawWall()
               cases[pos]->setPos(pos);
               cases[pos]->initialize();
             }
-          else if ((rand()%100) > 50 && cases[pos] == NULL)
+          else if ((rand() % 100) > 50 && cases[pos] == NULL)
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);

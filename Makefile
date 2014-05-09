@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Fri May  9 15:36:11 2014 Mehdi Chouag
+## Last update Sat May 10 00:42:05 2014 Mehdi Chouag
 ##
 
 NAME		=	bomberman
@@ -19,6 +19,7 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Cube.cpp \
 			srcs/Engine.cpp \
 			srcs/Map.cpp \
+			srcs/Player.cpp \
 			srcs/Mybot.cpp \
 			srcs/Floor.cpp \
 			srcs/Background.cpp \

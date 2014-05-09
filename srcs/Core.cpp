@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Fri May  9 10:14:45 2014 Mehdi Chouag
+// Last update Sat May 10 01:23:37 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
@@ -13,8 +13,8 @@
 
 Core::Core(Camera *cam, Loader *loader)
 {
-  _width = 3000;
-  _height = 3000;
+  _width = 300;
+  _height = 300;
   _loader = loader;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
@@ -57,29 +57,6 @@ bool	Core::initialize()
   return (true);
 }
 
-bool    Core::drawBot()
-{
-  std::pair<float, float> pos;
-  AObject                 *obj;
-
-  for (int y = (-_height + 16); y < _height; y += 15)
-    {
-      for (int x = (-_width + 16); x < _width; x += 15)
-      {
-        obj = create<Mybot>();
-        if (obj->initialize() == false)
-          return (false);
-        pos = std::make_pair((float)x, (float)y);
-        obj->initialize();
-        obj->setType(BOT);
-        obj->setPos(pos);
-        obj->setMap(&_objects);
-        _player[_player.size() + 1] = obj;
-      }
-    }
-  return (true);
-}
-
 bool  Core::drawMap()
 {
   _objects = _map->getMap();
@@ -105,7 +82,7 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(int posx, int posy, int screen)
 {
-  AObject *chara = create<Char>();
+  Player *chara = create<Char>();
   std::pair<float, float> pos;
 
   if (chara->initialize() == false)
@@ -134,7 +111,7 @@ bool		Core::drawChar()
 
 bool	Core::update()
 {
-  std::map<int, AObject *>::iterator it;
+  std::map<int, Player *>::iterator it;
   std::vector<AObject*>::iterator it1;
 
   _clock = _cam->getClock();
@@ -145,8 +122,6 @@ bool	Core::update()
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
-  // for (unsigned int i = (_players + 1); i <= _player.size(); i++)
-  //   _player[i]->update(_clock, _input);
   return (true);
 }
 
@@ -192,7 +167,7 @@ void  Core::changeFocus(AObject *cur_char, int screen)
   std::pair<float, float> pos;
   pos = cur_char->getPos();
   _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second), 
-    glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
+		   glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
 }
 
 void	Core::draw()
