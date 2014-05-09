@@ -23,8 +23,11 @@ AObject::~AObject()
 
 void		AObject::setPos(std::pair<float, float> &pos)
 {
-  translate(glm::vec3(pos.first, 0, pos.second));
+  if (pos.first != 0 || pos.second != 0)
+    translate(glm::vec3(pos.first, 0, pos.second));
   _pos = pos;
+  _posy = pos.first;
+  _posx = pos.second;
 }
 
 std::pair<float, float>	AObject::getPos() const

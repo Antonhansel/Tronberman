@@ -25,11 +25,12 @@ Engine::~Engine()
 bool 		Engine::init()
 {
   _camera = new Camera(HEIGHT, WIDTH);
+  _camera->initScene();
   _loader = new Loader();
   if (_loader->loadTextures() == false)
   	return (false);
-  _menu = new Menu(_camera);
-  _core = new Core(_camera);
+  _menu = new Menu(_camera, _loader);
+  _core = new Core(_camera, _loader);
   return (true);
 }
 

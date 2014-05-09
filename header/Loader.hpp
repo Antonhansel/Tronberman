@@ -18,10 +18,12 @@ class Loader
 public:
 	Loader();
 	~Loader();
-	gdl::Texture *getTexture(type);
 	bool 		loadTextures();
+	void 		bindTexture(type);
+	void 		drawGeometry(gdl::AShader &, glm::mat4 );
 private:
 	std::map<type, gdl::Texture*> _textures;
+	gdl::Geometry 		_geometry;
 };
 
 #endif	/*!_LOADER_HPP_*/

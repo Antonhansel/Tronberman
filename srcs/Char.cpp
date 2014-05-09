@@ -55,31 +55,31 @@ float	Char::getTrans()
 
 bool  Char::checkMove(float y, float x)
 {
-  std::pair<float, float>   pos;
-  AObject                   *obj = NULL;
+  // std::pair<float, float>   pos;
+  // AObject                   *obj = NULL;
   
-  if (y < 0)
-    y -= 1;
-  if (x < 0)
-    x -= 1;
+  // if (y < 0)
+  //   y -= 1;
+  // if (x < 0)
+  //   x -= 1;
 
-  for (int i = 0; i < 4; i++)
-  {
-    if (i == 0)
-      pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
-    else if (i == 1)
-     pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
-    else if (i == 2)
-      pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
-    else if (i == 3)
-      pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
+  // for (int i = 0; i < 4; i++)
+  // {
+  //   if (i == 0)
+  //     pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
+  //   else if (i == 1)
+  //    pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
+  //   else if (i == 2)
+  //     pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
+  //   else if (i == 3)
+  //     pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
 
-    if ((*_map).find(pos) != (*_map).end())
-      obj = (*_map).find(pos)->second;
-    if (obj != NULL && (obj->getType() == BLOCKD || obj->getType() == BORDER ||
-        obj->getType() == BOT || obj->getType() == BLOCK))
-      return (false);
-  }
+  //   if ((*_map).find(pos) != (*_map).end())
+  //     obj = (*_map).find(pos)->second;
+  //   if (obj != NULL && (obj->getType() == BLOCKD || obj->getType() == BORDER ||
+  //       obj->getType() == BOT || obj->getType() == BLOCK))
+  //     return (false);
+  // }
   return (true);
 }
 

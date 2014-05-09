@@ -14,9 +14,9 @@ int		main(int ac, char **argv)
 {
   Engine	game;
   
-  if (!game.init())
+  if (game.init() == false)
   	return (EXIT_FAILURE);
-  if (!game.start())
+  if (game.start() == false)
     return (EXIT_FAILURE);
   else 
   	return (EXIT_SUCCESS);

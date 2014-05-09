@@ -30,6 +30,7 @@
 # include "AObject.hpp"
 # include "Cube.hpp"
 # include "Factory.hpp"
+# include "Loader.hpp"
  
 #define MAX 32 
 #define TAILLE_SPECTRE  2048
@@ -47,7 +48,7 @@ using namespace glm;
 class Menu : public Game
 {
 public:
-  Menu(Camera *);
+  Menu(Camera *, Loader *loader);
   ~Menu();
   bool			initialize();
   bool			update();
@@ -57,12 +58,13 @@ public:
   bool			makeCube(int, int, int);
   bool			initFmod();
   bool 			genSpiral();
-  float		        getEquation(int);
+  float		  getEquation(int);
   void			rotate();
   
 private:
   bool      _inIntro;
   Camera		*_camera;
+  Loader    *_loader;
   int 			a[MAX][MAX];
   Clock			_clock;
   Input			_input;

@@ -10,10 +10,10 @@
 
 #include "Menu.hpp"
 
-Menu::Menu(Camera *camera) : _camera(camera)
+Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
 {
-  _camera->initScene();
   _camera->setPlayer(1);
+  _loader = loader;
   _width = MAX;
   _height = MAX;
   _shader = _camera->getShader();
@@ -56,9 +56,10 @@ bool	Menu::initialize()
 { 
   if (!genSpiral())
     return (false);
-  // if (!drawBackground())
-  //   return (false);
-  return (initFmod());
+  if (initFmod() == false)
+    return (false);
+  std::cout << "Menu init ended" << std::endl;
+  return (true);
 }
 
 bool		Menu::makeCube(int x, int y, int z)
@@ -66,6 +67,7 @@ bool		Menu::makeCube(int x, int y, int z)
   AObject	*cube = create<Cube>();
   std::pair<float, float> pos;
 
+  cube->setType(BLOCKD);
   if (cube->initialize() == false)
     return (false);
   pos = std::make_pair(x, z);
@@ -92,14 +94,22 @@ bool    Menu::update()
 
 void    Menu::draw()
 {
+  type LastType = BLOCKD;
+
   if (_input.getKey(SDLK_p))
     _isLaunch = true;
   if (_input.getKey(SDLK_SPACE))
    _stopintro = true;
   rotate();
+  _loader->bindTexture(LastType);
   for (size_t i = 0; i < _objects.size(); ++i)
     {
-      _objects[i]->draw(_shader, _clock);
+      if (_objects[i]->getType() != LastType)
+      {
+        LastType = _objects[i]->getType();
+        _loader->bindTexture(LastType);
+      }
+      _loader->drawGeometry(_shader, _objects[i]->getTransformation());
       _objects[i]->translate(vec3(0, -getEquation(i), 0));
     }
   _camera->flushContext();

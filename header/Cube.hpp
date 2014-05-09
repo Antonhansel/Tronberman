@@ -16,8 +16,6 @@
 class Cube : public AObject
 {
 private:
-  gdl::Texture	_texture;
-  gdl::Geometry	_geometry;
   float		_speed;
   type		_type;
 public:

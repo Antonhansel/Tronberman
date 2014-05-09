@@ -20,8 +20,6 @@
 class Char : public AObject
 {
 private:
-  float			      _posx;
-  float			      _posy;
   gdl::Texture		_texture;
   gdl::Geometry		_geometry;
   gdl::Model		  _model;

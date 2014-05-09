@@ -34,6 +34,7 @@
 # include "Char.hpp"
 # include "Map.hpp"
 # include "Factory.hpp"
+# include "Loader.hpp"
 
 #define POSX 0
 #define POSY 0
@@ -59,7 +60,7 @@ enum cinput
 class Core : public gdl::Game
 {
 public:
-  Core(Camera *cam);
+  Core(Camera *cam, Loader *loader);
   ~Core();
   bool			initialize();
   void			draw();
@@ -68,7 +69,6 @@ public:
   bool			drawChar();
   bool      drawBot();
   bool			drawBackground();
-  bool      drawTextures();
   void			changeFocus(AObject *, int);
   bool 			update();
   void      drawAll(AObject *);
@@ -78,6 +78,7 @@ private:
   std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap2;
   int 			_percent;
   Camera 		*_cam;
+  Loader    *_loader;
   int 			_players;
   float 		_posx;
   float			_posy;
@@ -91,7 +92,7 @@ private:
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
   std::map< std::pair<float, float>, AObject* > _bombs;
-  std::map<type, gdl::Texture> _textures;
+  std::map<type, gdl::Texture*> _textures;
   std::map<int, AObject*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;

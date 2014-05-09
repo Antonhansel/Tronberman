@@ -54,13 +54,15 @@ std::map< std::pair<float, float>, AObject *> &Map::getMap()
 
 void    Map::drawWall()
 {
-  int   min;
-  int   max;
   std::pair<float, float> pos;
 
-  min = 0;
-  max = 100;
   srand(time(NULL));
+  // pos.first = 0;
+  // pos.second = 0;
+  // cases[pos] = create<Cube>();
+  // cases[pos]->setType(BLOCK);
+  // cases[pos]->setPos(pos);
+  // cases[pos]->initialize();
   for (int y = -size_y; y <= size_y; y++)
     {
       for (int x = -size_x; x <= size_x; x++)
@@ -76,7 +78,7 @@ void    Map::drawWall()
               cases[pos]->setPos(pos);
               cases[pos]->initialize();
             }
-          else if ((rand()%(max - min) + min) > 70 && cases[pos] == NULL && !(x == 0 && y == 0))
+          else if ((rand()%100) > 50 && cases[pos] == NULL)
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);
