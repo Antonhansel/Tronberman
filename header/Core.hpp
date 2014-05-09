@@ -73,7 +73,6 @@ public:
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
-
 private:
   std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap1;
   std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap2;

@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Sun May  4 03:42:30 2014 Mehdi Chouag
+// Last update Fri May  9 10:14:45 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
@@ -13,11 +13,11 @@
 
 Core::Core(Camera *cam)
 {
-  _width = 30;
-  _height = 30;
+  _width = 200;
+  _height = 200;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
-  _players = 2;
+  _players = 1;
   _cam->setPlayer(_players);
   _posx = POSX;
   _posy = POSY;

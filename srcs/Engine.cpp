@@ -12,9 +12,6 @@
 
 Engine::Engine()
 {
-  _camera = new Camera(HEIGHT, WIDTH);
-  _menu = new Menu(_camera);
-  _core = new Core(_camera);
 }
 
 Engine::~Engine()
@@ -22,6 +19,18 @@ Engine::~Engine()
   delete _camera;
   delete _menu;
   delete _core;
+  delete _loader;
+}
+
+bool 		Engine::init()
+{
+  _camera = new Camera(HEIGHT, WIDTH);
+  _loader = new Loader();
+  if (_loader->loadTextures() == false)
+  	return (false);
+  _menu = new Menu(_camera);
+  _core = new Core(_camera);
+  return (true);
 }
 
 bool		Engine::start()
