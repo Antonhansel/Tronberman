@@ -76,7 +76,7 @@ void    Map::drawWall()
               cases[pos]->setPos(pos);
               cases[pos]->initialize();
             }
-          else if ((rand()%(max - min) + min) > 70 && cases[pos] == NULL)
+          else if ((rand()%(max - min) + min) > 70 && cases[pos] == NULL && !(x == 0 && y == 0))
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);
