@@ -14,6 +14,7 @@
 #include "Camera.hpp"
 #include "Menu.hpp"
 #include "Core.hpp"
+#include "Loader.hpp"
 
 #define WIDTH	1000
 #define HEIGHT	1800
@@ -23,8 +24,8 @@ class Engine
 public:
   Engine();
   ~Engine();
-  bool		start();		
-
+  bool		start();
+  bool 		init();
 private:
   Engine(const Engine&);
   Engine &operator=(const Engine &);
@@ -33,6 +34,7 @@ private:
   Camera	*_camera;
   Core		*_core;
   Menu		*_menu;
+  Loader 	*_loader;
 };
 
 #endif /* !ENGINE_HPP_ */

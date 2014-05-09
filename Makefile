@@ -11,6 +11,7 @@
 NAME		=	bomberman
 
 SOURCES		=	srcs/main.cpp \
+			srcs/Loader.cpp \
 			srcs/Menu.cpp \
 			srcs/Core.cpp \
 			srcs/Char.cpp \
