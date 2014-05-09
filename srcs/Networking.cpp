@@ -5,7 +5,7 @@
 // Login   <besson_g@epitech.net>
 //
 // Started on  Fri Jan 10 09:07:44 2014 guillaume besson
-// Last update Fri Jan 10 09:07:44 2014 guillaume besson
+// Last update Fri May  9 15:35:33 2014 Mehdi Chouag
 //
 
 #include <sys/types.h>
@@ -117,5 +117,3 @@ void    Networking::refreshPlayers()
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
         FD_SET((*i)->sockfd, &sets[0]);
 }
-
-

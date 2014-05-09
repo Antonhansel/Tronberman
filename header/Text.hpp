@@ -5,21 +5,36 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Fri May  02 10:46:24 2014 Antonin Ribeaud
-** Last update Fri May  02 10:46:24 2014 Antonin Ribeaud
+// Last update Thu May  8 00:58:57 2014 Mehdi Chouag
 */
 
 #ifndef _TEXT_HPP_
 # define _TEXT_HPP_
 
-#include "Core.hpp"
+#include "AObject.hpp"
+#include <vector>
+#include <unistd.h>
 
-class Text
+class Text : public AObject
 {
-public:
-	Text();
-	~Text();
 private:
+  gdl::Texture	_texture;
+  int		_firstChar;
+  //gdl::Geometry	geometry;
+  std::vector<gdl::Geometry *> _text;
+  bool		_isDraw;
 
+private:
+  int	getColumn(char c);
+
+public:
+  Text();
+  ~Text();
+  void putchar(char c);
+  void putstr(const char *);
+  void update(gdl::Clock const &clock, gdl::Input &input);
+  bool initialize();
+  void draw(gdl::AShader &shader, gdl::Clock const &clock);
 };
 
 #endif /*!TEXT_HPP*/
