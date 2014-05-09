@@ -11,6 +11,8 @@
 #include "Char.hpp"
 #include <iostream>
 
+#include "Core.hpp"
+
 Char::Char()
 {
   _speed = 10.0f;
@@ -53,46 +55,32 @@ float	Char::getTrans()
 
 bool  Char::checkMove(float y, float x)
 {
-  std::pair<float, float>   pos1;
-  std::pair<float, float>   pos2;
-  std::pair<float, float>   pos3;
-  std::pair<float, float>   pos4;
-  AObject                   *obj1 = NULL;
-  AObject                   *obj2 = NULL;
-  AObject                   *obj3 = NULL;
-  AObject                   *obj4 = NULL;
-  bool                      error = true;
+  std::pair<float, float>   pos;
+  AObject                   *obj = NULL;
+  
+  if (y < 0)
+    y -= 1;
+  if (x < 0)
+    x -= 1;
 
-if (y < 0) 
-  y -= 1;
-if (x < 0)
-  x -= 1;
+  for (int i = 0; i < 4; i++)
+  {
+    if (i == 0)
+      pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
+    else if (i == 1)
+     pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
+    else if (i == 2)
+      pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
+    else if (i == 3)
+      pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
 
-  pos1 = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
-  pos2 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
-  pos3 = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
-  pos4 = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
-
-  if ((*_map).find(pos1) != (*_map).end())
-    obj1 = (*_map).find(pos1)->second;
-  if ((*_map).find(pos2) != (*_map).end())
-    obj2 = (*_map).find(pos2)->second;
-  if ((*_map).find(pos3) != (*_map).end())
-    obj3 = (*_map).find(pos3)->second;
-  if ((*_map).find(pos4) != (*_map).end())
-    obj4 = (*_map).find(pos4)->second;
-
-  if (obj1 != NULL && (obj1->getType() == BLOCKD || obj1->getType() == BORDER || obj1->getType() == BOT))
-    error = false;
-  if (obj2 != NULL && (obj2->getType() == BLOCKD || obj2->getType() == BORDER || obj2->getType() == BOT))
-    error = false;
-  if (obj3 != NULL && (obj3->getType() == BLOCKD || obj3->getType() == BORDER || obj3->getType() == BOT))
-    error = false;
-  if (obj4 != NULL && (obj4->getType() == BLOCKD || obj4->getType() == BORDER || obj4->getType() == BOT))
-      error = false;
-  if (error == false)
-    _trans = 0;
-  return (error);
+    if ((*_map).find(pos) != (*_map).end())
+      obj = (*_map).find(pos)->second;
+    if (obj != NULL && (obj->getType() == BLOCKD || obj->getType() == BORDER ||
+        obj->getType() == BOT || obj->getType() == BLOCK))
+      return (false);
+  }
+  return (true);
 }
 
 void  Char::checkBombs()

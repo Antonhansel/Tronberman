@@ -18,7 +18,7 @@ public:
 
   void				outline();
   void				spawnBot();
-  void				drawWall();
+  void        drawWall();
   bool				spawnBotChecking(const int&, const int&);
   bool				isEmpty(const int&, const int&);
   std::map< std::pair<float, float>, AObject *> &getMap();

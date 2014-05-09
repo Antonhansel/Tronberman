@@ -66,11 +66,17 @@ void    Map::drawWall()
       for (int x = -size_x; x <= size_x; x++)
       {
         if (x != -size_x && x != size_x &&
-            y != -size_y && y != size_y && 
-            x != 0 && x != 1 && y != 0 && y != 1)
+            y != -size_y && y != size_y)
         {
           pos = std::make_pair(y, x);
-          if ((rand()%(max - min) + min) > 90)
+          if (x % 2 == 0 && y % 2 == 0 && !(x == 0 && y == 0))
+            {
+              cases[pos] = create<Cube>();
+              cases[pos]->setType(BLOCK);
+              cases[pos]->setPos(pos);
+              cases[pos]->initialize();
+            }
+          else if ((rand()%(max - min) + min) > 70 && cases[pos] == NULL)
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);
