@@ -30,7 +30,7 @@ private:
   int					size_x;
   int					size_y;
   int     getSide(float x, float y);
-  bool    deleteSide(float x, float y);
+  void    deleteSide(float x, float y);
 };
 
 #endif /* !MAP_HPP */
