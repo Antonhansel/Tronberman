@@ -10,10 +10,11 @@
 
 #include "AObject.hpp"
 
-AObject::AObject() : 
+AObject::AObject() :
 	_position(0, 0, 0), _rotation(0, 0, 0), _scale(1, 1, 1)
 {
   _isAlive = true;
+  _transformationDirty = true;
 }
 
 AObject::~AObject()
@@ -37,16 +38,19 @@ std::pair<float, float>	AObject::getPos() const
 
 void 		AObject::translate(glm::vec3 const &v)
 {
+  _transformationDirty = true;
   _position += v;
 }
 
 void		AObject::rotate(glm::vec3 const& axis, float angle)
 {
+  _transformationDirty = true;
   _rotation += axis * angle;
 }
 
 void 		AObject::scale(glm::vec3 const& scale)
 {
+  _transformationDirty = true;
   _scale *= scale;
 }
 
@@ -62,13 +66,17 @@ type		AObject::getType() const
 
 glm::mat4 	AObject::getTransformation()
 {
-  glm::mat4 transform(1);
-  transform = glm::rotate(transform, _rotation.x, glm::vec3(1, 0, 0));
-  transform = glm::rotate(transform, _rotation.y, glm::vec3(0, 1, 0));
-  transform = glm::rotate(transform, _rotation.z, glm::vec3(0, 0, 1));
-  transform = glm::translate(transform, _position);
-  transform = glm::scale(transform, _scale);
-  return (transform);
+  if (_transformationDirty)
+  {
+    _transformation = glm::mat4(1);
+    _transformation = glm::rotate(_transformation, _rotation.x, glm::vec3(1, 0, 0));
+    _transformation = glm::rotate(_transformation, _rotation.y, glm::vec3(0, 1, 0));
+    _transformation = glm::rotate(_transformation, _rotation.z, glm::vec3(0, 0, 1));
+    _transformation = glm::translate(_transformation, _position);
+    _transformation = glm::scale(_transformation, _scale);
+  }
+  _transformationDirty = false;
+  return (_transformation);
 }
 
 float		AObject::getTrans() const
@@ -78,7 +86,7 @@ float		AObject::getTrans() const
 
 void	AObject::setPlayer(int player)
 {
-  _players = player; 
+  _players = player;
 }
 
 void	AObject::setSpeed(float speed)

@@ -1,13 +1,13 @@
 #ifndef _AOBJECT_HPP_
 # define _AOBJECT_HPP_
 
-# include <Game.hh> 
-# include <Clock.hh> 
-# include <Input.hh> 
-# include <SdlContext.hh> 
-# include <Geometry.hh> 
-# include <Texture.hh> 
-# include <Model.hh> 
+# include <Game.hh>
+# include <Clock.hh>
+# include <Input.hh>
+# include <SdlContext.hh>
+# include <Geometry.hh>
+# include <Texture.hh>
+# include <Model.hh>
 # include <glm/glm.hpp>
 # include <BasicShader.hh>
 # include <glm/gtc/matrix_transform.hpp>
@@ -23,7 +23,7 @@ enum type
     PLAYER = 3,
     LASER = 4,
     BLOCK = 5,
-    BLOCKD = 6, 
+    BLOCKD = 6,
     BONUS = 7
   };
 
@@ -55,6 +55,8 @@ public:
   /*TEST*/
   void  setTexture(gdl::Texture *);
 protected:
+  bool        _transformationDirty;
+  glm::mat4   _transformation;
   float   _posx;
   float   _posy;
   type		_type;
