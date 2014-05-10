@@ -26,7 +26,10 @@ void 	Camera::setPlayer(int players)
   if (_players == 1)
     _projection = perspective(60.0f, (float)_width / (float)_height, 0.1f, 100.0f);
   else
-    _projection = perspective(40.0f, (float)_width / (float)_height, 0.1f, 100.0f);
+    _projection = perspective(60.0f, ((float)_width/2) / (float)_height, 0.1f, 100.0f);
+  _shader.bind();
+  _shader.setUniform("view", _transformation);
+  _shader.setUniform("projection", _projection);
 }
 
 bool	Camera::initScene()
