@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Sat May 10 01:23:37 2014 Mehdi Chouag
+// Last update Sat May 10 22:39:08 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
@@ -21,10 +21,8 @@ Core::Core(Camera *cam, Loader *loader)
   _cam = cam;
   _players = 2;
   _map = new Map(_width, _height, _objects);
-  /*----*/
-    obj = _map->setSpawn(1);
-    std::cout << obj.begin()->first << " " << obj.begin()->second << std::endl;
-  /*----*/
+  _sound = new Sound();
+  obj = _map->setSpawn(1);
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
   _posx2 = POSX1;
@@ -40,6 +38,7 @@ Core::~Core()
   for (it = _objects.begin(); it !=  _objects.end(); ++it)
     delete (*it).second;
   delete _map;
+  delete _sound;
 }
 
 bool	Core::initialize()
@@ -52,8 +51,6 @@ bool	Core::initialize()
     return (false);
   if (drawChar() == false)
     return (false);
-  // if (drawBot() == false)
-  //   return (false);
   if (drawBackground() == false)
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
@@ -108,7 +105,6 @@ bool   Core::makeChar(int posx, int posy, int screen)
   chara->setPlayer(screen);
   chara->setMap(&_objects);;
   chara->setId(screen);
-//  chara->translate(glm::vec3(posx, 0, posy));
   _player[screen] = chara;
   return (true);
 }
@@ -166,61 +162,91 @@ bool  Core::makeBomb(Player *player)
 
 void  Core::removeExplosion()
 {
-  std::map< double, AObject*>::iterator it2;
- 
-  for (it2 = _explosion.begin(); it2 != _explosion.end(); ++it2)
-  {
+  std::vector< std::pair<double, AObject*> >::iterator it2;
+
+  for (it2 = _explosion.begin(); it2 != _explosion.end();)
+    {
       if (_time - (*it2).first > 0.5)
-      {
-        _objects.erase(_objects.find((*it2).second->getPos()));
-      }
-   }
-  for (it2 = _explosion.begin(); it2 != _explosion.end(); ++it2)
-  {
-      if (_time - (*it2).first > 0.5)
-      {
-        _explosion.erase((it2));
-      }
-   }
+      	{
+  	  _objects.erase(_objects.find((*it2).second->getPos()));
+  	  delete (*it2).second;
+  	  it2 = _explosion.erase((it2));
+  	}
+      else
+  	++it2;
+    }
 }
 
 void  Core::bombExplode()
 {
   std::map< double, std::pair< int, AObject*> >::iterator it2;
-
   std::pair<float, float> pos;
   int                     playerId;
 
-  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
-  {
-      if (_time - (*it2).first > 2.0)
-      {
-        _objects.erase(_objects.find((*it2).second.second->getPos()));
-     }
-   }
   for (it2 = _bombs.begin(); it2 != _bombs.end(); )
-  {
+    {
       if (_time - (*it2).first > 2.0)
-      {
-        pos = (*it2).second.second->getPos();
-        playerId = (*it2).second.first;
-        _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
-        _bombs.erase(it2++);
-        explosion(pos, playerId);
-      }
+	{
+	  _objects.erase(_objects.find((*it2).second.second->getPos()));
+	  pos = (*it2).second.second->getPos();
+	  playerId = (*it2).second.first;
+	  _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
+	  _bombs.erase(it2++);
+	  explosion(pos, playerId);
+	  _sound->playSound(BOMB_S, 100);
+	}
       else
         ++it2;
-   }
+    }
 }
 
-void  Core::explosion(std::pair<float, float> pos, int playerId)
+void		Core::newBomb(std::pair<float, float> &check)
 {
-    AObject *bomb = create<Bombs>();
-    bomb->setType(LASER);
-    bomb->setPos(pos);
-    bomb->initialize();
-    _objects[pos] = bomb;
-    _explosion[_time] = bomb;
+  AObject	*bomb; 
+
+  bomb = create<Bombs>();
+  bomb->setType(LASER);
+  bomb->setPos(check);
+  bomb->initialize();
+  _objects[check] = bomb;
+  _explosion.push_back(std::make_pair(_time, bomb));
+}
+
+void	Core::explosion(std::pair<float, float> pos, int playerId)
+{
+  std::map< std::pair<float, float>, AObject * >::iterator it;
+  std::pair<float, float>	check;
+  // int				range;
+
+  // range = _player[playerId]->getRange();
+  check.first = pos.first;
+  check.second = pos.second - 1;
+  while (check.second - 1 < pos.second + 1)
+    {
+      it = _objects.find(check);
+      if (it != _objects.end() && (*it).second->getType() == BLOCKD)
+	{
+	  _objects.erase(it);
+	  newBomb(check);
+	}
+      else if (it == _objects.end())
+	newBomb(check);
+      check.second++;
+    }
+  check.first = pos.first - 1;
+  check.second = pos.second;
+  while (check.first - 1 < pos.first + 1)
+    {
+      it = _objects.find(check);
+      if (it != _objects.end() && (*it).second->getType() == BLOCKD)
+	{
+	  _objects.erase(it);
+	  newBomb(check);
+	}
+      else if (it == _objects.end())
+	newBomb(check);
+      check.first++;
+    }
 }
 
 bool	Core::update()

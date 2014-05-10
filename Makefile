@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Sat May 10 00:42:05 2014 Mehdi Chouag
+## Last update Sat May 10 22:39:35 2014 Mehdi Chouag
 ##
 
 NAME		=	bomberman
@@ -26,6 +26,7 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Networking.cpp \
 			srcs/Camera.cpp \
 			srcs/Text.cpp \
+			srcs/Sound.cpp \
 			srcs/Bombs.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)

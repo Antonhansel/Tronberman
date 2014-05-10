@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 13:35:37 2014 Antonin Ribeaud
-// Last update Sat May 10 01:07:53 2014 Mehdi Chouag
+// Last update Sat May 10 22:38:13 2014 Mehdi Chouag
 */
 
 #ifndef _CORE_HPP_
@@ -37,6 +37,7 @@
 # include "Factory.hpp"
 # include "Loader.hpp"
 # include "Bombs.hpp"
+# include "Sound.hpp"
 
 #define POSX 0
 #define POSY 0
@@ -76,9 +77,10 @@ public:
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
   bool      makeBomb(Player *);
-  void      bombExplode();
-  void      removeExplosion();
-  void      explosion(std::pair<float, float>, int);
+  void			bombExplode();
+  void			removeExplosion();
+  void			explosion(std::pair<float, float>, int);
+  void			newBomb(std::pair<float, float>&);
   std::pair<float, float> genPos();
 private:
   int       _screen;
@@ -94,13 +96,14 @@ private:
   int			_width;
   int			_height;
   Map		        *_map;
+  Sound			*_sound;
   gdl::Clock		_clock;
   gdl::Input		_input;
   double        _time;
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
   std::map< double, std::pair< int, AObject* > > _bombs;
-  std::map< double, AObject*> _explosion;
+  std::vector< std::pair<double, AObject*> > _explosion;
   std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;

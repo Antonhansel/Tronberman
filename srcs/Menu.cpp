@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Mon May  5 17:46:18 2014 ribeaud antonin
+// Last update Sat May 10 22:47:47 2014 Mehdi Chouag
 */
 
 #include "Menu.hpp"
@@ -97,7 +97,10 @@ void    Menu::draw()
   type LastType = BLOCKD;
 
   if (_input.getKey(SDLK_p))
-    _isLaunch = true;
+    {
+      _isLaunch = true;
+      FMOD_Channel_SetVolume(canal, 0.4);
+    }
   if (_input.getKey(SDLK_SPACE))
    _stopintro = true;
   rotate();
