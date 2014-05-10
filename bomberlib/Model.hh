@@ -33,6 +33,9 @@ namespace gdl
 		int			getAnimationFrameNumber(int stack);
 		int			getAnimationFrameNumber(std::string const &name);
 
+		// Get the time of one animation frame
+		float		getFrameDuration();
+
 		// Create a sub animation depending on the name or index of a model animation
 		bool		createSubAnim(int stack, std::string const &subAnimName,
 								  int frameStart, int frameEnd);

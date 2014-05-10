@@ -9,7 +9,7 @@ namespace	gdl
 	// Class for an Sdl Context
 	class SdlContext : public IRenderContext
 	{
-	private:
+	protected:
 		SDL_Window		*_window;
 		SDL_GLContext	_glContext;
 
@@ -18,7 +18,8 @@ namespace	gdl
 		virtual ~SdlContext() { }
 
 		// Start the context, create a windows
-		virtual bool    start(unsigned int swidth, unsigned int sheight, const std::string &name);
+		virtual bool    start(unsigned int swidth, unsigned int sheight, const std::string &name,
+							  int initFlags = SDL_INIT_VIDEO, int windowsFlags = SDL_WINDOW_OPENGL);
 		// Update the inputs
 		virtual void    updateInputs(Input &input) const;
 		// Update the game clock

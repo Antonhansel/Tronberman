@@ -29,7 +29,7 @@ namespace	gdl
 
 		Texture		&operator=(Texture const &o);
 
-	private:
+	protected:
 		GLuint _width;
 		GLuint _height;
 		GLuint _id;

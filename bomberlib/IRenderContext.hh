@@ -13,7 +13,7 @@ namespace	gdl
 		IRenderContext() { }
 		virtual ~IRenderContext() { }
 
-		virtual bool start(unsigned int swidth, unsigned int sheight, const std::string &name) = 0;
+		virtual bool start(unsigned int swidth, unsigned int sheight, const std::string &name, int initFlags, int windowsFlags) = 0;
 		virtual void updateInputs(Input &input) const = 0;
 		virtual void updateClock(Clock &clock) const = 0;
 		virtual void flush() const = 0;

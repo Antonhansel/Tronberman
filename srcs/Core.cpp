@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Sat May 10 22:50:18 2014 Mehdi Chouag
+// Last update Sun May 11 00:12:10 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
@@ -15,11 +15,11 @@ Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair <float, float> >    obj;
 
-  _width = 10;
-  _height = 10;
+  _width = 100;
+  _height = 100;
   _loader = loader;
   _cam = cam;
-  _players = 2;
+  _players = 1;
   _map = new Map(_width, _height, _objects);
   _sound = new Sound();
   obj = _map->setSpawn(1);
