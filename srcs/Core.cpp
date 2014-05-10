@@ -13,8 +13,8 @@
 
 Core::Core(Camera *cam, Loader *loader)
 {
-  _width = 300;
-  _height = 300;
+  _width = 10;
+  _height = 10;
   _loader = loader;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
