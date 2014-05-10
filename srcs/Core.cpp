@@ -13,6 +13,8 @@
 
 Core::Core(Camera *cam, Loader *loader)
 {
+  std::vector<std::pair <float, float> >    obj;
+
   _width = 10;
   _height = 10;
   _loader = loader;
@@ -20,8 +22,12 @@ Core::Core(Camera *cam, Loader *loader)
   _map = new Map(_width, _height, _objects);
   _players = 1;
   _cam->setPlayer(_players);
-  _posx = POSX;
-  _posy = POSY;
+  /*----*/
+    obj = _map->setSpawn(1);
+    std::cout << obj.begin()->first << " " << obj.begin()->second << std::endl;
+  /*----*/  
+  _posx = obj.begin()->first;
+  _posy = obj.begin()->second;
   _posx2 = POSX1;
   _posy2 = POSY1;
   _percent = 15;
@@ -93,18 +99,18 @@ bool   Core::makeChar(int posx, int posy, int screen)
   chara->setPlayer(screen);
   chara->setMap(&_objects);;
   chara->setId(screen);
-  chara->translate(glm::vec3(posx, 0, posy));
+//  chara->translate(glm::vec3(posx, 0, posy));
   _player[screen] = chara;
   return (true);
 }
 
 bool		Core::drawChar()
 {
-  if (makeChar(POSX, POSY, 1) == false)
+  if (makeChar(_posx, _posy, 1) == false)
     return (false);
   if (_players == 2)
   {
-    if (makeChar(POSX1, POSY1, 2) == false)
+    if (makeChar(_posx2, _posy2, 2) == false)
       return (false);
   }
   return (true);
