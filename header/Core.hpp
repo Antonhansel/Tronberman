@@ -77,6 +77,8 @@ public:
   bool      makeChar(int, int, int);
   bool      makeBomb(Player *);
   void      bombExplode();
+  void      removeExplosion();
+  void      explosion(std::pair<float, float>, int);
 private:
   int 			_percent;
   Camera 		*_cam;
@@ -95,6 +97,7 @@ private:
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
   std::map< double, std::pair< int, AObject* > > _bombs;
+  std::map< double, AObject*> _explosion;
   std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;

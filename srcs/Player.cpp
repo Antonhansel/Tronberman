@@ -13,6 +13,7 @@
 Player::Player()
 {
   _stock = 3;
+  _range = 2;
 }
 
 Player::~Player()
@@ -170,4 +171,14 @@ void  Player::setId(int id)
 int   Player::getId() const
 {
   return (_id);
+}
+
+int   Player::getRange() const
+{
+  return (_range);
+}
+
+void  Player::setRange(int range)
+{
+  _range = range;
 }

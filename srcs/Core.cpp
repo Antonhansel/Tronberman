@@ -149,25 +149,63 @@ bool  Core::makeBomb(Player *player)
   return (true);
 }
 
+void  Core::removeExplosion()
+{
+  std::map< double, AObject*>::iterator it2;
+ 
+  for (it2 = _explosion.begin(); it2 != _explosion.end(); ++it2)
+  {
+      if (_time - (*it2).first > 0.5)
+      {
+        _objects.erase(_objects.find((*it2).second->getPos()));
+      }
+   }
+  for (it2 = _explosion.begin(); it2 != _explosion.end(); ++it2)
+  {
+      if (_time - (*it2).first > 0.5)
+      {
+        _explosion.erase((it2));
+      }
+   }
+}
+
 void  Core::bombExplode()
 {
   std::map< double, std::pair< int, AObject*> >::iterator it2;
 
+  std::pair<float, float> pos;
+  int                     playerId;
+
   for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
   {
-      if (_time - (*it2).first > 3.0)
+      if (_time - (*it2).first > 2.0)
       {
         _objects.erase(_objects.find((*it2).second.second->getPos()));
-      }
+     }
    }
-  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); )
   {
-      if (_time - (*it2).first > 3.0)
+      if (_time - (*it2).first > 2.0)
       {
+        pos = (*it2).second.second->getPos();
+        playerId = (*it2).second.first;
         _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
-        _bombs.erase((it2));
+        _bombs.erase(it2++);
+        explosion(pos, playerId);
       }
+      else
+        ++it2;
    }
+}
+
+void  Core::explosion(std::pair<float, float> pos, int playerId)
+{
+    AObject *bomb = create<Bombs>();
+    bomb->setType(LASER);
+    bomb->setPos(pos);
+    bomb->initialize();
+    _objects[pos] = bomb;
+    _explosion[_time] = bomb;
 }
 
 bool	Core::update()
@@ -190,6 +228,7 @@ bool	Core::update()
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
   bombExplode();
+  removeExplosion();
   return (true);
 }
 

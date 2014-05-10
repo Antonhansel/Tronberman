@@ -32,6 +32,10 @@ bool 	Loader::loadTextures()
   _textures[BOMB] = new gdl::Texture();
   if (_textures[BOMB]->load("./ressources/assets/BOMB.tga") == false)
     return (false);
+  _textures[LASER] = new gdl::Texture();
+  if (_textures[LASER]->load("./ressources/assets/LASER.tga") == false)
+    return (false);
+ 
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
