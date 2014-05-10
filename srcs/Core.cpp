@@ -13,8 +13,8 @@
 
 Core::Core(Camera *cam, Loader *loader)
 {
-  _width = 300;
-  _height = 300;
+  _width = 10;
+  _height = 10;
   _loader = loader;
   _cam = cam;
   _map = new Map(_width, _height, _objects);
@@ -25,6 +25,7 @@ Core::Core(Camera *cam, Loader *loader)
   _posx2 = POSX1;
   _posy2 = POSY1;
   _percent = 15;
+  _time = 0;
 }
 
 Core::~Core()
@@ -90,8 +91,8 @@ bool   Core::makeChar(int posx, int posy, int screen)
   pos = std::make_pair((float)posx, (float)posy);
   chara->setPos(pos);
   chara->setPlayer(screen);
-  chara->setMap(&_objects);
-  chara->setBombs(_bombs);
+  chara->setMap(&_objects);;
+  chara->setId(screen);
   chara->translate(glm::vec3(posx, 0, posy));
   _player[screen] = chara;
   return (true);
@@ -109,19 +110,86 @@ bool		Core::drawChar()
   return (true);
 }
 
+bool  Core::makeBomb(Player *player)
+{
+  float temp1;
+  float temp2;
+  std::pair<float, float> pos;
+
+  pos = player->getPos();
+  temp1 = floor(pos.first);
+  temp2 = ceil(pos.first);
+  if (temp1 - pos.first > pos.first - temp2)
+  {
+    pos.first = temp1;
+  }
+  else
+    pos.first = temp2;
+  temp1 = floor(pos.second);
+  temp2 = ceil(pos.second);
+  if (temp1 - pos.second > pos.second - temp2)
+  {
+    pos.second = temp1;
+  }
+  else
+    pos.second = temp2;
+  if (_objects.find(pos) == _objects.end())
+  {
+    if (player->getStock() >= 1)
+    {
+      AObject *bomb = create<Bombs>();
+      bomb->setType(BOMB);
+      bomb->setPos(pos);
+      bomb->initialize();
+      _objects[pos] = bomb;
+      _bombs[_time] = std::make_pair(player->getId(), bomb);
+      player->setStock(player->getStock() - 1);
+    }
+  }
+  return (true);
+}
+
+void  Core::bombExplode()
+{
+  std::map< double, std::pair< int, AObject*> >::iterator it2;
+
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  {
+      if (_time - (*it2).first > 3.0)
+      {
+        _objects.erase(_objects.find((*it2).second.second->getPos()));
+      }
+   }
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  {
+      if (_time - (*it2).first > 3.0)
+      {
+        _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
+        _bombs.erase((it2));
+      }
+   }
+}
+
 bool	Core::update()
 {
-  std::map<int, Player *>::iterator it;
+  std::map< int, Player *>::iterator it;
+  std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
+  _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
+  if (_input.getKey(SDLK_SPACE))
+    makeBomb(_player[1]);
+  if (_input.getKey(SDLK_KP_0) && _players == 2)
+    makeBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
+  bombExplode();
   return (true);
 }
 

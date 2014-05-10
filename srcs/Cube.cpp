@@ -38,6 +38,5 @@ void Cube::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 bool	Cube::initialize()
 {
-  _speed = 10.0f;
   return (true);
 }

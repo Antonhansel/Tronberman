@@ -13,7 +13,7 @@
 AObject::AObject() : 
 	_position(0, 0, 0), _rotation(0, 0, 0), _scale(1, 1, 1)
 {
-
+  _isAlive = true;
 }
 
 AObject::~AObject()
@@ -104,4 +104,15 @@ const std::map< std::pair<float, float>, AObject* >&  AObject::getBombs()
 void AObject::setTexture(gdl::Texture *texture)
 {
   _texture = texture;
+}
+
+
+void  AObject::setIsAlive(bool isAlive)
+{
+  _isAlive = isAlive;
+}
+
+bool  AObject::getIsAlive() const
+{
+  return (_isAlive);
 }

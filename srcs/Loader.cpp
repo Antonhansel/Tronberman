@@ -21,14 +21,17 @@ Loader::~Loader()
 bool 	Loader::loadTextures()
 {
 	_textures[BLOCKD] = new gdl::Texture();
-	if (_textures[BLOCKD]->load("./ressources/assets/block.tga") == false)
+	if (_textures[BLOCKD]->load("./ressources/assets/BLOCKD.tga") == false)
 		return (false);
 	_textures[BORDER] = new gdl::Texture();
-	if (_textures[BORDER]->load("./ressources/assets/block.tga") == false)
+	if (_textures[BORDER]->load("./ressources/assets/BORDER.tga") == false)
 		return (false);
 	_textures[BLOCK] = new gdl::Texture();
-	if (_textures[BLOCK]->load("./ressources/assets/block.tga") == false)
+	if (_textures[BLOCK]->load("./ressources/assets/BLOCK.tga") == false)
 		return (false);
+  _textures[BOMB] = new gdl::Texture();
+  if (_textures[BOMB]->load("./ressources/assets/BOMB.tga") == false)
+    return (false);
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));

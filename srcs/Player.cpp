@@ -11,7 +11,9 @@
 #include "Player.hpp"
 
 Player::Player()
-{}
+{
+  _stock = 3;
+}
 
 Player::~Player()
 {}
@@ -19,8 +21,10 @@ Player::~Player()
 bool    Player::initialize()
 {
   _speed = 10.0f;
+  //_model.load( "./ressources/assets/marvin.fbx");
   _model.load( "./ressources/assets/bomberman_white_run.FBX");
   scale(glm::vec3(1,2,1));
+  //scale(glm::vec3(0.002,0.002,0.002));
   return (true);
 }
 
@@ -146,4 +150,24 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     _anim = 0;
   _pos.first = _posy;
   _pos.second = _posx;
+}
+
+int  Player::getStock() const
+{
+  return (_stock);
+}
+
+void  Player::setStock(int stock)
+{
+  _stock = stock;
+}
+
+void  Player::setId(int id)
+{
+  _id = id;
+}
+
+int   Player::getId() const
+{
+  return (_id);
 }

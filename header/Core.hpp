@@ -25,6 +25,7 @@
 # include <vector>
 # include <iostream>
 # include <map>
+# include <math.h>
 # include "Camera.hpp"
 # include "Loading.hpp"
 # include "Background.hpp"
@@ -35,6 +36,7 @@
 # include "Map.hpp"
 # include "Factory.hpp"
 # include "Loader.hpp"
+# include "Bombs.hpp"
 
 #define POSX 0
 #define POSY 0
@@ -73,9 +75,9 @@ public:
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
+  bool      makeBomb(Player *);
+  void      bombExplode();
 private:
-  std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap1;
-  std::map<int, void (Core::*)(AObject *, int&, int&, int)> inputmap2;
   int 			_percent;
   Camera 		*_cam;
   Loader    *_loader;
@@ -89,9 +91,10 @@ private:
   Map		        *_map;
   gdl::Clock		_clock;
   gdl::Input		_input;
+  double        _time;
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
-  std::map< std::pair<float, float>, AObject* > _bombs;
+  std::map< double, std::pair< int, AObject* > > _bombs;
   std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;
