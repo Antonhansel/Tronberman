@@ -21,7 +21,7 @@ Player::~Player()
 
 bool    Player::initialize()
 {
-  _speed = 10.0f;
+  _speed = 7.0f;
   //_model.load( "./ressources/assets/marvin.fbx");
   _model.load( "./ressources/assets/bomberman_white_run.FBX");
   scale(glm::vec3(1,2,1));
@@ -59,32 +59,28 @@ float   Player::getTrans()
 
 bool	Player::checkMove(float y, float x)
 {
-  // std::pair<float, float>   pos;
-  // AObject                   *obj = NULL;
-  
-  // if (y < 0)
-  //   y -= 1;
-  // if (x < 0)
-  //   x -= 1;
+  float temp1;
+  float temp2;
 
-  // for (int i = 0; i < 4; i++)
-  // {
-  //   if (i == 0)
-  //     pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x)));
-  //   else if (i == 1)
-  //    pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x)));
-  //   else if (i == 2)
-  //     pos = std::make_pair((float)((int)(y + 0.6)), (float)((int)(x + 0.9)));
-  //   else if (i == 3)
-  //     pos = std::make_pair((float)((int)(y + 0.9)), (float)((int)(x + 0.9)));
-
-  //   if ((*_map).find(pos) != (*_map).end())
-  //     obj = (*_map).find(pos)->second;
-  //   if (obj != NULL && (obj->getType() == BLOCKD || obj->getType() == BORDER ||
-  //       obj->getType() == BOT || obj->getType() == BLOCK))
-  //     return (false);
-  // }
-  return (true);
+  std::pair<float, float> pos;
+  pos.first = y;
+  pos.second = x;
+  temp1 = floor(pos.first);
+  temp2 = ceil(pos.first);
+  if (temp1 - pos.first > pos.first - temp2)
+    pos.first = temp1;
+  else
+    pos.first = temp2;
+  temp1 = floor(pos.second);
+  temp2 = ceil(pos.second);
+  if (temp1 - pos.second > pos.second - temp2)
+    pos.second = temp1;
+  else
+    pos.second = temp2; 
+  if (_map->find(pos) == (_map->end()))
+    return (true);
+  else
+    return (false);
 }
 
 
@@ -93,38 +89,38 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
  _trans = static_cast<float>(clock.getElapsed()) * _speed;
  if (_players == 1)
    {
-     if (input.getKey(SDLK_UP) && checkMove(_posy, _posx + (1 * _trans)) == true)
+     if (input.getKey(SDLK_UP) && checkMove(_posy, _posx + (_trans -0.2)) == true)
        {
-	 _anim = 2;
-	 _posx += 1 * _trans;
-	 translate(glm::vec3(0, 0, 1) * _trans);
+  	 _anim = 2;
+  	 _posx += 1 * _trans;
+  	 translate(glm::vec3(0, 0, 1) * _trans);
        }
-     if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * _trans)) == true)
+     if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * (_trans+0.3))) == true)
        {
-	 _anim = 2;
-	 _posx += -1 * _trans;
-	 translate(glm::vec3(0, 0, -1) * _trans);
+  	 _anim = 2;
+  	 _posx += -1 * _trans;
+  	 translate(glm::vec3(0, 0, -1) * _trans);
        }
-     if (input.getKey(SDLK_LEFT) && checkMove(_posy + (1 * _trans), _posx) == true)
+     if (input.getKey(SDLK_LEFT) && checkMove(_posy + (_trans +0.2), _posx) == true)
        {
-	 _anim = 2;
-	 _posy += 1 * _trans;
-	 translate(glm::vec3(1, 0, 0) * _trans);
+  	 _anim = 2;
+  	 _posy += 1 * _trans;
+  	 translate(glm::vec3(1, 0, 0) * _trans);
        }
-     if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * _trans), _posx) == true)
+     if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * (_trans - 0.2)), _posx) == true)
        {
-	 _anim = 2;
-	 _posy += -1 * _trans;
-	 translate(glm::vec3(-1, 0, 0) * _trans);
+  	 _anim = 2;
+  	 _posy += -1 * _trans;
+  	 translate(glm::vec3(-1, 0, 0) * _trans);
        }
    }
  else
    {
      if (input.getKey(SDLK_z) && checkMove(_posy, _posx + (1 * _trans)) == true)
        {
-	 _anim = 2;
-	 _posx += 1 * _trans;
-	 translate(glm::vec3(0, 0, 1) * _trans);
+	   _anim = 2;
+	   _posx += 1 * _trans;
+	   translate(glm::vec3(0, 0, 1) * _trans);
        }
      if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
        {
