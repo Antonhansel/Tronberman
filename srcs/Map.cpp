@@ -85,3 +85,88 @@ void    Map::drawWall()
       }
     } 
 }
+
+int     Map::getSide(float x, float y)
+{
+  std::pair<float, float>   spawn;
+  int     check;
+
+  check = 0;
+  spawn = std::make_pair((float)x + 1, (float)y);
+  if (cases.find(spawn) == cases.end())
+    check++;
+  spawn.first -= 2;
+  if (cases.find(spawn) == cases.end())
+    check++;
+  spawn.first -= 1;;
+  spawn.second += 1;;
+  if (cases.find(spawn) == cases.end())
+    check++;
+  spawn.second -= 1;
+  if (cases.find(spawn) == cases.end())
+    check++;
+  return (check);
+}
+
+bool    Map::deleteSide(float x, float y)
+{
+  std::pair<float, float>   spawn;
+  std::map< std::pair<float, float>, AObject * >::iterator it;
+
+  spawn = std::make_pair((float)x + 1, (float)y);
+  if ((it = cases.find(spawn)) != cases.end())
+    if ((*it).second->getType() == BLOCKD)
+    {
+      cases.erase(it);
+      return (true);
+    }
+  spawn.first -= 2;
+  if ((it = cases.find(spawn)) != cases.end())
+    if ((*it).second->getType() == BLOCKD)
+    {
+      cases.erase(it);
+      return (true);
+    }
+  spawn.first += 1;
+  spawn.second -= 1;
+  if ((it = cases.find(spawn)) != cases.end())
+    if ((*it).second->getType() == BLOCKD)
+    {
+      cases.erase(it);
+      return (true);
+    }
+  spawn.first += 2;
+  if ((it = cases.find(spawn)) != cases.end())
+    if ((*it).second->getType() == BLOCKD)
+    {
+      cases.erase(it);
+      return (true);
+    }
+  return (false);
+}
+
+std::vector<std::pair <float, float> >   Map::setSpawn(int nb)
+{
+  std::map< std::pair<float, float>, AObject * >::iterator it;
+  std::vector<std::pair <float, float> > spawns;
+  std::pair <float, float>   spawn;
+  int   x;
+  int   y;
+
+  srand(time(NULL));
+  for (int i = 0; i < nb; i++)
+  {
+    if ((x = rand() %(size_x * 2) -size_x) %2 == 0)
+      x++;
+    if ((y = rand() %(size_y * 2) -size_y) %2 == 0)
+      y++;
+    spawn = std::make_pair((float)x, (float)y);
+    if ((it = cases.find(spawn)) != cases.end())
+      if ((*it).second->getType() == BLOCKD)
+        cases.erase(it);
+    while (getSide(x, y) < 2)
+      deleteSide(x, y);
+    spawns.push_back(std::make_pair((float)x, (float)y));
+  }
+  return (spawns);
+}
