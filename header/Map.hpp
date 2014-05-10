@@ -22,11 +22,15 @@ public:
   bool				spawnBotChecking(const int&, const int&);
   bool				isEmpty(const int&, const int&);
   std::map< std::pair<float, float>, AObject *> &getMap();
+  std::vector<std::pair <float, float> >   setSpawn(int nb);
+
   ~Map();
 private:
-  std::map< std::pair<float, float>, AObject *> cases;
+  std::map<std::pair<float, float>, AObject *> cases;
   int					size_x;
   int					size_y;
+  int     getSide(float x, float y);
+  bool    deleteSide(float x, float y);
 };
 
 #endif /* !MAP_HPP */
