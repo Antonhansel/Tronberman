@@ -57,14 +57,20 @@ float   Player::getTrans()
   return (_trans);
 }
 
-bool	Player::checkMove(float y, float x)
+bool  Player::checkBomb()
+{
+  std::pair<float, float> pos;
+  pos = realPos(getPos());
+  if ((_map->find(pos) != _map->end()) && _map->find(pos)->second->getType() == BOMB)
+    return (true);
+  else
+    return (false);
+}
+
+std::pair<float, float> Player::realPos(std::pair<float, float> pos)
 {
   float temp1;
   float temp2;
-
-  std::pair<float, float> pos;
-  pos.first = y;
-  pos.second = x;
   temp1 = floor(pos.first);
   temp2 = ceil(pos.first);
   if (temp1 - pos.first > pos.first - temp2)
@@ -76,7 +82,18 @@ bool	Player::checkMove(float y, float x)
   if (temp1 - pos.second > pos.second - temp2)
     pos.second = temp1;
   else
-    pos.second = temp2; 
+    pos.second = temp2;  
+  return (pos);
+}
+
+bool	Player::checkMove(float y, float x)
+{
+  std::pair<float, float> pos;
+  if (checkBomb() == true)
+    return (true);
+  pos.first = y;
+  pos.second = x;
+  pos = realPos(pos);
   if (_map->find(pos) == (_map->end()))
     return (true);
   else

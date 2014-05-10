@@ -41,12 +41,14 @@ public:
   void 		draw(gdl::AShader &shader, gdl::Clock const &clock);	
   bool		checkMove(float y, float x);  
   float		getTrans();
+  bool    checkBomb();
   int     getStock() const;
   void    setStock(int);
   int     getId() const;
   void    setId(int);
   int     getRange() const;
   void    setRange(int);
+  std::pair<float, float> realPos(std::pair<float, float>);
 };
 
 #endif /* !_PLAYER_HPP_ */
