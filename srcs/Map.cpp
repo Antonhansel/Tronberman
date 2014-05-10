@@ -74,7 +74,7 @@ void    Map::drawWall()
               cases[pos]->setPos(pos);
               cases[pos]->initialize();
             }
-          else if ((rand() % 100) > 75 && cases[pos] == NULL)
+          else if ((rand() % 100) > 10 && cases[pos] == NULL)
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);
@@ -108,24 +108,26 @@ int     Map::getSide(float x, float y)
   return (check);
 }
 
-bool    Map::deleteSide(float x, float y)
+void    Map::deleteSide(float x, float y)
 {
+  int   nb;
   std::pair<float, float>   spawn;
   std::map< std::pair<float, float>, AObject * >::iterator it;
 
+  nb = 0;
   spawn = std::make_pair((float)x + 1, (float)y);
   if ((it = cases.find(spawn)) != cases.end())
     if ((*it).second->getType() == BLOCKD)
     {
       cases.erase(it);
-      return (true);
+      nb++;
     }
   spawn.first -= 2;
   if ((it = cases.find(spawn)) != cases.end())
     if ((*it).second->getType() == BLOCKD)
     {
       cases.erase(it);
-      return (true);
+      nb++;
     }
   spawn.first += 1;
   spawn.second -= 1;
@@ -133,16 +135,15 @@ bool    Map::deleteSide(float x, float y)
     if ((*it).second->getType() == BLOCKD)
     {
       cases.erase(it);
-      return (true);
+      nb++;
     }
   spawn.first += 2;
   if ((it = cases.find(spawn)) != cases.end())
     if ((*it).second->getType() == BLOCKD)
     {
       cases.erase(it);
-      return (true);
+      nb++;
     }
-  return (false);
 }
 
 std::vector<std::pair <float, float> >   Map::setSpawn(int nb)
@@ -164,7 +165,7 @@ std::vector<std::pair <float, float> >   Map::setSpawn(int nb)
     if ((it = cases.find(spawn)) != cases.end())
       if ((*it).second->getType() == BLOCKD)
         cases.erase(it);
-    while (getSide(x, y) < 2)
+  //  while (getSide(x, y) < 2)
       deleteSide(x, y);
     spawns.push_back(std::make_pair((float)x, (float)y));
   }
