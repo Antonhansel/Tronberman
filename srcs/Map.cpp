@@ -5,7 +5,7 @@
 // Login   <ribeau_a@epitech.net>
 // 
 // Started on  Thu May  1 16:48:07 2014 ribeaud antonin
-// Last update Sat May 10 01:34:58 2014 Mehdi Chouag
+// Last update Sat May 10 22:50:48 2014 Mehdi Chouag
 //
 
 #include "Map.hpp"
@@ -74,7 +74,7 @@ void    Map::drawWall()
               cases[pos]->setPos(pos);
               cases[pos]->initialize();
             }
-          else if ((rand() % 100) > 10 && cases[pos] == NULL)
+          else if ((rand() % 100) > 75 && cases[pos] == NULL)
             {
               cases[pos] = create<Cube>();
               cases[pos]->setType(BLOCKD);

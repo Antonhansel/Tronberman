@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Sat May 10 22:39:08 2014 Mehdi Chouag
+// Last update Sat May 10 22:50:18 2014 Mehdi Chouag
 */
 
 #include "Core.hpp"
@@ -15,8 +15,8 @@ Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair <float, float> >    obj;
 
-  _width = 12;
-  _height = 12;
+  _width = 10;
+  _height = 10;
   _loader = loader;
   _cam = cam;
   _players = 2;
