@@ -37,7 +37,7 @@ public:
   virtual void 	draw(gdl::AShader &shader, gdl::Clock const &clock) = 0;
   std::pair<float, float>	getPos() const;
   void 			translate(glm::vec3 const &v);
-  void 			rotate(glm::vec3 const& axis, float angle);
+  void 			rotate(glm::vec3 const& rotation);
   void 			scale(glm::vec3 const& scale);
   void			setPos(std::pair<float, float>&);
   void			setType(type);

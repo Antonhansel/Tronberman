@@ -1,9 +1,9 @@
 //
 // Player.cpp for Player in /home/chouag_m/rendu/bitbucker
-// 
+//
 // Made by Mehdi Chouag
 // Login   <chouag_m@epitech.net>
-// 
+//
 // Started on  Sat May 10 00:23:31 2014 Mehdi Chouag
 // Last update Sat May 10 00:58:19 2014 Mehdi Chouag
 //
@@ -39,7 +39,7 @@ void	Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 void    Player::setPlayer(int player)
 {
-  _players = player; 
+  _players = player;
 }
 
 void    Player::setScreen(int screen)
@@ -82,7 +82,7 @@ std::pair<float, float> Player::realPos(std::pair<float, float> pos)
   if (temp1 - pos.second > pos.second - temp2)
     pos.second = temp1;
   else
-    pos.second = temp2;  
+    pos.second = temp2;
   return (pos);
 }
 
@@ -111,24 +111,28 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
   	 _anim = 2;
   	 _posx += 1 * _trans;
   	 translate(glm::vec3(0, 0, 1) * _trans);
+     rotate(glm::vec3(0, 0, 0));
        }
      if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * (_trans+0.3))) == true)
        {
   	 _anim = 2;
   	 _posx += -1 * _trans;
   	 translate(glm::vec3(0, 0, -1) * _trans);
+     rotate(glm::vec3(0, 180, 0));
        }
      if (input.getKey(SDLK_LEFT) && checkMove(_posy + (_trans +0.2), _posx) == true)
        {
   	 _anim = 2;
   	 _posy += 1 * _trans;
   	 translate(glm::vec3(1, 0, 0) * _trans);
+     rotate(glm::vec3(0, 90, 0));
        }
      if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * (_trans - 0.2)), _posx) == true)
        {
   	 _anim = 2;
   	 _posy += -1 * _trans;
   	 translate(glm::vec3(-1, 0, 0) * _trans);
+     rotate(glm::vec3(0, 270, 0));
        }
    }
  else
@@ -138,24 +142,28 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 	   _anim = 2;
 	   _posx += 1 * _trans;
 	   translate(glm::vec3(0, 0, 1) * _trans);
+     rotate(glm::vec3(0, 0, 0));
        }
      if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
        {
 	 _anim = 2;
 	 _posx += -1 * _trans;
 	 translate(glm::vec3(0, 0, -1) * _trans);
+     rotate(glm::vec3(0, 180, 0));
        }
      if (input.getKey(SDLK_q) && checkMove(_posy + (1 * _trans), _posx) == true)
        {
 	 _anim = 2;
 	 _posy += 1 * _trans;
 	 translate(glm::vec3(1, 0, 0) * _trans);
+     rotate(glm::vec3(0, 90, 0));
        }
      if (input.getKey(SDLK_d) && checkMove(_posy + (-1 * _trans), _posx) == true)
        {
 	 _anim = 2;
 	 _posy += -1 * _trans;
 	 translate(glm::vec3(-1, 0, 0) * _trans);
+     rotate(glm::vec3(0, 270, 0));
        }
    }
   if (_anim == 2)

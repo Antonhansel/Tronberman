@@ -42,10 +42,10 @@ void 		AObject::translate(glm::vec3 const &v)
   _position += v;
 }
 
-void		AObject::rotate(glm::vec3 const& axis, float angle)
+void		AObject::rotate(glm::vec3 const& rotation)
 {
   _transformationDirty = true;
-  _rotation += axis * angle;
+  _rotation = rotation;
 }
 
 void 		AObject::scale(glm::vec3 const& scale)
@@ -69,11 +69,12 @@ glm::mat4 	AObject::getTransformation()
   if (_transformationDirty)
   {
     _transformation = glm::mat4(1);
+    _transformation = glm::translate(_transformation, _position);
+    _transformation = glm::scale(_transformation, _scale);
     _transformation = glm::rotate(_transformation, _rotation.x, glm::vec3(1, 0, 0));
     _transformation = glm::rotate(_transformation, _rotation.y, glm::vec3(0, 1, 0));
     _transformation = glm::rotate(_transformation, _rotation.z, glm::vec3(0, 0, 1));
-    _transformation = glm::translate(_transformation, _position);
-    _transformation = glm::scale(_transformation, _scale);
+    _transformation = glm::translate(_transformation, glm::vec3(-0.3, 0, 0));
   }
   _transformationDirty = false;
   return (_transformation);
