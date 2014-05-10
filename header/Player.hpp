@@ -26,6 +26,7 @@ protected:
   int			_anim;
   int           _stock;
   int           _id;
+  int           _range;
 
 public:
   void		setPlayer(int);
@@ -44,6 +45,8 @@ public:
   void    setStock(int);
   int     getId() const;
   void    setId(int);
+  int     getRange() const;
+  void    setRange(int);
 };
 
 #endif /* !_PLAYER_HPP_ */
