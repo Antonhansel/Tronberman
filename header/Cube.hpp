@@ -16,7 +16,6 @@
 class Cube : public AObject
 {
 private:
-  float		_speed;
   type		_type;
 public:
 	Cube();

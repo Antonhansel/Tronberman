@@ -25,6 +25,7 @@ Core::Core(Camera *cam, Loader *loader)
   _posx2 = POSX1;
   _posy2 = POSY1;
   _percent = 15;
+  _time = 0;
 }
 
 Core::~Core()
@@ -91,7 +92,6 @@ bool   Core::makeChar(int posx, int posy, int screen)
   chara->setPos(pos);
   chara->setPlayer(screen);
   chara->setMap(&_objects);
-  chara->setBombs(_bombs);
   chara->translate(glm::vec3(posx, 0, posy));
   _player[screen] = chara;
   return (true);
@@ -109,19 +109,73 @@ bool		Core::drawChar()
   return (true);
 }
 
+bool  Core::makeBomb(AObject *Player)
+{
+  std::pair<float, float> pos;
+
+  pos = Player->getPos();
+  if (pos.first > 0)
+    pos.first = floor(pos.first);
+  else
+    pos.first = ceil(pos.first);
+  if (pos.first < 0)
+    pos.second = (int)floor(pos.second);
+  else
+    pos.second = (int)ceil(pos.second);
+  std::cout << pos.first << std::endl;
+  std::cout << pos.second << std::endl;
+  if (_objects.find(pos) == _objects.end())
+  {
+    AObject *bomb = create<Bombs>();
+    bomb->setType(BOMB);
+    bomb->setPos(pos);
+    bomb->initialize();
+    _objects[pos] = bomb;
+    _bombs[_time] = bomb;
+  }
+  return (true);
+}
+
+void  Core::bombExplode()
+{
+  std::map< double, AObject*>::iterator it2;
+ 
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  {
+      if (_time - (*it2).first > 3.0)
+      {
+        _objects.erase(_objects.find((*it2).second->getPos()));
+      }
+   }
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  {
+      if (_time - (*it2).first > 3.0)
+      {
+        _bombs.erase((it2));
+      }
+   }
+}
+
 bool	Core::update()
 {
-  std::map<int, Player *>::iterator it;
+  std::map< int, Player *>::iterator it;
+  std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
+  _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
+  if (_input.getKey(SDLK_SPACE))
+    makeBomb(_player[1]);
+  if (_input.getKey(SDLK_KP_0) && _players == 2)
+    makeBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
+  bombExplode();
   return (true);
 }
 

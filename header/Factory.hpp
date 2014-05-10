@@ -11,9 +11,10 @@
 #ifndef FACTORY_HPP_
 # define FACTORY_HPP_
 
-#include "Cube.hpp"
-#include "Char.hpp"
-#include "Mybot.hpp"
+# include "Cube.hpp"
+# include "Char.hpp"
+# include "Mybot.hpp"
+# include "Bombs.hpp"
 
 template<typename T>
 T	*create()

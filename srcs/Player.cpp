@@ -19,8 +19,10 @@ Player::~Player()
 bool    Player::initialize()
 {
   _speed = 10.0f;
+  //_model.load( "./ressources/assets/marvin.fbx");
   _model.load( "./ressources/assets/bomberman_white_run.FBX");
   scale(glm::vec3(1,2,1));
+  //scale(glm::vec3(0.002,0.002,0.002));
   return (true);
 }
 

@@ -29,6 +29,9 @@ bool 	Loader::loadTextures()
 	_textures[BLOCK] = new gdl::Texture();
 	if (_textures[BLOCK]->load("./ressources/assets/BLOCK.tga") == false)
 		return (false);
+  _textures[BOMB] = new gdl::Texture();
+  if (_textures[BOMB]->load("./ressources/assets/BOMB.tga") == false)
+    return (false);
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
