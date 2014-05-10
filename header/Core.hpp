@@ -75,7 +75,7 @@ public:
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
-  bool      makeBomb(AObject *);
+  bool      makeBomb(Player *);
   void      bombExplode();
 private:
   int 			_percent;
@@ -94,7 +94,7 @@ private:
   double        _time;
   gdl::BasicShader	_shader;
   std::map< std::pair<float, float>, AObject* > _objects;
-  std::map< double, AObject* > _bombs;
+  std::map< double, std::pair< int, AObject* > > _bombs;
   std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;

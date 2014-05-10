@@ -11,7 +11,9 @@
 #include "Player.hpp"
 
 Player::Player()
-{}
+{
+  _stock = 3;
+}
 
 Player::~Player()
 {}
@@ -148,4 +150,24 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     _anim = 0;
   _pos.first = _posy;
   _pos.second = _posx;
+}
+
+int  Player::getStock() const
+{
+  return (_stock);
+}
+
+void  Player::setStock(int stock)
+{
+  _stock = stock;
+}
+
+void  Player::setId(int id)
+{
+  _id = id;
+}
+
+int   Player::getId() const
+{
+  return (_id);
 }

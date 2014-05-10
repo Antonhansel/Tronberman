@@ -24,6 +24,8 @@ protected:
   gdl::Geometry		_geometry;
   gdl::Model		_model;
   int			_anim;
+  int           _stock;
+  int           _id;
 
 public:
   void		setPlayer(int);
@@ -37,7 +39,11 @@ public:
   bool 		initialize();
   void 		draw(gdl::AShader &shader, gdl::Clock const &clock);	
   bool		checkMove(float y, float x);  
-  float		getTrans();  
+  float		getTrans();
+  int     getStock() const;
+  void    setStock(int);
+  int     getId() const;
+  void    setId(int);
 };
 
 #endif /* !_PLAYER_HPP_ */

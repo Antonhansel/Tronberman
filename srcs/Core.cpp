@@ -91,7 +91,8 @@ bool   Core::makeChar(int posx, int posy, int screen)
   pos = std::make_pair((float)posx, (float)posy);
   chara->setPos(pos);
   chara->setPlayer(screen);
-  chara->setMap(&_objects);
+  chara->setMap(&_objects);;
+  chara->setId(screen);
   chara->translate(glm::vec3(posx, 0, posy));
   _player[screen] = chara;
   return (true);
@@ -109,48 +110,61 @@ bool		Core::drawChar()
   return (true);
 }
 
-bool  Core::makeBomb(AObject *Player)
+bool  Core::makeBomb(Player *player)
 {
+  float temp1;
+  float temp2;
   std::pair<float, float> pos;
 
-  pos = Player->getPos();
-  if (pos.first > 0)
-    pos.first = floor(pos.first);
+  pos = player->getPos();
+  temp1 = floor(pos.first);
+  temp2 = ceil(pos.first);
+  if (temp1 - pos.first > pos.first - temp2)
+  {
+    pos.first = temp1;
+  }
   else
-    pos.first = ceil(pos.first);
-  if (pos.first < 0)
-    pos.second = (int)floor(pos.second);
+    pos.first = temp2;
+  temp1 = floor(pos.second);
+  temp2 = ceil(pos.second);
+  if (temp1 - pos.second > pos.second - temp2)
+  {
+    pos.second = temp1;
+  }
   else
-    pos.second = (int)ceil(pos.second);
-  std::cout << pos.first << std::endl;
-  std::cout << pos.second << std::endl;
+    pos.second = temp2;
   if (_objects.find(pos) == _objects.end())
   {
-    AObject *bomb = create<Bombs>();
-    bomb->setType(BOMB);
-    bomb->setPos(pos);
-    bomb->initialize();
-    _objects[pos] = bomb;
-    _bombs[_time] = bomb;
+    if (player->getStock() >= 1)
+    {
+      AObject *bomb = create<Bombs>();
+      bomb->setType(BOMB);
+      bomb->setPos(pos);
+      bomb->initialize();
+      _objects[pos] = bomb;
+      _bombs[_time] = std::make_pair(player->getId(), bomb);
+      player->setStock(player->getStock() - 1);
+    }
   }
   return (true);
 }
 
 void  Core::bombExplode()
 {
-  std::map< double, AObject*>::iterator it2;
- 
+  std::map< double, std::pair< int, AObject*> >::iterator it2;
+
   for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
   {
       if (_time - (*it2).first > 3.0)
       {
-        _objects.erase(_objects.find((*it2).second->getPos()));
+        _objects.erase(_objects.find((*it2).second.second->getPos()));
       }
    }
   for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
   {
       if (_time - (*it2).first > 3.0)
       {
+        _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
         _bombs.erase((it2));
       }
    }

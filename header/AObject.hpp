@@ -48,6 +48,8 @@ public:
   void			setSpeed(float);
   void			setMap(std::map< std::pair<float, float>, AObject *> *);
   void      setBombs(std::map< std::pair<float, float>, AObject* >&);
+  void      setIsAlive(bool);
+  bool      getIsAlive() const;
   const std::map< std::pair<float, float>, AObject* >&  getBombs();
 
   /*TEST*/
@@ -66,6 +68,7 @@ protected:
   std::map< std::pair<float, float>, AObject *>	*_map;
   std::map< std::pair<float, float>, AObject* > _bombs;
   float		_speed;
+  bool    _isAlive;
   gdl::Texture *_texture;
 };
 
