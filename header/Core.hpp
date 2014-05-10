@@ -79,7 +79,10 @@ public:
   void      bombExplode();
   void      removeExplosion();
   void      explosion(std::pair<float, float>, int);
+  std::pair<float, float> genPos();
 private:
+  int       _screen;
+  float     _dist;
   int 			_percent;
   Camera 		*_cam;
   Loader    *_loader;

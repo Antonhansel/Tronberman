@@ -19,13 +19,12 @@ Core::Core(Camera *cam, Loader *loader)
   _height = 10;
   _loader = loader;
   _cam = cam;
+  _players = 2;
   _map = new Map(_width, _height, _objects);
-  _players = 1;
-  _cam->setPlayer(_players);
   /*----*/
     obj = _map->setSpawn(1);
     std::cout << obj.begin()->first << " " << obj.begin()->second << std::endl;
-  /*----*/  
+  /*----*/
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
   _posx2 = POSX1;
@@ -57,7 +56,17 @@ bool	Core::initialize()
   //   return (false);
   if (drawBackground() == false)
     return (false);
-  _cam->setPlayer(_players);
+  if (_players == 2 && _width <= 10 && _height <= 10)
+  {
+    _screen = 1;
+    _cam->setPlayer(1);
+  }
+  else
+  {
+    _screen = 0;
+    _cam->setPlayer(_players);
+  }
+  
   std::cout << "Load done!" << std::endl;
   for (size_t i = 0; i < _loading.size(); ++i)
     delete _loading[i];
@@ -283,13 +292,33 @@ void  Core::changeFocus(AObject *cur_char, int screen)
 		   glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
 }
 
+std::pair<float, float>  Core::genPos()
+{
+  std::pair<float, float> pos;
+
+  pos.first = (_player[1]->getPos().first + _player[2]->getPos().first)/4;
+  pos.second = (_player[1]->getPos().second + _player[2]->getPos().second)/4;
+  //pos.first -= 2;
+  pos.second -= 2;
+  return (pos);
+}
+
 void	Core::draw()
 {	
-  changeFocus(_player[1], 1);
+  std::pair<float, float> pos;
+  if (_screen == 0)
+    changeFocus(_player[1], 1);
+  else
+  {
+  pos = genPos();
+  _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second), 
+       glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);    
+  }
   drawAll(_player[1]);
   if (_players == 2)
     {
-      changeFocus(_player[2], 2);
+      if (_screen == 0)
+        changeFocus(_player[2], 2);
       drawAll(_player[2]);
     }
   _cam->flushContext();

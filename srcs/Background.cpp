@@ -19,14 +19,6 @@ Background::Background(float width, float height, float speed)
 
 void Background::update(gdl::Clock const &clock, gdl::Input &input)
 {
-	if (input.getKey(SDLK_UP))
-		translate(glm::vec3(0, 0, 2) * static_cast<float>(clock.getElapsed()) * _speed);
-	if (input.getKey(SDLK_DOWN))
-		translate(glm::vec3(0, 0, -2) * static_cast<float>(clock.getElapsed()) * _speed);
-	if (input.getKey(SDLK_LEFT))
-		translate(glm::vec3(2, 0, 0) * static_cast<float>(clock.getElapsed()) * _speed);
-	if (input.getKey(SDLK_RIGHT))
-		translate(glm::vec3(-2, 0, 0) * static_cast<float>(clock.getElapsed()) * _speed);
 }
 
 void Background::draw(gdl::AShader &shader, gdl::Clock const &clock)
