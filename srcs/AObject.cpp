@@ -68,15 +68,15 @@ glm::mat4 	AObject::getTransformation()
 {
   if (_transformationDirty)
   {
-    _transformation = glm::mat4(1);
-    _transformation = glm::translate(_transformation, _position);
+    _transformation = glm::translate(glm::mat4(1), _position);
     _transformation = glm::scale(_transformation, _scale);
+    _transformation = glm::translate(_transformation, glm::vec3(0.3, 0, -0.3));
     _transformation = glm::rotate(_transformation, _rotation.x, glm::vec3(1, 0, 0));
     _transformation = glm::rotate(_transformation, _rotation.y, glm::vec3(0, 1, 0));
     _transformation = glm::rotate(_transformation, _rotation.z, glm::vec3(0, 0, 1));
-    _transformation = glm::translate(_transformation, glm::vec3(-0.3, 0, 0));
+    _transformation = glm::translate(_transformation, glm::vec3(-0.3, 0, 0.3));
+    _transformationDirty = false;
   }
-  _transformationDirty = false;
   return (_transformation);
 }
 
