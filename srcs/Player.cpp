@@ -22,10 +22,9 @@ Player::~Player()
 bool    Player::initialize()
 {
     _speed = 7.0f;
-//_model.load( "./ressources/assets/marvin.fbx");
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
-//scale(glm::vec3(0.002,0.002,0.002));
+    translate(glm::vec3(-0.7, 0, -0.3));
     return (true);
 }
 
@@ -96,7 +95,11 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         {
             if (checkMove(
                 i->second.first * _trans,
-                i->second.second * _trans))
+                i->second.second * _trans)
+                && checkMove(
+                i->second.first * _trans + 0.2,
+                i->second.second * _trans + 0.2)
+                )
             {
                 _posy += i->second.second * _trans;
                 _posx += i->second.first * _trans;
