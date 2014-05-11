@@ -12,8 +12,8 @@
 
 Player::Player()
 {
-  _stock = 3;
-  _range = 2;
+    _stock = 3;
+    _range = 2;
 }
 
 Player::~Player()
@@ -21,185 +21,127 @@ Player::~Player()
 
 bool    Player::initialize()
 {
-  _speed = 7.0f;
-  //_model.load( "./ressources/assets/marvin.fbx");
-  _model.load( "./ressources/assets/bomberman_white_run.FBX");
-  scale(glm::vec3(1,2,1));
-  //scale(glm::vec3(0.002,0.002,0.002));
-  return (true);
+    _speed = 7.0f;
+//_model.load( "./ressources/assets/marvin.fbx");
+    _model.load( "./ressources/assets/bomberman_white_run.FBX");
+    scale(glm::vec3(1,2,1));
+//scale(glm::vec3(0.002,0.002,0.002));
+    return (true);
 }
 
 void	Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
-  glPushMatrix();
-  _model.setCurrentAnim(_anim);
-  _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-  glPopMatrix();
+    glPushMatrix();
+    _model.setCurrentAnim(_anim);
+    _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
+    glPopMatrix();
 }
 
 void    Player::setPlayer(int player)
 {
-  _players = player;
+    _players = player;
 }
 
 void    Player::setScreen(int screen)
 {
-  _screen = screen;
+    _screen = screen;
 }
 
 void    Player::setSpeed(float speed)
 {
-  _speed = speed;
+    _speed = speed;
 }
 
 float   Player::getTrans()
 {
-  return (_trans);
+    return (_trans);
 }
 
-bool  Player::checkBomb()
+bool	Player::checkMove(float x, float y)
 {
-  std::pair<float, float> pos;
-  pos = realPos(getPos());
-  if ((_map->find(pos) != _map->end()) && _map->find(pos)->second->getType() == BOMB)
-    return (true);
-  else
-    return (false);
+    std::pair<float, float> pos;
+    if (floor(_posx) == floor(_posx + x) && floor(_posy) == floor(_posy + y))
+        return true;
+    pos.second = floor(_posx + x);
+    pos.first = floor(_posy + y);
+    if (_map->find(pos) == (_map->end()))
+        return (true);
+    else
+        return (false);
 }
-
-std::pair<float, float> Player::realPos(std::pair<float, float> pos)
-{
-  float temp1;
-  float temp2;
-  temp1 = floor(pos.first);
-  temp2 = ceil(pos.first);
-  if (temp1 - pos.first > pos.first - temp2)
-    pos.first = temp1;
-  else
-    pos.first = temp2;
-  temp1 = floor(pos.second);
-  temp2 = ceil(pos.second);
-  if (temp1 - pos.second > pos.second - temp2)
-    pos.second = temp1;
-  else
-    pos.second = temp2;
-  return (pos);
-}
-
-bool	Player::checkMove(float y, float x)
-{
-  std::pair<float, float> pos;
-  if (checkBomb() == true)
-    return (true);
-  pos.first = y;
-  pos.second = x;
-  pos = realPos(pos);
-  if (_map->find(pos) == (_map->end()))
-    return (true);
-  else
-    return (false);
-}
-
 
 void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
- _trans = static_cast<float>(clock.getElapsed()) * _speed;
- if (_players == 1)
-   {
-     if (input.getKey(SDLK_UP) && checkMove(_posy, _posx + (_trans -0.2)) == true)
-       {
-  	 _anim = 2;
-  	 _posx += 1 * _trans;
-  	 translate(glm::vec3(0, 0, 1) * _trans);
-     rotate(glm::vec3(0, 0, 0));
-       }
-     if (input.getKey(SDLK_DOWN) && checkMove(_posy, _posx + (-1 * (_trans+0.3))) == true)
-       {
-  	 _anim = 2;
-  	 _posx += -1 * _trans;
-  	 translate(glm::vec3(0, 0, -1) * _trans);
-     rotate(glm::vec3(0, 180, 0));
-       }
-     if (input.getKey(SDLK_LEFT) && checkMove(_posy + (_trans +0.2), _posx) == true)
-       {
-  	 _anim = 2;
-  	 _posy += 1 * _trans;
-  	 translate(glm::vec3(1, 0, 0) * _trans);
-     rotate(glm::vec3(0, 90, 0));
-       }
-     if (input.getKey(SDLK_RIGHT) && checkMove(_posy + (-1 * (_trans - 0.2)), _posx) == true)
-       {
-  	 _anim = 2;
-  	 _posy += -1 * _trans;
-  	 translate(glm::vec3(-1, 0, 0) * _trans);
-     rotate(glm::vec3(0, 270, 0));
-       }
-   }
- else
-   {
-     if (input.getKey(SDLK_z) && checkMove(_posy, _posx + (1 * _trans)) == true)
-       {
-	   _anim = 2;
-	   _posx += 1 * _trans;
-	   translate(glm::vec3(0, 0, 1) * _trans);
-     rotate(glm::vec3(0, 0, 0));
-       }
-     if (input.getKey(SDLK_s) && checkMove(_posy, _posx + (-1 * _trans)) == true)
-       {
-	 _anim = 2;
-	 _posx += -1 * _trans;
-	 translate(glm::vec3(0, 0, -1) * _trans);
-     rotate(glm::vec3(0, 180, 0));
-       }
-     if (input.getKey(SDLK_q) && checkMove(_posy + (1 * _trans), _posx) == true)
-       {
-	 _anim = 2;
-	 _posy += 1 * _trans;
-	 translate(glm::vec3(1, 0, 0) * _trans);
-     rotate(glm::vec3(0, 90, 0));
-       }
-     if (input.getKey(SDLK_d) && checkMove(_posy + (-1 * _trans), _posx) == true)
-       {
-	 _anim = 2;
-	 _posy += -1 * _trans;
-	 translate(glm::vec3(-1, 0, 0) * _trans);
-     rotate(glm::vec3(0, 270, 0));
-       }
-   }
-  if (_anim == 2)
-    _anim = 1;
-  else
-    _anim = 0;
-  _pos.first = _posy;
-  _pos.second = _posx;
+    _trans = static_cast<float>(clock.getElapsed()) * _speed;
+    std::map<int, std::pair<int, int> > keymap;
+    glm::vec3 rotation = glm::vec3(0);
+
+    if (_players == 1)
+    {
+        keymap[SDLK_UP] = std::make_pair(1, 0);
+        keymap[SDLK_DOWN] = std::make_pair(-1, 0);
+        keymap[SDLK_LEFT] = std::make_pair(0, 1);
+        keymap[SDLK_RIGHT] = std::make_pair(0, -1);
+    }
+    else
+    {
+        keymap[SDLK_z] = std::make_pair(1, 0);
+        keymap[SDLK_s] = std::make_pair(-1, 0);
+        keymap[SDLK_q] = std::make_pair(0, 1);
+        keymap[SDLK_d] = std::make_pair(0, -1);
+    }
+    for (std::map<int, std::pair<int, int> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
+    {
+        if (input.getKey(i->first))
+        {
+            if (checkMove(
+                i->second.first * _trans,
+                i->second.second * _trans))
+            {
+                _posy += i->second.second * _trans;
+                _posx += i->second.first * _trans;
+                translate(glm::vec3(i->second.second, 0, i->second.first) * _trans);
+            }
+            _anim = 2;
+            rotation.y += (i->second.first) ? (i->second.first * 90 - 90) : (0);
+            rotation.y += (i->second.second) ? (i->second.second * -90 + 180) : (0);
+            rotate(rotation);
+        }
+    }
+    if (_anim == 2)
+        _anim = 1;
+    else
+        _anim = 0;
+    _pos.first = _posy;
+    _pos.second = _posx;
 }
 
 int  Player::getStock() const
 {
-  return (_stock);
+    return (_stock);
 }
 
 void  Player::setStock(int stock)
 {
-  _stock = stock;
+    _stock = stock;
 }
 
 void  Player::setId(int id)
 {
-  _id = id;
+    _id = id;
 }
 
 int   Player::getId() const
 {
-  return (_id);
+    return (_id);
 }
 
 int   Player::getRange() const
 {
-  return (_range);
+    return (_range);
 }
 
 void  Player::setRange(int range)
 {
-  _range = range;
+    _range = range;
 }
