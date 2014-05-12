@@ -1,9 +1,9 @@
 //
 // Map.cpp for Map in /home/apollo/rendu/cpp_bomberman
-// 
+//
 // Made by ribeaud antonin
 // Login   <ribeau_a@epitech.net>
-// 
+//
 // Started on  Thu May  1 16:48:07 2014 ribeaud antonin
 // Last update Sat May 10 22:50:48 2014 Mehdi Chouag
 //
@@ -12,8 +12,8 @@
 
 Map::Map(const int& x, const int& y, std::map< std::pair<float, float>, AObject * > &map)
 {
-  size_x = x; 
-  size_y = y; 
+  size_x = x;
+  size_y = y;
   cases = map;
   outline();
   drawWall();
@@ -56,34 +56,36 @@ std::map< std::pair<float, float>, AObject *> &Map::getMap()
 
 void    Map::drawWall()
 {
-  std::pair<float, float> pos;
+    std::pair<float, float> pos;
+    std::map<std::pair<float, float>, AObject *>::iterator i;
 
-  srand(time(NULL));
-  for (int y = -size_y; y <= size_y; y++)
+    srand(time(NULL));
+    for (int y = -size_y; y <= size_y; y++)
     {
-      for (int x = -size_x; x <= size_x; x++)
-      {
-        if (x != -size_x && x != size_x &&
-            y != -size_y && y != size_y)
+        pos.first = y;
+        for (int x = -size_x; x <= size_x; x++)
         {
-          pos = std::make_pair(y, x);
-          if (x % 2 == 0 && y % 2 == 0 && !(x == 0 && y == 0))
+            pos.second = x;
+            if (x != -size_x && x != size_x &&
+                y != -size_y && y != size_y)
             {
-              cases[pos] = create<Cube>();
-              cases[pos]->setType(BLOCK);
-              cases[pos]->setPos(pos);
-              cases[pos]->initialize();
-            }
-          else if ((rand() % 100) > 75 && cases[pos] == NULL)
-            {
-              cases[pos] = create<Cube>();
-              cases[pos]->setType(BLOCKD);
-              cases[pos]->setPos(pos);
-              cases[pos]->initialize();
+                if (x % 2 == 0 && y % 2 == 0)
+                {
+                    i = cases.insert(std::pair<std::pair<float, float>, AObject *>(pos, create<Cube>())).first;
+                    i->second->setType(BLOCK);
+                    i->second->setPos(pos);
+                    i->second->initialize();
+                }
+                else if ((rand() % 100) > 75)
+                {
+                    i = cases.insert(std::pair<std::pair<float, float>, AObject *>(pos, create<Cube>())).first;
+                    i->second->setType(BLOCKD);
+                    i->second->setPos(pos);
+                    i->second->initialize();
+                }
             }
         }
-      }
-    } 
+    }
 }
 
 int     Map::getSide(float x, float y)
