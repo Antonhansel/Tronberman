@@ -99,6 +99,12 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
                 && checkMove(
                 (float)i->second.first * _trans + 0.2,
                 (float)i->second.second * _trans + 0.2)
+                && checkMove(
+                (float)i->second.first * _trans,
+                (float)i->second.second * _trans + 0.2)
+                && checkMove(
+                (float)i->second.first * _trans + 0.2,
+                (float)i->second.second * _trans)
                 )
             {
                 _posx += i->second.first * _trans;
