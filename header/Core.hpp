@@ -101,6 +101,8 @@ private:
   gdl::Clock		_clock;
   gdl::Input		_input;
   double        _time;
+  double        _frames;
+  double        _lasttime;
   gdl::BasicShader	_shader;
   std::map< double, std::pair< int, AObject* > > _bombs;
   std::vector< std::pair<double, AObject*> > _explosion;

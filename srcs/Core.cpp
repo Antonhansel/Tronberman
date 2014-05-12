@@ -14,8 +14,8 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 30;
-  _height = 30;
+  _width = 1000;
+  _height = 1000;
   _loader = loader;
   _cam = cam;
   _players = 2;
@@ -32,6 +32,8 @@ Core::Core(Camera *cam, Loader *loader)
   }
   _percent = 15;
   _time = 0;
+  _frames = 0;
+  _lasttime = 0;
 }
 
 Core::~Core()
@@ -62,7 +64,12 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-
+   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHT0);
+   float LightPos[4]={0,0,0,1};
+   glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
+   glMateriali(GL_FRONT_AND_BACK,GL_SHININESS,40);
+   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
   std::cout << "Load done!" << std::endl;
   for (size_t i = 0; i < _loading.size(); ++i)
     delete _loading[i];
@@ -226,19 +233,16 @@ void	Core::explosion(std::pair<float, float> pos, int playerId)
 
 void  Core::FPS()
 {
-  static double time = 0;
-  static int frames = 0;
-
-  time += _clock.getElapsed();
-  if (time > 1)
+  _lasttime += _clock.getElapsed();
+  if (_lasttime > 1)
   {
-    std::cout << frames << std::endl;
-    time = 0;
-    frames = 0;
+    std::cout << _frames << std::endl;
+    _lasttime = 0;
+    _frames = 1;
   }
   else
   {
-    frames++;
+    _frames++;
   }
 }
 
@@ -309,7 +313,6 @@ std::pair<float, float>  Core::genPos()
 
   pos.first = (_player[1]->getPos().first + _player[2]->getPos().first)/2;
   pos.second = (_player[1]->getPos().second + _player[2]->getPos().second)/2;
-  //pos.first -= 2;
   pos.second -= 2;
   return (pos);
 }
