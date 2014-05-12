@@ -22,7 +22,7 @@ public:
 	void 		bindTexture(type);
 	void 		drawGeometry(gdl::AShader &, glm::mat4 );
 private:
-	std::map<type, gdl::Texture*> _textures;
+	std::vector<gdl::Texture*> _textures;
 	gdl::Geometry 		_geometry;
 };
 
