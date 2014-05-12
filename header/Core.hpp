@@ -78,8 +78,10 @@ public:
   bool      makeBomb(Player *);
   void			bombExplode();
   void			removeExplosion();
+  void      FPS();
   void			explosion(std::pair<float, float>, int);
   void			newBomb(std::pair<float, float>&);
+  void      genSplit();
   std::pair<float, float> genPos();
 private:
   int       _screen;

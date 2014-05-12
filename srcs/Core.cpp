@@ -14,19 +14,22 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-
-  _width = 1000;
-  _height = 1000;
+  _width = 30;
+  _height = 30;
   _loader = loader;
   _cam = cam;
-  _players = 1;
+  _players = 2;
   _map = new Map(_width, _height);
   _sound = new Sound();
-  obj = _map->setSpawn(1);
+  obj = _map->setSpawn(_players);
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
-  _posx2 = POSX1;
-  _posy2 = POSY1;
+  if (_players == 2)
+  {
+    obj.erase(obj.begin());
+    _posx2 = obj.begin()->first;
+    _posy2 = obj.begin()->second;
+  }
   _percent = 15;
   _time = 0;
 }
@@ -221,6 +224,24 @@ void	Core::explosion(std::pair<float, float> pos, int playerId)
   }
 }
 
+void  Core::FPS()
+{
+  static double time = 0;
+  static int frames = 0;
+
+  time += _clock.getElapsed();
+  if (time > 1)
+  {
+    std::cout << frames << std::endl;
+    time = 0;
+    frames = 0;
+  }
+  else
+  {
+    frames++;
+  }
+}
+
 bool	Core::update()
 {
   std::map< int, Player *>::iterator it;
@@ -229,12 +250,13 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
+  FPS();
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
-  if (_input.getKey(SDLK_SPACE))
+  if (_input.getKey(SDLK_KP_0))
     makeBomb(_player[1]);
-  if (_input.getKey(SDLK_KP_0) && _players == 2)
+  if (_input.getKey(SDLK_SPACE) && _players == 2)
     makeBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
@@ -285,16 +307,43 @@ std::pair<float, float>  Core::genPos()
 {
   std::pair<float, float> pos;
 
-  pos.first = (_player[1]->getPos().first + _player[2]->getPos().first)/4;
-  pos.second = (_player[1]->getPos().second + _player[2]->getPos().second)/4;
+  pos.first = (_player[1]->getPos().first + _player[2]->getPos().first)/2;
+  pos.second = (_player[1]->getPos().second + _player[2]->getPos().second)/2;
   //pos.first -= 2;
   pos.second -= 2;
   return (pos);
 }
 
+void  Core::genSplit()
+{
+  float   pos1;
+  float   pos2;
+
+  if (_player[1]->getPos().first > _player[2]->getPos().first)
+    pos1 = _player[1]->getPos().first - _player[2]->getPos().first;
+  else
+    pos1 = _player[2]->getPos().first - _player[1]->getPos().first;
+  if (_player[1]->getPos().second > _player[2]->getPos().second)
+    pos2 = _player[1]->getPos().second - _player[2]->getPos().second;
+  else
+    pos2 = _player[2]->getPos().second - _player[1]->getPos().second;
+  if (pos1 > 20 || pos2 > 20)
+  {
+    _cam->setPlayer(2);
+    _screen = 0;
+  }
+  else
+  {
+    _cam->setPlayer(1);
+    _screen = 1;
+  }
+}
+
 void	Core::draw()
 {
   std::pair<float, float> pos;
+  if (_players == 2)
+    genSplit();
   if (_screen == 0)
     changeFocus(_player[1], 1);
   else
