@@ -14,17 +14,18 @@ Map::Map(int sizex, int sizey)
 {
     _size_x = sizex;
     _size_y = sizey;
-    _map.resize(_size_x * _size_y, NULL);
-    _outline();
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();
+    _outline();
 }
 
 Map::~Map()
 {
-    for (std::vector<AObject *>::iterator i = _map.begin(); i != _map.end(); ++i)
+    for (int i = 0; i < _size_x * _size_y; ++i)
     {
-        if (*i)
-            delete *i;
+        if (_map[i])
+            delete _map[i];
     }
 }
 

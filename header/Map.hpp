@@ -23,7 +23,7 @@ public:
   void    addCube(int, int, AObject *);
   void    deleteCube(int, int);
 private:
-  std::vector<AObject *>  _map;
+  AObject **_map;
   int     _size_x;
   int     _size_y;
   std::vector<std::pair<int, int> >   _spawns;
