@@ -9,11 +9,14 @@
 //
 
 #include "Player.hpp"
+#include "Map.hpp"
 
 Player::Player()
 {
     _stock = 3;
     _range = 2;
+    _posx = -0.3;
+    _posy = -0.3;
 }
 
 Player::~Player()
@@ -58,12 +61,9 @@ float   Player::getTrans()
 
 bool	Player::checkMove(float x, float y)
 {
-    std::pair<float, float> pos;
     if (floor(_posx) == floor(_posx + x) && floor(_posy) == floor(_posy + y))
         return true;
-    pos.second = floor(_posx + x);
-    pos.first = floor(_posy + y);
-    if (_map->find(pos) == (_map->end()))
+    if (!_map->getCase(floor(_posy + y), floor(_posx + x)))
         return (true);
     else
         return (false);
@@ -94,15 +94,15 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         if (input.getKey(i->first))
         {
             if (checkMove(
-                i->second.first * _trans,
-                i->second.second * _trans)
+                (float)i->second.first * _trans,
+                (float)i->second.second * _trans)
                 && checkMove(
-                i->second.first * _trans + 0.2,
-                i->second.second * _trans + 0.2)
+                (float)i->second.first * _trans + 0.2,
+                (float)i->second.second * _trans + 0.2)
                 )
             {
-                _posy += i->second.second * _trans;
                 _posx += i->second.first * _trans;
+                _posy += i->second.second * _trans;
                 translate(glm::vec3(i->second.second, 0, i->second.first) * _trans);
             }
             _anim = 2;

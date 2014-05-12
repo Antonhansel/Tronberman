@@ -13,14 +13,14 @@
 
 Core::Core(Camera *cam, Loader *loader)
 {
-  std::vector<std::pair <float, float> >    obj;
+  std::vector<std::pair<int, int> >    obj;
 
-  _width = 100;
-  _height = 100;
+  _width = 2000;
+  _height = 2000;
   _loader = loader;
   _cam = cam;
   _players = 1;
-  _map = new Map(_width, _height, _objects);
+  _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(1);
   _posx = obj.begin()->first;
@@ -35,8 +35,6 @@ Core::~Core()
 {
   std::map< std::pair<float, float>, AObject *>::iterator it;
 
-  for (it = _objects.begin(); it !=  _objects.end(); ++it)
-    delete (*it).second;
   delete _map;
   delete _sound;
 }
@@ -45,8 +43,6 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
-  if (drawMap() == false)
-    return (false);
   if (drawFloor() == false)
     return (false);
   if (drawChar() == false)
@@ -63,17 +59,10 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  
+
   std::cout << "Load done!" << std::endl;
   for (size_t i = 0; i < _loading.size(); ++i)
     delete _loading[i];
-  return (true);
-}
-
-bool  Core::drawMap()
-{
-  _objects = _map->getMap();
-  std::cout << _objects.size() << std::endl;
   return (true);
 }
 
@@ -103,7 +92,7 @@ bool   Core::makeChar(int posx, int posy, int screen)
   pos = std::make_pair((float)posx, (float)posy);
   chara->setPos(pos);
   chara->setPlayer(screen);
-  chara->setMap(&_objects);;
+  chara->setMap(_map);
   chara->setId(screen);
   _player[screen] = chara;
   return (true);
@@ -144,15 +133,14 @@ bool  Core::makeBomb(Player *player)
   }
   else
     pos.second = temp2;
-  if (_objects.find(pos) == _objects.end())
+  if (_map->getCase(pos.first, pos.second) == NULL)
   {
     if (player->getStock() >= 1)
     {
       AObject *bomb = create<Bombs>();
       bomb->setType(BOMB);
-      bomb->setPos(pos);
       bomb->initialize();
-      _objects[pos] = bomb;
+      _map->addCube(pos.first, pos.second, bomb);
       _bombs[_time] = std::make_pair(player->getId(), bomb);
       player->setStock(player->getStock() - 1);
     }
@@ -163,18 +151,19 @@ bool  Core::makeBomb(Player *player)
 void  Core::removeExplosion()
 {
   std::vector< std::pair<double, AObject*> >::iterator it2;
+  std::pair<float, float>     pos;
 
   for (it2 = _explosion.begin(); it2 != _explosion.end();)
+  {
+    if (_time - (*it2).first > 0.5)
     {
-      if (_time - (*it2).first > 0.5)
-      	{
-  	  _objects.erase(_objects.find((*it2).second->getPos()));
-  	  delete (*it2).second;
-  	  it2 = _explosion.erase((it2));
-  	}
-      else
-  	++it2;
+      pos = (*it2).second->getPos();
+      _map->deleteCube(pos.first, pos.second);
+      it2 = _explosion.erase((it2));
     }
+    else
+      ++it2;
+  }
 }
 
 void  Core::bombExplode()
@@ -184,69 +173,68 @@ void  Core::bombExplode()
   int                     playerId;
 
   for (it2 = _bombs.begin(); it2 != _bombs.end(); )
+  {
+    if (_time - (*it2).first > 2.0)
     {
-      if (_time - (*it2).first > 2.0)
-	{
-	  _objects.erase(_objects.find((*it2).second.second->getPos()));
-	  pos = (*it2).second.second->getPos();
-	  playerId = (*it2).second.first;
-	  _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
-	  _bombs.erase(it2++);
-	  explosion(pos, playerId);
-	  _sound->playSound(BOMB_S, 100);
-	}
-      else
-        ++it2;
+      pos = (*it2).second.second->getPos();
+      playerId = (*it2).second.first;
+      _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
+      _bombs.erase(it2++);
+      explosion(pos, playerId);
+      _sound->playSound(BOMB_S, 100);
+      pos = (*it2).second.second->getPos();
+      _map->deleteCube(pos.first, pos.second);
     }
+    else
+      ++it2;
+  }
 }
 
 void		Core::newBomb(std::pair<float, float> &check)
 {
-  AObject	*bomb; 
+  AObject	*bomb;
 
   bomb = create<Bombs>();
   bomb->setType(LASER);
-  bomb->setPos(check);
   bomb->initialize();
-  _objects[check] = bomb;
+  _map->addCube(check.first, check.second, bomb);
   _explosion.push_back(std::make_pair(_time, bomb));
 }
 
 void	Core::explosion(std::pair<float, float> pos, int playerId)
 {
+  AObject *tmp;
   std::map< std::pair<float, float>, AObject * >::iterator it;
   std::pair<float, float>	check;
-  // int				range;
 
-  // range = _player[playerId]->getRange();
   check.first = pos.first;
   check.second = pos.second - 1;
   while (check.second - 1 < pos.second + 1)
+  {
+    tmp = _map->getCase(check.first, check.second);
+    if (tmp && tmp->getType() == BLOCKD)
     {
-      it = _objects.find(check);
-      if (it != _objects.end() && (*it).second->getType() == BLOCKD)
-	{
-	  _objects.erase(it);
-	  newBomb(check);
-	}
-      else if (it == _objects.end())
-	newBomb(check);
-      check.second++;
+      _map->deleteCube(check.first, check.second);
+      newBomb(check);
     }
+    else if (!tmp)
+      newBomb(check);
+    check.second++;
+  }
   check.first = pos.first - 1;
   check.second = pos.second;
   while (check.first - 1 < pos.first + 1)
+  {
+    tmp = _map->getCase(check.first, check.second);
+    if (tmp && tmp->getType() == BLOCKD)
     {
-      it = _objects.find(check);
-      if (it != _objects.end() && (*it).second->getType() == BLOCKD)
-	{
-	  _objects.erase(it);
-	  newBomb(check);
-	}
-      else if (it == _objects.end())
-	newBomb(check);
-      check.first++;
+      _map->deleteCube(check.first, check.second);
+      newBomb(check);
     }
+    else if (!tmp)
+      newBomb(check);
+    check.first++;
+  }
 }
 
 bool	Core::update()
@@ -275,37 +263,30 @@ bool	Core::update()
 
 void  Core::drawAll(AObject *cur_char)
 {
-  std::map< std::pair<float, float>, AObject * >::iterator it;
-  std::vector<AObject*>::iterator it2;
-  std::pair<float, float> pos;
-  std::pair<float, float> check;
-  type LastType = BLOCKD;
+  std::pair<int, int> pos;
+  type LastType = static_cast<type>(-1);
+  AObject     *tmp;
 
-  _loader->bindTexture(LastType);
   pos = cur_char->getPos();
-  pos.first = (float)(int)pos.first;
-  pos.second = (float)(int)pos.second;
-  check.second = pos.second - 15;
-  while (check.second < pos.second + 25)
+    // pos.first = floor(pos.first);
+    // pos.second = floor(pos.second);
+  for (int x = pos.first - 30; x < pos.first + 30; ++x)
   {
-    check.first = pos.first - 30;
-    while (check.first < pos.first + 30)
+    for (int y = pos.second - 30; y < pos.second + 30; ++y)
     {
-        if ((it = _objects.find(check)) != _objects.end())
-        {
-          if ((*it).second->getType() != LastType)
-          {
-            LastType = (*it).second->getType();
-            _loader->bindTexture(LastType);
-          }
-          _loader->drawGeometry(_shader, (*it).second->getTransformation());
-        }
-      check.first++;
+      tmp = _map->getCase(x, y);
+      if (!tmp)
+        continue;
+      if (tmp->getType() != LastType)
+      {
+        LastType = tmp->getType();
+        _loader->bindTexture(LastType);
+      }
+      _loader->drawGeometry(_shader, tmp->getTransformation());
     }
-    check.second++;
   }
-  for (it2 = _other.begin(); it2 != _other.end(); ++it2)
-    (*it2)->draw(_shader, _clock);
+  for (std::vector<AObject*>::iterator i = _other.begin(); i != _other.end(); ++i)
+    (*i)->draw(_shader, _clock);
   for (size_t i = 1; i <= _player.size(); i++)
     _player[i]->draw(_shader, _clock);
 }
@@ -314,8 +295,8 @@ void  Core::changeFocus(AObject *cur_char, int screen)
 {
   std::pair<float, float> pos;
   pos = cur_char->getPos();
-  _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second), 
-		   glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
+  _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second),
+   glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
 }
 
 std::pair<float, float>  Core::genPos()
@@ -330,22 +311,22 @@ std::pair<float, float>  Core::genPos()
 }
 
 void	Core::draw()
-{	
+{
   std::pair<float, float> pos;
   if (_screen == 0)
     changeFocus(_player[1], 1);
   else
   {
-  pos = genPos();
-  _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second), 
-       glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);    
+    pos = genPos();
+    _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second),
+     glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);
   }
   drawAll(_player[1]);
   if (_players == 2)
-    {
-      if (_screen == 0)
-        changeFocus(_player[2], 2);
-      drawAll(_player[2]);
-    }
+  {
+    if (_screen == 0)
+      changeFocus(_player[2], 2);
+    drawAll(_player[2]);
+  }
   _cam->flushContext();
 }

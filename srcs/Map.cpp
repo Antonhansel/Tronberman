@@ -10,166 +10,129 @@
 
 #include "Map.hpp"
 
-Map::Map(const int& x, const int& y, std::map< std::pair<float, float>, AObject * > &map)
+Map::Map(int sizex, int sizey)
 {
-  size_x = x;
-  size_y = y;
-  cases = map;
-  outline();
-  drawWall();
-}
-
-Map::Map(const std::string& name)
-{
-
+    _size_x = sizex;
+    _size_y = sizey;
+    _map.resize(_size_x * _size_y, NULL);
+    _outline();
+    _drawWall();
 }
 
 Map::~Map()
-{}
-
-void    Map::outline()
 {
-  std::pair<float, float> pos;
-
-  for (int y = -size_y; y <= size_y; y++)
-  {
-    for (int x = -size_x; x <= size_x; x++)
+    for (std::vector<AObject *>::iterator i = _map.begin(); i != _map.end(); ++i)
     {
-      if (x == -size_x || x == size_x ||
-          y == -size_y || y == size_y)
-      {
-        pos = std::make_pair(y, x);
-        cases[pos] = create<Cube>();
-        cases[pos]->setType(BORDER);
-        cases[pos]->setPos(pos);
-        cases[pos]->initialize();
-      }
+        if (*i)
+            delete *i;
     }
-
-  }
 }
 
-std::map< std::pair<float, float>, AObject *> &Map::getMap()
+AObject     *Map::getCase(int x, int y) const
 {
-  return (cases);
+    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
+        return NULL;
+    return _map[x * _size_x + y];
 }
 
-void    Map::drawWall()
+void Map::addCube(int x, int y, type blockType)
 {
-    std::pair<float, float> pos;
-    std::map<std::pair<float, float>, AObject *>::iterator i;
+    std::pair<float, float>     pos;
+    AObject     *tmp;
 
-    srand(time(NULL));
-    for (int y = -size_y; y <= size_y; y++)
+    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
+        return;
+    if (_map[x * _size_x + y])
+        return;
+    tmp = create<Cube>();
+    pos = std::make_pair(x, y);
+    tmp->setType(blockType);
+    tmp->setPos(pos);
+    tmp->initialize();
+    _map[x * _size_x + y] = tmp;
+}
+
+void Map::addCube(int x, int y, AObject *obj)
+{
+    std::pair<float, float>     pos;
+
+    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
+        return;
+    if (_map[x * _size_x + y])
+        return;
+    pos = std::make_pair(x, y);
+    obj->setPos(pos);
+    _map[x * _size_x + y] = obj;
+}
+
+void Map::deleteCube(int x, int y)
+{
+    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
+        return;
+    delete _map[x * _size_x + y];
+    _map[x * _size_x + y] = NULL;
+}
+
+void    Map::_outline()
+{
+    for (int y = 0; y < _size_y; y++)
     {
-        pos.first = y;
-        for (int x = -size_x; x <= size_x; x++)
+        addCube(0, y, BORDER);
+        addCube(_size_x - 1, y, BORDER);
+    }
+    for (int x = 0; x < _size_x; x++)
+    {
+        addCube(x, 0, BORDER);
+        addCube(x, _size_y - 1, BORDER);
+    }
+}
+
+void    Map::_drawWall()
+{
+    srand(time(NULL));
+    for (int y = 0; y <= _size_y; y++)
+    {
+        for (int x = 0; x <= _size_x; x++)
         {
-            pos.second = x;
-            if (x != -size_x && x != size_x &&
-                y != -size_y && y != size_y)
-            {
-                if (x % 2 == 0 && y % 2 == 0)
-                {
-                    i = cases.insert(std::pair<std::pair<float, float>, AObject *>(pos, create<Cube>())).first;
-                    i->second->setType(BLOCK);
-                    i->second->setPos(pos);
-                    i->second->initialize();
-                }
-                else if ((rand() % 100) > 75)
-                {
-                    i = cases.insert(std::pair<std::pair<float, float>, AObject *>(pos, create<Cube>())).first;
-                    i->second->setType(BLOCKD);
-                    i->second->setPos(pos);
-                    i->second->initialize();
-                }
-            }
+            if (x % 2 == 0 && y % 2 == 0)
+                addCube(x, y, BLOCK);
+            else if ((rand() % 100) > 75)
+                addCube(x, y, BLOCKD);
         }
     }
 }
 
-int     Map::getSide(float x, float y)
+void    Map::_deleteSide(int x, int y)
 {
-  std::pair<float, float>   spawn;
-  int     check;
+    AObject *tmp;
 
-  check = 0;
-  spawn = std::make_pair((float)x + 1, (float)y);
-  if (cases.find(spawn) == cases.end())
-    check++;
-  spawn.first -= 2;
-  if (cases.find(spawn) == cases.end())
-    check++;
-  spawn.first -= 1;;
-  spawn.second += 1;;
-  if (cases.find(spawn) == cases.end())
-    check++;
-  spawn.second -= 1;
-  if (cases.find(spawn) == cases.end())
-    check++;
-  return (check);
-}
-
-void    Map::deleteSide(float x, float y)
-{
-  int   nb;
-  std::pair<float, float>   spawn;
-  std::map< std::pair<float, float>, AObject * >::iterator it;
-
-  nb = 0;
-  spawn = std::make_pair((float)x + 1, (float)y);
-  if ((it = cases.find(spawn)) != cases.end())
-    if ((*it).second->getType() == BLOCKD)
+    for (int i = x - 2; i < x + 2; ++i)
     {
-      cases.erase(it);
-      nb++;
-    }
-  spawn.first -= 2;
-  if ((it = cases.find(spawn)) != cases.end())
-    if ((*it).second->getType() == BLOCKD)
-    {
-      cases.erase(it);
-      nb++;
-    }
-  spawn.first += 1;
-  spawn.second -= 1;
-  if ((it = cases.find(spawn)) != cases.end())
-    if ((*it).second->getType() == BLOCKD)
-    {
-      cases.erase(it);
-      nb++;
-    }
-  spawn.first += 2;
-  if ((it = cases.find(spawn)) != cases.end())
-    if ((*it).second->getType() == BLOCKD)
-    {
-      cases.erase(it);
-      nb++;
+        for (int j = y - 2; j < y + 2; ++j)
+        {
+            tmp = getCase(i, j);
+            if (tmp && tmp->getType() == BLOCKD)
+                deleteCube(i, j);
+        }
     }
 }
 
-std::vector<std::pair <float, float> >   Map::setSpawn(int nb)
+std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
 {
-  std::map< std::pair<float, float>, AObject * >::iterator it;
-  std::vector<std::pair <float, float> > spawns;
-  std::pair <float, float>   spawn;
-  int   x;
-  int   y;
+    int   x;
+    int   y;
 
-  srand(time(NULL));
-  for (int i = 0; i < nb; i++)
-  {
-    if ((x = rand() %(size_x * 2) -size_x) %2 == 0)
-      x++;
-    if ((y = rand() %(size_y * 2) -size_y) %2 == 0)
-      y++;
-    spawn = std::make_pair((float)x, (float)y);
-    if ((it = cases.find(spawn)) != cases.end())
-      if ((*it).second->getType() == BLOCKD)
-        cases.erase(it);
-  //  while (getSide(x, y) < 2)
-      deleteSide(x, y);
-    spawns.push_back(std::make_pair((float)x, (float)y));
-  }
-  return (spawns);
+    srand(time(NULL));
+    for (int i = 0; i < nb; i++)
+    {
+        x = rand() % _size_x;
+        y = rand() % _size_y;
+        if (x % 2 == 0)
+            x = (x + 1) % _size_x;
+        if (y % 2 == 0)
+            y = (y + 1) % _size_y;
+        _spawns.push_back(std::make_pair(x, y));
+        _deleteSide(x, y);
+    }
+    return (_spawns);
 }

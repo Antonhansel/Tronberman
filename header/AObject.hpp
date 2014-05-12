@@ -15,6 +15,8 @@
 # include <vector>
 # include <iostream>
 
+class Map;
+
 enum type
   {
     BORDER = 0,
@@ -46,7 +48,7 @@ public:
   float			getTrans() const;
   void			setPlayer(int);
   void			setSpeed(float);
-  void			setMap(std::map< std::pair<float, float>, AObject *> *);
+  void			setMap(Map *);
   void      setBombs(std::map< std::pair<float, float>, AObject* >&);
   void      setIsAlive(bool);
   bool      getIsAlive() const;
@@ -67,7 +69,7 @@ protected:
   glm::vec3	_position;
   glm::vec3	_rotation;
   glm::vec3	_scale;
-  std::map< std::pair<float, float>, AObject *>	*_map;
+  Map	*_map;
   std::map< std::pair<float, float>, AObject* > _bombs;
   float		_speed;
   bool    _isAlive;

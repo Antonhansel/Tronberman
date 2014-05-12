@@ -11,13 +11,13 @@
 #ifndef _CORE_HPP_
 # define _CORE_HPP_
 
-# include <Game.hh> 
-# include <Clock.hh> 
-# include <Input.hh> 
-# include <SdlContext.hh> 
-# include <Geometry.hh> 
-# include <Texture.hh> 
-# include <Model.hh> 
+# include <Game.hh>
+# include <Clock.hh>
+# include <Input.hh>
+# include <SdlContext.hh>
+# include <Geometry.hh>
+# include <Texture.hh>
+# include <Model.hh>
 # include <glm/glm.hpp>
 # include <BasicShader.hh>
 # include <glm/gtc/matrix_transform.hpp>
@@ -57,7 +57,7 @@ enum cinput
   P2DOWN,
   P2RIGHT,
   P2LEFT,
-  P2BOMB 
+  P2BOMB
 };
 
 class Core : public gdl::Game
@@ -68,7 +68,6 @@ public:
   bool			initialize();
   void			draw();
   bool			drawFloor();
-  bool			drawMap();
   bool			drawChar();
   bool      drawBot();
   bool			drawBackground();
@@ -101,7 +100,6 @@ private:
   gdl::Input		_input;
   double        _time;
   gdl::BasicShader	_shader;
-  std::map< std::pair<float, float>, AObject* > _objects;
   std::map< double, std::pair< int, AObject* > > _bombs;
   std::vector< std::pair<double, AObject*> > _explosion;
   std::map<type, gdl::Texture*> _textures;

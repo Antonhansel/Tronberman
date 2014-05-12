@@ -7,30 +7,29 @@
 # include <map>
 # include <stdlib.h>
 # include <utility>
-# include "AObject.hpp"
 # include "Factory.hpp"
+
+class AObject;
 
 class Map
 {
 public:
-  Map(const int&, const int&, std::map< std::pair<float, float>, AObject * > &);
-  Map(const std::string&);
-
-  void				outline();
-  void				spawnBot();
-  void        drawWall();
-  bool				spawnBotChecking(const int&, const int&);
-  bool				isEmpty(const int&, const int&);
-  std::map< std::pair<float, float>, AObject *> &getMap();
-  std::vector<std::pair <float, float> >   setSpawn(int nb);
-
+  Map(int, int);
   ~Map();
+
+  AObject     *getCase(int, int) const;
+  std::vector<std::pair<int, int> >   &setSpawn(int nb);
+  void    addCube(int, int, type);
+  void    addCube(int, int, AObject *);
+  void    deleteCube(int, int);
 private:
-  std::map<std::pair<float, float>, AObject *> cases;
-  int					size_x;
-  int					size_y;
-  int     getSide(float x, float y);
-  void    deleteSide(float x, float y);
+  std::vector<AObject *>  _map;
+  int     _size_x;
+  int     _size_y;
+  std::vector<std::pair<int, int> >   _spawns;
+  void    _deleteSide(int x, int y);
+  void		_outline();
+  void    _drawWall();
 };
 
 #endif /* !MAP_HPP */
