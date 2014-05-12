@@ -45,35 +45,17 @@ public:
   void			setType(type);
   glm::mat4 		getTransformation();
   type			getType() const;
-  float			getTrans() const;
-  void			setPlayer(int);
-  void			setSpeed(float);
-  void			setMap(Map *);
-  void      setBombs(std::map< std::pair<float, float>, AObject* >&);
-  void      setIsAlive(bool);
-  bool      getIsAlive() const;
-  const std::map< std::pair<float, float>, AObject* >&  getBombs();
 
-  /*TEST*/
   void  setTexture(gdl::Texture *);
 protected:
-  bool        _transformationDirty;
-  glm::mat4   _transformation;
-  float   _posx;
-  float   _posy;
-  type		_type;
-  float		_trans;
-  int 			_players;
-  int 			_screen;
+  bool                    _transformationDirty;
+  glm::mat4               _transformation;
+  type                    _type;
   std::pair<float, float>	_pos;
-  glm::vec3	_position;
-  glm::vec3	_rotation;
-  glm::vec3	_scale;
-  Map	*_map;
-  std::map< std::pair<float, float>, AObject* > _bombs;
-  float		_speed;
-  bool    _isAlive;
-  gdl::Texture *_texture;
+  glm::vec3	              _position;
+  glm::vec3	              _rotation;
+  glm::vec3	              _scale;
+  gdl::Texture            *_texture;
 };
 
 #endif /*!_AOBJECT_HPP_*/

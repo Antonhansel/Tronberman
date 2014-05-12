@@ -15,8 +15,7 @@ Player::Player()
 {
     _stock = 3;
     _range = 2;
-    _posx = -0.3;
-    _posy = -0.3;
+    _x = 0;
 }
 
 Player::~Player()
@@ -24,10 +23,10 @@ Player::~Player()
 
 bool    Player::initialize()
 {
-    _speed = 7.0f;
+    _speed = 7;
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
-    translate(glm::vec3(-0.7, 0, -0.3));
+    translate(glm::vec3(-0.5, 0, 0));
     return (true);
 }
 
@@ -39,14 +38,14 @@ void	Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
     glPopMatrix();
 }
 
-void    Player::setPlayer(int player)
+void    Player::setMap(Map *map)
 {
-    _players = player;
+    _map = map;
 }
 
-void    Player::setScreen(int screen)
+void    Player::setPlayer(int player)
 {
-    _screen = screen;
+    _player = player;
 }
 
 void    Player::setSpeed(float speed)
@@ -54,16 +53,11 @@ void    Player::setSpeed(float speed)
     _speed = speed;
 }
 
-float   Player::getTrans()
-{
-    return (_trans);
-}
-
 bool	Player::checkMove(float x, float y)
 {
-    if (floor(_posx) == floor(_posx + x) && floor(_posy) == floor(_posy + y))
+    if (floor(_pos.first) == floor(_pos.first + x) && floor(_pos.second) == floor(_pos.second + y))
         return true;
-    if (!_map->getCase(floor(_posy + y), floor(_posx + x)))
+    if (!_map->getCase(floor(_pos.first + x), floor(_pos.second + y)))
         return (true);
     else
         return (false);
@@ -71,49 +65,49 @@ bool	Player::checkMove(float x, float y)
 
 void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
-    _trans = static_cast<float>(clock.getElapsed()) * _speed;
-    std::map<int, std::pair<int, int> > keymap;
+    float trans = static_cast<float>(clock.getElapsed()) * _speed;
+    std::map<int, std::pair<float, float> > keymap;
     glm::vec3 rotation = glm::vec3(0);
 
-    if (_players == 1)
+    if (_player == 1)
     {
-        keymap[SDLK_UP] = std::make_pair(1, 0);
-        keymap[SDLK_DOWN] = std::make_pair(-1, 0);
-        keymap[SDLK_LEFT] = std::make_pair(0, 1);
-        keymap[SDLK_RIGHT] = std::make_pair(0, -1);
+        keymap[SDLK_LEFT] = std::make_pair(trans, 0);
+        keymap[SDLK_RIGHT] = std::make_pair(-trans, 0);
+        keymap[SDLK_UP] = std::make_pair(0, trans);
+        keymap[SDLK_DOWN] = std::make_pair(0, -trans);
     }
     else
     {
-        keymap[SDLK_z] = std::make_pair(1, 0);
-        keymap[SDLK_s] = std::make_pair(-1, 0);
-        keymap[SDLK_q] = std::make_pair(0, 1);
-        keymap[SDLK_d] = std::make_pair(0, -1);
+        keymap[SDLK_q] = std::make_pair(trans, 0);
+        keymap[SDLK_d] = std::make_pair(-trans, 0);
+        keymap[SDLK_z] = std::make_pair(0, trans);
+        keymap[SDLK_s] = std::make_pair(0, -trans);
     }
-    for (std::map<int, std::pair<int, int> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
+    for (std::map<int, std::pair<float, float> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
     {
         if (input.getKey(i->first))
         {
             if (checkMove(
-                (float)i->second.first * _trans,
-                (float)i->second.second * _trans)
+                (float)i->second.first,
+                (float)i->second.second)
                 && checkMove(
-                (float)i->second.first * _trans + 0.2,
-                (float)i->second.second * _trans + 0.2)
+                (float)i->second.first + 0.4,
+                (float)i->second.second + 0.4)
                 && checkMove(
-                (float)i->second.first * _trans,
-                (float)i->second.second * _trans + 0.2)
+                (float)i->second.first,
+                (float)i->second.second + 0.4)
                 && checkMove(
-                (float)i->second.first * _trans + 0.2,
-                (float)i->second.second * _trans)
+                (float)i->second.first + 0.4,
+                (float)i->second.second)
                 )
             {
-                _posx += i->second.first * _trans;
-                _posy += i->second.second * _trans;
-                translate(glm::vec3(i->second.second, 0, i->second.first) * _trans);
+                _pos.first += i->second.first;
+                _pos.second += i->second.second;
+                translate(glm::vec3(i->second.first, 0, i->second.second));
             }
             _anim = 2;
-            rotation.y += (i->second.first) ? (i->second.first * 90 - 90) : (0);
-            rotation.y += (i->second.second) ? (i->second.second * -90 + 180) : (0);
+            rotation.y += (i->second.second) ? (SIGN(i->second.second) * 90 - 90) : (0);
+            rotation.y += (i->second.first) ? (SIGN(i->second.first) * -90 + 180) : (0);
             rotate(rotation);
         }
     }
@@ -121,8 +115,6 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         _anim = 1;
     else
         _anim = 0;
-    _pos.first = _posy;
-    _pos.second = _posx;
 }
 
 int  Player::getStock() const

@@ -17,30 +17,33 @@
 # include "Model.hh"
 # include "Bombs.hpp"
 
+# define SIGN(x)  (((x) < 0) ? (-1) : (1))
+
 class Player : public AObject
 {
 protected:
-  gdl::Texture		_texture;
-  gdl::Geometry		_geometry;
+  gdl::Texture	_texture;
+  gdl::Geometry	_geometry;
   gdl::Model		_model;
-  int			_anim;
+  int			      _anim;
   int           _stock;
   int           _id;
   int           _range;
-  bool		checkMove(float y, float x);
-
+  float         _speed;
+  Map           *_map;
+  int           _player;
+  bool          checkMove(float y, float x);
+  float         _x;
 public:
   void    setPlayer(int);
-  void    setScreen(int);
   void    setSpeed(float);
-
+  void    setMap(Map *);
 public:
   Player();
   ~Player();
   void    update(gdl::Clock const &clock, gdl::Input &input);
   bool    initialize();
   void    draw(gdl::AShader &shader, gdl::Clock const &clock);
-  float		getTrans();
   int     getStock() const;
   void    setStock(int);
   int     getId() const;

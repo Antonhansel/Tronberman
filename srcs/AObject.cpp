@@ -13,7 +13,6 @@
 AObject::AObject() :
 	_position(0, 0, 0), _rotation(0, 0, 0), _scale(1, 1, 1)
 {
-  _isAlive = true;
   _transformationDirty = true;
 }
 
@@ -24,11 +23,9 @@ AObject::~AObject()
 
 void		AObject::setPos(std::pair<float, float> &pos)
 {
-  if (pos.first != 0 || pos.second != 0)
-    translate(glm::vec3(pos.first, 0, pos.second));
-  _pos = pos;
-  _posy = pos.first;
-  _posx = pos.second;
+  _position += glm::vec3(pos.first, 0, pos.second);
+  _pos.first += pos.first;
+  _pos.second += pos.second;
 }
 
 std::pair<float, float>	AObject::getPos() const
@@ -85,48 +82,7 @@ glm::mat4 	AObject::getTransformation()
   return (_transformation);
 }
 
-float		AObject::getTrans() const
-{
-  return (_trans);
-}
-
-void	AObject::setPlayer(int player)
-{
-  _players = player;
-}
-
-void	AObject::setSpeed(float speed)
-{
-  _speed = speed;
-}
-
-void	AObject::setMap(Map *map)
-{
-  _map = map;
-}
-
-void  AObject::setBombs(std::map< std::pair<float, float>, AObject* > &bombs)
-{
-  _bombs = bombs;
-}
-
-const std::map< std::pair<float, float>, AObject* >&  AObject::getBombs()
-{
-  return (_bombs);
-}
-
 void AObject::setTexture(gdl::Texture *texture)
 {
   _texture = texture;
-}
-
-
-void  AObject::setIsAlive(bool isAlive)
-{
-  _isAlive = isAlive;
-}
-
-bool  AObject::getIsAlive() const
-{
-  return (_isAlive);
 }

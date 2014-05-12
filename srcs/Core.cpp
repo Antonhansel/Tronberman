@@ -15,8 +15,8 @@ Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
 
-  _width = 20;
-  _height = 20;
+  _width = 1000;
+  _height = 1000;
   _loader = loader;
   _cam = cam;
   _players = 1;
@@ -89,7 +89,7 @@ bool   Core::makeChar(int posx, int posy, int screen)
 
   if (chara->initialize() == false)
     return (false);
-  pos = std::make_pair((float)posx, (float)posy);
+  pos = std::make_pair(posx, posy);
   chara->setPos(pos);
   chara->setPlayer(screen);
   chara->setMap(_map);
@@ -252,8 +252,6 @@ void  Core::drawAll(AObject *cur_char)
   AObject     *tmp;
 
   pos = cur_char->getPos();
-    // pos.first = floor(pos.first);
-    // pos.second = floor(pos.second);
   for (int x = pos.first - 30; x < pos.first + 30; ++x)
   {
     for (int y = pos.second - 30; y < pos.second + 30; ++y)
@@ -280,7 +278,7 @@ void  Core::changeFocus(AObject *cur_char, int screen)
   std::pair<float, float> pos;
   pos = cur_char->getPos();
   _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second),
-   glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
+    glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
 }
 
 std::pair<float, float>  Core::genPos()
