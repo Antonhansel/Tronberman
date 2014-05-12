@@ -12,6 +12,9 @@
 # define BOMBS_HPP_
 
 # include "AObject.hpp"
+# include "Player.hpp"
+# include "Map.hpp"
+# include "Sound.hpp"
 
 class Bombs : public AObject
 {
@@ -20,6 +23,14 @@ private:
   	gdl::Model 	_model;
   	type		_type;
   	int			_anim;
+  	std::vector<AObject *> _bombs;
+  	Map 		*_map;
+  	double		_time;
+  	double		_create;
+  	std::vector< std::pair<double, AObject*> > _explosion;
+  	Player 		*_player;
+  	Sound			*_sound;
+
 public:
 	Bombs();
 	~Bombs();
@@ -29,6 +40,12 @@ public:
 	bool	initialize();
 	void	draw(gdl::AShader &shader, gdl::Clock const &clock);
 	void	update(gdl::Clock const &clock, gdl::Input &input);
+	bool    makeBomb(Player *);
+  	void	bombExplode();
+  	void	removeExplosion();
+  	void	explosion(std::pair<float, float>, int);
+  	void	newBomb(std::pair<float, float>&);
+  	void	setObjects(Map *, Sound *);
 };
 
 #endif

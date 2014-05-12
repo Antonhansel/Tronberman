@@ -75,13 +75,10 @@ public:
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
-  bool      makeBomb(Player *);
-  void			bombExplode();
-  void			removeExplosion();
   void      FPS();
-  void			explosion(std::pair<float, float>, int);
-  void			newBomb(std::pair<float, float>&);
   void      genSplit();
+
+
   std::pair<float, float> genPos();
 private:
   int       _screen;
@@ -104,12 +101,12 @@ private:
   double        _frames;
   double        _lasttime;
   gdl::BasicShader	_shader;
-  std::map< double, std::pair< int, AObject* > > _bombs;
   std::vector< std::pair<double, AObject*> > _explosion;
   std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
+  std::vector<Bombs*> _bombs;
 };
 
 #endif /*!_CORE_HPP_*/

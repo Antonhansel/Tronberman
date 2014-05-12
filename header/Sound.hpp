@@ -8,6 +8,9 @@
 // Last update Sat May 10 22:11:27 2014 Mehdi Chouag
 */
 
+#ifndef SOUND_HPP_
+# define SOUND_HPP_
+
 # include <iostream>
 # include <map>
 # include <SFML/Audio/Music.hpp>
@@ -37,3 +40,5 @@ private:
   sf::Music			*_effect[4];
   std::map<TypeSound, void(Sound::*)(int)> _soundEffect;
 };
+
+#endif

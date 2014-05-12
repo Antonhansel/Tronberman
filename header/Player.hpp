@@ -15,7 +15,6 @@
 # include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
-# include "Bombs.hpp"
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 

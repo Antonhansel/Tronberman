@@ -120,117 +120,6 @@ bool		Core::drawChar()
   return (true);
 }
 
-bool  Core::makeBomb(Player *player)
-{
-  std::pair<float, float> pos;
-
-  pos = player->getPos();
-  pos.first = floor(pos.first);
-  pos.second = floor(pos.second);
-  if (_map->getCase(pos.first, pos.second) == NULL)
-  {
-    if (player->getStock() >= 1)
-    {
-      AObject *bomb = create<Bombs>();
-      bomb->setType(BOMB);
-      bomb->initialize();
-      _map->addCube(pos.first, pos.second, bomb);
-      _bombs[_time] = std::make_pair(player->getId(), bomb);
-      player->setStock(player->getStock() - 1);
-    }
-  }
-  return (true);
-}
-
-void  Core::removeExplosion()
-{
-  std::vector< std::pair<double, AObject*> >::iterator it2;
-  std::pair<float, float>     pos;
-
-  for (it2 = _explosion.begin(); it2 != _explosion.end();)
-  {
-    if (_time - (*it2).first > 0.5)
-    {
-      pos = (*it2).second->getPos();
-      _map->deleteCube(pos.first, pos.second);
-      it2 = _explosion.erase((it2));
-    }
-    else
-      ++it2;
-  }
-}
-
-void  Core::bombExplode()
-{
-  std::map< double, std::pair< int, AObject*> >::iterator it2;
-  std::pair<int, int> pos;
-  int                     playerId;
-
-  for (it2 = _bombs.begin(); it2 != _bombs.end(); )
-  {
-    if (_time - (*it2).first > 2.0)
-    {
-      pos = (*it2).second.second->getPos();
-      playerId = (*it2).second.first;
-      _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
-      pos = (*it2).second.second->getPos();
-      _map->deleteCube(pos.first, pos.second);
-      _bombs.erase(it2++);
-      explosion(pos, playerId);
-      _sound->playSound(BOMB_S, 100);
-    }
-    else
-      ++it2;
-  }
-}
-
-void		Core::newBomb(std::pair<float, float> &check)
-{
-  AObject	*bomb;
-
-  bomb = create<Bombs>();
-  bomb->setType(LASER);
-  bomb->initialize();
-  _map->addCube(check.first, check.second, bomb);
-  _explosion.push_back(std::make_pair(_time, bomb));
-}
-
-void	Core::explosion(std::pair<float, float> pos, int playerId)
-{
-  AObject *tmp;
-  std::map< std::pair<float, float>, AObject * >::iterator it;
-  std::pair<float, float>	check;
-
-  check.first = pos.first;
-  check.second = pos.second - 1;
-  while (check.second - 1 < pos.second + 1)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-    }
-    else if (!tmp)
-      newBomb(check);
-    check.second++;
-  }
-  check.first = pos.first - 1;
-  check.second = pos.second;
-  while (check.first - 1 < pos.first + 1)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-    }
-    else if (!tmp)
-      newBomb(check);
-    check.first++;
-  }
-}
-
 void  Core::FPS()
 {
   _lasttime += _clock.getElapsed();
@@ -259,15 +148,29 @@ bool	Core::update()
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
   if (_input.getKey(SDLK_KP_0))
-    makeBomb(_player[1]);
+  {
+    Bombs *b = new Bombs();
+    b->setObjects(_map, _sound);
+    b->makeBomb(_player[1]);
+    _bombs.push_back(b);
+  }
   if (_input.getKey(SDLK_SPACE) && _players == 2)
-    makeBomb(_player[2]);
+  {
+    Bombs *b = new Bombs();
+    b->setObjects(_map, _sound);
+    b->makeBomb(_player[2]);
+    _bombs.push_back(b);
+  }
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
-  bombExplode();
-  removeExplosion();
+  for (std::vector<Bombs *>::iterator it = _bombs.begin(); it != _bombs.end(); ++it)
+  {
+    (*it)->update(_clock, _input);
+    (*it)->bombExplode();
+    (*it)->removeExplosion();
+  }
   return (true);
 }
 
