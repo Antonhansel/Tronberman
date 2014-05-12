@@ -43,7 +43,7 @@ void Map::addCube(int x, int y, type blockType)
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
     if (_map[x * _size_x + y])
-        return;
+        deleteCube(x, y);
     tmp = create<Cube>();
     pos = std::make_pair(x, y);
     tmp->setType(blockType);
@@ -59,7 +59,7 @@ void Map::addCube(int x, int y, AObject *obj)
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
     if (_map[x * _size_x + y])
-        return;
+        deleteCube(x, y);
     pos = std::make_pair(x, y);
     obj->setPos(pos);
     _map[x * _size_x + y] = obj;

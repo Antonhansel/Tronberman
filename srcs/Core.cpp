@@ -15,8 +15,8 @@ Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
 
-  _width = 2000;
-  _height = 2000;
+  _width = 200;
+  _height = 200;
   _loader = loader;
   _cam = cam;
   _players = 1;
@@ -112,27 +112,11 @@ bool		Core::drawChar()
 
 bool  Core::makeBomb(Player *player)
 {
-  float temp1;
-  float temp2;
   std::pair<float, float> pos;
 
   pos = player->getPos();
-  temp1 = floor(pos.first);
-  temp2 = ceil(pos.first);
-  if (temp1 - pos.first > pos.first - temp2)
-  {
-    pos.first = temp1;
-  }
-  else
-    pos.first = temp2;
-  temp1 = floor(pos.second);
-  temp2 = ceil(pos.second);
-  if (temp1 - pos.second > pos.second - temp2)
-  {
-    pos.second = temp1;
-  }
-  else
-    pos.second = temp2;
+  pos.first = floor(pos.first);
+  pos.second = floor(pos.second);
   if (_map->getCase(pos.first, pos.second) == NULL)
   {
     if (player->getStock() >= 1)
@@ -169,7 +153,7 @@ void  Core::removeExplosion()
 void  Core::bombExplode()
 {
   std::map< double, std::pair< int, AObject*> >::iterator it2;
-  std::pair<float, float> pos;
+  std::pair<int, int> pos;
   int                     playerId;
 
   for (it2 = _bombs.begin(); it2 != _bombs.end(); )
@@ -179,11 +163,11 @@ void  Core::bombExplode()
       pos = (*it2).second.second->getPos();
       playerId = (*it2).second.first;
       _player[(*it2).second.first]->setStock(_player[(*it2).second.first]->getStock() + 1);
+      pos = (*it2).second.second->getPos();
+      _map->deleteCube(pos.first, pos.second);
       _bombs.erase(it2++);
       explosion(pos, playerId);
       _sound->playSound(BOMB_S, 100);
-      pos = (*it2).second.second->getPos();
-      _map->deleteCube(pos.first, pos.second);
     }
     else
       ++it2;
