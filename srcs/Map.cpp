@@ -107,12 +107,12 @@ void    Map::_deleteSide(int x, int y)
 {
     AObject *tmp;
 
-    for (int i = x - 2; i < x + 2; ++i)
+    for (int i = x; i <= x + 1; i++)
     {
-        for (int j = y - 2; j < y + 2; ++j)
+        for (int j = y; j <= y + 1; j++)
         {
             tmp = getCase(i, j);
-            if (tmp && tmp->getType() == BLOCKD)
+            if (tmp && (tmp->getType() == BLOCKD || tmp->getType() == BLOCK))
                 deleteCube(i, j);
         }
     }
