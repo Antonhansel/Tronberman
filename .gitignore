@@ -1,3 +1,4 @@
 bomberman
 *.d
 *.o
+gmon.out
