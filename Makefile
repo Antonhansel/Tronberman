@@ -33,12 +33,18 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXX 		= g++
 
-CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -g -pg
-LDFLAGS		+=	-pg -L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
+LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+
+# Debug and profiling flags
+
+# CXXFLAGS	+= -g -pg
+# LDFLAGS 	+= -g -pg
 
 GREEN 		= 	@if [ -t 1 ]; then tput setaf 2 ; fi
 BLUE 		= 	@if [ -t 1 ]; then tput setaf 4 ; fi
 RESET 		= 	@if [ -t 1 ]; then tput sgr0 ; fi
+
 DEPS := $(OBJECTS:.o=.d)
 
 all: $(NAME)
