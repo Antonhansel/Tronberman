@@ -126,14 +126,15 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
     srand(time(NULL));
     for (int i = 0; i < nb; i++)
     {
-        x = rand() % (_size_x - 1) + 1;
-        y = rand() % (_size_y - 1) + 1;
+        x = rand() % (_size_x - 2) + 1;
+        y = rand() % (_size_y - 2) + 1;
         if (x % 2 == 0)
-            x = (x + 1) % (_size_x - 1) + 1;
+            x--;
         if (y % 2 == 0)
-            y = (y + 1) % (_size_y - 1) + 1;
+            y--;
         _spawns.push_back(std::make_pair(x, y));
         _deleteSide(x, y);
+        std::cout << "x : " << x << ", y : " << y << std::endl;
     }
     return (_spawns);
 }
