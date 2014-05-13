@@ -14,11 +14,11 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 50;
-  _height = 50;
+  _width = 10;
+  _height = 10;
   _loader = loader;
   _cam = cam;
-  _players = 2;
+  _players = 1;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);
@@ -64,12 +64,6 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-   glEnable(GL_LIGHTING);
-   glEnable(GL_LIGHT0);
-   float LightPos[4]={0,0,0,1};
-   glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
-   glMateriali(GL_FRONT_AND_BACK,GL_SHININESS,40);
-   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
   std::cout << "Load done!" << std::endl;
   for (size_t i = 0; i < _loading.size(); ++i)
     delete _loading[i];
@@ -147,6 +141,10 @@ bool	Core::update()
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
+  if (_input.getKey(SDLK_l))
+    glEnable(GL_LIGHT1);
+  if (_input.getKey(SDLK_m))
+    glDisable(GL_LIGHT1);
   if (_input.getKey(SDLK_KP_0))
   {
     Bombs *b = new Bombs();

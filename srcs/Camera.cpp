@@ -36,6 +36,17 @@ bool	Camera::initScene()
 {
   if (!_context.start(_width, _height, "Best Bomberman!"))
     return (false);
+    GLfloat LightAmbient[]  = { 0.5f, 0.5f, 0.5f, 1.0f };
+  GLfloat LightDiffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+  GLfloat LightPosition[] = { 0.0f, 0.0f, 1000.0f, 1.0f };
+  glEnable(GL_LIGHTING);
+  glEnable(GL_COLOR_MATERIAL);
+  glDepthFunc(GL_LEQUAL);
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);
+  glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
+  glEnable(GL_LIGHT1);
   glEnable(GL_DEPTH_TEST);
   if (!_shader.load("./ressources/shaders/basic.fp", GL_FRAGMENT_SHADER) || 
       !_shader.load("./ressources/shaders/basic.vp", GL_VERTEX_SHADER) || 
@@ -49,6 +60,8 @@ bool	Camera::initScene()
   _shader.bind();
   _shader.setUniform("view", _transformation);
   _shader.setUniform("projection", _projection);
+  // float LightPos[4]={0,0,0,1};
+  // glLightfv(GL_LIGHT0,GL_SPECULAR,LightPos);
   return (true);
 }
 
