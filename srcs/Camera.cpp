@@ -35,7 +35,8 @@ void  Camera::setMode()
     _projection = perspective(60.0f, ((float)_width/2) / (float)_height, 0.1f, 100.0f);
     _shader.bind();
     _shader.setUniform("view", _transformation);
-    _shader.setUniform("projection", _projection);    
+    _shader.setUniform("projection", _projection);
+    _mode = 1;    
   }
 }
 
