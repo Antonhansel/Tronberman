@@ -117,8 +117,6 @@ void		Bombs::newBomb(std::pair<float, float> &check)
 
 void	Bombs::explosion(std::pair<float, float> pos, int playerId)
 {
-  
-  std::map< std::pair<float, float>, AObject * >::iterator it;
   std::pair<float, float>	check;
   int 						range;
 
@@ -129,20 +127,6 @@ void	Bombs::explosion(std::pair<float, float> pos, int playerId)
   exploseNegY(pos.second - range, check);
   explosePosX(pos.first + range, check);
   exploseNegX(pos.first - range, check);
-  check.first = pos.first - range;
-  check.second = pos.second;
- /* while (check.first - 1 < pos.first + range)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-    }
-    else if (!tmp)
-      newBomb(check);
-    check.first++;
-  }*/
 }
 
 void  Bombs::explosePosY(float y, std::pair<float, float> check)
@@ -158,6 +142,7 @@ void  Bombs::explosePosY(float y, std::pair<float, float> check)
     {
       _map->deleteCube(check.first, check.second);
       newBomb(check);
+      resume = false;
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
@@ -180,6 +165,7 @@ void  Bombs::exploseNegY(float y, std::pair<float, float> check)
     {
       _map->deleteCube(check.first, check.second);
       newBomb(check);
+      resume = false;
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
@@ -202,6 +188,7 @@ void  Bombs::explosePosX(float y, std::pair<float, float> check)
     {
       _map->deleteCube(check.first, check.second);
       newBomb(check);
+      resume = false;
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
@@ -224,6 +211,7 @@ void  Bombs::exploseNegX(float y, std::pair<float, float> check)
     {
       _map->deleteCube(check.first, check.second);
       newBomb(check);
+      resume = false;
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
