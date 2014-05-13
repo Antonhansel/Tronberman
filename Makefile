@@ -36,49 +36,60 @@ CXX 		= g++
 CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -g -pg
 LDFLAGS		+=	-pg -L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
+GREEN 		= 	@if [ -t 1 ]; then tput setaf 2 ; fi
+BLUE 		= 	@if [ -t 1 ]; then tput setaf 4 ; fi
+RESET 		= 	@if [ -t 1 ]; then tput sgr0 ; fi
 DEPS := $(OBJECTS:.o=.d)
 
 all: $(NAME)
-	@if [ -t 1 ]; then tput setaf 2 ; fi
+	$(GREEN)
 	@echo "$(NAME) Up to date !"
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 
 $(NAME):	$(OBJECTS)
-	@if [ -t 1 ]; then tput setaf 4 ; fi
+	$(BLUE)
 	@echo -n "Linking :" $(NAME)
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 	@$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS)
-	@if [ -t 1 ]; then tput setaf 2 ; fi
-	@echo [OK]
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(GREEN)
+	@echo " [OK]"
+	$(RESET)
 
 %.o: %.cpp
-	@if [ -t 1 ]; then tput setaf 4 ; fi
-	@echo "Compile :" $<
-	@if [ -t 1 ]; then tput sgr0 ; fi
-	@$(CXX) -MMD -MP $(CXXFLAGS) -o $@ -c $<
-	@if [ -t 1 ]; then tput setaf 2 ; fi
-	@echo [OK]
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(BLUE)
+	@echo -n "Compile :" $<
+	$(RESET)
+	@$(CXX) -MMD -MP $(CXXFLAGS) -o $@ -c $< 2> ./tmp || echo -n ""
+	@if [ -s ./tmp ] ; then \
+		if [ -t 1 ]; then tput setaf 1 ; fi ; \
+		echo " [Error]" ; \
+		if [ -t 1 ]; then tput sgr0 ; fi ;\
+		cat ./tmp ; rm ./tmp ; exit 1; \
+	else \
+		if [ -t 1 ]; then tput setaf 2 ; fi ; \
+		echo " [OK]" ; \
+		if [ -t 1 ]; then tput sgr0 ; fi ;\
+		rm ./tmp ; \
+	fi
 
 clean:
-	@if [ -t 1 ]; then tput setaf 4 ; fi
+	$(BLUE)
 	@echo -n "Deleting objects and dependancies..."
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 	@rm -f $(OBJECTS)
 	@rm -f $(DEPS)
-	@if [ -t 1 ]; then tput setaf 2 ; fi
+	$(GREEN)
 	@echo [OK]
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 
 fclean:	clean
-	@if [ -t 1 ]; then tput setaf 4 ; fi
+	$(BLUE)
 	@echo -n "Deleting Executable..."
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 	@rm -f $(NAME)
-	@if [ -t 1 ]; then tput setaf 2 ; fi
+	$(GREEN)
 	@echo [OK]
-	@if [ -t 1 ]; then tput sgr0 ; fi
+	$(RESET)
 
 re:		fclean	all
 
