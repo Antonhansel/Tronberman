@@ -41,11 +41,15 @@ public:
 	void	draw(gdl::AShader &shader, gdl::Clock const &clock);
 	void	update(gdl::Clock const &clock, gdl::Input &input);
 	bool    makeBomb(Player *);
-  	void	bombExplode();
-  	void	removeExplosion();
-  	void	explosion(std::pair<float, float>, int);
-  	void	newBomb(std::pair<float, float>&);
-  	void	setObjects(Map *, Sound *);
+  void	bombExplode();
+  void	removeExplosion();
+  void	explosion(std::pair<float, float>, int);
+  void	newBomb(std::pair<float, float>&);
+  void	setObjects(Map *, Sound *);
+  void  explosePosY(float, std::pair<float, float>);
+  void  exploseNegY(float, std::pair<float, float>);
+  void  explosePosX(float, std::pair<float, float>);
+  void  exploseNegX(float, std::pair<float, float>);
 };
 
 #endif
