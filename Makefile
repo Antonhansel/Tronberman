@@ -33,52 +33,52 @@ OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXX 		= g++
 
-CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
-LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -g -pg
+LDFLAGS		+=	-pg -L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
 
 DEPS := $(OBJECTS:.o=.d)
 
 all: $(NAME)
 	@if [ -t 1 ]; then tput setaf 2 ; fi
 	@echo "$(NAME) Up to date !"
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 
 $(NAME):	$(OBJECTS)
 	@if [ -t 1 ]; then tput setaf 4 ; fi
 	@echo -n "Linking :" $(NAME)
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 	@$(CXX) $(OBJECTS) -o $(NAME) $(LDFLAGS)
 	@if [ -t 1 ]; then tput setaf 2 ; fi
 	@echo [OK]
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 
 %.o: %.cpp
 	@if [ -t 1 ]; then tput setaf 4 ; fi
 	@echo "Compile :" $<
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 	@$(CXX) -MMD -MP $(CXXFLAGS) -o $@ -c $<
 	@if [ -t 1 ]; then tput setaf 2 ; fi
 	@echo [OK]
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 
 clean:
 	@if [ -t 1 ]; then tput setaf 4 ; fi
 	@echo -n "Deleting objects and dependancies..."
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 	@rm -f $(OBJECTS)
 	@rm -f $(DEPS)
 	@if [ -t 1 ]; then tput setaf 2 ; fi
 	@echo [OK]
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 
 fclean:	clean
 	@if [ -t 1 ]; then tput setaf 4 ; fi
 	@echo -n "Deleting Executable..."
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 	@rm -f $(NAME)
 	@if [ -t 1 ]; then tput setaf 2 ; fi
 	@echo [OK]
-	@if [ -t 1 ]; then tput setaf 0 ; fi
+	@if [ -t 1 ]; then tput sgr0 ; fi
 
 re:		fclean	all
 
