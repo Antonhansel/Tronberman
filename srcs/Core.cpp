@@ -14,11 +14,11 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 100;
-  _height = 100;
+  _width = 30;
+  _height = 30;
   _loader = loader;
   _cam = cam;
-  _players = 1;
+  _players = 2;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);
@@ -129,12 +129,27 @@ void  Core::FPS()
   }
 }
 
+void  Core::spawnBomb(Player *player)
+{
+  std::pair<float, float> pos;
+
+  pos = player->getPos();
+  pos.first = floor(pos.first);
+  pos.second = floor(pos.second);
+  if (_bombs.find(pos) == _bombs.end())
+  {
+     Bombs *b = new Bombs();
+     b->setObjects(_map, _sound, &_bombs);
+     b->makeBomb(player);
+     _bombs[pos] = b;
+   }
+}
+
 bool	Core::update()
 {
   std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
-  std::vector<AObject*>::iterator it1;
-  std::pair<float, float> pos;
+  std::vector<AObject*>::iterator it1;;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
@@ -147,31 +162,9 @@ bool	Core::update()
   if (_input.getKey(SDLK_m))
     glDisable(GL_LIGHT1);
   if (_input.getKey(SDLK_KP_0))
-  {
-    pos = _player[1]->getPos();
-    pos.first = floor(pos.first);
-    pos.second = floor(pos.second);
-    if (_bombs.find(pos) == _bombs.end())
-    {
-      Bombs *b = new Bombs();
-      b->setObjects(_map, _sound, &_bombs);
-      b->makeBomb(_player[1]);
-      _bombs[pos] = b;
-    }
-  }
+    spawnBomb(_player[1]);
   if (_input.getKey(SDLK_SPACE) && _players == 2)
-  {
-    pos = _player[2]->getPos();
-    pos.first = floor(pos.first);
-    pos.second = floor(pos.second);
-    if (_bombs.find(pos) == _bombs.end())
-    {
-      Bombs *b = new Bombs();
-      b->setObjects(_map, _sound, &_bombs);
-      b->makeBomb(_player[2]);
-      _bombs[pos] = b;
-    }
-  }
+    spawnBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
@@ -220,59 +213,16 @@ void  Core::drawAll(AObject *cur_char)
     _player[i]->draw(_shader, _clock);
 }
 
-void  Core::changeFocus(AObject *cur_char, int screen)
-{
-  std::pair<float, float> pos;
-  pos = cur_char->getPos();
-  _cam->moveCamera(glm::vec3(pos.first, 13, -10 + pos.second),
-    glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), screen);
-}
-
-std::pair<float, float>  Core::genPos()
-{
-  std::pair<float, float> pos;
-
-  pos.first = (_player[1]->getPos().first + _player[2]->getPos().first)/2;
-  pos.second = (_player[1]->getPos().second + _player[2]->getPos().second)/2;
-  pos.second -= 2;
-  return (pos);
-}
-
-void  Core::genSplit()
-{
-  float   pos1;
-  float   pos2;
-
-  if (_player[1]->getPos().first > _player[2]->getPos().first)
-    pos1 = _player[1]->getPos().first - _player[2]->getPos().first;
-  else
-    pos1 = _player[2]->getPos().first - _player[1]->getPos().first;
-  if (_player[1]->getPos().second > _player[2]->getPos().second)
-    pos2 = _player[1]->getPos().second - _player[2]->getPos().second;
-  else
-    pos2 = _player[2]->getPos().second - _player[1]->getPos().second;
-  if (pos1 > 20 || pos2 > 20)
-  {
-    _cam->setPlayer(2);
-    _screen = 0;
-  }
-  else
-  {
-    _cam->setPlayer(1);
-    _screen = 1;
-  }
-}
-
 void	Core::draw()
 {
   std::pair<float, float> pos;
   if (_players == 2)
-    genSplit();
+    _screen = _cam->genSplit(_player[1], _player[2]);
   if (_screen == 0)
-    changeFocus(_player[1], 1);
+    _cam->changeFocus(_player[1], 1);
   else
   {
-    pos = genPos();
+    pos = _cam->genPos(_player[1], _player[2]);
     _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second),
      glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);
   }
@@ -280,7 +230,7 @@ void	Core::draw()
   if (_players == 2)
   {
     if (_screen == 0)
-      changeFocus(_player[2], 2);
+      _cam->changeFocus(_player[2], 2);
     drawAll(_player[2]);
   }
   _cam->flushContext();

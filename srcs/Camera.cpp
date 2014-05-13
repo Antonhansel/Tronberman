@@ -111,3 +111,44 @@ void 	Camera::stopContext()
 {
   _context.stop();
 }
+
+std::pair<float, float>  Camera::genPos(Player *player1, Player *player2)
+{
+  std::pair<float, float> pos;
+
+  pos.first = (player1->getPos().first + player2->getPos().first)/2;
+  pos.second = (player1->getPos().second + player2->getPos().second)/2;
+  pos.second -= 2;
+  return (pos);
+}
+
+void  Camera::changeFocus(AObject *cur_char, int screen)
+{
+  moveCamera(glm::vec3(cur_char->getPos().first, 13, -10 + cur_char->getPos().second),
+    glm::vec3(cur_char->getPos().first, 0, cur_char->getPos().second), glm::vec3(0, 1, 0), screen);
+}
+
+int  Camera::genSplit(Player *player1, Player *player2)
+{
+  float   pos1;
+  float   pos2;
+
+  if (player1->getPos().first > player2->getPos().first)
+    pos1 = player1->getPos().first - player2->getPos().first;
+  else
+    pos1 = player2->getPos().first - player1->getPos().first;
+  if (player1->getPos().second > player2->getPos().second)
+    pos2 = player1->getPos().second - player2->getPos().second;
+  else
+    pos2 = player2->getPos().second - player1->getPos().second;
+  if (pos1 > 20 || pos2 > 20)
+  {
+    setPlayer(2);
+    return (0);
+  }
+  else
+  {
+    setPlayer(1);
+    return (1);
+  }
+}

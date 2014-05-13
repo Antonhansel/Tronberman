@@ -24,6 +24,7 @@
 # include <OpenGL.hh>
 # include <vector>
 # include <iostream>
+# include "Player.hpp"
 
 using namespace gdl;
 using namespace glm;
@@ -35,10 +36,13 @@ public:
   ~Camera();
   void 			setPlayer(int players);
   BasicShader		&getShader();
+  void      changeFocus(AObject *cur_char, int screen);
+    std::pair<float, float>   genPos(Player *, Player *);
   void 			stopContext();
   bool 			initScene();
   void 			flushContext();
   void 			update();
+  int       genSplit(Player *, Player *);
   void 			moveCamera(vec3, vec3, vec3, int);
   Clock 		&getClock();
   Input 		&getInput();

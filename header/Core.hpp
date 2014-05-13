@@ -71,15 +71,11 @@ public:
   bool			drawChar();
   bool      drawBot();
   bool			drawBackground();
-  void			changeFocus(AObject *, int);
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
   void      FPS();
-  void      genSplit();
-
-
-  std::pair<float, float> genPos();
+  void      spawnBomb(Player *);
 private:
   int       _screen;
   float     _dist;
