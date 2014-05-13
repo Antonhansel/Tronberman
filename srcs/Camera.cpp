@@ -20,6 +20,25 @@ Camera::Camera(const int width, const int height)
 Camera::~Camera()
 {}
 
+void  Camera::setMode()
+{
+  if (_mode == 1)
+  {
+  _projection = glm::ortho(0.0f, _width, _height, 0.0f, -1.0f, 1.0f);
+  _shader.bind();
+  _shader.setUniform("view", glm::mat4(1));
+  _shader.setUniform("projection", _projection);
+  _mode = 0;
+  }
+  else
+  {
+    _projection = perspective(60.0f, ((float)_width/2) / (float)_height, 0.1f, 100.0f);
+    _shader.bind();
+    _shader.setUniform("view", _transformation);
+    _shader.setUniform("projection", _projection);    
+  }
+}
+
 void 	Camera::setPlayer(int players)
 {
   _players = players;
@@ -57,6 +76,7 @@ bool	Camera::initScene()
   else
     _projection = perspective(60.0f, ((float)_width / 2.0f) / ((float)_height / 2.0f), 0.5f, 100.0f);
   _transformation = lookAt(vec3(0, 10, -10), vec3(0, 0, 0), vec3(0, 1, 0));
+  _mode = 1;
   _shader.bind();
   _shader.setUniform("view", _transformation);
   _shader.setUniform("projection", _projection);
