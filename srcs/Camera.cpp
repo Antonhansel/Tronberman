@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Fri May  02 19:25:38 2014 Antonin Ribeaud
-// Last update Mon May  5 15:01:09 2014 charly roche
+// Last update Tue May 13 20:05:19 2014 Mehdi Chouag
 */
 
 #include "Camera.hpp"
@@ -23,21 +23,21 @@ Camera::~Camera()
 void  Camera::setMode()
 {
   if (_mode == 1)
-  {
-  _projection = glm::ortho(0.0f, _width, _height, 0.0f, -1.0f, 1.0f);
-  _shader.bind();
-  _shader.setUniform("view", glm::mat4(1));
-  _shader.setUniform("projection", _projection);
-  _mode = 0;
-  }
+    {
+      _projection = glm::ortho(0.0f, (float)_width, (float)_height, 0.0f, -1.0f, 1.0f);
+      _shader.bind();
+      _shader.setUniform("view", glm::mat4(1));
+      _shader.setUniform("projection", _projection);
+      _mode = 0;  
+    }
   else
-  {
-    _projection = perspective(60.0f, ((float)_width/2) / (float)_height, 0.1f, 100.0f);
-    _shader.bind();
-    _shader.setUniform("view", _transformation);
-    _shader.setUniform("projection", _projection);
-    _mode = 1;    
-  }
+    {
+      _projection = perspective(60.0f, ((float)_width/2) / (float)_height, 0.1f, 100.0f);
+      _shader.bind();
+      _shader.setUniform("view", _transformation);
+      _shader.setUniform("projection", _projection);
+      _mode = 1;
+    }
 }
 
 void 	Camera::setPlayer(int players)
