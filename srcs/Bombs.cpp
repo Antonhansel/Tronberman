@@ -13,6 +13,8 @@
 Bombs::Bombs()
 {
 	_time = 0;
+  _isExplosed = false;
+  _explosed = false;
 	initialize();
 }
 
@@ -22,7 +24,6 @@ Bombs::~Bombs()
 void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	 _time += clock.getElapsed();
-	 //std::cout << "MAJ\n";
 }
 
 void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -52,11 +53,9 @@ bool  Bombs::makeBomb(Player *player)
       bomb->setType(BOMB);
       bomb->initialize();
       _map->addCube(pos.first, pos.second, bomb);
-      //std::cout << "_bombs addr: " << _bombs << std::endl;
       _bombs.push_back(bomb);
       _player = player;
       _create = _time;
-      //_bombs[_time] = std::make_pair(player->getId(), bomb);
       _player->setStock(_player->getStock() - 1);
     }
   }
@@ -72,6 +71,7 @@ void  Bombs::removeExplosion()
   {
     if (_time - (*it2).first > 0.5)
     {
+      _isExplosed = true;
       pos = (*it2).second->getPos();
       _map->deleteCube(pos.first, pos.second);
       it2 = _explosion.erase((it2));
@@ -89,7 +89,7 @@ void  Bombs::bombExplode()
 
   for (it2 = _bombs.begin(); it2 != _bombs.end(); )
   {
-    if (_time - _create > 2.0)
+    if (_time - _create > 2.0 || _explosed == true)
     {
       pos = (*it2)->getPos();
       _player->setStock(_player->getStock() + 1);
@@ -146,6 +146,11 @@ void  Bombs::explosePosY(float y, std::pair<float, float> check)
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
+    else if (tmp && tmp->getType() == BOMB)
+    {
+      (*_bombsM->find(check)).second->setExplose();
+      resume = false;
+    }
     else if (!tmp)
       newBomb(check);
     check.second++;
@@ -165,6 +170,11 @@ void  Bombs::exploseNegY(float y, std::pair<float, float> check)
     {
       _map->deleteCube(check.first, check.second);
       newBomb(check);
+      resume = false;
+    }
+    else if (tmp && tmp->getType() == BOMB)
+    {
+      (*_bombsM->find(check)).second->setExplose();
       resume = false;
     }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
@@ -190,6 +200,11 @@ void  Bombs::explosePosX(float y, std::pair<float, float> check)
       newBomb(check);
       resume = false;
     }
+    else if (tmp && tmp->getType() == BOMB)
+    {
+      (*_bombsM->find(check)).second->setExplose();
+      resume = false;
+    }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
     else if (!tmp)
@@ -213,6 +228,11 @@ void  Bombs::exploseNegX(float y, std::pair<float, float> check)
       newBomb(check);
       resume = false;
     }
+    else if (tmp && tmp->getType() == BOMB)
+    {
+      (*_bombsM->find(check)).second->setExplose();
+      resume = false;
+    }
     else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
       resume = false;
     else if (!tmp)
@@ -221,8 +241,19 @@ void  Bombs::exploseNegX(float y, std::pair<float, float> check)
   }
 }
 
-void	Bombs::setObjects(Map *map, Sound *sound)
+void	Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float>, Bombs *> *bombsM)
 {
 	_map = map;
 	_sound = sound;
+  _bombsM = bombsM;
+}
+
+bool  Bombs::isExplosed() const
+{
+  return (_isExplosed);
+}
+
+void  Bombs::setExplose()
+{
+  _explosed = true;
 }

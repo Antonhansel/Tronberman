@@ -30,6 +30,9 @@ private:
   	std::vector< std::pair<double, AObject*> > _explosion;
   	Player 		*_player;
   	Sound			*_sound;
+    std::map<std::pair<float, float>, Bombs *>  *_bombsM;
+    bool      _isExplosed;
+    bool      _explosed;
 
 public:
 	Bombs();
@@ -45,11 +48,13 @@ public:
   void	removeExplosion();
   void	explosion(std::pair<float, float>, int);
   void	newBomb(std::pair<float, float>&);
-  void	setObjects(Map *, Sound *);
+  void	setObjects(Map *, Sound *, std::map<std::pair<float, float>, Bombs *>  *);
   void  explosePosY(float, std::pair<float, float>);
   void  exploseNegY(float, std::pair<float, float>);
   void  explosePosX(float, std::pair<float, float>);
   void  exploseNegX(float, std::pair<float, float>);
+  bool  isExplosed() const;
+  void  setExplose();
 };
 
 #endif
