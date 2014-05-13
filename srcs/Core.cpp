@@ -134,6 +134,7 @@ bool	Core::update()
   std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;
+  std::pair<float, float> pos;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
@@ -147,27 +148,46 @@ bool	Core::update()
     glDisable(GL_LIGHT1);
   if (_input.getKey(SDLK_KP_0))
   {
-    Bombs *b = new Bombs();
-    b->setObjects(_map, _sound);
-    b->makeBomb(_player[1]);
-    _bombs.push_back(b);
+    pos = _player[1]->getPos();
+    pos.first = floor(pos.first);
+    pos.second = floor(pos.second);
+    if (_bombs.find(pos) == _bombs.end())
+    {
+      Bombs *b = new Bombs();
+      b->setObjects(_map, _sound, &_bombs);
+      b->makeBomb(_player[1]);
+      _bombs[pos] = b;
+    }
   }
   if (_input.getKey(SDLK_SPACE) && _players == 2)
   {
-    Bombs *b = new Bombs();
-    b->setObjects(_map, _sound);
-    b->makeBomb(_player[2]);
-    _bombs.push_back(b);
+    pos = _player[2]->getPos();
+    pos.first = floor(pos.first);
+    pos.second = floor(pos.second);
+    if (_bombs.find(pos) == _bombs.end())
+    {
+      Bombs *b = new Bombs();
+      b->setObjects(_map, _sound, &_bombs);
+      b->makeBomb(_player[2]);
+      _bombs[pos] = b;
+    }
   }
   for (it = _player.begin(); it != _player.end(); ++it)
     (*it).second->update(_clock, _input);
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
-  for (std::vector<Bombs *>::iterator it = _bombs.begin(); it != _bombs.end(); ++it)
+  for (std::map<std::pair<float, float>, Bombs *>::iterator it = _bombs.begin(); it != _bombs.end(); )
   {
-    (*it)->update(_clock, _input);
-    (*it)->bombExplode();
-    (*it)->removeExplosion();
+    (*it).second->update(_clock, _input);
+    (*it).second->bombExplode();
+    (*it).second->removeExplosion();
+    if ((*it).second->isExplosed() == true)
+    {
+      _bombs.erase(it);
+      it = _bombs.begin();
+    }
+    else
+      ++it;
   }
   return (true);
 }

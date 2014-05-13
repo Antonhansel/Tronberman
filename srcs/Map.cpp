@@ -134,7 +134,6 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
             y--;
         _spawns.push_back(std::make_pair(x, y));
         _deleteSide(x, y);
-        std::cout << "x : " << x << ", y : " << y << std::endl;
     }
     return (_spawns);
 }

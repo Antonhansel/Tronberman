@@ -106,7 +106,8 @@ private:
   std::map<int, Player*>	_player;
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
-  std::vector<Bombs*> _bombs;
+  std::map<std::pair<float, float>, Bombs *>  _bombs;
+  //std::vector<Bombs*> _bombs;
 };
 
 #endif /*!_CORE_HPP_*/
