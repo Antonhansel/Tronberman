@@ -3,7 +3,9 @@
 
 # include "AObject.hpp"
 # include "Map.hpp"
-# include "Player.hpp"
+//# include "Player.hpp"
+
+class Player;
 
 class Bonus: public AObject
 {

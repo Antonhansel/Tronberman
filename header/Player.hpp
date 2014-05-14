@@ -15,8 +15,11 @@
 # include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
+//# include "Bonus.hpp"
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
+
+class Bonus;
 
 class Player : public AObject
 {
