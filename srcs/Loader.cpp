@@ -39,7 +39,7 @@ bool 	Loader::loadTextures()
   if (_textures[LASER]->load("./ressources/assets/LASER.tga") == false)
     return (false);
   _textures[BONUS] = new gdl::Texture();
-  if (_textures[BONUS]->load("./ressources/assets/BONUS.tga") == false)
+  if (_textures[BONUS]->load("./ressources/assets/BONUS3.tga") == false)
     return (false);
   _textures[BLOCKD]->bind();
   //   GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };

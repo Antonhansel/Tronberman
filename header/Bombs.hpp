@@ -36,6 +36,8 @@ private:
     bool      _explosed;
     std::map<int, Player*>  *_playerTab;
     std::map<type, int (Bombs::*)(int, std::pair<float, float> &)>  _ptrFunct;
+    std::map<std::pair<float, float>, Bonus *>  _bonusM;
+    bool      _doBonus;
 
 public:
 	Bombs();

@@ -46,6 +46,7 @@ public:
 	void	giveBonus1(Player *);
 	void	giveBonus2(Player *);
 	void	giveBonus3(Player *);
+    void	throwBonus();
 };
 
 #endif /* BONUS_HPP_ */

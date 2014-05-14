@@ -15,6 +15,7 @@ Bombs::Bombs()
 	_time = 0;
   _isExplosed = false;
   _explosed = false;
+  _doBonus = false;
 	initialize();
   _ptrFunct[BLOCKD] = &Bombs::checkBlockD;
   _ptrFunct[BLOCK] = &Bombs::checkBlockS;
@@ -85,6 +86,14 @@ void  Bombs::removeExplosion()
     else
       ++it2;
   }
+  if (_doBonus == false && _isExplosed == true)
+    {
+      for (std::map<std::pair<float, float>, Bonus *>::iterator it = _bonusM.begin(); it != _bonusM.end(); ++it)
+      {
+        (*it).second->throwBonus();
+      }  
+      _doBonus = true;
+    }
 }
 
 void  Bombs::bombExplode()
@@ -236,8 +245,14 @@ int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
   {
     if (_player->getBegin() == false)
       _player->setBegin(true);
-    Bonus *bonus = create<Bonus>();
-    bonus->setObject(BONUS, check, _map);
+    if (_bonusM.find(check) == _bonusM.end())
+    {
+      //_bonusM[check]
+        Bonus *b = create<Bonus>();
+        b->setObject(BONUS, check, _map);
+_bonusM[check] = b;
+      //_bonusM[check]->throwBonus();
+    }
   }
   resume = false;
   return (resume);

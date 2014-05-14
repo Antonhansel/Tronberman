@@ -53,6 +53,10 @@ void	Bonus::setObject(type type, std::pair<float, float> &pos, Map *map)
 	_pos = pos;
 	_map = map;
 	setType(_type);
+}
+
+void	Bonus::throwBonus()
+{
 	_map->addCube(_pos.first, _pos.second, this);
 }
 
