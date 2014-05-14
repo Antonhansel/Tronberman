@@ -49,8 +49,8 @@ bool  Bombs::makeBomb(Player *player)
   std::pair<float, float> pos;
 
   pos = player->getPos();
-  pos.first = floor(pos.first);
-  pos.second = floor(pos.second);
+  pos.first = roundf(pos.first - 0.2);
+  pos.second = roundf(pos.second - 0.2);
   if (_map->getCase(pos.first, pos.second) == NULL)
   {
     if (player != NULL && player->getStock() >= 1)
@@ -286,7 +286,7 @@ int   Bombs::checkLaser(int resume, std::pair<float, float> &check)
         }
         else
         {
-         (*it).second->setLife((*it).second->getLife() - 1);          
+         (*it).second->setLife((*it).second->getLife() - 1);
         }
       }
       else
