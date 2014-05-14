@@ -55,28 +55,31 @@ void    Player::setSpeed(float speed)
     _speed = speed;
 }
 
-bool	Player::checkMove(float x, float y)
+bool	Player::_checkMove(float x, float y)
 {
-    if (floor(_pos.first) == floor(_pos.first + x) && floor(_pos.second) == floor(_pos.second + y))
-        return true;
     AObject *cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
-    if (!cas)
+    if (!cas || cas->getType() == BONUS)
         return (true);
-    else if (cas->getType() == BONUS)
-    {
-        dynamic_cast<Bonus*>(cas)->addToPlayer(this);
-        _map->deleteCube(floor(_pos.first + x), floor(_pos.second + y));  
-        return (true);
-    }
     else
         return (false);
+}
+
+bool    Player::_onBomb()
+{
+    AObject     *tmp;
+
+    return (((tmp = _map->getCase(floor(_pos.first), floor(_pos.second)))
+        && tmp->getType() == BOMB)
+        || ((tmp = _map->getCase(floor(_pos.first + 0.4), floor(_pos.second + 0.4)))
+        && tmp->getType() == BOMB));
 }
 
 void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
     float trans = static_cast<float>(clock.getElapsed()) * _speed;
     std::map<int, std::pair<float, float> > keymap;
-    glm::vec3 rotation = glm::vec3(0);
+    glm::vec3                               rotation = glm::vec3(0);
+    AObject                                 *tmp;
 
     if (_player == 1)
     {
@@ -96,19 +99,20 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     {
         if (input.getKey(i->first))
         {
-            if (checkMove(
-                (float)i->second.first,
-                (float)i->second.second)
-                && checkMove(
-                (float)i->second.first + 0.4,
-                (float)i->second.second + 0.4)
-                && checkMove(
-                (float)i->second.first,
-                (float)i->second.second + 0.4)
-                && checkMove(
-                (float)i->second.first + 0.4,
-                (float)i->second.second)
-                )
+            if (_onBomb() ||
+                (_checkMove(
+                    i->second.first,
+                    i->second.second)
+                && _checkMove(
+                    i->second.first + 0.4,
+                    i->second.second + 0.4)
+                && _checkMove(
+                    i->second.first,
+                    i->second.second + 0.4)
+                && _checkMove(
+                    i->second.first + 0.4,
+                    i->second.second)
+                ))
             {
                 _pos.first += i->second.first;
                 _pos.second += i->second.second;
@@ -124,6 +128,12 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         _anim = 1;
     else
         _anim = 0;
+    tmp = _map->getCase(_pos.first, _pos.second);
+    if (tmp && tmp->getType() == BONUS)
+    {
+        static_cast<Bonus*>(tmp)->addToPlayer(this);
+        _map->deleteCube(_pos.first, _pos.second);
+    }
 }
 
 int  Player::getStock() const
@@ -174,4 +184,4 @@ bool    Player::getBegin() const
 void    Player::setBegin(bool begin)
 {
     _begin = begin;
-}    
+}

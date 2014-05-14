@@ -33,7 +33,8 @@ protected:
   float         _speed;
   Map           *_map;
   int           _player;
-  bool          checkMove(float y, float x);
+  bool          _checkMove(float y, float x);
+  bool          _onBomb();
   float         _x;
   int           _life;
   bool          _begin;
