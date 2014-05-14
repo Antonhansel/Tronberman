@@ -38,8 +38,10 @@ bool 	Loader::loadTextures()
   _textures[LASER] = new gdl::Texture();
   if (_textures[LASER]->load("./ressources/assets/LASER.tga") == false)
     return (false);
-
-  _textures[BLOCK]->bind();
+  _textures[BONUS] = new gdl::Texture();
+  if (_textures[BONUS]->load("./ressources/assets/BONUS.tga") == false)
+    return (false);
+  _textures[BONUS]->bind();
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushNormal(vec);
   // gauche

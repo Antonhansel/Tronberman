@@ -27,7 +27,8 @@ SOURCES		=	srcs/main.cpp \
 			srcs/Camera.cpp \
 			srcs/Text.cpp \
 			srcs/Sound.cpp \
-			srcs/Bombs.cpp
+			srcs/Bombs.cpp \
+			srcs/Bonus.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

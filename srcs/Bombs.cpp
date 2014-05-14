@@ -195,6 +195,8 @@ int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
   {
     _map->deleteCube(check.first, check.second);
     newBomb(check);
+    Bonus *bonus = create<Bonus>();
+    bonus->setObject(BONUS, check, _map);
     resume = false;
   }
   else if (tmp && tmp->getType() == BOMB)
@@ -202,18 +204,18 @@ int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
     (*_bombsM->find(check)).second->setExplose();
     resume = false;
   }
-  else if (tmp && tmp->getType() == LASER)
+/*  else if (tmp && tmp->getType() == LASER)
   {
   //  std::cout << "TOUCH: " << _playerTab->size() << std::endl;
 
     for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
     {
       pos = (*it).second->getPos();
-      pos.first = floor(pos.first);
-      pos.second = floor(pos.second);
-/*      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
+      pos.first = ((int)(pos.first));
+      pos.second = ((int)(pos.second));
+      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
       std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
-*/      if (pos.first == check.first && pos.second == check.second)
+      if (pos.first == check.first && pos.second == check.second)
       {
         std::cout << "TOUCHER\n";
         if ((*it).second->getLife() == 0)
@@ -231,7 +233,12 @@ int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
       else
         ++it;
     }
-  }
+  }*/
+    else if (tmp && tmp->getType() == BONUS)
+    {
+      _map->deleteCube(check.first, check.second);
+      newBomb(check);
+    }
   else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
     resume = false;
   else if (!tmp)

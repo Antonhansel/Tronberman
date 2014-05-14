@@ -15,6 +15,7 @@
 # include "Player.hpp"
 # include "Map.hpp"
 # include "Sound.hpp"
+# include "Bonus.hpp"
 
 class Bombs : public AObject
 {
@@ -34,6 +35,7 @@ private:
     bool      _isExplosed;
     bool      _explosed;
     std::map<int, Player*>  *_playerTab;
+    //std::map<int, 
 
 public:
 	Bombs();

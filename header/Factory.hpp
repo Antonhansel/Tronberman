@@ -15,6 +15,7 @@
 # include "Char.hpp"
 # include "Mybot.hpp"
 # include "Bombs.hpp"
+# include "Bonus.hpp"
 
 template<typename T>
 T	*create()
