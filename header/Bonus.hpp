@@ -17,14 +17,23 @@
 
 class Player;
 
+enum typeBonus
+  {
+    BONUS1,
+    BONUS2,
+    BONUS3
+  };
+
 class Bonus: public AObject
 {
 private:
 	type					_type;
+	typeBonus				_bonus;
 	std::pair<float, float>	_pos;
 	Map						*_map;
 	bool					_isTaken;
 	float					_time;
+    std::map<typeBonus, void (Bonus::*)(Player *)>  _ptrFunct;
 
 public:
 	Bonus();
@@ -34,7 +43,9 @@ public:
 	void	update(gdl::Clock const &, gdl::Input &);
 	void	setObject(type, std::pair<float, float> &, Map *);
 	void	addToPlayer(Player *);
-	/* data */
+	void	giveBonus1(Player *);
+	void	giveBonus2(Player *);
+	void	giveBonus3(Player *);
 };
 
 #endif /* BONUS_HPP_ */

@@ -13,6 +13,9 @@
 Bonus::Bonus() :
 	_isTaken(false), _time(0)
 {
+	_ptrFunct[BONUS1] = &Bonus::giveBonus1;
+	_ptrFunct[BONUS2] = &Bonus::giveBonus2;
+	_ptrFunct[BONUS3] = &Bonus::giveBonus3;
 	initialize();
 }
 
@@ -21,6 +24,15 @@ Bonus::~Bonus()
 
 bool	Bonus::initialize()
 {
+	int res;
+
+	res = rand() % 3;
+	if (res == 0)
+		_bonus = BONUS1;
+	else if (res == 1)
+		_bonus = BONUS2;
+	else
+		_bonus = BONUS3;
   scale(glm::vec3(0.9, 0.9, 0.9));
   return (true);
 }
@@ -44,7 +56,22 @@ void	Bonus::setObject(type type, std::pair<float, float> &pos, Map *map)
 	_map->addCube(_pos.first, _pos.second, this);
 }
 
-void	Bonus::addToPlayer(Player *Player)
+void	Bonus::addToPlayer(Player *player)
 {
+	(this->*_ptrFunct[_bonus])(player);
+}
 
+void	Bonus::giveBonus1(Player *player)
+{
+	player->setLife(player->getLife() + 1);
+}
+
+void	Bonus::giveBonus2(Player *player)
+{
+	player->setRange(player->getRange() + 1);
+}
+
+void	Bonus::giveBonus3(Player *player)
+{
+	player->setStock(player->getStock() + 1);
 }
