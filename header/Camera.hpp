@@ -46,9 +46,11 @@ public:
   void 			moveCamera(vec3, vec3, vec3, int);
   Clock 		&getClock();
   Input 		&getInput();
+  void      setMode();
 private:
-  int			_width;
-  int			_height;
+  int     _mode;
+  float			_width;
+  float			_height;
   int 			_players;
   mat4			_transformation;
   mat4			_projection;

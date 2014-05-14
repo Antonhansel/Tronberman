@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Sat May 10 22:47:47 2014 Mehdi Chouag
+// Last update Wed May 14 01:50:17 2014 Mehdi Chouag
 */
 
 #include "Menu.hpp"
@@ -18,6 +18,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _height = MAX;
   _shader = _camera->getShader();
   _clock = _camera->getClock();
+  _text = new Text(_camera);
   _angle = 0;
   _posy = 0;
   _posx = 0;
@@ -32,6 +33,7 @@ Menu::~Menu()
 {
   for (size_t i = 0; i < _objects.size(); ++i)
     delete _objects[i];
+  delete _text;
   FMOD_Sound_Release(musique);
   FMOD_System_Close(system);
   FMOD_System_Release(system);
@@ -102,7 +104,10 @@ void    Menu::draw()
       FMOD_Channel_SetVolume(canal, 0.4);
     }
   if (_input.getKey(SDLK_SPACE))
-   _stopintro = true;
+    {
+      _stopintro = true;
+      _text->setShow(true);
+    }
   rotate();
   _loader->bindTexture(LastType);
   for (size_t i = 0; i < _objects.size(); ++i)
@@ -115,6 +120,7 @@ void    Menu::draw()
       _loader->drawGeometry(_shader, _objects[i]->getTransformation());
       _objects[i]->translate(vec3(0, -getEquation(i), 0));
     }
+  _text->draw(_shader, _clock);
   _camera->flushContext();
 }
 

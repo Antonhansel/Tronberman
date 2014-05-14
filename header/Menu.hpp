@@ -5,7 +5,7 @@
 // Login   <chouag_m@epitech.net>
 // 
 // Started on  Sat May  3 17:42:13 2014 Mehdi Chouag
-// Last update Mon May  5 13:15:09 2014 Mehdi Chouag
+// Last update Tue May 13 19:24:11 2014 Mehdi Chouag
 //
 
 #ifndef MENU_HPP_
@@ -31,6 +31,7 @@
 # include "Cube.hpp"
 # include "Factory.hpp"
 # include "Loader.hpp"
+# include "Text.hpp"
  
 #define MAX 32 
 #define TAILLE_SPECTRE  2048
@@ -78,7 +79,8 @@ private:
   float			_posy;
   float			_posz;
   float			_posx;
-  float     _xend;
+  float			_xend;
+  Text			*_text;
 
 private:
   FMOD_SYSTEM 		*system;
