@@ -103,7 +103,6 @@ private:
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
-  //std::vector<Bombs*> _bombs;
 };
 
 #endif /*!_CORE_HPP_*/

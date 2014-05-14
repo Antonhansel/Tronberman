@@ -33,6 +33,7 @@ protected:
   int           _player;
   bool          checkMove(float y, float x);
   float         _x;
+  int           _life;
 public:
   void    setPlayer(int);
   void    setSpeed(float);
@@ -49,6 +50,8 @@ public:
   void    setId(int);
   int     getRange() const;
   void    setRange(int);
+  void    setLife(int);
+  int     getLife() const;
 };
 
 #endif /* !_PLAYER_HPP_ */

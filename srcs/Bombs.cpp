@@ -69,7 +69,7 @@ void  Bombs::removeExplosion()
 
   for (it2 = _explosion.begin(); it2 != _explosion.end(); )
   {
-    if (_time - (*it2).first > 0.5)
+    if (_time - (*it2).first > 0.2)
     {
       _isExplosed = true;
       pos = (*it2).second->getPos();
@@ -85,7 +85,6 @@ void  Bombs::bombExplode()
 {
   std::vector<AObject *>::iterator it2;
   std::pair<int, int> pos;
-  //int                     playerId;
 
   for (it2 = _bombs.begin(); it2 != _bombs.end(); )
   {
@@ -133,26 +132,13 @@ void  Bombs::explosePosY(float y, std::pair<float, float> check)
 {
   AObject *tmp;
   bool  resume;
+  std::pair<float, float> pos;
 
   resume = true;
   while (check.second - 1 < y && resume == true)
   {
     tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-      resume = false;
-    }
-    else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
-      resume = false;
-    else if (tmp && tmp->getType() == BOMB)
-    {
-      (*_bombsM->find(check)).second->setExplose();
-      resume = false;
-    }
-    else if (!tmp)
-      newBomb(check);
+    resume = checkBlock(tmp, check, resume);
     check.second++;
   }
 }
@@ -161,26 +147,13 @@ void  Bombs::exploseNegY(float y, std::pair<float, float> check)
 {
   AObject *tmp;
   bool  resume;
+  std::pair<float, float> pos;
 
   resume = true;
   while (check.second + 1 > y && resume == true)
   {
     tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-      resume = false;
-    }
-    else if (tmp && tmp->getType() == BOMB)
-    {
-      (*_bombsM->find(check)).second->setExplose();
-      resume = false;
-    }
-    else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
-      resume = false;
-    else if (!tmp)
-      newBomb(check);
+    resume = checkBlock(tmp, check, resume);
     check.second--;
   }
 }
@@ -189,26 +162,13 @@ void  Bombs::explosePosX(float y, std::pair<float, float> check)
 {
   AObject *tmp;
   bool  resume;
+  std::pair<float, float> pos;
 
   resume = true;
   while (check.first - 1 < y && resume == true)
   {
     tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-      resume = false;
-    }
-    else if (tmp && tmp->getType() == BOMB)
-    {
-      (*_bombsM->find(check)).second->setExplose();
-      resume = false;
-    }
-    else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
-      resume = false;
-    else if (!tmp)
-      newBomb(check);
+    resume = checkBlock(tmp, check, resume);
     check.first++;
   }
 }
@@ -222,23 +182,61 @@ void  Bombs::exploseNegX(float y, std::pair<float, float> check)
   while (check.first + 1 > y && resume == true)
   {
     tmp = _map->getCase(check.first, check.second);
-    if (tmp && tmp->getType() == BLOCKD)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-      resume = false;
-    }
-    else if (tmp && tmp->getType() == BOMB)
-    {
-      (*_bombsM->find(check)).second->setExplose();
-      resume = false;
-    }
-    else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
-      resume = false;
-    else if (!tmp)
-      newBomb(check);
+    resume = checkBlock(tmp, check, resume);
     check.first--;
   }
+}
+
+int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
+{
+  std::pair<float, float> pos;
+
+  if (tmp && tmp->getType() == BLOCKD)
+  {
+    _map->deleteCube(check.first, check.second);
+    newBomb(check);
+    resume = false;
+  }
+  else if (tmp && tmp->getType() == BOMB)
+  {
+    (*_bombsM->find(check)).second->setExplose();
+    resume = false;
+  }
+  else if (tmp && tmp->getType() == LASER)
+  {
+  //  std::cout << "TOUCH: " << _playerTab->size() << std::endl;
+
+    for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
+    {
+      pos = (*it).second->getPos();
+      pos.first = floor(pos.first);
+      pos.second = floor(pos.second);
+/*      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
+      std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
+*/      if (pos.first == check.first && pos.second == check.second)
+      {
+        std::cout << "TOUCHER\n";
+        if ((*it).second->getLife() == 0)
+        {
+          std::cout << "DEAD\n";
+          //_playerTab->erase(it++);
+          //it = _playerTab->begin();
+          ++it;
+        }
+        else
+        {
+         (*it).second->setLife((*it).second->getLife() - 1);          
+        }
+      }
+      else
+        ++it;
+    }
+  }
+  else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
+    resume = false;
+  else if (!tmp)
+    newBomb(check);
+  return (resume);
 }
 
 void	Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float>, Bombs *> *bombsM)
@@ -256,4 +254,9 @@ bool  Bombs::isExplosed() const
 void  Bombs::setExplose()
 {
   _explosed = true;
+}
+
+void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
+{
+  _playerTab = playerTab;
 }

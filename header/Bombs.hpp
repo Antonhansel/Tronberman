@@ -33,6 +33,7 @@ private:
     std::map<std::pair<float, float>, Bombs *>  *_bombsM;
     bool      _isExplosed;
     bool      _explosed;
+    std::map<int, Player*>  *_playerTab;
 
 public:
 	Bombs();
@@ -55,6 +56,10 @@ public:
   void  exploseNegX(float, std::pair<float, float>);
   bool  isExplosed() const;
   void  setExplose();
+  void  setPlayerTab(std::map<int, Player*> *);
+
+private:
+  int  checkBlock(AObject *tmp, std::pair<float, float>, int);
 };
 
 #endif

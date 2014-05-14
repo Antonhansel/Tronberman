@@ -140,6 +140,7 @@ void  Core::spawnBomb(Player *player)
   {
      Bombs *b = new Bombs();
      b->setObjects(_map, _sound, &_bombs);
+     b->setPlayerTab(&_player);
      b->makeBomb(player);
      _bombs[pos] = b;
    }

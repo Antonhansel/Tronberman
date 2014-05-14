@@ -16,6 +16,7 @@ Player::Player()
     _stock = 3;
     _range = 2;
     _x = 0;
+    _life = 3;
 }
 
 Player::~Player()
@@ -145,4 +146,14 @@ int   Player::getRange() const
 void  Player::setRange(int range)
 {
     _range = range;
+}
+
+void    Player::setLife(int newLife)
+{
+    _life = newLife;
+}
+
+int     Player::getLife() const
+{
+    return (_life);
 }
