@@ -1,3 +1,13 @@
+/*
+** Bonus.hpp for Bonus in /home/apollo/rendu/cpp_bomberman/header
+**
+** Made by Antonin Ribeaud
+** Login   <ribeau_a@epitech.net>
+**
+** Started on  Wed May  14 12:38:02 2014 Antonin Ribeaud
+** Last update Wed May  14 12:38:02 2014 Antonin Ribeaud
+*/
+
 #ifndef BONUS_HPP_
 # define BONUS_HPP_
 

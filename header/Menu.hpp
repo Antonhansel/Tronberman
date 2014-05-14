@@ -81,6 +81,7 @@ private:
   float			_posx;
   float			_xend;
   Text			*_text;
+  int       _players;
 
 private:
   FMOD_SYSTEM 		*system;

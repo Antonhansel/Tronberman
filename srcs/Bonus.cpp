@@ -1,3 +1,13 @@
+/*
+** Bonus.cpp for Bonus in /home/apollo/rendu/cpp_bomberman/srcs
+**
+** Made by Antonin Ribeaud
+** Login   <ribeau_a@epitech.net>
+**
+** Started on  Wed May  14 12:37:53 2014 Antonin Ribeaud
+** Last update Wed May  14 12:37:53 2014 Antonin Ribeaud
+*/
+
 #include "Bonus.hpp"
 
 Bonus::Bonus() :
@@ -18,7 +28,6 @@ bool	Bonus::initialize()
 void	Bonus::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_time += clock.getElapsed();
-
 }
 
 void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
