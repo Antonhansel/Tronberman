@@ -25,23 +25,13 @@
 # include <OpenGL.hh>
 # include <vector>
 # include <iostream>
-# include <math.h>
-# include <fmod.h>
+# include "CubeAnim.hpp"
+# include "Loader.hpp"
+# include "Background.hpp"
 # include "AObject.hpp"
 # include "Cube.hpp"
 # include "Factory.hpp"
-# include "Loader.hpp"
 # include "Text.hpp"
- 
-#define MAX 32 
-#define TAILLE_SPECTRE  2048
-#define REF_FREQ 1000
-#define REF_FREQ_EQ 171
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
-#define PI 3.14159
 
 using namespace gdl;
 using namespace glm;
@@ -49,46 +39,26 @@ using namespace glm;
 class Menu : public Game
 {
 public:
-  Menu(Camera *, Loader *loader);
+  Menu(Camera *, Loader *);
   ~Menu();
   bool			initialize();
   bool			update();
   void			reset();
   void			draw();
   bool			launch() const;
-  bool			makeCube(int, int, int);
-  bool			initFmod();
-  bool 			genSpiral();
-  float		  getEquation(int);
-  void			rotate();
-  
+  bool      drawBackground();
 private:
-  bool      _inIntro;
+  CubeAnim *_cubeanim;
+  Background *_background;
   Camera		*_camera;
   Loader    *_loader;
-  int 			a[MAX][MAX];
   Clock			_clock;
   Input			_input;
   BasicShader		_shader;
-  std::vector<AObject*> _objects;
-  bool			_isLaunch;
-  bool      _stopintro;
-  int			  _width;
-  int			  _height;
-  float			_angle;
-  float			_posy;
-  float			_posz;
-  float			_posx;
-  float			_xend;
   Text			*_text;
   int       _players;
-
+  bool      _isLaunch;
 private:
-  FMOD_SYSTEM 		*system;
-  FMOD_SOUND 		*musique;
-  FMOD_CHANNEL 		*canal;
-  FMOD_RESULT 		resultat;
-  float			spectre[TAILLE_SPECTRE]; 
 };
 
 #endif /* !MENU_HPP_ */

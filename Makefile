@@ -11,24 +11,25 @@
 NAME		=	bomberman
 
 SOURCES		=	srcs/main.cpp \
-			srcs/Loader.cpp \
-			srcs/Menu.cpp \
-			srcs/Core.cpp \
-			srcs/Char.cpp \
-			srcs/AObject.cpp \
-			srcs/Cube.cpp \
-			srcs/Engine.cpp \
-			srcs/Map.cpp \
-			srcs/Player.cpp \
-			srcs/Mybot.cpp \
-			srcs/Floor.cpp \
-			srcs/Background.cpp \
-			srcs/Networking.cpp \
-			srcs/Camera.cpp \
-			srcs/Text.cpp \
-			srcs/Sound.cpp \
-			srcs/Bombs.cpp \
-			srcs/Bonus.cpp
+				srcs/Loader.cpp \
+				srcs/Menu.cpp \
+				srcs/CubeAnim.cpp \
+				srcs/Core.cpp \
+				srcs/Char.cpp \
+				srcs/AObject.cpp \
+				srcs/Cube.cpp \
+				srcs/Engine.cpp \
+				srcs/Map.cpp \
+				srcs/Player.cpp \
+				srcs/Mybot.cpp \
+				srcs/Floor.cpp \
+				srcs/Background.cpp \
+				srcs/Networking.cpp \
+				srcs/Camera.cpp \
+				srcs/Text.cpp \
+				srcs/Sound.cpp \
+				srcs/Bombs.cpp \
+				srcs/Bonus.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

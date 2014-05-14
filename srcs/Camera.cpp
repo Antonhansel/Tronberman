@@ -75,7 +75,7 @@ bool	Camera::initScene()
   if (_players == 1)
     _projection = perspective(60.0f, (float)_width / (float)_height, 0.1f, 100.0f);
   else
-    _projection = perspective(60.0f, ((float)_width / 2.0f) / ((float)_height / 2.0f), 0.5f, 100.0f);
+    _projection = perspective(60.0f, ((float)_width / 2.0f) / ((float)_height / 2.0f), 0.5f, 150.0f);
   _transformation = lookAt(vec3(0, 10, -10), vec3(0, 0, 0), vec3(0, 1, 0));
   _mode = 1;
   _shader.bind();

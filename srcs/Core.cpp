@@ -52,8 +52,6 @@ bool	Core::initialize()
     return (false);
   if (drawChar() == false)
     return (false);
-  if (drawBackground() == false)
-    return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
   {
     _screen = 1;
