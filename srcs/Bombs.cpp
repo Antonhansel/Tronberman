@@ -16,6 +16,12 @@ Bombs::Bombs()
   _isExplosed = false;
   _explosed = false;
 	initialize();
+  _ptrFunct[BLOCKD] = &Bombs::checkBlockD;
+  _ptrFunct[BLOCK] = &Bombs::checkBlockS;
+  _ptrFunct[BONUS] = &Bombs::checkBonus;
+  _ptrFunct[BOMB] = &Bombs::checkBomb;
+  _ptrFunct[BORDER] = &Bombs::checkBlockS;
+  _ptrFunct[LASER] = &Bombs::checkLaser;
 }
 
 Bombs::~Bombs()
@@ -189,58 +195,10 @@ void  Bombs::exploseNegX(float y, std::pair<float, float> check)
 
 int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
 {
-  std::pair<float, float> pos;
-
-  if (tmp && tmp->getType() == BLOCKD)
+  if (tmp)
   {
-    _map->deleteCube(check.first, check.second);
-    newBomb(check);
-    Bonus *bonus = create<Bonus>();
-    bonus->setObject(BONUS, check, _map);
-    resume = false;
+    resume = (this->*_ptrFunct[tmp->getType()])(resume, check);
   }
-  else if (tmp && tmp->getType() == BOMB)
-  {
-    (*_bombsM->find(check)).second->setExplose();
-    resume = false;
-  }
-/*  else if (tmp && tmp->getType() == LASER)
-  {
-  //  std::cout << "TOUCH: " << _playerTab->size() << std::endl;
-
-    for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
-    {
-      pos = (*it).second->getPos();
-      pos.first = ((int)(pos.first));
-      pos.second = ((int)(pos.second));
-      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
-      std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
-      if (pos.first == check.first && pos.second == check.second)
-      {
-        std::cout << "TOUCHER\n";
-        if ((*it).second->getLife() == 0)
-        {
-          std::cout << "DEAD\n";
-          //_playerTab->erase(it++);
-          //it = _playerTab->begin();
-          ++it;
-        }
-        else
-        {
-         (*it).second->setLife((*it).second->getLife() - 1);          
-        }
-      }
-      else
-        ++it;
-    }
-  }*/
-    else if (tmp && tmp->getType() == BONUS)
-    {
-      _map->deleteCube(check.first, check.second);
-      newBomb(check);
-    }
-  else if (tmp && (tmp->getType() == BLOCK || tmp->getType() == BORDER))
-    resume = false;
   else if (!tmp)
     newBomb(check);
   return (resume);
@@ -266,4 +224,66 @@ void  Bombs::setExplose()
 void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
 {
   _playerTab = playerTab;
+}
+
+int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
+{
+  _map->deleteCube(check.first, check.second);
+  newBomb(check);
+  Bonus *bonus = create<Bonus>();
+  bonus->setObject(BONUS, check, _map);
+  resume = false;
+  return (resume);
+}
+
+int   Bombs::checkBlockS(int resume, std::pair<float, float> &check)
+{
+  resume = false;
+  return (resume);
+}
+
+int   Bombs::checkBonus(int resume, std::pair<float, float> &check)
+{
+  _map->deleteCube(check.first, check.second);
+  newBomb(check);
+  return (resume);
+}
+
+int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
+{
+  (*_bombsM->find(check)).second->setExplose();
+  resume = false;
+  return (resume);
+}
+
+int   Bombs::checkLaser(int resume, std::pair<float, float> &check)
+{
+  std::pair<float, float> pos;
+
+  /*for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
+    {
+      pos = (*it).second->getPos();
+      pos.first = ((int)(pos.first));
+      pos.second = ((int)(pos.second));
+      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
+      std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
+      if (pos.first == check.first && pos.second == check.second)
+      {
+        std::cout << "TOUCHER\n";
+        if ((*it).second->getLife() == 0)
+        {
+          std::cout << "DEAD\n";
+          //_playerTab->erase(it++);
+          //it = _playerTab->begin();
+          ++it;
+        }
+        else
+        {
+         (*it).second->setLife((*it).second->getLife() - 1);          
+        }
+      }
+      else
+        ++it;
+    }*/
+    return (resume);
 }

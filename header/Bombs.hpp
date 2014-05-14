@@ -35,7 +35,7 @@ private:
     bool      _isExplosed;
     bool      _explosed;
     std::map<int, Player*>  *_playerTab;
-    //std::map<int, 
+    std::map<type, int (Bombs::*)(int, std::pair<float, float> &)>  _ptrFunct;
 
 public:
 	Bombs();
@@ -61,7 +61,12 @@ public:
   void  setPlayerTab(std::map<int, Player*> *);
 
 private:
-  int  checkBlock(AObject *tmp, std::pair<float, float>, int);
+  int   checkBlock(AObject *tmp, std::pair<float, float>, int);
+  int   checkBlockD(int, std::pair<float, float> &);
+  int   checkBlockS(int, std::pair<float, float> &);
+  int   checkBonus(int, std::pair<float, float> &);
+  int   checkBomb(int, std::pair<float, float> &);
+  int   checkLaser(int, std::pair<float, float> &);
 };
 
 #endif
