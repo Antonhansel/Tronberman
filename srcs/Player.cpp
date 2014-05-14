@@ -17,6 +17,7 @@ Player::Player()
     _range = 2;
     _x = 0;
     _life = 3;
+    _begin = false;
 }
 
 Player::~Player()
@@ -164,3 +165,13 @@ int     Player::getLife() const
 {
     return (_life);
 }
+
+bool    Player::getBegin() const
+{
+    return (_begin);
+}
+
+void    Player::setBegin(bool begin)
+{
+    _begin = begin;
+}    
