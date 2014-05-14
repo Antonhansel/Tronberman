@@ -18,6 +18,8 @@
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
+class Bonus;
+
 class Player : public AObject
 {
 protected:
@@ -34,10 +36,13 @@ protected:
   bool          checkMove(float y, float x);
   float         _x;
   int           _life;
+  bool          _begin;
+
 public:
   void    setPlayer(int);
   void    setSpeed(float);
   void    setMap(Map *);
+
 public:
   Player();
   ~Player();
@@ -52,6 +57,8 @@ public:
   void    setRange(int);
   void    setLife(int);
   int     getLife() const;
+  void    setBegin(bool);
+  bool    getBegin() const;
 };
 
 #endif /* !_PLAYER_HPP_ */

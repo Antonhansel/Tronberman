@@ -228,10 +228,17 @@ void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
 
 int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
 {
+  int   res;
   _map->deleteCube(check.first, check.second);
   newBomb(check);
-  Bonus *bonus = create<Bonus>();
-  bonus->setObject(BONUS, check, _map);
+  res = rand() % 1000;
+  if (_player->getBegin() == false || res % 2 == 0)
+  {
+    if (_player->getBegin() == false)
+      _player->setBegin(true);
+    Bonus *bonus = create<Bonus>();
+    bonus->setObject(BONUS, check, _map);
+  }
   resume = false;
   return (resume);
 }

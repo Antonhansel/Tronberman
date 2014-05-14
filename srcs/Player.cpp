@@ -17,6 +17,7 @@ Player::Player()
     _range = 2;
     _x = 0;
     _life = 3;
+    _begin = false;
 }
 
 Player::~Player()
@@ -58,8 +59,15 @@ bool	Player::checkMove(float x, float y)
 {
     if (floor(_pos.first) == floor(_pos.first + x) && floor(_pos.second) == floor(_pos.second + y))
         return true;
-    if (!_map->getCase(floor(_pos.first + x), floor(_pos.second + y)))
+    AObject *cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
+    if (!cas)
         return (true);
+    else if (cas->getType() == BONUS)
+    {
+        dynamic_cast<Bonus*>(cas)->addToPlayer(this);
+        _map->deleteCube(floor(_pos.first + x), floor(_pos.second + y));  
+        return (true);
+    }
     else
         return (false);
 }
@@ -157,3 +165,13 @@ int     Player::getLife() const
 {
     return (_life);
 }
+
+bool    Player::getBegin() const
+{
+    return (_begin);
+}
+
+void    Player::setBegin(bool begin)
+{
+    _begin = begin;
+}    
