@@ -27,6 +27,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _stopintro = false;
   _xend = 0;
   _inIntro = true;
+  _players = 1;
 }
 
 Menu::~Menu()

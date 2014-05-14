@@ -41,7 +41,17 @@ bool 	Loader::loadTextures()
   _textures[BONUS] = new gdl::Texture();
   if (_textures[BONUS]->load("./ressources/assets/BONUS.tga") == false)
     return (false);
-  _textures[BONUS]->bind();
+  _textures[BLOCKD]->bind();
+  //   GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
+  // GLfloat mat_ambient_color[] = { 0.8F,0.8F,0.2F,1.0F };
+  // GLfloat mat_diffuse[] = { 0.1F,0.5F,0.8F,1.0F };
+  // GLfloat no_shininess[] = { 0.0F };
+  // GLfloat mat_emission[] = {0.3F,0.2F,0.2F,0.0F};
+  // glMaterialfv(GL_FRONT,GL_AMBIENT,mat_ambient_color);
+  // glMaterialfv(GL_FRONT,GL_DIFFUSE,mat_diffuse);
+  // glMaterialfv(GL_FRONT,GL_SPECULAR,no_mat);
+  // glMaterialfv(GL_FRONT,GL_SHININESS,no_shininess);
+  // glMaterialfv(GL_FRONT,GL_EMISSION,mat_emission);
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushNormal(vec);
   // gauche
