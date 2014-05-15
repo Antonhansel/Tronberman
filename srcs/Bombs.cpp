@@ -51,7 +51,6 @@ bool  Bombs::makeBomb(Player *player)
   std::pair<float, float> pos;
 
   pos = player->realPos(player->getPos());
-  std::cout << "X: " << pos.first << " && Y: " << pos.second << std::endl;
   /*pos.first = roundf(pos.first - 0.2);
   pos.second = roundf(pos.second - 0.2);*/
   if (_map->getCase(pos.first, pos.second) == NULL)
@@ -229,7 +228,10 @@ bool  Bombs::isExplosed() const
 
 void  Bombs::setExplose()
 {
-  _explosed = true;
+  std::cout << "Begin this = " << this << std::endl;
+  if (isExplosed() == false)
+    _explosed = true;
+  std::cout << "End\n";
 }
 
 void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
@@ -273,7 +275,7 @@ int   Bombs::checkBonus(int resume, std::pair<float, float> &check)
 
 int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
 {
- /* (*_bombsM->find(check)).second->setExplose();
+  /*(*_bombsM->find(check)).second->setExplose();
   resume = false;*/
   return (resume);
 }

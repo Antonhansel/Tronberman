@@ -61,6 +61,7 @@ public:
   bool      makeChar(int, int, int);
   void      FPS();
   void      spawnBomb(Player *);
+
 private:
   int       _screen;
   float     _dist;
