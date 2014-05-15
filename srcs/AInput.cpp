@@ -5,6 +5,7 @@ AInput::AInput(gdl::Input &input, inputType t) :
 {
 	_ptrFunct[KEY1] = &AInput::createPlayer1Key;
 	_ptrFunct[KEY2] = &AInput::createPlayer2Key;
+	_ptrFunct[MENU] = &AInput::createMenuKey;
 	(this->*_ptrFunct[t])();
 }
 
@@ -46,7 +47,12 @@ void	AInput::createPlayer2Key()
 	_key[SDLK_d] = PRIGHT;
 }
 
-/*int 	AInput::menuEvent()
+void	AInput::createMenuKey()
 {
-
-}*/
+	_key[SDLK_UP] = MUP;
+	_key[SDLK_LEFT] = MLEFT;
+	_key[SDLK_RIGHT] = MRIGHT;
+	_key[SDLK_DOWN] = MDOWN;
+	_key[SDLK_RETURN] = MRETURN;
+	_key[SDLK_ESCAPE] = ESCAPE;
+}

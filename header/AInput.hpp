@@ -20,7 +20,8 @@
 enum inputType
 {
 	KEY1,
-	KEY2
+	KEY2,
+	MENU
 };
 
 /*enum key
@@ -53,6 +54,7 @@ public:
 	~AInput();
 	key 	getInput();
 	void	setInput(gdl::Input &);
+	void	createMenuKey();
 
 private:
 	void	createPlayer1Key();

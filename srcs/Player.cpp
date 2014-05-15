@@ -95,23 +95,13 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         _input = new AInput(input, KEY2);
     else
         _input->setInput(input);
-    if (_player == 1)
-    {
-        keymap[SDLK_LEFT] = std::make_pair(trans, 0);
-        keymap[SDLK_RIGHT] = std::make_pair(-trans, 0);
-        keymap[SDLK_UP] = std::make_pair(0, trans);
-        keymap[SDLK_DOWN] = std::make_pair(0, -trans);
-    }
-    else
-    {
-        keymap[SDLK_q] = std::make_pair(trans, 0);
-        keymap[SDLK_d] = std::make_pair(-trans, 0);
-        keymap[SDLK_z] = std::make_pair(0, trans);
-        keymap[SDLK_s] = std::make_pair(0, -trans);
-    }
     if (_input && (key = _input->getInput()) != NONE)
     {
         i = (this->*_key[key])(trans);
+        _anim = 2;
+        rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+        rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
+        rotate(rotation);
     }
     if (_onBomb() ||
                 (_checkMove(
@@ -132,10 +122,6 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
                 _pos.second += i.second;
                 translate(glm::vec3(i.first, 0, i.second));
             }
-            _anim = 2;
-            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
-            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
-            rotate(rotation);
     if (_anim == 2)
         _anim = 1;
     else
@@ -174,6 +160,25 @@ std::pair<float, float>    Player::left(float &trans)
     std::pair<float, float> i(trans, 0);
 
     return (i);
+}
+
+std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
+{
+  float temp1;
+  float temp2;
+  temp1 = floor(pos.first);
+  temp2 = ceil(pos.first);
+  if (temp1 - pos.first > pos.first - temp2)
+    pos.first = temp1;
+  else
+    pos.first = temp2;
+  temp1 = floor(pos.second);
+  temp2 = ceil(pos.second);
+  if (temp1 - pos.second > pos.second - temp2)
+    pos.second = temp1;
+  else
+    pos.second = temp2;  
+  return (pos);
 }
 
 int     Player::getStock() const

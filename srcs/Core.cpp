@@ -14,8 +14,8 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 30;
-  _height = 30;
+  _width = 10;
+  _height = 10;
   _loader = loader;
   _cam = cam;
   _players = 1;
@@ -152,7 +152,7 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  FPS();
+  //FPS();
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;

@@ -50,9 +50,10 @@ bool  Bombs::makeBomb(Player *player)
 {
   std::pair<float, float> pos;
 
-  pos = player->getPos();
-  pos.first = roundf(pos.first - 0.2);
-  pos.second = roundf(pos.second - 0.2);
+  pos = player->realPos(player->getPos());
+  std::cout << "X: " << pos.first << " && Y: " << pos.second << std::endl;
+  /*pos.first = roundf(pos.first - 0.2);
+  pos.second = roundf(pos.second - 0.2);*/
   if (_map->getCase(pos.first, pos.second) == NULL)
   {
     if (player != NULL && player->getStock() >= 1)

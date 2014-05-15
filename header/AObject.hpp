@@ -37,11 +37,12 @@ enum key
   PRIGHT,
   PLEFT,
   PBOMB,
-  P2UP,
-  P2DOWN,
-  P2RIGHT,
-  P2LEFT,
-  P2BOMB
+  MRETURN,
+  MUP,
+  MLEFT,
+  MDOWN,
+  MRIGHT,
+  ESCAPE
 };
 
 class AObject

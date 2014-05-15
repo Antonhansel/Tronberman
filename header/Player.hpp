@@ -65,6 +65,7 @@ public:
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
+  std::pair<float, float>   realPos(std::pair<float, float>);
 
 private:
   std::pair<float, float> up(float &);
