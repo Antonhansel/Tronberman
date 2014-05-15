@@ -79,13 +79,18 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
     float trans = static_cast<float>(clock.getElapsed()) * _speed;
     std::map<int, std::pair<float, float> > keymap;
-    glm::vec3                               rotation = glm::vec3(0);
+  /*  glm::vec3                               rotation = glm::vec3(0);
     AObject                                 *tmp;
+  */  key                                      key;
 
-    if (_input == NULL)
+    if (_input == NULL && _player == 1)
     {
         _input = new AInput(input, KEY1);
     }
+    else if (_input == NULL && _player == 2)
+        _input = new AInput(input, KEY2);
+    else
+        _input->setInput(input);
     if (_player == 1)
     {
         keymap[SDLK_LEFT] = std::make_pair(trans, 0);
@@ -100,7 +105,11 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         keymap[SDLK_z] = std::make_pair(0, trans);
         keymap[SDLK_s] = std::make_pair(0, -trans);
     }
-    for (std::map<int, std::pair<float, float> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
+    if (_input && (key = _input->getInput()) != NONE)
+    {
+        std::cout << "Player " << _player << " KEY: " << key << std::endl;
+    }
+/*    for (std::map<int, std::pair<float, float> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
     {
         if (input.getKey(i->first))
         {
@@ -139,7 +148,7 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         static_cast<Bonus*>(tmp)->addToPlayer(this);
         _map->deleteCube(_pos.first, _pos.second);
     }
-}
+*/}
 
 int  Player::getStock() const
 {

@@ -15,30 +15,39 @@ AInput::~AInput()
 
 key	AInput::getInput()
 {
+	std::cout << "BEGIN\n";
 	for (std::map<int, key>::const_iterator it = _key.begin(); it != _key.end(); ++it)
 	{
+		std::cout << "----1------\n";
 		if (_input.getKey((*it).first))
 		{
+			std::cout << "event\n";			
 			return ((*it).second);
 		}
 	}
+	std::cout << "No event\n";
 	return (NONE);
+}
+
+void	AInput::setInput(gdl::Input &input)
+{
+	_input = input;
 }
 
 void	AInput::createPlayer1Key()
 {
-	_key[SDLK_UP] = P1UP;
-	_key[SDLK_DOWN] = P1DOWN;
-	_key[SDLK_LEFT] = P1LEFT;
-	_key[SDLK_RIGHT] = P1RIGHT;
+	_key[SDLK_UP] = PUP;
+	_key[SDLK_DOWN] = PDOWN;
+	_key[SDLK_LEFT] = PLEFT;
+	_key[SDLK_RIGHT] = PRIGHT;
 }
 
 void	AInput::createPlayer2Key()
 {
-	_key[SDLK_z] = P2UP;
-	_key[SDLK_s] = P2DOWN;
-	_key[SDLK_q] = P2LEFT;
-	_key[SDLK_d] = P2RIGHT;	
+	_key[SDLK_z] = PUP;
+	_key[SDLK_s] = PDOWN;
+	_key[SDLK_q] = PLEFT;
+	_key[SDLK_d] = PRIGHT;
 }
 
 /*int 	AInput::menuEvent()

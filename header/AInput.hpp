@@ -52,6 +52,7 @@ public:
 	AInput(gdl::Input &, inputType);
 	~AInput();
 	key 	getInput();
+	void	setInput(gdl::Input &);
 
 private:
 	void	createPlayer1Key();

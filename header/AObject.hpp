@@ -32,11 +32,11 @@ enum type
 enum key
 {
   NONE = 0,
-  P1UP,
-  P1DOWN,
-  P1RIGHT,
-  P1LEFT,
-  P1BOMB,
+  PUP,
+  PDOWN,
+  PRIGHT,
+  PLEFT,
+  PBOMB,
   P2UP,
   P2DOWN,
   P2RIGHT,

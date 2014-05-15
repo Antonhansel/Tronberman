@@ -64,6 +64,12 @@ public:
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
+
+private:
+  void    up();
+  void    right();
+  void    left();
+  void    down();
 };
 
 #endif /* !_PLAYER_HPP_ */
