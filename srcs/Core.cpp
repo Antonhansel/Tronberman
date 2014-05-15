@@ -152,7 +152,7 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  //FPS();
+  FPS();
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
