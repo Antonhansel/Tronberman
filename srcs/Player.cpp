@@ -19,6 +19,10 @@ Player::Player()
     _life = 3;
     _begin = false;
     _input = NULL;
+    _key[PUP] = &Player::up;
+    _key[PDOWN] = &Player::down;
+    _key[PRIGHT] = &Player::right;
+    _key[PLEFT] = &Player::left;
 }
 
 Player::~Player()
@@ -79,14 +83,14 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
     float trans = static_cast<float>(clock.getElapsed()) * _speed;
     std::map<int, std::pair<float, float> > keymap;
-  /*  glm::vec3                               rotation = glm::vec3(0);
+    std::pair<float, float> i;
+    glm::vec3                               rotation = glm::vec3(0);
+    key                                      key;
     AObject                                 *tmp;
-  */  key                                      key;
+
 
     if (_input == NULL && _player == 1)
-    {
         _input = new AInput(input, KEY1);
-    }
     else if (_input == NULL && _player == 2)
         _input = new AInput(input, KEY2);
     else
@@ -107,37 +111,31 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     }
     if (_input && (key = _input->getInput()) != NONE)
     {
-        std::cout << "Player " << _player << " KEY: " << key << std::endl;
+        i = (this->*_key[key])(trans);
     }
-/*    for (std::map<int, std::pair<float, float> >::iterator i = keymap.begin(); i != keymap.end(); ++i)
-    {
-        if (input.getKey(i->first))
-        {
-            if (_onBomb() ||
+    if (_onBomb() ||
                 (_checkMove(
-                    i->second.first,
-                    i->second.second)
+                    i.first,
+                    i.second)
                 && _checkMove(
-                    i->second.first + 0.4,
-                    i->second.second + 0.4)
+                    i.first + 0.4,
+                    i.second + 0.4)
                 && _checkMove(
-                    i->second.first,
-                    i->second.second + 0.4)
+                    i.first,
+                    i.second + 0.4)
                 && _checkMove(
-                    i->second.first + 0.4,
-                    i->second.second)
+                    i.first + 0.4,
+                    i.second)
                 ))
             {
-                _pos.first += i->second.first;
-                _pos.second += i->second.second;
-                translate(glm::vec3(i->second.first, 0, i->second.second));
+                _pos.first += i.first;
+                _pos.second += i.second;
+                translate(glm::vec3(i.first, 0, i.second));
             }
             _anim = 2;
-            rotation.y += (i->second.second) ? (SIGN(i->second.second) * 90 - 90) : (0);
-            rotation.y += (i->second.first) ? (SIGN(i->second.first) * -90 + 180) : (0);
+            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
             rotate(rotation);
-        }
-    }
     if (_anim == 2)
         _anim = 1;
     else
@@ -148,9 +146,37 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
         static_cast<Bonus*>(tmp)->addToPlayer(this);
         _map->deleteCube(_pos.first, _pos.second);
     }
-*/}
+}
 
-int  Player::getStock() const
+std::pair<float, float>    Player::up(float &trans)
+{
+    std::pair<float, float> i(0, trans);
+
+    return (i);
+}
+
+std::pair<float, float>    Player::down(float &trans)
+{
+    std::pair<float, float> i(0, -trans);
+
+    return (i);
+}
+
+std::pair<float, float>    Player::right(float &trans)
+{
+    std::pair<float, float> i(-trans, 0);
+
+    return (i);
+}
+
+std::pair<float, float>    Player::left(float &trans)
+{
+    std::pair<float, float> i(trans, 0);
+
+    return (i);
+}
+
+int     Player::getStock() const
 {
     return (_stock);
 }

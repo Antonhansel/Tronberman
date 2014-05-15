@@ -15,17 +15,13 @@ AInput::~AInput()
 
 key	AInput::getInput()
 {
-	std::cout << "BEGIN\n";
 	for (std::map<int, key>::const_iterator it = _key.begin(); it != _key.end(); ++it)
 	{
-		std::cout << "----1------\n";
 		if (_input.getKey((*it).first))
 		{
-			std::cout << "event\n";			
 			return ((*it).second);
 		}
 	}
-	std::cout << "No event\n";
 	return (NONE);
 }
 

@@ -27,7 +27,6 @@ Bombs::Bombs()
 
 Bombs::~Bombs()
 {
-  std::cout << "Destructing bombs\n";
 }
 
 void Bombs::update(gdl::Clock const &clock, gdl::Input &input)

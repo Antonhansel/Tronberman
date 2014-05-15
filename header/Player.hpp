@@ -42,6 +42,7 @@ protected:
   int           _life;
   bool          _begin;
   AInput        *_input;
+  std::map<key, std::pair<float, float> (Player::*)(float &)>   _key;
 
 public:
   void    setPlayer(int);
@@ -66,10 +67,10 @@ public:
   bool    getBegin() const;
 
 private:
-  void    up();
-  void    right();
-  void    left();
-  void    down();
+  std::pair<float, float> up(float &);
+  std::pair<float, float> right(float &);
+  std::pair<float, float> left(float &);
+  std::pair<float, float> down(float &);
 };
 
 #endif /* !_PLAYER_HPP_ */
