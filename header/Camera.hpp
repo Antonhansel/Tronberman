@@ -17,7 +17,7 @@
 # include <SdlContext.hh> 
 # include <Geometry.hh> 
 # include <Texture.hh> 
-# include <Model.hh> 
+# include <Model.hh>
 # include <glm/glm.hpp>
 # include <BasicShader.hh>
 # include <glm/gtc/matrix_transform.hpp>

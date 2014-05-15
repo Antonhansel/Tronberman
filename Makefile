@@ -29,7 +29,8 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Text.cpp \
 				srcs/Sound.cpp \
 				srcs/Bombs.cpp \
-				srcs/Bonus.cpp
+				srcs/Bonus.cpp \
+				srcs/AInput.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
@@ -40,8 +41,8 @@ LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex6
 
 # Debug and profiling flags
 
-# CXXFLAGS	+= -g -pg
-# LDFLAGS 	+= -g -pg
+CXXFLAGS	+= -g -pg
+LDFLAGS 	+= -g -pg
 
 GREEN 		= 	@if [ -t 1 ]; then tput setaf 2 ; fi
 BLUE 		= 	@if [ -t 1 ]; then tput setaf 4 ; fi

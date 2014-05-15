@@ -18,7 +18,7 @@ Core::Core(Camera *cam, Loader *loader)
   _height = 30;
   _loader = loader;
   _cam = cam;
-  _players = 2;
+  _players = 1;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);

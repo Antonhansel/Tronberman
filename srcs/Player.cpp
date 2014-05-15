@@ -18,6 +18,7 @@ Player::Player()
     _x = 0;
     _life = 3;
     _begin = false;
+    _input = NULL;
 }
 
 Player::~Player()
@@ -81,6 +82,10 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     glm::vec3                               rotation = glm::vec3(0);
     AObject                                 *tmp;
 
+    if (_input == NULL)
+    {
+        _input = new AInput(input, KEY1);
+    }
     if (_player == 1)
     {
         keymap[SDLK_LEFT] = std::make_pair(trans, 0);

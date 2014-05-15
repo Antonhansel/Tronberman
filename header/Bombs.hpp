@@ -48,7 +48,7 @@ public:
 	bool	initialize();
 	void	draw(gdl::AShader &shader, gdl::Clock const &clock);
 	void	update(gdl::Clock const &clock, gdl::Input &input);
-	bool    makeBomb(Player *);
+	bool  makeBomb(Player *);
   void	bombExplode();
   void	removeExplosion();
   void	explosion(std::pair<float, float>, int);

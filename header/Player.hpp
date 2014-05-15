@@ -15,10 +15,13 @@
 # include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
+# include "AInput.hpp"
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
 class Bonus;
+
+class AInput;
 
 class Player : public AObject
 {
@@ -38,6 +41,7 @@ protected:
   float         _x;
   int           _life;
   bool          _begin;
+  AInput        *_input;
 
 public:
   void    setPlayer(int);

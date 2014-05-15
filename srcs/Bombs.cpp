@@ -26,7 +26,9 @@ Bombs::Bombs()
 }
 
 Bombs::~Bombs()
-{}
+{
+  std::cout << "Destructing bombs\n";
+}
 
 void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
 {
@@ -247,11 +249,9 @@ int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
       _player->setBegin(true);
     if (_bonusM.find(check) == _bonusM.end())
     {
-      //_bonusM[check]
         Bonus *b = create<Bonus>();
         b->setObject(BONUS, check, _map);
-_bonusM[check] = b;
-      //_bonusM[check]->throwBonus();
+        _bonusM[check] = b;
     }
   }
   resume = false;
@@ -273,8 +273,8 @@ int   Bombs::checkBonus(int resume, std::pair<float, float> &check)
 
 int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
 {
-  (*_bombsM->find(check)).second->setExplose();
-  resume = false;
+ /* (*_bombsM->find(check)).second->setExplose();
+  resume = false;*/
   return (resume);
 }
 

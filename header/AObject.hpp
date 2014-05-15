@@ -29,6 +29,21 @@ enum type
     BONUS = 7
   };
 
+enum key
+{
+  NONE = 0,
+  P1UP,
+  P1DOWN,
+  P1RIGHT,
+  P1LEFT,
+  P1BOMB,
+  P2UP,
+  P2DOWN,
+  P2RIGHT,
+  P2LEFT,
+  P2BOMB
+};
+
 class AObject
 {
 public:
