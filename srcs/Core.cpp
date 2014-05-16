@@ -18,7 +18,7 @@ Core::Core(Camera *cam, Loader *loader)
   _height = 30;
   _loader = loader;
   _cam = cam;
-  _players = 2;
+  _players = 1;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);
@@ -51,6 +51,8 @@ bool	Core::initialize()
   if (drawFloor() == false)
     return (false);
   if (drawChar() == false)
+    return (false);
+  if (drawBot(0) == false)
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
   {
@@ -100,6 +102,21 @@ bool   Core::makeChar(int posx, int posy, int screen)
   return (true);
 }
 
+bool   Core::makeBot(int posx, int posy, int id)
+{
+  Player *chara = create<Mybot>();
+  std::pair<float, float> pos;
+
+  if (chara->initialize() == false)
+    return (false);
+  pos = std::make_pair(posx, posy);
+  chara->setPos(pos);
+  chara->setMap(_map);
+  chara->setId(id);
+  _player[id] = chara;
+  return (true);
+}
+
 bool		Core::drawChar()
 {
   if (makeChar(_posx, _posy, 1) == false)
@@ -110,6 +127,28 @@ bool		Core::drawChar()
       return (false);
   }
   return (true);
+}
+
+bool    Core::drawBot(int nb)
+{
+  std::vector<std::pair<int, int> >    spawn;
+  int   x;
+  int   y;
+  int   i;
+
+  i = 0;
+  if (nb > 0)
+    spawn = _map->setSpawn(nb);
+  while (++i <= nb && nb > 0)
+    {
+      x = spawn.begin()->first;
+      y = spawn.begin()->second;
+      if (makeBot(x, y, i + 2) == false)
+        return (false);
+      if (i < nb)
+        spawn.erase(spawn.begin());
+    }
+  return true;
 }
 
 void  Core::FPS()
@@ -189,7 +228,9 @@ void  Core::drawAll(AObject *cur_char)
   std::pair<int, int> pos;
   type LastType = static_cast<type>(-1);
   AObject     *tmp;
+  int         nb_p;
 
+  nb_p = 0;
   pos = cur_char->getPos();
   for (int x = pos.first - 30; x < pos.first + 30; ++x)
   {
@@ -209,7 +250,11 @@ void  Core::drawAll(AObject *cur_char)
   for (std::vector<AObject*>::iterator i = _other.begin(); i != _other.end(); ++i)
     (*i)->draw(_shader, _clock);
   for (size_t i = 1; i <= _player.size(); i++)
-    _player[i]->draw(_shader, _clock);
+  {
+    if (i == 2 && _players == 1)
+       nb_p = 1;
+    _player[i + nb_p]->draw(_shader, _clock);
+  }
 }
 
 void	Core::draw()

@@ -124,7 +124,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         _input = new AInput(input, KEY1);
     else if (_input == NULL && _player == 2)
         _input = new AInput(input, KEY2);
-    else
+    else if (_id < 3)
         _input->setInput(input);
     if (_input && (key = _input->getInput()) != NONE)
     {

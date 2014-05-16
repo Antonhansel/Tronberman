@@ -118,20 +118,35 @@ void    Map::_deleteSide(int x, int y)
     }
 }
 
+bool    Map::check_pos(int x, int y)
+{
+    std::vector<std::pair<int, int> >::iterator it;
+
+    for (it = _spawns.begin(); it < _spawns.end(); ++it)
+        if (x == (*it).first && y == (*it).second)
+            return true;
+    return false;
+}
+
 std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
 {
     int   x;
     int   y;
 
     srand(time(NULL));
+    x = 0;
+    y = 0;
     for (int i = 0; i < nb; i++)
     {
-        x = rand() % (_size_x - 2) + 1;
-        y = rand() % (_size_y - 2) + 1;
-        if (x % 2 == 0)
-            x--;
-        if (y % 2 == 0)
-            y--;
+        while ((x == 0 && y == 0) || check_pos(x, y))
+        {
+            x = rand() % (_size_x - 2) + 1;
+            y = rand() % (_size_y - 2) + 1;
+            if (x % 2 == 0)
+                x--;
+            if (y % 2 == 0)
+                y--;
+        }
         _spawns.push_back(std::make_pair(x, y));
         _deleteSide(x, y);
     }

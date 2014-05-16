@@ -23,6 +23,7 @@ public:
   void    addCube(int, int, type);
   void    addCube(int, int, AObject *);
   void    deleteCube(int, int);
+  bool    check_pos(int x, int y);
 
 private:
   AObject **_map;

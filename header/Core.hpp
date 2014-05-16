@@ -54,11 +54,12 @@ public:
   void			draw();
   bool			drawFloor();
   bool			drawChar();
-  bool      drawBot();
+  bool      drawBot(int);
   bool			drawBackground();
   bool 			update();
   void      drawAll(AObject *);
   bool      makeChar(int, int, int);
+  bool      makeBot(int, int, int);
   void      FPS();
   void      spawnBomb(Player *);
   Map       *getMap();
