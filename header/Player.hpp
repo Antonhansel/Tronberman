@@ -28,8 +28,8 @@ class Player : public AObject
 protected:
   gdl::Texture	_texture;
   gdl::Geometry	_geometry;
-  gdl::Model		_model;
-  int			      _anim;
+  gdl::Model	_model;
+  int		_anim;
   int           _stock;
   int           _id;
   int           _range;

@@ -24,6 +24,7 @@ Engine::~Engine()
 
 bool 		Engine::init()
 {
+  std::string str = "save_file.xml";
   _camera = new Camera(HEIGHT, WIDTH);
   _camera->initScene();
   _loader = new Loader();
@@ -31,7 +32,72 @@ bool 		Engine::init()
   	return (false);
   _menu = new Menu(_camera, _loader);
   _core = new Core(_camera, _loader);
+  // _core->getMap()->load_map(str);   // Charge la map si 
+  // _core->initPlayer();              // existe ou en creer une nouvelle
   return (true);
+}
+
+void    Engine::save_player()
+{
+  std::map<int, Player*> player = _core->getPlayer();
+  _file << "<player>" << std::endl;
+  _file << "\t" << player.size() << std::endl;
+
+  for (unsigned int i = 1; i <= player.size(); i++)
+    _file << "\t" << player[i]->getId() << std::endl;
+
+  _file << "</player>" << std::endl;
+}
+
+void    Engine::save_map()
+{
+  Map     *map = _core->getMap();
+  int     size_x = _core->getMap()->getX();
+  int     size_y = _core->getMap()->getY();
+
+  _file << "<map>" << std::endl;
+  _file << "\t<size>" << std::endl << "\t\t" << size_y << " " << 
+  size_x << std::endl << "\t</size>" << std::endl;
+  _file << "\t<case>" << std::endl;
+  for (int y = 0; y < size_y; y++)
+  {
+    for (int x = 0; x < size_x; x++)
+    {
+      if (map->getCase(x, y) != NULL)
+      {
+        type t = map->getCase(x, y)->getType();
+        if (t != BOMB && t != BONUS && t != LASER)
+        {
+          _file << "\t\t" << y << " " << x << " " << 
+          map->getCase(x, y)->getType() << std::endl;
+        }
+      }
+    }
+  }
+  _file << "\t</case>" << std::endl;
+  save_spawn();
+  _file << "</map>" << std::endl;
+}
+
+void    Engine::save_spawn()
+{
+  std::vector<std::pair<int, int> >    obj;
+
+  std::map<int, Player*>  player = _core->getPlayer();
+  _file << "\t<spawn>" << std::endl;
+  for (unsigned int i = 1; i <= player.size(); i++)
+  { 
+    std::pair<int, int> pos = player[i]->getPos();
+    _file << "\t\t" << pos.second << " " << pos.first << std::endl;
+  }
+  _file << "\t</spawn>" << std::endl;
+}
+
+void    Engine::saving()
+{
+  _file.open("save_file.xml");
+  save_map();
+  _file.close();
 }
 
 bool		Engine::start()
@@ -53,6 +119,7 @@ bool		Engine::start()
                 {
                     while (_core->update())
                         _core->draw();
+                    saving();
                 }
                 _menu->reset();
 //	      _core->reset();

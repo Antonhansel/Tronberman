@@ -14,11 +14,11 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 10;
-  _height = 10;
+  _width = 100;
+  _height = 100;
   _loader = loader;
   _cam = cam;
-  _players = 1;
+  _players = 2;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);
@@ -43,6 +43,24 @@ Core::~Core()
   delete _map;
   delete _sound;
 }
+
+bool  Core::initPlayer()
+{
+  std::vector<std::pair<int, int> >    obj;
+
+  _players = 2;
+  obj = _map->getSpawn();
+  _posx = obj.begin()->first;
+  _posy = obj.begin()->second;
+  if (_players == 2)
+  {
+    obj.erase(obj.begin());
+    _posx2 = obj.begin()->first;
+    _posy2 = obj.begin()->second;
+  }
+  return (true);  
+}
+
 
 bool	Core::initialize()
 {
@@ -233,4 +251,14 @@ void	Core::draw()
     drawAll(_player[2]);
   }
   _cam->flushContext();
+}
+
+Map       *Core::getMap()
+{
+  return _map;
+}
+
+std::map<int, Player*>  Core::getPlayer()
+{
+  return _player;
 }

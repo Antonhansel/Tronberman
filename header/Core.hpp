@@ -51,6 +51,7 @@ public:
   Core(Camera *cam, Loader *loader);
   ~Core();
   bool			initialize();
+  bool      initPlayer();
   void			draw();
   bool			drawFloor();
   bool			drawChar();
@@ -61,6 +62,8 @@ public:
   bool      makeChar(int, int, int);
   void      FPS();
   void      spawnBomb(Player *);
+  Map       *getMap();
+  std::map<int, Player*>  getPlayer();
 
 private:
   int       _screen;

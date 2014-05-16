@@ -137,3 +137,161 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
     }
     return (_spawns);
 }
+
+
+std::vector<std::pair<int, int> >   &Map::getSpawn()
+{
+    return (_spawns);
+}
+
+int       Map::getY()
+{
+    return _size_y;
+}
+
+int       Map::getX()
+{
+    return _size_x;
+}
+
+void        Map::my_parseur(std::vector<int> &tab, std::string &str)
+{
+  unsigned int   x;
+  unsigned int   y;
+  int v;
+  tab.clear();
+
+  x = 2;
+  y = 2;
+  while (str[y])
+  {
+    if (str[y] == ' ')
+    {
+      std::istringstream buffer(str.substr(x, y - x + 1));
+      buffer >> v;
+      tab.push_back(v);
+      x = y + 1;
+    }
+    y++;
+  }
+    std::istringstream buffer(str.substr(x, y - x + 1));
+    buffer >> v;
+    tab.push_back(v);
+}
+
+bool        Map::my_balise(std::string &in, std::string &out, std::string &str)
+{
+  unsigned int pos = str.find(in) + in.length();
+  unsigned int pos2 = str.find(out);
+
+  std::cout << "in : "  << pos << std::endl;
+  std::cout << "out : "  << pos2 << std::endl;
+  
+  if (pos2 != std::string::npos)
+    str = str.substr(pos, pos2 - pos);
+  else
+    str = str.substr(pos);
+  return (true);
+}
+
+void    Map::load_size(std::list<std::string> &file)
+{
+    std::vector<int> tab;
+
+  while (file.front() != "\t</size>")
+  {
+    my_parseur(tab, file.front());
+    _size_x = tab.back();
+    tab.pop_back();
+    _size_y = tab.back();
+    file.pop_front();
+  }
+  file.pop_front();
+}
+
+void    Map::load_case(std::list<std::string> &file)
+{
+    std::vector<int> tab;
+    delete _map;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+
+  while (file.front() != "\t</case>")
+  {
+    int x;
+    int y;
+    int t;
+    type _type;
+
+    my_parseur(tab, file.front());
+    t = tab.back();
+    tab.pop_back();
+    x = tab.back();
+    tab.pop_back();
+    y = tab.back();
+    file.pop_front();
+    _type = (type)t;
+    addCube(x, y, _type);
+  }
+  file.pop_front();
+}
+
+void    Map::load_spawn(std::list<std::string> &file)
+{
+  std::vector<int> tab;
+
+  while (!_spawns.empty())
+     _spawns.pop_back();
+  while (file.front() != "\t</spawn>")
+  {
+    int x;
+    int y;
+
+    my_parseur(tab, file.front());
+    x = tab.back();
+    tab.pop_back();
+    y = tab.back();
+    tab.pop_back();
+    _spawns.push_back(std::make_pair(x, y));
+    _deleteSide(x, y);
+    file.pop_front();
+  }
+  file.pop_front();
+ std::cout << _spawns.size() << std::endl;
+}
+
+void    Map::load_map(std::string &file_name)
+{
+  std::list<std::string>  file;
+  std::string             str;
+  std::ifstream           infile(file_name.c_str());
+  std::vector<int>  tab;
+
+  while (std::getline(infile, str))
+    file.push_back(str);
+  if (file.size() > 0)
+  {
+    file.pop_front(); 
+    while (file.front() != "</map>")
+    {
+      if (file.front() == "\t<size>") 
+      {
+        file.pop_front();
+        load_size(file);
+      }
+      else if (file.front() == "\t<case>")
+      {
+        file.pop_front();
+        load_case(file);
+      }
+      else if (file.front() == "\t<spawn>")
+      {
+        file.pop_front();
+        load_spawn(file);
+      }
+    }
+    file.pop_front();
+  }
+  else
+    std::cout << "The map is not found." << std::endl;
+}

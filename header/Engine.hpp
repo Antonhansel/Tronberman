@@ -29,12 +29,17 @@ public:
 private:
   Engine(const Engine&);
   Engine &operator=(const Engine &);
+  void    saving();
+  void    save_player();
+  void    save_map();
+  void    save_spawn();
   
 private:
   Camera	*_camera;
   Core		*_core;
   Menu		*_menu;
   Loader 	*_loader;
+  std::ofstream _file;
 };
 
 #endif /* !ENGINE_HPP_ */
