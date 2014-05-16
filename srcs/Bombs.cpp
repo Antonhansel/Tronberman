@@ -12,11 +12,11 @@
 
 Bombs::Bombs()
 {
-	_time = 0;
+  _time = 0;
   _isExplosed = false;
   _explosed = false;
   _doBonus = false;
-	initialize();
+  initialize();
   _ptrFunct[BLOCKD] = &Bombs::checkBlockD;
   _ptrFunct[BLOCK] = &Bombs::checkBlockS;
   _ptrFunct[BONUS] = &Bombs::checkBonus;
@@ -31,7 +31,7 @@ Bombs::~Bombs()
 
 void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
 {
-	 _time += clock.getElapsed();
+   _time += clock.getElapsed();
 }
 
 void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -39,7 +39,7 @@ void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
   (void)clock;
 }
 
-bool	Bombs::initialize()
+bool  Bombs::initialize()
 {
   scale(glm::vec3(0.9, 0.9, 0.9));
   _speed = 10.0f;
@@ -119,21 +119,50 @@ void  Bombs::bombExplode()
   }
 }
 
-void		Bombs::newBomb(std::pair<float, float> &check)
+void    Bombs::newBomb(std::pair<float, float> &check)
 {
-  AObject	*bomb;
+  AObject *bomb;
+  std::pair<float, float> pos;
 
   bomb = create<Bombs>();
   bomb->setType(LASER);
   bomb->initialize();
   _map->addCube(check.first, check.second, bomb);
+  for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); ++it)
+    {
+      if ((*it).second->getShield() > 1.0)
+      {
+        pos = (*it).second->getPos();
+        pos.first = ((int)(pos.first));
+        pos.second = ((int)(pos.second));
+        //std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
+        //std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
+        if (pos.first == check.first && pos.second == check.second)
+        {
+          std::cout << "TOUCHER\n";
+          if ((*it).second->getLife() == 0)
+          {
+           std::cout << "DEAD\n";
+          //_playerTab->erase(it++);
+          //it = _playerTab->begin();
+          // ++it;
+          }
+          else
+          {
+            (*it).second->setLife((*it).second->getLife() - 1);
+          }
+        }
+      }
+/*      else
+        ++it;
+*/    }
   _explosion.push_back(std::make_pair(_time, bomb));
 }
 
-void	Bombs::explosion(std::pair<float, float> pos, int playerId)
+void  Bombs::explosion(std::pair<float, float> pos, int playerId)
 {
-  std::pair<float, float>	check;
-  int 						range;
+  std::pair<float, float> check;
+  int             range;
 
   range = _player->getRange();
   check.first = pos.first;
@@ -214,10 +243,10 @@ int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
   return (resume);
 }
 
-void	Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float>, Bombs *> *bombsM)
+void  Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float>, Bombs *> *bombsM)
 {
-	_map = map;
-	_sound = sound;
+  _map = map;
+  _sound = sound;
   _bombsM = bombsM;
 }
 
@@ -284,6 +313,7 @@ int   Bombs::checkLaser(int resume, std::pair<float, float> &check)
 {
   std::pair<float, float> pos;
 
+  std::cout << "TOTO\n";
   /*for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
     {
       pos = (*it).second->getPos();

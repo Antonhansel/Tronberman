@@ -44,24 +44,6 @@ Core::~Core()
   delete _sound;
 }
 
-bool  Core::initPlayer()
-{
-  std::vector<std::pair<int, int> >    obj;
-
-  _players = 2;
-  obj = _map->getSpawn();
-  _posx = obj.begin()->first;
-  _posy = obj.begin()->second;
-  if (_players == 2)
-  {
-    obj.erase(obj.begin());
-    _posx2 = obj.begin()->first;
-    _posy2 = obj.begin()->second;
-  }
-  return (true);  
-}
-
-
 bool	Core::initialize()
 {
   _shader = _cam->getShader();

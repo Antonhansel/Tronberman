@@ -32,63 +32,7 @@ bool 		Engine::init()
   	return (false);
   _menu = new Menu(_camera, _loader);
   _core = new Core(_camera, _loader);
-  // _core->getMap()->load_map(str);   // Charge la map si
-  // _core->initPlayer();              // existe ou en creer une nouvelle
   return (true);
-}
-
-void    Engine::save_player()
-{
-  std::map<int, Player*> player = _core->getPlayer();
-  for (unsigned int i = 1; i <= player.size(); i++)
-    _file << "\t<player>" << player[i]->getId() << "</player>" << std::endl;
-}
-
-void    Engine::save_map()
-{
-  Map     *map = _core->getMap();
-  int     size_x = _core->getMap()->getX();
-  int     size_y = _core->getMap()->getY();
-
-  _file << "<map>" << std::endl;
-  _file << "\t<size>" << size_y << "</size>" << std::endl;
-  for (int y = 0; y < size_y; y++)
-    {
-      for (int x = 0; x < size_x; x++)
-      {
-        if (map->getCase(x, y) != NULL)
-        {
-          type t = map->getCase(x, y)->getType();
-          if (t != BOMB && t != BONUS && t != LASER)
-          {
-            _file << "\t<case>" << y << " " << x << " " << 
-            map->getCase(x, y)->getType() << "</case>"<< std::endl;
-        }
-      }
-    }
-  }
-  save_spawn();
-  _file << "</map>" << std::endl;
-}
-
-void    Engine::save_spawn()
-{
-  std::vector<std::pair<int, int> >    obj;
-
-  std::map<int, Player*>  player = _core->getPlayer();
-  for (unsigned int i = 1; i <= player.size(); i++)
-  { 
-    std::pair<int, int> pos = player[i]->getPos();
-    _file << "\t<spawn>" << pos.second << " " << pos.first << "</spawn>" << std::endl;
-  }
-}
-
-void    Engine::saving()
-{
-  _file.open("save_file.xml");
-  _file << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl;
-  save_map();
-  _file.close();
 }
 
 bool		Engine::start()
@@ -110,7 +54,6 @@ bool		Engine::start()
                 {
                     while (_core->update())
                         _core->draw();
-                    saving();
                 }
                 _menu->reset();
 //	      _core->reset();

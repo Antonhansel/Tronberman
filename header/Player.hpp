@@ -26,10 +26,10 @@ class AInput;
 class Player : public AObject
 {
 protected:
-  gdl::Texture	_texture;
-  gdl::Geometry	_geometry;
-  gdl::Model	_model;
-  int		_anim;
+  gdl::Texture  _texture;
+  gdl::Geometry _geometry;
+  gdl::Model    _model;
+  int           _anim;
   int           _stock;
   int           _id;
   int           _range;
@@ -43,6 +43,8 @@ protected:
   bool          _begin;
   AInput        *_input;
   std::map<key, std::pair<float, float> (Player::*)(float &)>   _key;
+  float         _shield;
+  double        _timer;
 
 public:
   void    setPlayer(int);
@@ -66,6 +68,7 @@ public:
   void    setBegin(bool);
   bool    getBegin() const;
   std::pair<float, float>   realPos(std::pair<float, float>);
+  float   getShield() const;
 
 private:
   std::pair<float, float> up(float &);

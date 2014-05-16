@@ -23,6 +23,7 @@ Player::Player()
     _key[PDOWN] = &Player::down;
     _key[PRIGHT] = &Player::right;
     _key[PLEFT] = &Player::left;
+    _shield = 1;
 }
 
 Player::~Player()
@@ -34,14 +35,44 @@ bool    Player::initialize()
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
+   /* _geometry.setColor(glm::vec4(1, 1, 0, 1));
+    _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
+  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
+  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+
+  _geometry.setColor(glm::vec4(1, 0, 1, 1));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
+  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+    _geometry.build();*/
     return (true);
 }
 
-void	Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
+void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
     glPushMatrix();
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
+    //_geometry.draw(shader, getTransformation(), GL_QUADS);
     glPopMatrix();
 }
 
@@ -60,7 +91,7 @@ void    Player::setSpeed(float speed)
     _speed = speed;
 }
 
-bool	Player::_checkMove(float x, float y)
+bool    Player::_checkMove(float x, float y)
 {
     AObject *cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
     if (!cas || cas->getType() == BONUS)
@@ -79,7 +110,7 @@ bool    Player::_onBomb()
         && tmp->getType() == BOMB));
 }
 
-void	Player::update(gdl::Clock const &clock, gdl::Input &input)
+void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
     float trans = static_cast<float>(clock.getElapsed()) * _speed;
     std::map<int, std::pair<float, float> > keymap;
@@ -88,7 +119,7 @@ void	Player::update(gdl::Clock const &clock, gdl::Input &input)
     key                                      key;
     AObject                                 *tmp;
 
-
+    _shield += clock.getElapsed();
     if (_input == NULL && _player == 1)
         _input = new AInput(input, KEY1);
     else if (_input == NULL && _player == 2)
@@ -214,6 +245,7 @@ void  Player::setRange(int range)
 void    Player::setLife(int newLife)
 {
     _life = newLife;
+    _shield = 0;
 }
 
 int     Player::getLife() const
@@ -229,4 +261,9 @@ bool    Player::getBegin() const
 void    Player::setBegin(bool begin)
 {
     _begin = begin;
+}
+
+float    Player::getShield() const
+{
+    return (_shield);
 }

@@ -51,7 +51,6 @@ public:
   Core(Camera *cam, Loader *loader);
   ~Core();
   bool			initialize();
-  bool      initPlayer();
   void			draw();
   bool			drawFloor();
   bool			drawChar();
