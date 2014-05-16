@@ -24,6 +24,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _stopIntro = false;
   _event = NULL;
   _cubeanim = new CubeAnim(camera, loader);
+  _timer = 0;
   _step1[std::make_pair(0, std::make_pair(1300/2, 15))] = _text->putstr("BOMBERTRON", 64);
   _step1[std::make_pair(1, std::make_pair(15, 300))] = _text->putstr("ONLINE", 64);
   _step1[std::make_pair(2, std::make_pair(15, 380))] = _text->putstr("LOCAL", 64);
@@ -61,19 +62,28 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
   key   k;
 
   k = _event->getInput();
-  switch (k)
+  if (_timer > DELAY)
+  {
+    switch (k)
     {
       case MUP:
-        if (_isSelect > 1)
+        if (_isSelect > 0)
           _isSelect--;
+        if (_isSelect == 0)
+          _isSelect = s.size() - 1;
+        _timer = 0;
         break;
       case MDOWN:
-        if (_isSelect < ((int)(s.size() - 1)))
+        if (_isSelect < ((int)(s.size())))
           _isSelect++;
+        if (_isSelect == ((int)(s.size())))
+            _isSelect = 1;
+        _timer = 0;
         break;
       default:
         break;
     }
+  }
 }
 
 bool    Menu::update()
@@ -81,6 +91,7 @@ bool    Menu::update()
   _camera->setPlayer(1);
   _clock = _camera->getClock();
   _input = _camera->getInput();
+  _timer += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return (false);
   if (_isLaunch == true)

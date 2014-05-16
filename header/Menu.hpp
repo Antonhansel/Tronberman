@@ -34,6 +34,8 @@
 # include "Text.hpp"
 # include "AInput.hpp"
 
+# define DELAY  0.2
+
 using namespace gdl;
 using namespace glm;
 
@@ -65,6 +67,7 @@ private:
   bool      _isLaunch;
   AInput    *_event;
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
+  float     _timer;
 };
 
 #endif /* !MENU_HPP_ */
