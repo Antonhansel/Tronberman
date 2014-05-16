@@ -32,6 +32,7 @@
 # include "Cube.hpp"
 # include "Factory.hpp"
 # include "Text.hpp"
+# include "AInput.hpp"
 
 using namespace gdl;
 using namespace glm;
@@ -47,6 +48,8 @@ public:
   void			draw();
   bool			launch() const;
   bool      drawBackground();
+  void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
+
 private:
   int         _isSelect;
   CubeAnim *_cubeanim;
@@ -60,6 +63,7 @@ private:
   Text			*_text;
   int       _players;
   bool      _isLaunch;
+  AInput    *_event;
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
 };
 
