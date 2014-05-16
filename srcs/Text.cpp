@@ -82,28 +82,25 @@ std::vector<gdl::Geometry *> Text::putstr(const char *str, int size)
   return (text);
 }
 
-void	Text::draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &map, int isSelect)
+void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &map, int isSelect)
 {
   int __attribute__((unused))col(0);
   int __attribute__((unused))row(0);
-  int count(0);
-  std::map<std::pair<int, int>, std::vector<gdl::Geometry *> >::const_iterator it;
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::const_iterator it;
 
-  std::cout << map.size() << std::endl;
   _loader->bindTexture(_lastType);
   _camera->setMode();
   for (it = map.begin(); it != map.end(); ++it)
     {
-      col = (*it).first.first;
-      row = (*it).first.second;
-      textureBind(count, isSelect);
+      col = (*it).first.second.first;
+      row = (*it).first.second.second;
+      textureBind((*it).first.first, isSelect);
       for (size_t i(0); i != (*it).second.size(); i++)
       {
         _transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
         (*it).second[i]->draw(_camera->getShader(), _transformation, GL_QUADS);
         col += 50; 
       }
-      count++;
     }
   _camera->setMode();
 }

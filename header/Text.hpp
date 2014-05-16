@@ -37,7 +37,7 @@ public:
   void putchar(char, int, std::vector<gdl::Geometry *> &);
   std::vector<gdl::Geometry *> putstr(const char *, int);
   // void update(gdl::Clock const &clock, gdl::Input &input);
-  void draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &, int);
+  void draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int);
 };
 
 #endif /* !TEXT_HPP */

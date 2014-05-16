@@ -60,7 +60,7 @@ private:
   Text			*_text;
   int       _players;
   bool      _isLaunch;
-  std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > _step1;
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
 };
 
 #endif /* !MENU_HPP_ */

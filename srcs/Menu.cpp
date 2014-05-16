@@ -19,14 +19,14 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _clock = _camera->getClock();
   _text = new Text(_camera, _loader);
   _players = 1;
-  _isSelect = 0;
+  _isSelect = 1;
   _isLaunch = false;
   _stopIntro = false;
   _cubeanim = new CubeAnim(camera, loader);
-  _step1[std::make_pair(1300/2, 15)] = _text->putstr("BOMBERTRON", 64);
-  _step1[std::make_pair(15, 300)] = _text->putstr("ONLINE", 64);
-  _step1[std::make_pair(15, 380)] = _text->putstr("LOCAL", 64);
-  _step1[std::make_pair(15, 460)] = _text->putstr("SCORE", 64);
+  _step1[std::make_pair(0, std::make_pair(1300/2, 15))] = _text->putstr("BOMBERTRON", 64);
+  _step1[std::make_pair(1, std::make_pair(15, 300))] = _text->putstr("ONLINE", 64);
+  _step1[std::make_pair(2, std::make_pair(15, 380))] = _text->putstr("LOCAL", 64);
+  _step1[std::make_pair(3, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
 }
 
 Menu::~Menu()
@@ -62,10 +62,10 @@ bool    Menu::update()
     return (false);
   if (_isLaunch == true)
     return (false);
-  if (_input.getKey(SDLK_DOWN))
-  {
+  if (_input.getKey(SDLK_DOWN) && (size_t)_isSelect != _step1.size() - 1)
     _isSelect++;
-  }
+  if (_input.getKey(SDLK_UP) && (size_t)_isSelect != 1)
+    _isSelect--;
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _cubeanim->update();
