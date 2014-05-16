@@ -19,42 +19,23 @@
 
 #define WIDTH_T 1300
 
-enum MenuText
-  {
-    TITLE = 0,
-    SUBTITLE = 1,
-    LOCAL = 2,
-    ONLINE = 3
-  };
-
-class Text : public AObject
+class Text
 {
 private:
   gdl::Texture	_texture;
   int		_firstChar;
   Camera        *_camera;
-  bool		_isDraw;
-  gdl::BasicShader	_shader;
-  std::map<MenuText, std::vector<gdl::Geometry *> >  _word;
-  std::map<MenuText, void (Text::*)(std::vector<gdl::Geometry *>&)> _funct;
-  bool		_menu;
   
 private:
   int	getColumn(char c);
-  void  title(std::vector<gdl::Geometry *> &);
-  void  subTitle(std::vector<gdl::Geometry *> &);
-  void  local(std::vector<gdl::Geometry *> &);
-  void  online(std::vector<gdl::Geometry *> &);
 
 public:
   Text(Camera *);
   ~Text();
   void putchar(char, int, std::vector<gdl::Geometry *> &);
-  void putstr(const char *, int, MenuText);
-  void update(gdl::Clock const &clock, gdl::Input &input);
-  bool initialize();
-  void draw(gdl::AShader &shader, gdl::Clock const &clock);
-  void setShow(bool);
+  std::vector<gdl::Geometry *> putstr(const char *, int);
+  // void update(gdl::Clock const &clock, gdl::Input &input);
+  void draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &);
 };
 
-#endif /*!TEXT_HPP*/
+#endif /* !TEXT_HPP */

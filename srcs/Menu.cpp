@@ -20,7 +20,12 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _text = new Text(_camera);
   _players = 1;
   _isLaunch = false;
+  _stopIntro = false;
   _cubeanim = new CubeAnim(camera, loader);
+  _step1[std::make_pair(1300/2, 15)] = _text->putstr("BOMBERTRON", 64);
+  _step1[std::make_pair(15, 300)] = _text->putstr("ONLINE", 64);
+  _step1[std::make_pair(15, 380)] = _text->putstr("LOCAL", 64);
+  _step1[std::make_pair(15, 460)] = _text->putstr("SCORE", 64);
 }
 
 Menu::~Menu()
@@ -74,14 +79,15 @@ void    Menu::draw()
   if (_input.getKey(SDLK_SPACE))
     {
       _cubeanim->stopIntro(true);
-      _text->setShow(true);
+      _stopIntro = true;
     }
   _cubeanim->rotate();
   _loader->bindTexture(LastType);
   _cubeanim->draw(_shader, LastType);
   if (_cubeanim->getStatus())
     _background->draw(_shader, _clock);
-  _text->draw(_shader, _clock);
+  if (_stopIntro)
+    _text->draw(_step1);
   _camera->flushContext();
 }
 

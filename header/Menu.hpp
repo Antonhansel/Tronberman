@@ -51,6 +51,7 @@ private:
   CubeAnim *_cubeanim;
   Background *_background;
   Camera		*_camera;
+  bool      _stopIntro;
   Loader    *_loader;
   Clock			_clock;
   Input			_input;
@@ -58,7 +59,7 @@ private:
   Text			*_text;
   int       _players;
   bool      _isLaunch;
-private:
+  std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > _step1;
 };
 
 #endif /* !MENU_HPP_ */

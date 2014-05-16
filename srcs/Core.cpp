@@ -14,8 +14,8 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 100;
-  _height = 100;
+  _width = 30;
+  _height = 30;
   _loader = loader;
   _cam = cam;
   _players = 2;
