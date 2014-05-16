@@ -39,6 +39,15 @@
 using namespace gdl;
 using namespace glm;
 
+enum stepM
+  {
+    HOME,
+    STEP1,
+    STEP11,
+    STEP2,
+    STEP3 
+  };
+
 class Menu : public Game
 {
 public:
@@ -51,6 +60,10 @@ public:
   bool			launch() const;
   bool      drawBackground();
   void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
+  void      chooseStep();
+  void      home();
+  void      step1();
+  void      step11();
 
 private:
   int         _isSelect;
@@ -67,7 +80,10 @@ private:
   bool      _isLaunch;
   AInput    *_event;
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
+  std::map<stepM, void (Menu::*)()>    _func;
   float     _timer;
+  int       _back;
+  stepM      _stepM;
 };
 
 #endif /* !MENU_HPP_ */

@@ -118,3 +118,26 @@ void  Text::textureBind(int count, int isSelect)
       _loader->bindTexture(_lastType);        
     }
 }
+
+void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, const std::vector<std::string> &words)
+{
+  size_t  cptr;
+
+  cptr = 0;
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it; 
+  for (it = old->begin(); it != old->end(); ++it)
+  {
+    for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
+    {
+      (*it).second.erase(v);
+      v = (*it).second.begin();
+    }
+    if (cptr < words.size())
+    {
+      (*it).second = putstr(words[cptr].c_str(), 64);      
+    }
+    else
+      (*it).second = putstr("", 64);
+    cptr++;
+  }
+}

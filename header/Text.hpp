@@ -38,6 +38,7 @@ public:
   std::vector<gdl::Geometry *> putstr(const char *, int);
   // void update(gdl::Clock const &clock, gdl::Input &input);
   void draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int);
+  void  modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const std::vector<std::string> &);
 };
 
 #endif /* !TEXT_HPP */

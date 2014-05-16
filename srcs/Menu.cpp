@@ -19,16 +19,20 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _clock = _camera->getClock();
   _text = new Text(_camera, _loader);
   _players = 1;
-  _isSelect = 1;
+  _isSelect = 0;
   _isLaunch = false;
   _stopIntro = false;
   _event = NULL;
   _cubeanim = new CubeAnim(camera, loader);
   _timer = 0;
-  _step1[std::make_pair(0, std::make_pair(1300/2, 15))] = _text->putstr("BOMBERTRON", 64);
-  _step1[std::make_pair(1, std::make_pair(15, 300))] = _text->putstr("ONLINE", 64);
-  _step1[std::make_pair(2, std::make_pair(15, 380))] = _text->putstr("LOCAL", 64);
-  _step1[std::make_pair(3, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
+  _back = -1;
+  _stepM = HOME;
+  _func[HOME] = &Menu::home;
+  _func[STEP1] = &Menu::step1;
+  _func[STEP11] = &Menu::step11;
+  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64);
+  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64);
+  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
 }
 
 Menu::~Menu()
@@ -57,6 +61,18 @@ bool	Menu::initialize()
   return (true);
 }
 
+void    Menu::chooseStep()
+{
+  if (_isSelect == 2 && _stepM == STEP1)
+  {
+    _stepM = HOME;
+//    _isSelect = 0;
+  }
+  if (_isSelect == 0 && _stepM == HOME)
+    _stepM = STEP1;
+  (this->*_func[_stepM])();
+}
+
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
 {
   key   k;
@@ -67,9 +83,9 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if (_isSelect > 0)
+        if (_isSelect >= 0)
           _isSelect--;
-        if (_isSelect == 0)
+        if (_isSelect == -1)
           _isSelect = s.size() - 1;
         _timer = 0;
         break;
@@ -77,9 +93,15 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         if (_isSelect < ((int)(s.size())))
           _isSelect++;
         if (_isSelect == ((int)(s.size())))
-            _isSelect = 1;
+            _isSelect = 0;
         _timer = 0;
         break;
+      case MRETURN:
+      {
+        _timer = 0;
+        chooseStep();
+        break;
+      }
       default:
         break;
     }
@@ -139,4 +161,41 @@ void    Menu::reset()
 bool    Menu::launch() const
 {
   return (_isLaunch);
+}
+
+void    Menu::home()
+{
+  std::vector<std::string> v;
+  std::string u("LOCAL");
+  std::string u1("ONLINE");
+  std::string u2("SCORE");
+  v.push_back(u);
+  v.push_back(u1);
+  v.push_back(u2);
+  _isSelect = 0;
+  _text->modifyWord(&_step1, v);
+}
+
+void    Menu::step1()
+{
+  std::vector<std::string> v;
+  std::string u("New Game");
+  std::string u1("Load Game");
+  std::string u2("Back");
+  v.push_back(u);
+  v.push_back(u1);
+  v.push_back(u2);
+  _text->modifyWord(&_step1, v);
+}
+
+void    Menu::step11()
+{
+  std::vector<std::string> v;
+  std::string u("MAP SIZE");
+  std::string u1("NB PLAYER");
+  std::string u2("BOTS");
+  v.push_back(u);
+  v.push_back(u1);
+  v.push_back(u2);
+  _text->modifyWord(&_step1, v);
 }
