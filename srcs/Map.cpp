@@ -161,8 +161,8 @@ void        Map::my_parseur(std::vector<int> &tab, std::string &str)
   int v;
   tab.clear();
 
-  x = 2;
-  y = 2;
+  x = 0;
+  y = 0;
   while (str[y])
   {
     if (str[y] == ' ')
@@ -184,9 +184,6 @@ bool        Map::my_balise(std::string &in, std::string &out, std::string &str)
   unsigned int pos = str.find(in) + in.length();
   unsigned int pos2 = str.find(out);
 
-  std::cout << "in : "  << pos << std::endl;
-  std::cout << "out : "  << pos2 << std::endl;
-  
   if (pos2 != std::string::npos)
     str = str.substr(pos, pos2 - pos);
   else
@@ -197,67 +194,64 @@ bool        Map::my_balise(std::string &in, std::string &out, std::string &str)
 void    Map::load_size(std::list<std::string> &file)
 {
     std::vector<int> tab;
+    std::string       str;
+    std::string       in = "<size>";
+    std::string       out = "</size>";
 
-  while (file.front() != "\t</size>")
-  {
+    str = my_balise(in, out, file.front());
     my_parseur(tab, file.front());
     _size_x = tab.back();
-    tab.pop_back();
     _size_y = tab.back();
-    file.pop_front();
-  }
+    delete _map;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+    while (!_spawns.empty())
+       _spawns.pop_back();
+
   file.pop_front();
 }
 
 void    Map::load_case(std::list<std::string> &file)
 {
-    std::vector<int> tab;
-    delete _map;
-    _map = new AObject *[_size_x * _size_y];
-    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<case>";
+  std::string       out = "</case>";
+  type _type;
+  int x;
+  int y;
+  int t;
 
-  while (file.front() != "\t</case>")
-  {
-    int x;
-    int y;
-    int t;
-    type _type;
-
-    my_parseur(tab, file.front());
-    t = tab.back();
-    tab.pop_back();
-    x = tab.back();
-    tab.pop_back();
-    y = tab.back();
-    file.pop_front();
-    _type = (type)t;
-    addCube(x, y, _type);
-  }
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  t = tab.back();
+  tab.pop_back();
+  x = tab.back();
+  tab.pop_back();
+  y = tab.back();
+  _type = (type)t;
+  addCube(x, y, _type);
   file.pop_front();
 }
 
 void    Map::load_spawn(std::list<std::string> &file)
 {
   std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<spawn>";
+  std::string       out = "</spawn>";
+  int x;
+  int y;
 
-  while (!_spawns.empty())
-     _spawns.pop_back();
-  while (file.front() != "\t</spawn>")
-  {
-    int x;
-    int y;
-
-    my_parseur(tab, file.front());
-    x = tab.back();
-    tab.pop_back();
-    y = tab.back();
-    tab.pop_back();
-    _spawns.push_back(std::make_pair(x, y));
-    _deleteSide(x, y);
-    file.pop_front();
-  }
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  x = tab.back();
+  tab.pop_back();
+  y = tab.back();
+  tab.pop_back();
+  _spawns.push_back(std::make_pair(x, y));
+  _deleteSide(x, y);
   file.pop_front();
- std::cout << _spawns.size() << std::endl;
 }
 
 void    Map::load_map(std::string &file_name)
@@ -271,26 +265,22 @@ void    Map::load_map(std::string &file_name)
     file.push_back(str);
   if (file.size() > 0)
   {
-    file.pop_front(); 
-    while (file.front() != "</map>")
+    while (file.front().find("<map") != std::string::npos
+          && file.size() > 0)
+      file.pop_back();
+
+    while (file.front().find("</map") == std::string::npos
+          && file.size() > 0)
     {
-      if (file.front() == "\t<size>") 
-      {
-        file.pop_front();
+      if (file.front().find("<size>") != std::string::npos)
         load_size(file);
-      }
-      else if (file.front() == "\t<case>")
-      {
-        file.pop_front();
+      else if (file.front().find("<case>") != std::string::npos)
         load_case(file);
-      }
-      else if (file.front() == "\t<spawn>")
-      {
-        file.pop_front();
+      else if (file.front().find("<spawn>") != std::string::npos)
         load_spawn(file);
-      }
+      else
+        file.pop_front();
     }
-    file.pop_front();
   }
   else
     std::cout << "The map is not found." << std::endl;

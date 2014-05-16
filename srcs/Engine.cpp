@@ -32,7 +32,7 @@ bool 		Engine::init()
   	return (false);
   _menu = new Menu(_camera, _loader);
   _core = new Core(_camera, _loader);
-  // _core->getMap()->load_map(str);   // Charge la map si 
+  // _core->getMap()->load_map(str);   // Charge la map si
   // _core->initPlayer();              // existe ou en creer une nouvelle
   return (true);
 }
@@ -40,13 +40,8 @@ bool 		Engine::init()
 void    Engine::save_player()
 {
   std::map<int, Player*> player = _core->getPlayer();
-  _file << "<player>" << std::endl;
-  _file << "\t" << player.size() << std::endl;
-
   for (unsigned int i = 1; i <= player.size(); i++)
-    _file << "\t" << player[i]->getId() << std::endl;
-
-  _file << "</player>" << std::endl;
+    _file << "\t<player>" << player[i]->getId() << "</player>" << std::endl;
 }
 
 void    Engine::save_map()
@@ -56,25 +51,22 @@ void    Engine::save_map()
   int     size_y = _core->getMap()->getY();
 
   _file << "<map>" << std::endl;
-  _file << "\t<size>" << std::endl << "\t\t" << size_y << " " << 
-  size_x << std::endl << "\t</size>" << std::endl;
-  _file << "\t<case>" << std::endl;
+  _file << "\t<size>" << size_y << "</size>" << std::endl;
   for (int y = 0; y < size_y; y++)
-  {
-    for (int x = 0; x < size_x; x++)
     {
-      if (map->getCase(x, y) != NULL)
+      for (int x = 0; x < size_x; x++)
       {
-        type t = map->getCase(x, y)->getType();
-        if (t != BOMB && t != BONUS && t != LASER)
+        if (map->getCase(x, y) != NULL)
         {
-          _file << "\t\t" << y << " " << x << " " << 
-          map->getCase(x, y)->getType() << std::endl;
+          type t = map->getCase(x, y)->getType();
+          if (t != BOMB && t != BONUS && t != LASER)
+          {
+            _file << "\t<case>" << y << " " << x << " " << 
+            map->getCase(x, y)->getType() << "</case>"<< std::endl;
         }
       }
     }
   }
-  _file << "\t</case>" << std::endl;
   save_spawn();
   _file << "</map>" << std::endl;
 }
@@ -84,18 +76,17 @@ void    Engine::save_spawn()
   std::vector<std::pair<int, int> >    obj;
 
   std::map<int, Player*>  player = _core->getPlayer();
-  _file << "\t<spawn>" << std::endl;
   for (unsigned int i = 1; i <= player.size(); i++)
   { 
     std::pair<int, int> pos = player[i]->getPos();
-    _file << "\t\t" << pos.second << " " << pos.first << std::endl;
+    _file << "\t<spawn>" << pos.second << " " << pos.first << "</spawn>" << std::endl;
   }
-  _file << "\t</spawn>" << std::endl;
 }
 
 void    Engine::saving()
 {
   _file.open("save_file.xml");
+  _file << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl;
   save_map();
   _file.close();
 }
