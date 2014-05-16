@@ -14,8 +14,8 @@
 Core::Core(Camera *cam, Loader *loader)
 {
   std::vector<std::pair<int, int> >    obj;
-  _width = 30;
-  _height = 30;
+  _width = 50;
+  _height = 50;
   _loader = loader;
   _cam = cam;
   _players = 1;
@@ -24,6 +24,7 @@ Core::Core(Camera *cam, Loader *loader)
   obj = _map->setSpawn(_players);
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
+  _nb_bot = 0;
   if (_players == 2)
   {
     obj.erase(obj.begin());
@@ -52,7 +53,7 @@ bool	Core::initialize()
     return (false);
   if (drawChar() == false)
     return (false);
-  if (drawBot(0) == false)
+  if (drawBot(_nb_bot) == false)
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
   {

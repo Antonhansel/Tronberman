@@ -76,6 +76,7 @@ private:
   float			_posy;
   float			_posx2;
   float			_posy2;
+  int       _nb_bot;
   int			_width;
   int			_height;
   Map		        *_map;
