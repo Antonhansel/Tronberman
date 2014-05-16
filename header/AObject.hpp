@@ -26,7 +26,9 @@ enum type
     LASER = 4,
     BLOCK = 5,
     BLOCKD = 6,
-    BONUS = 7
+    BONUS = 7,
+    UNSELECTED = 8,
+    SELECTED = 9
   };
 
 enum key

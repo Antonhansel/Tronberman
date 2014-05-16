@@ -13,10 +13,11 @@
 
 using namespace glm;
 
-Text::Text(Camera *camera) : _firstChar(0)
+Text::Text(Camera *camera, Loader *load) : _firstChar(0)
 {
   _camera = camera;
-  _texture.load("./ressources/fonts/24BitTron.tga");
+  _loader = load;
+  _lastType = UNSELECTED;
 }
 
 Text::~Text()
@@ -52,9 +53,11 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text)
   gdl::Geometry *geometry = new gdl::Geometry();  
   int	div;
 
+  glDisable(GL_DEPTH_TEST);
+  glAlphaFunc(GL_GREATER, 0.1f);
+  glEnable(GL_ALPHA_TEST);
   c -= (c >= 'a' && c <= 'z') ? 32 : 0;
   div = getColumn(c);
-  geometry->setColor(glm::vec4(0, 1, 1, 0));
   geometry->pushVertex(glm::vec3(0, 0, 0));
   geometry->pushVertex(glm::vec3(size, 0, 0));
   geometry->pushVertex(glm::vec3(size, size, 0));
@@ -65,6 +68,7 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text)
   geometry->pushUv(glm::vec2((c - _firstChar) / 16.0f, (div - 1) / 16.0f));
   geometry->build();
   _text.push_back(geometry);
+  glEnable(GL_DEPTH_TEST);
 }
 
 std::vector<gdl::Geometry *> Text::putstr(const char *str, int size)
@@ -78,25 +82,42 @@ std::vector<gdl::Geometry *> Text::putstr(const char *str, int size)
   return (text);
 }
 
-void	Text::draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &map)
+void	Text::draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &map, int isSelect)
 {
   int __attribute__((unused))col(0);
   int __attribute__((unused))row(0);
+  int count(0);
   std::map<std::pair<int, int>, std::vector<gdl::Geometry *> >::const_iterator it;
-  glm::mat4 transformation;
 
-  _texture.bind(); 
+  std::cout << map.size() << std::endl;
+  _loader->bindTexture(_lastType);
   _camera->setMode();
   for (it = map.begin(); it != map.end(); ++it)
     {
       col = (*it).first.first;
       row = (*it).first.second;
+      textureBind(count, isSelect);
       for (size_t i(0); i != (*it).second.size(); i++)
       {
-        transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
-        (*it).second[i]->draw(_camera->getShader(), transformation, GL_QUADS);
+        _transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
+        (*it).second[i]->draw(_camera->getShader(), _transformation, GL_QUADS);
         col += 50; 
       }
+      count++;
     }
   _camera->setMode();
+}
+
+void  Text::textureBind(int count, int isSelect)
+{
+  if (count == isSelect && _lastType != SELECTED)
+   {
+    _lastType = SELECTED;
+    _loader->bindTexture(_lastType);
+   }
+  else if (_lastType == SELECTED)
+    {
+      _lastType = UNSELECTED;
+      _loader->bindTexture(_lastType);        
+    }
 }

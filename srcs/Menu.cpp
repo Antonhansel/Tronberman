@@ -17,8 +17,9 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _loader = loader;
   _shader = _camera->getShader();
   _clock = _camera->getClock();
-  _text = new Text(_camera);
+  _text = new Text(_camera, _loader);
   _players = 1;
+  _isSelect = 0;
   _isLaunch = false;
   _stopIntro = false;
   _cubeanim = new CubeAnim(camera, loader);
@@ -61,6 +62,10 @@ bool    Menu::update()
     return (false);
   if (_isLaunch == true)
     return (false);
+  if (_input.getKey(SDLK_DOWN))
+  {
+    _isSelect++;
+  }
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _cubeanim->update();
@@ -87,7 +92,7 @@ void    Menu::draw()
   if (_cubeanim->getStatus())
     _background->draw(_shader, _clock);
   if (_stopIntro)
-    _text->draw(_step1);
+    _text->draw(_step1, _isSelect);
   _camera->flushContext();
 }
 

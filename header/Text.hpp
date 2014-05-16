@@ -11,31 +11,33 @@
 #ifndef _TEXT_HPP_
 # define _TEXT_HPP_
 
-#include "AObject.hpp"
+#include "Loader.hpp"
 #include "Camera.hpp"
+#include "AInput.hpp"
 #include <vector>
 #include <unistd.h>
 #include <map>
 
-#define WIDTH_T 1300
-
 class Text
 {
 private:
-  gdl::Texture	_texture;
-  int		_firstChar;
+  int		         _firstChar;
   Camera        *_camera;
-  
+  Loader        *_loader;
+  type          _lastType;
+  glm::mat4     _transformation;
+
 private:
   int	getColumn(char c);
+  void textureBind(int, int);
 
 public:
-  Text(Camera *);
+  Text(Camera *, Loader *);
   ~Text();
   void putchar(char, int, std::vector<gdl::Geometry *> &);
   std::vector<gdl::Geometry *> putstr(const char *, int);
   // void update(gdl::Clock const &clock, gdl::Input &input);
-  void draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &);
+  void draw(const std::map<std::pair<int, int>, std::vector<gdl::Geometry *> > &, int);
 };
 
 #endif /* !TEXT_HPP */

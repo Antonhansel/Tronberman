@@ -41,6 +41,13 @@ bool 	Loader::loadTextures()
   _textures[BONUS] = new gdl::Texture();
   if (_textures[BONUS]->load("./ressources/assets/BONUS3.tga") == false)
     return (false);
+  _textures[UNSELECTED] = new gdl::Texture();
+  if (_textures[UNSELECTED]->load("./ressources/fonts/blue.tga") == false)
+    return (false);
+  _textures[SELECTED] = new gdl::Texture();
+  if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
+    return (false);
+
   _textures[BLOCKD]->bind();
   //   GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
   // GLfloat mat_ambient_color[] = { 0.8F,0.8F,0.2F,1.0F };

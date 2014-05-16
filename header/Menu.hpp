@@ -48,6 +48,7 @@ public:
   bool			launch() const;
   bool      drawBackground();
 private:
+  int         _isSelect;
   CubeAnim *_cubeanim;
   Background *_background;
   Camera		*_camera;
