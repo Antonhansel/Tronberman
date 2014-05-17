@@ -35,14 +35,14 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _sizeMap.assign("50");
   _nbPlayer.assign("1");
   _nbBots.assign("1");
-  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64);
-  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64);
-  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
-  _step1[std::make_pair(3, std::make_pair(15, 540))] = _text->putstr("", 64);
-  _step1[std::make_pair(4, std::make_pair(15, 620))] = _text->putstr("", 64);
-  _step1[std::make_pair(5, std::make_pair(700, 300))] = _text->putstr("", 64);
-  _step1[std::make_pair(6, std::make_pair(700, 380))] = _text->putstr("", 64);
-  _step1[std::make_pair(7, std::make_pair(700, 460))] = _text->putstr("", 64);
+  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64, true);
+  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64, true);
+  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64, true);
+  _step1[std::make_pair(3, std::make_pair(15, 540))] = _text->putstr("", 64, true);
+  _step1[std::make_pair(4, std::make_pair(15, 620))] = _text->putstr("", 64, true);
+  _step1[std::make_pair(5, std::make_pair(700, 300))] = _text->putstr("", 64, false);
+  _step1[std::make_pair(6, std::make_pair(700, 380))] = _text->putstr("", 64, false);
+  _step1[std::make_pair(7, std::make_pair(700, 460))] = _text->putstr("", 64, false);
 }
 
 Menu::~Menu()

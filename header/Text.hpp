@@ -28,14 +28,15 @@ private:
   glm::mat4     _transformation;
 
 private:
-  int	getColumn(char c);
+  int getColumn(char c);
+  int getOtherColumn(char c);
   void textureBind(int, int);
 
 public:
   Text(Camera *, Loader *);
   ~Text();
-  void putchar(char, int, std::vector<gdl::Geometry *> &);
-  std::vector<gdl::Geometry *> putstr(const char *, int);
+  void putchar(char, int, std::vector<gdl::Geometry *> &, bool);
+  std::vector<gdl::Geometry *> putstr(const char *, int, bool);
   // void update(gdl::Clock const &clock, gdl::Input &input);
   void draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int);
   void  modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const std::vector<std::string> &);
