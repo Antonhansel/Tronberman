@@ -311,9 +311,6 @@ int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
 
 int   Bombs::checkLaser(int resume, std::pair<float, float> &check)
 {
-  std::pair<float, float> pos;
-
-  std::cout << "TOTO\n";
   /*for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
     {
       pos = (*it).second->getPos();

@@ -128,13 +128,20 @@ void    Menu::getInputNb(std::string &s, int n, size_t size)
 void    Menu::chooseStep()
 {
   if (_isSelect == 2 && _stepM == STEP1)
+  {
     _stepM = HOME;
+    _max = 2;    
+  }
   if (_isSelect == 0 && _stepM == HOME)
+  {
     _stepM = STEP1;
+    _max = 2;        
+  }
   else if (_isSelect == 0 && _stepM == STEP1)
   {
     _isSelect = 0;
     _stepM = STEP11;
+    _max = 4;
   }
   (this->*_func[_stepM])();
 }
