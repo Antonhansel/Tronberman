@@ -64,6 +64,8 @@ public:
   void      manageEventInput();
   void      getInputNb(std::string &, int, size_t);
   void      home();
+  bool      initLogo();
+  void      drawLogo();
   void      step1();
   void      step11();
 
@@ -87,6 +89,8 @@ private:
   int       _back;
   stepM     _stepM;
   std::string       _sizeMap;
+  gdl::Texture  _texture;
+  gdl::Geometry _geometry;
 };
 
 #endif /* !MENU_HPP_ */

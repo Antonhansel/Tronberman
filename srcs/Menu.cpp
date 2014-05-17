@@ -63,6 +63,8 @@ bool	Menu::initialize()
     return (false);
   if (drawBackground() == false)
     return (false);
+  if (!initLogo())
+    return (false);
   std::cout << "Menu init ended" << std::endl;
   return (true);
 }
@@ -209,6 +211,7 @@ void    Menu::draw()
     _background->draw(_shader, _clock);
   if (_stopIntro)
     _text->draw(_step1, _isSelect);
+  drawLogo();
   _camera->flushContext();
 }
 
@@ -264,4 +267,35 @@ void    Menu::step11()
   v.push_back(_sizeMap);
   _isSelect = 0;
   _text->modifyWord(&_step1, v);
+}
+
+bool    Menu::initLogo()
+{
+  if (!_texture.load("./ressources/assets/logo.tga"))
+    return (false);
+  _camera->setMode();
+  glDisable(GL_DEPTH_TEST);
+  _geometry.pushVertex(glm::vec3(0, 0, 0));
+  _geometry.pushVertex(glm::vec3((float)_texture.getWidth(), 0, 0));
+  _geometry.pushVertex(glm::vec3((float)_texture.getWidth(), (float)_texture.getHeight(), 0));
+  _geometry.pushVertex(glm::vec3(0, (float)_texture.getHeight(), 0));
+  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
+  _geometry.build();
+  glEnable(GL_DEPTH_TEST);
+  _camera->setMode();
+  return (true);
+}
+
+void  Menu::drawLogo()
+{
+  glm::mat4 transformation;
+
+  _camera->setMode();
+  _texture.bind();
+  transformation = glm::translate(glm::mat4(1), glm::vec3(1300 / 2, 15, 0));
+  _geometry.draw(_shader, transformation, GL_QUADS);
+  _camera->setMode();
 }
