@@ -80,19 +80,22 @@ void    Menu::manageEventInput()
     switch (_isSelect)
     {
       case 0:
-        getInputNb(_sizeMap, 4, 4);
+        getInputNb(_sizeMap, 4, 4, 5000, 0);
         break;
       case 1:
-        getInputNb(_nbPlayer, 6, 1);
+        getInputNb(_nbPlayer, 6, 1, 2, 1);
         break;
       case 2:
-        getInputNb(_nbBots, 7, 2);
+        getInputNb(_nbBots, 7, 2, convToInt(_sizeMap) / 10, 0)/*) ? convToInt(_sizeMap) / 10 : 10)*/;
         break;
       case 3:
       {
-        _map = new Map(getMapSize());
-        _isLaunch = true;
-        _cubeanim->changeVolum(0.4f);
+        if (convToInt(_sizeMap) >= 10 && convToInt(_nbPlayer) != 0 && convToInt(_nbBots) != 0)
+        {
+          _map = new Map(getMapSize());
+          _isLaunch = true;
+          _cubeanim->changeVolum(0.4f);
+        }
         break;
       }
       //lancer le jeu
@@ -104,7 +107,7 @@ void    Menu::manageEventInput()
   }
 }
 
-void    Menu::getInputNb(std::string &s, int n, size_t size)
+void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
   key   k;
 
@@ -114,7 +117,10 @@ void    Menu::getInputNb(std::string &s, int n, size_t size)
   {
     _timer = 0;
     s += (((int)(k)) - 23) + 48;
-    _text->addNb(&_step1, n, s);
+    if (convToInt(s) <= max && convToInt(s) >= min)
+      _text->addNb(&_step1, n, s);
+    else
+      s.assign(s.substr(0, s.length() - 1));
     step11();
   }
   else if (k == MBACKSPACE)
@@ -208,11 +214,6 @@ void    Menu::draw()
 {
   type LastType = BLOCKD;
 
-  if (_input.getKey(SDLK_p))
-    {
-      _isLaunch = true;
-      _cubeanim->changeVolum(0.4f);
-    }
   if (_input.getKey(SDLK_SPACE))
     {
       _cubeanim->stopIntro(true);

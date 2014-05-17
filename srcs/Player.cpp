@@ -16,7 +16,7 @@ Player::Player()
     _stock = 1;
     _range = 1;
     _x = 0;
-    _life = 3;
+    _life = 1;
     _begin = false;
     _input = NULL;
     _key[PUP] = &Player::up;

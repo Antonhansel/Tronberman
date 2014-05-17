@@ -63,7 +63,7 @@ public:
   void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
   void      chooseStep();
   void      manageEventInput();
-  void      getInputNb(std::string &, int, size_t);
+  void      getInputNb(std::string &, int, size_t, int, int);
   void      home();
   bool      initLogo();
   void      drawLogo();
