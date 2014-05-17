@@ -68,6 +68,9 @@ public:
   void      drawLogo();
   void      step1();
   void      step11();
+  int       getMapSize() const;
+  int       getNbPlayer() const;
+  int       getNbBots() const;
 
 private:
   int         _isSelect;

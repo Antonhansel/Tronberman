@@ -71,4 +71,6 @@ private:
   int   checkLaser(int, std::pair<float, float> &);
 };
 
+int  operator<<(int, const std::string &);
+
 #endif

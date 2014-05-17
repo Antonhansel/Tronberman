@@ -313,3 +313,36 @@ void  Menu::drawLogo()
   _geometry.draw(_shader, transformation, GL_QUADS);
   _camera->setMode();
 }
+
+int   Menu::getMapSize() const
+{
+  int res = 0;
+
+  res << _sizeMap;
+  return (res);
+}
+
+int   Menu::getNbPlayer() const
+{
+  int res = 0;
+
+  res << _nbPlayer;
+  return (res);
+}
+
+int   Menu::getNbBots() const
+{
+  int res = 0;
+
+  res << _nbBots;
+  return (res);
+}
+
+int  operator<<(int, const std::string &s)
+{
+  std::istringstream iss(s);
+  int        val = 0;
+
+  iss >> val;
+  return (val);
+}
