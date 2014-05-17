@@ -24,13 +24,16 @@ void  Core::setValues(Map *map)
 {
   std::vector<std::pair<int, int> >    obj;
   _players = _menu->getNbPlayer();
+  std::cout << _players << std::endl;
   _map = map;
   _width = _menu->getMapSize();
   _height = _width;
   obj = _map->setSpawn(_players);
+  std::cout << obj.size() << std::endl;
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
   _nb_bot = _menu->getNbBots();
+  std::cout << "player " << _players << "-" << obj.size() << std::endl; 
   if (_players == 2)
   {
     obj.erase(obj.begin());
@@ -42,6 +45,7 @@ void  Core::setValues(Map *map)
   _frames = 0;
   //_lasttime = 0;
   _endgame = false;
+  std::cout << "test" << std::endl;
 }
 
 Core::~Core()
@@ -206,10 +210,6 @@ bool	Core::update()
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
-  if (_input.getKey(SDLK_l))
-    glEnable(GL_LIGHT1);
-  if (_input.getKey(SDLK_m))
-    glDisable(GL_LIGHT1);
   if (_input.getKey(SDLK_KP_0))
     spawnBomb(_player[1]);
   if (_input.getKey(SDLK_SPACE) && _players == 2)
@@ -277,13 +277,13 @@ void  Core::checkAlive()
   int num;
 
   num = 0;
-  for (size_t i = 1; i <= _player.size(); i++)
+  for (it = _player.begin(); it != _player.end(); ++it)
   {
-    if (_player[i]->isAlive() == true)
-      num++;
+    if ((*it).second->isAlive() == true)
+    num++;
   }
-  // if (num == 0)
-  //   _endgame = true;
+  if (num == 1)
+    _endgame = true;
 }
 
 void	Core::draw()

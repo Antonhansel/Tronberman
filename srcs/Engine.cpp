@@ -50,9 +50,9 @@ bool		Engine::start()
                 // getter depuis le menu
                 // setter vers core
                 std::cout << "LAUNCHING THE MENU" << std::endl;
+                _core->setValues(_menu->getMap());
                 if (_core->initialize())
                 {
-                  _core->setValues(_menu->getMap());
                     while (_core->update())
                         _core->draw();
                 }

@@ -14,6 +14,7 @@ Map::Map(int size)
 {
     _size_x = size;
     _size_y = size;
+    std::cout << "SIZE" << size << std::endl;
     _map = new AObject *[_size_x * _size_y];
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();

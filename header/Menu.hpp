@@ -73,6 +73,8 @@ public:
   int       getNbPlayer() const;
   int       getNbBots() const;
   Map       *getMap() const;
+  void      setIsSelect();
+  //int  operator=(const std::string &);
 
 private:
   int         _isSelect;
@@ -101,6 +103,10 @@ private:
   gdl::Texture  _texture;
   gdl::Geometry _geometry;
   Map           *_map;
+
+  private:
+    int   convToInt(const std::string &) const;
 };
+
 
 #endif /* !MENU_HPP_ */

@@ -232,6 +232,7 @@ void    Menu::draw()
 void    Menu::reset()
 {
   _isLaunch = false;
+  _isSelect = 0;
 }
 
 bool    Menu::launch() const
@@ -317,29 +318,20 @@ void  Menu::drawLogo()
 
 int   Menu::getMapSize() const
 {
-  int res = 0;
-
-  res << _sizeMap;
-  return (res);
+  return (convToInt(_sizeMap));
 }
 
 int   Menu::getNbPlayer() const
 {
-  int res = 0;
-
-  res << _nbPlayer;
-  return (res);
+  return (convToInt(_nbPlayer));
 }
 
 int   Menu::getNbBots() const
 {
-  int res = 0;
-
-  res << _nbBots;
-  return (res);
+  return (convToInt(_nbBots));
 }
 
-int  operator<<(int, const std::string &s)
+int  Menu::convToInt(const std::string &s) const
 {
   std::istringstream iss(s);
   int        val = 0;
@@ -351,4 +343,9 @@ int  operator<<(int, const std::string &s)
 Map   *Menu::getMap() const
 {
   return (_map);
+}
+
+void  Menu::setIsSelect()
+{
+  _isSelect = 0;
 }
