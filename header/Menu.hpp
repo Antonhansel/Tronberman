@@ -87,6 +87,8 @@ private:
   std::map<stepM, void (Menu::*)()>    _func;
   float     _timer;
   int       _back;
+  int       _min;
+  int       _max;
   stepM     _stepM;
   std::string       _sizeMap;
   std::string       _nbPlayer;

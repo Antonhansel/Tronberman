@@ -30,17 +30,19 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[HOME] = &Menu::home;
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
+  _min = 0;
+  _max = 2;
   _sizeMap.assign("50");
   _nbPlayer.assign("1");
   _nbBots.assign("1");
-  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64);
-  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64);
-  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
-  _step1[std::make_pair(3, std::make_pair(15, 540))] = _text->putstr("", 64);
-  _step1[std::make_pair(4, std::make_pair(15, 620))] = _text->putstr("", 64);
-  _step1[std::make_pair(5, std::make_pair(700, 300))] = _text->putstr("", 64);
-  _step1[std::make_pair(6, std::make_pair(700, 380))] = _text->putstr("", 64);
-  _step1[std::make_pair(7, std::make_pair(700, 460))] = _text->putstr("", 64);
+  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64, true);
+  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64, true);
+  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64, true);
+  _step1[std::make_pair(3, std::make_pair(15, 540))] = _text->putstr("", 64, true);
+  _step1[std::make_pair(4, std::make_pair(15, 620))] = _text->putstr("", 64, true);
+  _step1[std::make_pair(5, std::make_pair(700, 300))] = _text->putstr("", 64, false);
+  _step1[std::make_pair(6, std::make_pair(700, 380))] = _text->putstr("", 64, false);
+  _step1[std::make_pair(7, std::make_pair(700, 460))] = _text->putstr("", 64, false);
 }
 
 Menu::~Menu()
@@ -105,7 +107,9 @@ void    Menu::getInputNb(std::string &s, int n, size_t size)
 {
   key   k;
 
-  if ((k = _event->getInput()) != NONE && k != MBACKSPACE && s.size() < size)
+  if ((k = _event->getInput()) != NONE && 
+      k != MBACKSPACE && k != MUP && k != MDOWN &&
+        k != MLEFT && k != MRIGHT && s.size() < size)
   {
     _timer = 0;
     s += (((int)(k)) - 23) + 48;
@@ -145,16 +149,16 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if (_isSelect >= 0)
+        if (_isSelect >= _min)
           _isSelect--;
-        if (_isSelect == -1)
-          _isSelect = s.size() - 1;
+        if (_isSelect == _min - 1)
+          _isSelect = _max;
         _timer = 0;
         break;
       case MDOWN:
-        if (_isSelect < ((int)(s.size())))
+        if (_isSelect <= _max)
           _isSelect++;
-        if (_isSelect == ((int)(s.size())))
+        if (_isSelect == _max + 1)
             _isSelect = 0;
         _timer = 0;
         break;
