@@ -18,7 +18,7 @@ Core::Core(Camera *cam, Loader *loader)
   _height = 50;
   _loader = loader;
   _cam = cam;
-  _players = 1;
+  _players = 2;
   _map = new Map(_width, _height);
   _sound = new Sound();
   obj = _map->setSpawn(_players);
@@ -35,6 +35,7 @@ Core::Core(Camera *cam, Loader *loader)
   _time = 0;
   _frames = 0;
   _lasttime = 0;
+  _endgame = false;
 }
 
 Core::~Core()
@@ -186,6 +187,9 @@ void  Core::spawnBomb(Player *player)
 
 bool	Core::update()
 {
+  checkAlive();
+  if (_endgame == true)
+    return (false);
   std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;;
@@ -205,7 +209,10 @@ bool	Core::update()
   if (_input.getKey(SDLK_SPACE) && _players == 2)
     spawnBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)
+  {
+    if ((*it).second->isAlive() == true)
     (*it).second->update(_clock, _input);
+  }
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
   for (std::map<std::pair<float, float>, Bombs *>::iterator it = _bombs.begin(); it != _bombs.end(); )
@@ -258,6 +265,21 @@ void  Core::drawAll(AObject *cur_char)
   }
 }
 
+void  Core::checkAlive()
+{
+  std::map< int, Player *>::iterator it;
+  int num;
+
+  num = 0;
+  for (size_t i = 1; i <= _player.size(); i++)
+  {
+    if (_player[i]->isAlive() == true)
+      num++;
+  }
+  if (num == 1)
+    _endgame = true;
+}
+
 void	Core::draw()
 {
   std::pair<float, float> pos;
@@ -271,8 +293,9 @@ void	Core::draw()
     _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second),
      glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);
   }
-  drawAll(_player[1]);
-  if (_players == 2)
+  if (_player[1]->isAlive() == true)
+    drawAll(_player[1]);
+  if (_players == 2 && _player[2]->isAlive() == true)
   {
     if (_screen == 0)
       _cam->changeFocus(_player[2], 2);

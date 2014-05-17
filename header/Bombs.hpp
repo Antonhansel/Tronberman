@@ -20,20 +20,20 @@
 class Bombs : public AObject
 {
 private:
-  	float		_speed;
+  	float		    _speed;
   	gdl::Model 	_model;
-  	type		_type;
-  	int			_anim;
+  	type		   _type;
+  	int			   _anim;
   	std::vector<AObject *> _bombs;
-  	Map 		*_map;
-  	double		_time;
-  	double		_create;
+  	Map 		   *_map;
+  	double		 _time;
+  	double		 _create;
   	std::vector< std::pair<double, AObject*> > _explosion;
-  	Player 		*_player;
-  	Sound			*_sound;
+  	Player 		  *_player;
+  	Sound			 *_sound;
     std::map<std::pair<float, float>, Bombs *>  *_bombsM;
-    bool      _isExplosed;
-    bool      _explosed;
+    bool        _isExplosed;
+    bool        _explosed;
     std::map<int, Player*>  *_playerTab;
     std::map<type, int (Bombs::*)(int, std::pair<float, float> &)>  _ptrFunct;
     std::map<std::pair<float, float>, Bonus *>  _bonusM;
