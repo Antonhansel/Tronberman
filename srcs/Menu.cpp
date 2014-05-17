@@ -30,6 +30,8 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[HOME] = &Menu::home;
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
+  _min = 0;
+  _max = 2;
   _sizeMap.assign("50");
   _nbPlayer.assign("1");
   _nbBots.assign("1");
@@ -105,7 +107,9 @@ void    Menu::getInputNb(std::string &s, int n, size_t size)
 {
   key   k;
 
-  if ((k = _event->getInput()) != NONE && k != MBACKSPACE && s.size() < size)
+  if ((k = _event->getInput()) != NONE && 
+      k != MBACKSPACE && k != MUP && k != MDOWN &&
+        k != MLEFT && k != MRIGHT && s.size() < size)
   {
     _timer = 0;
     s += (((int)(k)) - 23) + 48;
@@ -145,16 +149,16 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if (_isSelect >= 0)
+        if (_isSelect >= _min)
           _isSelect--;
-        if (_isSelect == -1)
-          _isSelect = s.size() - 1;
+        if (_isSelect == _min - 1)
+          _isSelect = _max;
         _timer = 0;
         break;
       case MDOWN:
-        if (_isSelect < ((int)(s.size())))
+        if (_isSelect <= _max)
           _isSelect++;
-        if (_isSelect == ((int)(s.size())))
+        if (_isSelect == _max + 1)
             _isSelect = 0;
         _timer = 0;
         break;
