@@ -221,18 +221,18 @@ bool	Core::update()
   }
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
-  for (std::map<std::pair<float, float>, Bombs *>::iterator it = _bombs.begin(); it != _bombs.end(); )
+  for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
   {
-    (*it).second->update(_clock, _input);
-    (*it).second->bombExplode();
-    (*it).second->removeExplosion();
-    if ((*it).second->isExplosed() == true)
+    (*it6).second->update(_clock, _input);
+    (*it6).second->bombExplode();
+    (*it6).second->removeExplosion();
+    if ((*it6).second->isExplosed() == true)
     {
-      _bombs.erase(it);
-      it = _bombs.begin();
+      _bombs.erase(it6);
+      it6 = _bombs.begin();
     }
     else
-      ++it;
+      ++it6;
   }
   return (true);
 }

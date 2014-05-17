@@ -257,10 +257,9 @@ bool  Bombs::isExplosed() const
 
 void  Bombs::setExplose()
 {
-  std::cout << "Begin this = " << this << std::endl;
+  //segfault ici
   if (isExplosed() == false)
     _explosed = true;
-  std::cout << "End\n";
 }
 
 void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
@@ -304,8 +303,13 @@ int   Bombs::checkBonus(int resume, std::pair<float, float> &check)
 
 int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
 {
-  /*(*_bombsM->find(check)).second->setExplose();
-  resume = false;*/
+  std::map<std::pair<float, float>, Bombs *>::iterator it;
+
+  if ((it = _bombsM->find(check)) != _bombsM->end())
+  {
+    (*it).second->setExplose();
+    resume = false;
+  }
   return (resume);
 }
 
