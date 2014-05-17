@@ -276,8 +276,8 @@ void  Core::checkAlive()
     if (_player[i]->isAlive() == true)
       num++;
   }
-  if (num == 1)
-    _endgame = true;
+  // if (num == 0)
+  //   _endgame = true;
 }
 
 void	Core::draw()
@@ -286,7 +286,12 @@ void	Core::draw()
   if (_players == 2)
     _screen = _cam->genSplit(_player[1], _player[2]);
   if (_screen == 0)
-    _cam->changeFocus(_player[1], 1);
+  {
+    if (_player[1]->isAlive() == false && _players == 2)
+      _cam->changeFocus(_player[2], 1);
+    else
+      _cam->changeFocus(_player[1], 1);
+  }
   else
   {
     pos = _cam->genPos(_player[1], _player[2]);

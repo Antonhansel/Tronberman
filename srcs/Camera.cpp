@@ -154,6 +154,11 @@ int  Camera::genSplit(Player *player1, Player *player2)
   float   pos1;
   float   pos2;
 
+  if (player1->isAlive() == false || player2->isAlive() == false)
+  {
+    setPlayer(1);
+    return (0);
+  }
   if (player1->getPos().first > player2->getPos().first)
     pos1 = player1->getPos().first - player2->getPos().first;
   else

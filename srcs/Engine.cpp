@@ -47,8 +47,8 @@ bool		Engine::start()
                 _menu->draw();
             if (_menu->launch() == true)
             {
-// getter depuis le menu
-// setter vers core
+                // getter depuis le menu
+                // setter vers core
                 std::cout << "LAUNCHING THE MENU" << std::endl;
                 if (_core->initialize())
                 {
@@ -56,7 +56,7 @@ bool		Engine::start()
                         _core->draw();
                 }
                 _menu->reset();
-//	      _core->reset();
+                //_core->reset();
             }
             else
                 quit = true;
