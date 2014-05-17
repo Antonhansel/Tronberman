@@ -158,3 +158,98 @@ int     Map::getSize() const
 {
     return (_size_x);
 }
+
+void    Map::load_size(std::list<std::string> &file)
+{
+    std::vector<int> tab;
+    std::string       str;
+    std::string       in = "<size>";
+    std::string       out = "</size>";
+
+    str = my_balise(in, out, file.front());
+    my_parseur(tab, file.front());
+    _size_x = tab.back();
+    _size_y = tab.back();
+    delete _map;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+    while (!_spawns.empty())
+       _spawns.pop_back();
+
+  file.pop_front();
+}
+
+void    Map::load_case(std::list<std::string> &file)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<case>";
+  std::string       out = "</case>";
+  type _type;
+  int x;
+  int y;
+  int t;
+
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  t = tab.back();
+  tab.pop_back();
+  x = tab.back();
+  tab.pop_back();
+  y = tab.back();
+  _type = (type)t;
+  addCube(x, y, _type);
+  file.pop_front();
+}
+
+void    Map::load_spawn(std::list<std::string> &file)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<spawn>";
+  std::string       out = "</spawn>";
+  int x;
+  int y;
+
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  x = tab.back();
+  tab.pop_back();
+  y = tab.back();
+  tab.pop_back();
+  _spawns.push_back(std::make_pair(x, y));
+  _deleteSide(x, y);
+  file.pop_front();
+}
+
+void    Map::load_map(std::string &file_name)
+{
+  std::list<std::string>  file;
+  std::string             str;
+  std::ifstream           infile(file_name.c_str());
+  std::vector<int>  tab;
+
+  while (std::getline(infile, str))
+    file.push_back(str);
+  if (file.size() > 0)
+  {
+    while (file.front().find("<map>") != std::string::npos
+          && file.size() > 0)
+      file.pop_back();
+
+    while (file.front().find("</map") == std::string::npos
+          && file.size() > 0)
+    {
+      if (file.front().find("<size>") != std::string::npos)
+        load_size(file);
+      else if (file.front().find("<case>") != std::string::npos)
+        load_case(file);
+      else if (file.front().find("<spawn>") != std::string::npos)
+        load_spawn(file);
+      else
+        file.pop_front();
+    }
+  }
+  else
+    std::cout << "The map is not found." << std::endl;
+}

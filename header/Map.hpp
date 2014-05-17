@@ -8,10 +8,11 @@
 # include <stdlib.h>
 # include <utility>
 # include "Factory.hpp"
+# include "AParser.hpp"
 
 class AObject;
 
-class Map
+class Map : public AParser
 {
 public:
   Map(int);
@@ -25,6 +26,11 @@ public:
   void    deleteCube(int, int);
   bool    check_pos(int x, int y);
   int     getSize() const;
+  void    load_size(std::list<std::string> &);
+  void    load_case(std::list<std::string> &);
+  void    load_spawn(std::list<std::string> &);
+  void    load_map(std::string &);
+
 private:
   AObject **_map;
   int     _size_x;

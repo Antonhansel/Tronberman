@@ -248,3 +248,95 @@ bool    Player::isAlive() const
 {
   return (_isAlive);
 }
+
+void    Player::load_range(std::list<std::string> &file)
+{
+    std::vector<int> tab;
+    std::string       str;
+    std::string       in = "<range>";
+    std::string       out = "</range>";
+
+    str = my_balise(in, out, file.front());
+    my_parseur(tab, file.front());
+    setRange(tab.back());
+    tab.pop_back();
+    file.pop_front();
+}
+
+void    Player::load_life(std::list<std::string> &file)
+{
+    std::vector<int> tab;
+    std::string       str;
+    std::string       in = "<life>";
+    std::string       out = "</life>";
+
+    str = my_balise(in, out, file.front());
+    my_parseur(tab, file.front());
+    setLife(tab.back());
+    tab.pop_back();
+    file.pop_front();
+}
+
+void    Player::load_stock(std::list<std::string> &file)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<stock>";
+  std::string       out = "</stock>";
+
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  setStock(tab.back());
+  tab.pop_back();
+  file.pop_front();
+}
+
+void    Player::load_id(std::list<std::string> &file)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<id>";
+  std::string       out = "</id>";
+  int x;
+
+  str = my_balise(in, out, file.front());
+  my_parseur(tab, file.front());
+  x = tab.back();
+  tab.pop_back();
+  setId(x);
+  file.pop_front();
+}
+
+void    Player::load_player(std::string &file_name)
+{
+  std::list<std::string>  file;
+  std::string             str;
+  std::ifstream           infile(file_name.c_str());
+  std::vector<int>  tab;
+
+  while (std::getline(infile, str))
+    file.push_back(str);
+  if (file.size() > 0)
+  {
+    while (file.front().find("<player>") != std::string::npos
+          && file.size() > 0)
+      file.pop_back();
+
+    while (file.front().find("</player") == std::string::npos
+          && file.size() > 0)
+    {
+      if (file.front().find("<id>") != std::string::npos)
+        load_id(file);
+      else if (file.front().find("<life>") != std::string::npos)
+        load_life(file);
+      else if (file.front().find("<stock>") != std::string::npos)
+        load_stock(file);
+      else if (file.front().find("<range>") != std::string::npos)
+        load_range(file);
+      else
+        file.pop_front();
+    }
+  }
+  else
+    std::cout << "The map is not found." << std::endl;
+}

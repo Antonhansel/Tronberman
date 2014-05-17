@@ -16,6 +16,7 @@
 # include "AObject.hpp"
 # include "Model.hh"
 # include "AInput.hpp"
+# include "AParser.hpp"
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
@@ -23,7 +24,7 @@ class Bonus;
 
 class AInput;
 
-class Player : public AObject
+class Player : public AObject, public AParser
 {
 protected:
   gdl::Texture  _texture;
@@ -69,6 +70,12 @@ public:
   bool    getBegin() const;
   std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;
+  void    load_id(std::list<std::string> &);
+  void    load_life(std::list<std::string> &);
+  void    load_range(std::list<std::string> &);
+  void    load_stock(std::list<std::string> &);
+  void    load_player(std::string &);  
+
 
 private:
   std::pair<float, float> up(float &);

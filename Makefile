@@ -30,6 +30,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Sound.cpp \
 				srcs/Bombs.cpp \
 				srcs/Bonus.cpp \
+				srcs/AParser.cpp \
 				srcs/AInput.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
