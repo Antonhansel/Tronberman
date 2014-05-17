@@ -38,6 +38,7 @@
 # include "Loader.hpp"
 # include "Bombs.hpp"
 # include "Sound.hpp"
+# include "Menu.hpp"
 
 #define POSX 0
 #define POSY 0
@@ -48,7 +49,7 @@
 class Core : public gdl::Game
 {
 public:
-  Core(Camera *cam, Loader *loader);
+  Core(Camera *cam, Loader *loader, Menu *menu);
   ~Core();
   bool			initialize();
   void			draw();
@@ -65,11 +66,12 @@ public:
   void      spawnBomb(Player *);
   Map       *getMap();
   std::map<int, Player*>  getPlayer();
-
+  void      setValues(Map *map);
 private:
   int       _screen;
   float     _dist;
   int 			_percent;
+  Menu      *_menu;
   Camera 		*_cam;
   Loader    *_loader;
   int 			_players;

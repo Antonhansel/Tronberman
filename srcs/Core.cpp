@@ -11,20 +11,26 @@
 #include "Core.hpp"
 #include <unistd.h>
 
-Core::Core(Camera *cam, Loader *loader)
+Core::Core(Camera *cam, Loader *loader, Menu *menu)
 {
-  std::vector<std::pair<int, int> >    obj;
-  _width = 50;
-  _height = 50;
   _loader = loader;
   _cam = cam;
-  _players = 2;
-  _map = new Map(_width, _height);
+  _menu = menu;
   _sound = new Sound();
+
+}
+
+void  Core::setValues(Map *map)
+{
+  std::vector<std::pair<int, int> >    obj;
+  _players = _menu->getNbPlayer();
+  _map = map;
+  _width = _menu->getMapSize();
+  _height = _width;
   obj = _map->setSpawn(_players);
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
-  _nb_bot = 0;
+  _nb_bot = _menu->getNbBots();
   if (_players == 2)
   {
     obj.erase(obj.begin());
@@ -34,7 +40,7 @@ Core::Core(Camera *cam, Loader *loader)
   _percent = 15;
   _time = 0;
   _frames = 0;
-  _lasttime = 0;
+  //_lasttime = 0;
   _endgame = false;
 }
 
@@ -42,7 +48,7 @@ Core::~Core()
 {
   std::map< std::pair<float, float>, AObject *>::iterator it;
 
-  delete _map;
+  //delete _map;
   delete _sound;
 }
 

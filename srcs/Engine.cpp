@@ -31,7 +31,7 @@ bool 		Engine::init()
   if (_loader->loadTextures() == false)
   	return (false);
   _menu = new Menu(_camera, _loader);
-  _core = new Core(_camera, _loader);
+  _core = new Core(_camera, _loader, _menu);
   return (true);
 }
 

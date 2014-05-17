@@ -71,7 +71,6 @@ public:
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
-
 private:
   int         _isSelect;
   CubeAnim *_cubeanim;

@@ -152,3 +152,8 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
     }
     return (_spawns);
 }
+
+int     Map::getSize() const
+{
+    return (_size_x);
+}

@@ -24,7 +24,7 @@ public:
   void    addCube(int, int, AObject *);
   void    deleteCube(int, int);
   bool    check_pos(int x, int y);
-
+  int     getSize() const;
 private:
   AObject **_map;
   int     _size_x;
