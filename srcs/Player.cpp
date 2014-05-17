@@ -13,8 +13,8 @@
 
 Player::Player()
 {
-    _stock = 3;
-    _range = 2;
+    _stock = 1;
+    _range = 1;
     _x = 0;
     _life = 3;
     _begin = false;
