@@ -33,18 +33,29 @@ enum type
 
 enum key
 {
-  NONE = 0,
+  NONE = 10,
   PUP,
   PDOWN,
   PRIGHT,
   PLEFT,
   PBOMB,
   MRETURN,
+  MBACKSPACE,
   MUP,
   MLEFT,
   MDOWN,
   MRIGHT,
-  ESCAPE
+  ESCAPE,
+  MZERO,
+  MONE,
+  MTWO,
+  MTHREE,
+  MFOUR,
+  MFIVE,
+  MSIX,
+  MSEVEN,
+  MHEIGHT,
+  MNINE
 };
 
 class AObject

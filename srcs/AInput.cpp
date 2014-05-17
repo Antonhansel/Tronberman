@@ -55,4 +55,15 @@ void	AInput::createMenuKey()
 	_key[SDLK_DOWN] = MDOWN;
 	_key[SDLK_RETURN] = MRETURN;
 	_key[SDLK_ESCAPE] = ESCAPE;
+	_key[SDLK_BACKSPACE] = MBACKSPACE;
+	_key[SDLK_KP_0] = MZERO;
+	_key[SDLK_KP_1] = MONE;
+	_key[SDLK_KP_2] = MTWO;
+	_key[SDLK_KP_3] = MTHREE;
+	_key[SDLK_KP_4] = MFOUR;
+	_key[SDLK_KP_5] = MFIVE;
+	_key[SDLK_KP_6] = MSIX;
+	_key[SDLK_KP_7] = MSEVEN;
+	_key[SDLK_KP_8] = MHEIGHT;
+	_key[SDLK_KP_9] = MNINE;
 }

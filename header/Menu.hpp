@@ -61,6 +61,8 @@ public:
   bool      drawBackground();
   void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
   void      chooseStep();
+  void      manageEventInput();
+  void      getInputNb(std::string &, int, size_t);
   void      home();
   void      step1();
   void      step11();
@@ -83,7 +85,8 @@ private:
   std::map<stepM, void (Menu::*)()>    _func;
   float     _timer;
   int       _back;
-  stepM      _stepM;
+  stepM     _stepM;
+  std::string       _sizeMap;
 };
 
 #endif /* !MENU_HPP_ */

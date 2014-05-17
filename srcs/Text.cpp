@@ -127,10 +127,10 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it; 
   for (it = old->begin(); it != old->end(); ++it)
   {
-    for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
+    // AVERIFIER !!!!!! MERKI CHOUAGI
+    for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end();)
     {
-      (*it).second.erase(v);
-      v = (*it).second.begin();
+      v = (*it).second.erase(v);
     }
     if (cptr < words.size())
     {
@@ -140,4 +140,15 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
       (*it).second = putstr("", 64);
     cptr++;
   }
+}
+
+void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, int index, const std::string &input)
+{
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it; 
+  it = old->begin();
+  for (int i = 0; i < index; i++)
+    ++it;
+  for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
+    v = (*it).second.erase(v);
+  (*it).second = putstr(input.c_str(), 64);
 }
