@@ -30,7 +30,9 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[HOME] = &Menu::home;
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
-  _sizeMap.assign("");
+  _sizeMap.assign("50");
+  _nbPlayer.assign("1");
+  _nbBots.assign("1");
   _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64);
   _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64);
   _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64);
@@ -78,13 +80,18 @@ void    Menu::manageEventInput()
       case 0:
         getInputNb(_sizeMap, 4, 4);
         break;
-/*    case 1:
-      getInputNb(, 6);
-      break;
-    case 2:
-      getInputNb(7);
-      break;
-*/    //case 3:
+      case 1:
+        getInputNb(_nbPlayer, 6, 1);
+        break;
+      case 2:
+        getInputNb(_nbBots, 7, 2);
+        break;
+      case 3:
+      {
+        _isLaunch = true;
+        _cubeanim->changeVolum(0.4f);
+        break;
+      }
       //lancer le jeu
       case 4:
         _stepM = STEP1;
@@ -103,7 +110,6 @@ void    Menu::getInputNb(std::string &s, int n, size_t size)
     _timer = 0;
     s += (((int)(k)) - 23) + 48;
     _text->addNb(&_step1, n, s);
-    //std::cout << ((int)(k)) - 23 << std::endl;
     step11();
   }
   else if (k == MBACKSPACE)
@@ -122,15 +128,11 @@ void    Menu::chooseStep()
   if (_isSelect == 0 && _stepM == HOME)
     _stepM = STEP1;
   else if (_isSelect == 0 && _stepM == STEP1)
-    _stepM = STEP11;
-/*  else if (_isSelect == 4 && _stepM == STEP11)
-    _stepM = STEP1;*/
-/*  else if (_stepM == STEP11)
   {
-    std::cout << "RRRRRRRRRRRRRRR\n";
-//    manageEventInput();    
+    _isSelect = 0;
+    _stepM = STEP11;
   }
-*/  (this->*_func[_stepM])();
+  (this->*_func[_stepM])();
 }
 
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
@@ -265,7 +267,8 @@ void    Menu::step11()
   v.push_back(u3);
   v.push_back(u4);
   v.push_back(_sizeMap);
-  _isSelect = 0;
+  v.push_back(_nbPlayer);
+  v.push_back(_nbBots);
   _text->modifyWord(&_step1, v);
 }
 

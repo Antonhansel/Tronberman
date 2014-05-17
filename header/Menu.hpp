@@ -89,6 +89,8 @@ private:
   int       _back;
   stepM     _stepM;
   std::string       _sizeMap;
+  std::string       _nbPlayer;
+  std::string       _nbBots;
   gdl::Texture  _texture;
   gdl::Geometry _geometry;
 };

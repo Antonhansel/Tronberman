@@ -128,10 +128,10 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
   for (it = old->begin(); it != old->end(); ++it)
   {
     // AVERIFIER !!!!!! MERKI CHOUAGI
-    for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end();)
+    /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end();)
     {
       v = (*it).second.erase(v);
-    }
+    }*/
     if (cptr < words.size())
     {
       (*it).second = putstr(words[cptr].c_str(), 64);      
@@ -148,7 +148,7 @@ void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl
   it = old->begin();
   for (int i = 0; i < index; i++)
     ++it;
-  for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
-    v = (*it).second.erase(v);
+  /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
+    v = (*it).second.erase(v);*/
   (*it).second = putstr(input.c_str(), 64);
 }
