@@ -14,7 +14,7 @@ class AObject;
 class Map
 {
 public:
-  Map(int, int);
+  Map(int);
   ~Map();
 
   AObject     *getCase(int, int) const;

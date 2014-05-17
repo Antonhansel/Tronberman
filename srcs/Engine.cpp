@@ -52,6 +52,7 @@ bool		Engine::start()
                 std::cout << "LAUNCHING THE MENU" << std::endl;
                 if (_core->initialize())
                 {
+                  _core->setValues(_menu->getMap());
                     while (_core->update())
                         _core->draw();
                 }

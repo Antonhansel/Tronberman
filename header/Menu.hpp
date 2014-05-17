@@ -33,6 +33,7 @@
 # include "Factory.hpp"
 # include "Text.hpp"
 # include "AInput.hpp"
+# include "Map.hpp"
 
 # define DELAY  0.2
 
@@ -71,6 +72,8 @@ public:
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
+  Map       *getMap() const;
+
 private:
   int         _isSelect;
   CubeAnim *_cubeanim;
@@ -97,6 +100,7 @@ private:
   std::string       _nbBots;
   gdl::Texture  _texture;
   gdl::Geometry _geometry;
+  Map           *_map;
 };
 
 #endif /* !MENU_HPP_ */

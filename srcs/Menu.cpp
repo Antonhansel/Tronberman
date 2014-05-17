@@ -90,6 +90,7 @@ void    Menu::manageEventInput()
         break;
       case 3:
       {
+        _map = new Map(getMapSize());
         _isLaunch = true;
         _cubeanim->changeVolum(0.4f);
         break;
@@ -345,4 +346,9 @@ int  operator<<(int, const std::string &s)
 
   iss >> val;
   return (val);
+}
+
+Map   *Menu::getMap() const
+{
+  return (_map);
 }

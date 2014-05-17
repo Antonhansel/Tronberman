@@ -10,10 +10,10 @@
 
 #include "Map.hpp"
 
-Map::Map(int sizex, int sizey)
+Map::Map(int size)
 {
-    _size_x = sizex;
-    _size_y = sizey;
+    _size_x = size;
+    _size_y = size;
     _map = new AObject *[_size_x * _size_y];
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();
