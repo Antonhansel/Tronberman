@@ -61,6 +61,7 @@ public:
   bool      makeChar(int, int, int);
   bool      makeBot(int, int, int);
   void      FPS();
+  void      checkAlive();
   void      spawnBomb(Player *);
   Map       *getMap();
   std::map<int, Player*>  getPlayer();
@@ -93,6 +94,7 @@ private:
   std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
+  bool        _endgame;
 };
 
 #endif /*!_CORE_HPP_*/

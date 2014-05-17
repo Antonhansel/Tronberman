@@ -48,7 +48,32 @@ int	Text::getColumn(char c)
   return (0);
 }
 
-void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text)
+int Text::getOtherColumn(char c)
+{
+  if (c == '.')
+    {
+      _firstChar = ' ';
+      return (8);
+    }
+  if (c >= '0' && c <= '9')
+    {
+      _firstChar = '0';
+      return (7);
+    }
+  if (c >= '@' && c <= 'O')
+    {
+      _firstChar = '@';
+      return (6);
+    }
+  if (c >= 'P' && c <= '\\')
+    {
+      _firstChar = 'P';
+      return (5);
+    }
+  return (0);
+}
+
+void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool other)
 {
   gdl::Geometry *geometry = new gdl::Geometry();  
   int	div;
@@ -57,7 +82,7 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text)
   glAlphaFunc(GL_GREATER, 0.1f);
   glEnable(GL_ALPHA_TEST);
   c -= (c >= 'a' && c <= 'z') ? 32 : 0;
-  div = getColumn(c);
+  div = other ? getColumn(c) : getOtherColumn(c);
   geometry->pushVertex(glm::vec3(0, 0, 0));
   geometry->pushVertex(glm::vec3(size, 0, 0));
   geometry->pushVertex(glm::vec3(size, size, 0));
@@ -71,13 +96,13 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text)
   glEnable(GL_DEPTH_TEST);
 }
 
-std::vector<gdl::Geometry *> Text::putstr(const char *str, int size)
+std::vector<gdl::Geometry *> Text::putstr(const char *str, int size, bool other)
 {
   std::vector<gdl::Geometry *> text;
 
   _camera->setMode();
   for (size_t i(0); str[i]; i++)
-    this->putchar(str[i], size, text);
+    this->putchar(str[i], size, text, other);
   _camera->setMode();
   return (text);
 }
@@ -134,10 +159,10 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
     }*/
     if (cptr < words.size())
     {
-      (*it).second = putstr(words[cptr].c_str(), 64);      
+      (*it).second = putstr(words[cptr].c_str(), 64, true);      
     }
     else
-      (*it).second = putstr("", 64);
+      (*it).second = putstr("", 64, true);
     cptr++;
   }
 }
@@ -150,5 +175,5 @@ void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl
     ++it;
   /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
     v = (*it).second.erase(v);*/
-  (*it).second = putstr(input.c_str(), 64);
+  (*it).second = putstr(input.c_str(), 64, false);
 }

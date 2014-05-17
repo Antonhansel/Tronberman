@@ -24,6 +24,7 @@ Player::Player()
     _key[PRIGHT] = &Player::right;
     _key[PLEFT] = &Player::left;
     _shield = 1;
+    _isAlive = true;
 }
 
 Player::~Player()
@@ -35,35 +36,6 @@ bool    Player::initialize()
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
-   /* _geometry.setColor(glm::vec4(1, 1, 0, 1));
-    _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
-
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
-
-  _geometry.setColor(glm::vec4(1, 0, 1, 1));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
-    _geometry.build();*/
     return (true);
 }
 
@@ -72,7 +44,6 @@ void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
     glPushMatrix();
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-    //_geometry.draw(shader, getTransformation(), GL_QUADS);
     glPopMatrix();
 }
 
@@ -112,6 +83,8 @@ bool    Player::_onBomb()
 
 void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
+    if (_isAlive == true)
+    {
     float trans = static_cast<float>(clock.getElapsed()) * _speed;
     std::map<int, std::pair<float, float> > keymap;
     std::pair<float, float> i;
@@ -163,6 +136,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         static_cast<Bonus*>(tmp)->addToPlayer(this);
         _map->deleteCube(_pos.first, _pos.second);
     }
+  }
 }
 
 std::pair<float, float>    Player::up(float &trans)
@@ -245,6 +219,8 @@ void  Player::setRange(int range)
 void    Player::setLife(int newLife)
 {
     _life = newLife;
+    if (_life <= 0)
+      _isAlive = false;
     _shield = 0;
 }
 
@@ -266,4 +242,9 @@ void    Player::setBegin(bool begin)
 float    Player::getShield() const
 {
     return (_shield);
+}
+
+bool    Player::isAlive() const
+{
+  return (_isAlive);
 }

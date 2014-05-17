@@ -45,12 +45,12 @@ protected:
   std::map<key, std::pair<float, float> (Player::*)(float &)>   _key;
   float         _shield;
   double        _timer;
-
+  bool          _isAlive;
 public:
   void    setPlayer(int);
   void    setSpeed(float);
   void    setMap(Map *);
-
+  bool          isAlive() const;
 public:
   Player();
   ~Player();
