@@ -242,46 +242,49 @@ bool    Menu::launch() const
 
 void    Menu::home()
 {
-  std::vector<std::string> v;
+  std::vector<std::pair<bool, std::string> > v;
+  
   std::string u("LOCAL");
   std::string u1("ONLINE");
   std::string u2("SCORE");
-  v.push_back(u);
-  v.push_back(u1);
-  v.push_back(u2);
+  v.push_back(std::make_pair(true,u));
+  v.push_back(std::make_pair(true, u1));
+  v.push_back(std::make_pair(true, u2));
   _isSelect = 0;
   _text->modifyWord(&_step1, v);
 }
 
 void    Menu::step1()
 {
-  std::vector<std::string> v;
+  std::vector<std::pair<bool, std::string> > v;
+  
   std::string u("New Game");
   std::string u1("Load Game");
-  std::string u2("Back");
-  v.push_back(u);
-  v.push_back(u1);
-  v.push_back(u2);
+  std::string u2("Back");  
+  v.push_back(std::make_pair(true,u));
+  v.push_back(std::make_pair(true, u1));
+  v.push_back(std::make_pair(true, u2));
   _isSelect = 0;
   _text->modifyWord(&_step1, v);
 }
 
 void    Menu::step11()
 {
-  std::vector<std::string> v;
+  std::vector<std::pair<bool, std::string> > v;
+
   std::string u("MAP SIZE");
   std::string u1("NB PLAYER");
   std::string u2("BOTS");
   std::string u3("GO");
   std::string u4("BACK");
-  v.push_back(u);
-  v.push_back(u1);
-  v.push_back(u2);
-  v.push_back(u3);
-  v.push_back(u4);
-  v.push_back(_sizeMap);
-  v.push_back(_nbPlayer);
-  v.push_back(_nbBots);
+  v.push_back(std::make_pair(true, u));
+  v.push_back(std::make_pair(true, u1));
+  v.push_back(std::make_pair(true, u2));
+  v.push_back(std::make_pair(true, u3));
+  v.push_back(std::make_pair(true,u4));
+  v.push_back(std::make_pair(false, _sizeMap));
+  v.push_back(std::make_pair(false,_nbPlayer));
+  v.push_back(std::make_pair(false,_nbBots));
   _text->modifyWord(&_step1, v);
 }
 

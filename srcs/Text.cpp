@@ -144,7 +144,7 @@ void  Text::textureBind(int count, int isSelect)
     }
 }
 
-void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, const std::vector<std::string> &words)
+void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, const std::vector<std::pair<bool, std::string> > &words)
 {
   size_t  cptr;
 
@@ -159,7 +159,7 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
     }*/
     if (cptr < words.size())
     {
-      (*it).second = putstr(words[cptr].c_str(), 64, true);      
+      (*it).second = putstr(words[cptr].second.c_str(), 64, words[cptr].first);      
     }
     else
       (*it).second = putstr("", 64, true);
