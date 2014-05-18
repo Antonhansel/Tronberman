@@ -80,8 +80,8 @@ private:
   float			_posx2;
   float			_posy2;
   int       _nb_bot;
-  int			  _width;
-  int			  _height;
+  int			_width;
+  int			_height;
   Map		        *_map;
   Sound			*_sound;
   gdl::Clock		_clock;

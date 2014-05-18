@@ -35,68 +35,6 @@ bool 		Engine::init()
   return (true);
 }
 
-void    Engine::save_player()
-{
-  std::map<int, Player*>  player = _core->getPlayer();
-  for (int i = 1; i <= _menu->getNbPlayer(); i++)
-  {
-    _file << "<player>" << std::endl;
-    _file << "\t<id>" << player[i]->getId() << "</id>" << std::endl;
-    _file << "\t<life>" << player[i]->getId() << "</life>" << std::endl;
-    _file << "\t<range>" << player[i]->getId() << "</range>" << std::endl;
-    _file << "\t<stock>" << player[i]->getId() << "</stock>" << std::endl;
-    _file << "</player>" << std::endl;
-
-  }
-}
-
-void    Engine::save_map()
-{
-  Map     *map = _core->getMap();
-  int     size_x = _core->getMap()->getSize();
-
-  _file << "<map>" << std::endl;
-  _file << "\t<size>" << size_x << "</size>" << std::endl;
-  for (int y = 0; y < size_x; y++)
-    {
-      for (int x = 0; x < size_x; x++)
-      {
-        if (map->getCase(x, y) != NULL)
-        {
-          type t = map->getCase(x, y)->getType();
-          if (t != BOMB && t != BONUS && t != LASER)
-          {
-            _file << "\t<case>" << y << " " << x << " " << 
-            map->getCase(x, y)->getType() << "</case>"<< std::endl;
-        }
-      }
-    }
-  }
-  save_spawn();
-  _file << "</map>" << std::endl;
-}
-
-void    Engine::save_spawn()
-{
-  std::vector<std::pair<int, int> >    obj;
-
-  std::map<int, Player*>  player = _core->getPlayer();
-  for (int i = 1; i <= _menu->getNbPlayer(); i++)
-  {
-    std::pair<int, int> pos = player[i]->getPos();
-    _file << "\t<spawn>" << pos.second << " " << pos.first << "</spawn>" << std::endl;
-  }
-}
-
-void    Engine::saving()
-{
-  _file.open("save_file.xml");
-  _file << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl;
-  save_map();
-  save_player();
-  _file.close();
-}
-
 bool		Engine::start()
 {
     bool		quit(false);
@@ -117,7 +55,6 @@ bool		Engine::start()
                 {
                     while (_core->update())
                         _core->draw();
-                    //saving();
                 }
                 _menu->reset();
                 //_core->reset();

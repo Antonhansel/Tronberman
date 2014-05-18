@@ -97,12 +97,12 @@ private:
   int       _min;
   int       _max;
   stepM     _stepM;
-  std::string     _sizeMap;
-  std::string     _nbPlayer;
-  std::string     _nbBots;
-  gdl::Texture    _texture;
-  gdl::Geometry   _geometry;
-  Map             *_map;
+  std::string       _sizeMap;
+  std::string       _nbPlayer;
+  std::string       _nbBots;
+  gdl::Texture  _texture;
+  gdl::Geometry _geometry;
+  Map           *_map;
 
   private:
     int   convToInt(const std::string &) const;
