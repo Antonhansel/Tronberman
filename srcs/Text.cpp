@@ -169,11 +169,34 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
 
 void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, int index, const std::string &input)
 {
-  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it; 
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
   it = old->begin();
   for (int i = 0; i < index; i++)
     ++it;
   /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
     v = (*it).second.erase(v);*/
   (*it).second = putstr(input.c_str(), 64, false);
+}
+
+void  Text::addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t, int id, const std::pair<int, int> &p, const std::string& s, bool type)
+{
+  t[std::make_pair(id, p)] = putstr(s.c_str(), 64, type);
+}
+
+void  Text::deleteText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t, const std::pair<int, std::pair<int, int> > &p)
+{
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
+
+  it = t.find(p);
+  t.erase(it);
+}
+
+void  Text::deleteAllText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t)
+{
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
+
+  for (it = t.begin(); it != t.end(); ++it)
+  {
+    deleteText(t, (*it).first);
+  }
 }

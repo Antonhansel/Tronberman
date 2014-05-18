@@ -30,19 +30,8 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[HOME] = &Menu::home;
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
-  _min = 0;
-  _max = 2;
-  _sizeMap.assign("50");
-  _nbPlayer.assign("1");
-  _nbBots.assign("1");
-  _step1[std::make_pair(0, std::make_pair(15, 300))] = _text->putstr("LOCAL", 64, true);
-  _step1[std::make_pair(1, std::make_pair(15, 380))] = _text->putstr("ONLINE", 64, true);
-  _step1[std::make_pair(2, std::make_pair(15, 460))] = _text->putstr("SCORE", 64, true);
-  _step1[std::make_pair(3, std::make_pair(15, 540))] = _text->putstr("", 64, true);
-  _step1[std::make_pair(4, std::make_pair(15, 620))] = _text->putstr("", 64, true);
-  _step1[std::make_pair(5, std::make_pair(700, 300))] = _text->putstr("", 64, false);
-  _step1[std::make_pair(6, std::make_pair(700, 380))] = _text->putstr("", 64, false);
-  _step1[std::make_pair(7, std::make_pair(700, 460))] = _text->putstr("", 64, false);
+  _func[STEP12] = &Menu::step12;
+  home();
 }
 
 Menu::~Menu()
@@ -75,41 +64,32 @@ bool	Menu::initialize()
 
 void    Menu::manageEventInput()
 {
-  if (_stepM == STEP11)
+  if (_stepM == STEP12 || _stepM == STEP11)
   {
     switch (_isSelect)
     {
       case 0:
-        getInputNb(_sizeMap, 4, 4, 5000, 0);
+        getInputNb(_sizeMap, 5, 4, 5000, 0);
         break;
       case 1:
-        getInputNb(_nbPlayer, 6, 1, 2, 1);
+        if (_stepM == STEP11)
+          getInputNb(_nbPlayer, 6, 1, 2, 1);
         break;
       case 2:
-        getInputNb(_nbBots, 7, 2, convToInt(_sizeMap) / 10, 0)/*) ? convToInt(_sizeMap) / 10 : 10)*/;
+        if (_stepM == STEP11)
+          getInputNb(_nbBots, 7, 2, convToInt(_sizeMap) / 10, 0);
         break;
-      case 3:
-      {
-        if (convToInt(_sizeMap) >= 10 && convToInt(_nbPlayer) != 0 && convToInt(_nbBots) != 0)
-        {
-          _map = new Map(getMapSize());
-          _isLaunch = true;
-          _cubeanim->changeVolum(0.4f);
-        }
-        break;
-      }
-      //lancer le jeu
       case 4:
         _stepM = STEP1;
         break;
-  }
-
+    }
   }
 }
 
 void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
   key   k;
+
 
   if ((k = _event->getInput()) != NONE && 
       k != MBACKSPACE && k != MUP && k != MDOWN &&
@@ -121,36 +101,50 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
       _text->addNb(&_step1, n, s);
     else
       s.assign(s.substr(0, s.length() - 1));
-    step11();
+    (this->*_func[_stepM])();
   }
   else if (k == MBACKSPACE)
   {
     _timer = 0;
     s.assign(s.substr(0, s.length() - 1));
     _text->addNb(&_step1, n, s);
-    step11();
+    (this->*_func[_stepM])();
   }
 }
 
 void    Menu::chooseStep()
 {
-  if (_isSelect == 2 && _stepM == STEP1)
-  {
+  bool  play = true;
+
+  if (_isSelect == 3 && _stepM == STEP1)
     _stepM = HOME;
-    _max = 2;    
-  }
-  if (_isSelect == 0 && _stepM == HOME)
-  {
+  else if (_isSelect == 0 && _stepM == HOME)
     _stepM = STEP1;
-    _max = 2;        
-  }
   else if (_isSelect == 0 && _stepM == STEP1)
   {
     _isSelect = 0;
     _stepM = STEP11;
-    _max = 4;
   }
-  (this->*_func[_stepM])();
+  else if (_isSelect == 3 && _stepM == STEP11)
+  {
+    if (convToInt(_sizeMap) >= 10 && convToInt(_nbPlayer) != 0 && convToInt(_nbBots) != 0)
+        {
+          _map = new Map(getMapSize());
+          _isLaunch = true;
+          _cubeanim->changeVolum(0.4f);
+        }
+  }
+  else if (_isSelect == 2 && _stepM == STEP1)
+    _stepM = STEP12;
+  else if (_isSelect == 2 && _stepM == STEP12)
+  {
+    _stepM = STEP1;
+    _isSelect = 0;
+  }
+  else
+    play = false;
+  if (play == true)
+    (this->*_func[_stepM])();
 }
 
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
@@ -163,17 +157,16 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if (_isSelect >= _min)
+        if (_isSelect >= 0)
           _isSelect--;
-        if (_isSelect == _min - 1)
-          _isSelect = _max;
+        if (_isSelect == - 1)
+          _isSelect = s.size() - 1;
         _timer = 0;
         break;
       case MDOWN:
-        if (_isSelect <= _max)
-          _isSelect++;
-        if (_isSelect == _max + 1)
-            _isSelect = 0;
+        _isSelect++;
+        if (_isSelect == ((int)(s.size())))
+          _isSelect = 0;
         _timer = 0;
         break;
       case MRETURN:
@@ -243,50 +236,47 @@ bool    Menu::launch() const
 
 void    Menu::home()
 {
-  std::vector<std::pair<bool, std::string> > v;
-  
-  std::string u("LOCAL");
-  std::string u1("ONLINE");
-  std::string u2("SCORE");
-  v.push_back(std::make_pair(true,u));
-  v.push_back(std::make_pair(true, u1));
-  v.push_back(std::make_pair(true, u2));
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "LOCAL", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "ONLINE", true);
+  _text->addText(_step1, 2, std::make_pair(15, 460), "SCORE", true);
   _isSelect = 0;
-  _text->modifyWord(&_step1, v);
 }
 
 void    Menu::step1()
 {
-  std::vector<std::pair<bool, std::string> > v;
-  
-  std::string u("New Game");
-  std::string u1("Load Game");
-  std::string u2("Back");  
-  v.push_back(std::make_pair(true,u));
-  v.push_back(std::make_pair(true, u1));
-  v.push_back(std::make_pair(true, u2));
+  _sizeMap.assign("50");
+  _nbPlayer.assign("1");
+  _nbBots.assign("1");
   _isSelect = 0;
-  _text->modifyWord(&_step1, v);
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD GAME", true);
+  _text->addText(_step1, 2, std::make_pair(15, 460), "MAP BUILDER", true);
+  _text->addText(_step1, 3, std::make_pair(15, 540), "BACK", true);
 }
 
 void    Menu::step11()
 {
-  std::vector<std::pair<bool, std::string> > v;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "MAP SIZE", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "NB PLAYER", true);
+  _text->addText(_step1, 2, std::make_pair(15, 460), "BOTS", true);
+  _text->addText(_step1, 3, std::make_pair(15, 540), "GO", true);
+  _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
+  _text->addText(_step1, 6, std::make_pair(700, 380), _nbPlayer.c_str(), false);
+  _text->addText(_step1, 7, std::make_pair(700, 460), _nbBots.c_str(), false);
+}
 
-  std::string u("MAP SIZE");
-  std::string u1("NB PLAYER");
-  std::string u2("BOTS");
-  std::string u3("GO");
-  std::string u4("BACK");
-  v.push_back(std::make_pair(true, u));
-  v.push_back(std::make_pair(true, u1));
-  v.push_back(std::make_pair(true, u2));
-  v.push_back(std::make_pair(true, u3));
-  v.push_back(std::make_pair(true,u4));
-  v.push_back(std::make_pair(false, _sizeMap));
-  v.push_back(std::make_pair(false,_nbPlayer));
-  v.push_back(std::make_pair(false,_nbBots));
-  _text->modifyWord(&_step1, v);
+void    Menu::step12()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "MAP SIZE", true);
+  _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
 }
 
 bool    Menu::initLogo()

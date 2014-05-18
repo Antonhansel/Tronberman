@@ -35,7 +35,7 @@
 # include "AInput.hpp"
 # include "Map.hpp"
 
-# define DELAY  0.2
+# define DELAY  0.15
 
 using namespace gdl;
 using namespace glm;
@@ -45,6 +45,7 @@ enum stepM
     HOME,
     STEP1,
     STEP11,
+    STEP12,
     STEP2,
     STEP3 
   };
@@ -69,6 +70,7 @@ public:
   void      drawLogo();
   void      step1();
   void      step11();
+  void      step12();
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
