@@ -466,53 +466,6 @@ void    Menu::score()
   }
 }
 
-/*void  Menu::getPseudo(int y, int id)
-{
-  std::string       s;
-  key               k;
-  char              c;
-  int               pos;
-  bool              change;
-  bool              next;
-
-  pos = 0;
-  c = 65;
-  change = true;
-  while (pos < 6)
-  {
-    next = false;
-    k = _event->getInput();
-    switch (k)
-    {
-      case MUP:
-      {
-        c--;
-        if (c == 64)
-          c = 90;
-        change = true;
-        break;
-      }
-      case MDOWN:
-      {
-        c++;
-        if (c == 91)
-          c = 65;
-        change = true;
-        break;
-      }
-      case MRIGHT:
-      {
-        next = true;
-        change = true;
-        pos++;
-        break;
-      }
-      default:
-        break;
-    }
-   
-}*/
-
 bool    Menu::initLogo()
 {
   if (!_texture.load("./ressources/assets/logo.tga"))
