@@ -156,7 +156,7 @@ void  Camera::changeFocus(AObject *cur_char, int screen)
 
 void  Camera::tiltMode()
 {
-  _tilt = 5;
+    _tilt = 5;
 }
 
 int  Camera::genSplit(Player *player1, Player *player2)

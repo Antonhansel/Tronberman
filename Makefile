@@ -30,6 +30,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Sound.cpp \
 				srcs/Bombs.cpp \
 				srcs/Bonus.cpp \
+				srcs/Saving.cpp \
 				srcs/Generator.cpp \
 				srcs/AInput.cpp
 
