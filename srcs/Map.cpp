@@ -158,3 +158,19 @@ int     Map::getSize() const
 {
     return (_size_x);
 }
+
+void     Map::setSize(int sizeX)
+{
+    _size_x = sizeX;
+    _size_y = sizeX;
+}
+
+void    Map::setMap(AObject **map)
+{
+    _map = map;
+}
+
+void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
+{
+    _spawns = spawns;
+}

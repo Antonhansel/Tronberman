@@ -25,6 +25,10 @@ public:
   void    deleteCube(int, int);
   bool    check_pos(int x, int y);
   int     getSize() const;
+  void    setSize(int);
+  void    setMap(AObject **);
+  void    setSpawn(std::vector<std::pair<int, int> > &);
+
 private:
   AObject **_map;
   int     _size_x;
