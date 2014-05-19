@@ -286,17 +286,44 @@ void    Menu::score()
 {
   int   y;
   int   id;
+  int myints[_score.size()];
+  int i;
+  std::string s;
+  typedef std::vector<int>::iterator iter_type;
+  int   max;
 
+  max = 5;
   y = 380;
   id = 1;
+  i = 0;
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "BACK", true);
-  for (std::vector<std::string>::const_iterator it = _score.begin(); it != _score.end(); ++it)
+  for (std::map<int, std::string>::iterator it = _score.begin(); it != _score.end(); ++it)
   {
-    _text->addText(_step1, id, std::make_pair(15, y), (*it), true);
-    id++;
-    y += 80;
+    myints[i] = (*it).first;
+    i++;
+  }
+  std::vector<int> myvector (myints, myints + _score.size());
+  std::sort (myvector.begin(), myvector.end());
+  iter_type from (myvector.begin());
+  iter_type until (myvector.end());
+  std::reverse_iterator<iter_type> rev_until (from);
+  std::reverse_iterator<iter_type> rev_from (until);
+  
+  while (rev_from != rev_until && max > 0)
+  {
+    if (_score.find((*rev_from)) != _score.end())
+    {
+      convToString(s, (*rev_from));
+      _text->addText(_step1, id, std::make_pair(15, y), _score.find((*rev_from))->second, true);
+      id++;
+      _text->addText(_step1, id, std::make_pair(700, y), s, false);
+      y += 80;
+      id++;
+      rev_from++;
+      max--;
+    }
   }
 }
 
@@ -355,6 +382,14 @@ int  Menu::convToInt(const std::string &s) const
   return (val);
 }
 
+void  Menu::convToString(std::string &s, int i) const
+{
+  std::stringstream ss;
+
+  ss << i;
+  s = ss.str();
+}
+
 Map   *Menu::getMap() const
 {
   return (_map);
@@ -369,17 +404,22 @@ void  Menu::getScore()
 {
   std::ifstream file("score", std::ios::in);
   std::string   res;
+  std::size_t   found;
 
   if (file.is_open())
   { 
     while (!file.eof())
     {
       std::getline(file, res, '\n');
-      _score.push_back(res);
+      found = res.find('\t');
+      if (found != std::string::npos)
+      {
+        _score[convToInt(res.substr(found, res.length()))] = res.substr(0, found);
+      }
       res.clear();
-      file.close();
     }
+    file.close();
   }
   else
-    _score.push_back("NOT SCORE YET");
+    _score[-1] = "NO SCORE YET";
 }

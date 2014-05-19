@@ -107,10 +107,11 @@ private:
   gdl::Texture      _texture;
   gdl::Geometry     _geometry;
   Map               *_map;
-  std::vector<std::string> _score;
+  std::map<int, std::string> _score;
 
   private:
     int   convToInt(const std::string &) const;
+    void  convToString(std::string &, int) const;
     void  getScore();
 };
 
