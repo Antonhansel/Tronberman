@@ -15,6 +15,7 @@ Generator::Generator(Camera *camera, Loader *loader, int size)
 	_size = size;
 	_camera = camera;
 	_loader = loader;
+	_time = 0;
 }
 
 Generator::~Generator()
@@ -50,7 +51,7 @@ void 	Generator::draw()
 
 bool Generator::cleanObjects(int i)
 {
-	if (_size + 1 <= 100 && _size - 1 >= 10)
+	if (_size + i != 100 && _size + i != 10)
 	{
 		std::cout << _size + i << std::endl; 
 		_size += i;
@@ -96,10 +97,12 @@ void 	Generator::placeCube()
 {
 	if ((_cube->getPos().first > 0 && _cube->getPos().first < _size) && 
 		_cube->getPos().second > 0 && _cube->getPos().second < _size)
-	if (_input.getKey(SDLK_SPACE))
 	{
-	  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
-	  	_camera->tiltMode();
+		if (_input.getKey(SDLK_SPACE))
+		{
+		  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
+		  	_camera->tiltMode();
+		}
 	}
 }
 
@@ -113,13 +116,13 @@ void 	Generator::changeType()
 
 void 	Generator::moveCursor()
 {
-	if (_input.getKey(SDLK_UP))
+	if (_input.getKey(SDLK_UP) && _cube->getPos().second + 1 < _size)
 		_cube->translate(glm::vec3(0, 0, 1));
-	if (_input.getKey(SDLK_DOWN))
+	if (_input.getKey(SDLK_DOWN) && _cube->getPos().second - 1 > 0)
 		_cube->translate(glm::vec3(0, 0, -1));
-	if (_input.getKey(SDLK_LEFT))
+	if (_input.getKey(SDLK_LEFT) && _cube->getPos().first + 1 < _size - 1)
 		_cube->translate(glm::vec3(1, 0, 0));
-	if (_input.getKey(SDLK_RIGHT))
+	if (_input.getKey(SDLK_RIGHT) && _cube->getPos().first - 1 > 0)
 		_cube->translate(glm::vec3(-1, 0, 0));
 }
 
@@ -158,7 +161,7 @@ bool		Generator::addCube(int x, int z, type thetype)
 
 bool 	Generator::initialize()
 {
-	if (initCursor(10, 10) == false)
+	if (initCursor(round(_size/2), round(_size/2)) == false)
 		return (false);
 	if (drawBackground() == false)
 		return (false);
