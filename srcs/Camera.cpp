@@ -93,6 +93,11 @@ void 	Camera::flushContext()
 
 void 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
 {
+  if (_tilt != 0)
+  {
+    vec2.z += _tilt/10;
+    _tilt -= 1;
+  }
   if (_players == 1)
   {
     glViewport(0, 0, _width, _height);
@@ -147,6 +152,11 @@ void  Camera::changeFocus(AObject *cur_char, int screen)
 {
   moveCamera(glm::vec3(cur_char->getPos().first, 13, -10 + cur_char->getPos().second),
     glm::vec3(cur_char->getPos().first, 0, cur_char->getPos().second), glm::vec3(0, 1, 0), screen);
+}
+
+void  Camera::tiltMode()
+{
+  _tilt = 5;
 }
 
 int  Camera::genSplit(Player *player1, Player *player2)

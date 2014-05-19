@@ -80,6 +80,7 @@ public:
   int       getNbBots() const;
   Map       *getMap() const;
   void      setIsSelect();
+  void      startGenerator();
   //int  operator=(const std::string &);
 
 private:

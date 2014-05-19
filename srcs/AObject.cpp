@@ -30,7 +30,7 @@ void		AObject::setPos(std::pair<float, float> &pos)
 
 std::pair<float, float>	AObject::getPos() const
 {
-  return (_pos);
+  return (std::make_pair<float, float>(_position.x, _position.z));
 }
 
 void 		AObject::translate(glm::vec3 const &v)

@@ -5,11 +5,12 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Thu May  01 12:48:21 2014 Antonin Ribeaud
-// Last update Wed May 14 01:50:17 2014 Mehdi Chouag
+// Last update Mon May 19 18:23:32 2014 ribeaud antonin
 */
 
-#include "Menu.hpp"
-#include "CubeAnim.hpp"
+# include "Generator.hpp"
+# include "Menu.hpp"
+# include "CubeAnim.hpp"
 
 Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
 {
@@ -174,6 +175,23 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
   }
 }
 
+void    Menu::startGenerator()
+{
+    Generator *gen = new Generator(_camera, _loader, convToInt(_sizeMap));
+
+    if (gen->initialize() == false)
+    {
+      std::cout << "Error on initializing the map Generator" << std::endl;
+    }
+    else
+    {
+      while (gen->update() == true)
+      {
+        gen->draw();
+      }
+    }
+}
+
 void    Menu::chooseStep()
 {
   bool  play = true;
@@ -198,6 +216,12 @@ void    Menu::chooseStep()
   }
   else if (_isSelect == 2 && _stepM == STEP1)
     _stepM = STEP12;
+  else if (_isSelect == 1 && _stepM == STEP12)
+  {
+    _stepM = STEP1;
+    _isSelect = 0;
+    startGenerator();
+  }
   else if (_isSelect == 2 && _stepM == STEP12)
   {
     _stepM = STEP1;

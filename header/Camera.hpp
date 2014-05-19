@@ -47,7 +47,9 @@ public:
   Clock 		&getClock();
   Input 		&getInput();
   void      setMode();
+  void      tiltMode();
 private:
+  float   _tilt;
   int     _mode;
   float			_width;
   float			_height;
