@@ -26,7 +26,7 @@ Generator::~Generator()
 
 bool 	Generator::drawBackground()
 {
-  _floor = new Floor(_size * 4, _size * 4, 10.0f);
+  _floor = new Floor(100, 100, 10.0f);
   return (_floor->initialize());
 }
 
@@ -116,7 +116,7 @@ void 	Generator::changeType()
 
 void 	Generator::moveCursor()
 {
-	if (_input.getKey(SDLK_UP) && _cube->getPos().second + 1 < _size)
+	if (_input.getKey(SDLK_UP) && _cube->getPos().second + 1 < _size - 1)
 		_cube->translate(glm::vec3(0, 0, 1));
 	if (_input.getKey(SDLK_DOWN) && _cube->getPos().second - 1 > 0)
 		_cube->translate(glm::vec3(0, 0, -1));
