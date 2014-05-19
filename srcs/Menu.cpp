@@ -31,6 +31,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
   _func[STEP12] = &Menu::step12;
+  _func[SCORE] = &Menu::score;
   home();
 }
 
@@ -79,9 +80,6 @@ void    Menu::manageEventInput()
         if (_stepM == STEP11)
           getInputNb(_nbBots, 7, 2, convToInt(_sizeMap) / 10, 0);
         break;
-      case 4:
-        _stepM = STEP1;
-        break;
     }
   }
 }
@@ -89,7 +87,6 @@ void    Menu::manageEventInput()
 void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
   key   k;
-
 
   if ((k = _event->getInput()) != NONE && 
       k != MBACKSPACE && k != MUP && k != MDOWN &&
@@ -141,6 +138,13 @@ void    Menu::chooseStep()
     _stepM = STEP1;
     _isSelect = 0;
   }
+  else if (_isSelect == 4 && _stepM == STEP11)
+    _stepM = STEP1;
+  else if (_isSelect == 2 && _stepM == HOME)
+  {
+    getScore();
+    _stepM = SCORE;
+  }
   else
     play = false;
   if (play == true)
@@ -157,8 +161,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if (_isSelect >= 0)
-          _isSelect--;
+        _isSelect--;
         if (_isSelect == - 1)
           _isSelect = s.size() - 1;
         _timer = 0;
@@ -279,6 +282,24 @@ void    Menu::step12()
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
 }
 
+void    Menu::score()
+{
+  int   y;
+  int   id;
+
+  y = 380;
+  id = 1;
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "BACK", true);
+  for (std::vector<std::string>::const_iterator it = _score.begin(); it != _score.end(); ++it)
+  {
+    _text->addText(_step1, id, std::make_pair(15, y), (*it), true);
+    id++;
+    y += 80;
+  }
+}
+
 bool    Menu::initLogo()
 {
   if (!_texture.load("./ressources/assets/logo.tga"))
@@ -342,4 +363,23 @@ Map   *Menu::getMap() const
 void  Menu::setIsSelect()
 {
   _isSelect = 0;
+}
+
+void  Menu::getScore()
+{
+  std::ifstream file("score", std::ios::in);
+  std::string   res;
+
+  if (file.is_open())
+  { 
+    while (!file.eof())
+    {
+      std::getline(file, res, '\n');
+      _score.push_back(res);
+      res.clear();
+      file.close();
+    }
+  }
+  else
+    _score.push_back("NOT SCORE YET");
 }

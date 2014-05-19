@@ -46,11 +46,17 @@ protected:
   float         _shield;
   double        _timer;
   bool          _isAlive;
+  int           _score;
+
 public:
   void    setPlayer(int);
   void    setSpeed(float);
   void    setMap(Map *);
-  bool          isAlive() const;
+  bool    isAlive() const;
+  void    setIsAlive();
+  void    setScore(int);
+  int     getScore() const;
+
 public:
   Player();
   ~Player();

@@ -135,27 +135,26 @@ void    Bombs::newBomb(std::pair<float, float> &check)
         pos = (*it).second->getPos();
         pos.first = ((int)(pos.first));
         pos.second = ((int)(pos.second));
-        //std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
-        //std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
         if (pos.first == check.first && pos.second == check.second)
         {
-          std::cout << "TOUCHER\n";
-          if ((*it).second->getLife() == 0)
+          if ((*it).second->getLife() == 0 && (*it).second->isAlive() == true)
           {
-           std::cout << "DEAD\n";
-          //_playerTab->erase(it++);
-          //it = _playerTab->begin();
-          // ++it;
+            std::cout << "DEAD\n";
+            if ((*it).second->getId() != _player->getId())
+              _player->setScore(_player->getScore() + 1000);
+              (*it).second->setScore((*it).second->getScore() - 100);
+              std::cout << "Score: " << (*it).second->getScore() << std::endl;
+              (*it).second->setIsAlive();
           }
-          else
+          else if ((*it).second->isAlive() == true)
           {
             (*it).second->setLife((*it).second->getLife() - 1);
+            (*it).second->setScore((*it).second->getScore() - 50);
+            _player->setScore(_player->getScore() + 100);
           }
         }
       }
-/*      else
-        ++it;
-*/    }
+    }
   _explosion.push_back(std::make_pair(_time, bomb));
 }
 
@@ -257,7 +256,6 @@ bool  Bombs::isExplosed() const
 
 void  Bombs::setExplose()
 {
-  //segfault ici
   if (isExplosed() == false)
     _explosed = true;
 }

@@ -25,6 +25,7 @@ Player::Player()
     _key[PLEFT] = &Player::left;
     _shield = 1;
     _isAlive = true;
+    _score = 0;
 }
 
 Player::~Player()
@@ -219,8 +220,6 @@ void  Player::setRange(int range)
 void    Player::setLife(int newLife)
 {
     _life = newLife;
-    if (_life <= 0)
-      _isAlive = false;
     _shield = 0;
 }
 
@@ -247,4 +246,19 @@ float    Player::getShield() const
 bool    Player::isAlive() const
 {
   return (_isAlive);
+}
+
+void    Player::setIsAlive()
+{
+    _isAlive = false;
+}
+
+void    Player::setScore(int newScore)
+{
+    _score = newScore;
+}
+
+int     Player::getScore() const
+{
+    return (_score);
 }

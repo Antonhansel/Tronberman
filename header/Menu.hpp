@@ -46,6 +46,7 @@ enum stepM
     STEP1,
     STEP11,
     STEP12,
+    SCORE,
     STEP2,
     STEP3 
   };
@@ -71,6 +72,7 @@ public:
   void      step1();
   void      step11();
   void      step12();
+  void      score();
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
@@ -102,13 +104,14 @@ private:
   std::string       _sizeMap;
   std::string       _nbPlayer;
   std::string       _nbBots;
-  gdl::Texture  _texture;
-  gdl::Geometry _geometry;
-  Map           *_map;
+  gdl::Texture      _texture;
+  gdl::Geometry     _geometry;
+  Map               *_map;
+  std::vector<std::string> _score;
 
   private:
     int   convToInt(const std::string &) const;
+    void  getScore();
 };
-
 
 #endif /* !MENU_HPP_ */
