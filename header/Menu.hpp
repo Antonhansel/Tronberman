@@ -34,6 +34,7 @@
 # include "Text.hpp"
 # include "AInput.hpp"
 # include "Map.hpp"
+# include "Player.hpp"
 
 # define DELAY  0.15
 
@@ -48,7 +49,8 @@ enum stepM
     STEP12,
     SCORE,
     STEP2,
-    STEP3 
+    STEP3,
+    BUILDER
   };
 
 class Menu : public Game
@@ -58,7 +60,7 @@ public:
   ~Menu();
   bool			initialize();
   bool			update();
-  void			reset();
+  void			reset(const std::map<int, Player *> &);
   void			draw();
   bool			launch() const;
   bool      drawBackground();
@@ -101,9 +103,13 @@ private:
   int       _min;
   int       _max;
   stepM     _stepM;
+  bool      _addScore;
+  int       _newScore;
+  int       _pos;
   std::string       _sizeMap;
   std::string       _nbPlayer;
   std::string       _nbBots;
+  std::string       _scoreToAdd;
   gdl::Texture      _texture;
   gdl::Geometry     _geometry;
   Map               *_map;
@@ -113,6 +119,8 @@ private:
     int   convToInt(const std::string &) const;
     void  convToString(std::string &, int) const;
     void  getScore();
+    void  manageEventInputScore(key &);
+    void  getInputPseudo(char);
 };
 
 #endif /* !MENU_HPP_ */

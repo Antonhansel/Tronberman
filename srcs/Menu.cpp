@@ -27,11 +27,14 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _timer = 0;
   _back = -1;
   _stepM = HOME;
+  _pos = 0;
+  _scoreToAdd.assign("");
   _func[HOME] = &Menu::home;
   _func[STEP1] = &Menu::step1;
   _func[STEP11] = &Menu::step11;
   _func[STEP12] = &Menu::step12;
   _func[SCORE] = &Menu::score;
+  _addScore = false;
   home();
 }
 
@@ -82,6 +85,68 @@ void    Menu::manageEventInput()
         break;
     }
   }
+}
+
+void    Menu::manageEventInputScore(key &k)
+{
+  if (_stepM == SCORE)
+  {
+    const char *str;
+    char c;
+
+    if (_scoreToAdd.compare(""))
+    {
+      str = _scoreToAdd.c_str();
+      if (str[_pos] != '\0')
+      {
+        c = str[_pos];
+      }
+      else
+      {
+        c = 65;        
+      }
+    }
+    else
+      c = 65;
+    switch (k)
+    {
+      case MUP:
+      {
+        _timer = 0;
+        c--;
+        if (c == 64)
+          c = 90;
+        getInputPseudo(c);
+        break;
+      }
+      case MDOWN:
+      {
+        _timer = 0;
+        c++;
+        if (c == 91)
+          c = 65;
+        getInputPseudo(c);
+        break; 
+      }
+      case MRIGHT:
+      {
+        _timer = 0;
+        _pos++;
+        if (_pos >= 6)
+          _addScore = false;
+        break;           
+      }
+      default:
+        break;
+    }
+  }
+}
+
+void    Menu::getInputPseudo(char c)
+{
+  _scoreToAdd = _scoreToAdd.substr(0, _pos);
+  _scoreToAdd += c;
+  (this->*_func[_stepM])();
 }
 
 void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
@@ -161,25 +226,41 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        _isSelect--;
-        if (_isSelect == - 1)
-          _isSelect = s.size() - 1;
-        _timer = 0;
+        if ((_pos < 6 && _stepM != SCORE) || (_pos >= 6 && _stepM == SCORE))
+        {
+          _isSelect--;
+          if (_isSelect == - 1)
+            _isSelect = s.size() - 1;
+          _timer = 0;          
+        }
+        else
+          manageEventInputScore(k);
         break;
       case MDOWN:
-        _isSelect++;
-        if (_isSelect == ((int)(s.size())))
-          _isSelect = 0;
-        _timer = 0;
+        if ((_pos < 6 && _stepM != SCORE) || (_pos >= 6 && _stepM == SCORE))
+        {
+          _isSelect++;
+          if (_isSelect == ((int)(s.size())))
+            _isSelect = 0;
+          _timer = 0;
+        }
+        else
+          manageEventInputScore(k);
         break;
       case MRETURN:
       {
-        _timer = 0;
-        chooseStep();
+        if (_pos < 6)
+        {
+          _timer = 0;
+          chooseStep();          
+        }
         break;
       }
       default:
-        manageEventInput();
+        if (_pos < 6 && _stepM == SCORE)
+          manageEventInputScore(k);
+        else
+          manageEventInput();
         break;
     }
   }
@@ -226,10 +307,32 @@ void    Menu::draw()
   _camera->flushContext();
 }
 
-void    Menu::reset()
+void    Menu::reset(const std::map<int, Player*> &p)
 {
+  int   max;
+
   _isLaunch = false;
   _isSelect = 0;
+  max = 0;
+  _pos = 0;
+  _scoreToAdd.assign("");
+  if (p.find(1)->second->getScore() > max)
+    max = p.find(1)->second->getScore();
+  if (p.find(2) != p.end() && p.find(2)->second->getScore() > max)
+    max = p.find(2)->second->getScore();
+  _addScore = true;
+  for (std::map<int, Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
+  {
+    if ((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2)
+      _addScore = false;
+  }
+  if (_addScore == true)
+  {
+    getScore();
+    _stepM = SCORE;
+    _newScore = max;
+  }
+  (this->*_func[_stepM])();
 }
 
 bool    Menu::launch() const
@@ -291,34 +394,46 @@ void    Menu::score()
   std::string s;
   typedef std::vector<int>::iterator iter_type;
   int   max;
+  int   add;
 
   max = 5;
   y = 380;
   id = 1;
-  i = 0;
+  add = 0;
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "BACK", true);
+  if (_addScore == true)
+  {
+    i = 1;
+    myints[0] = _newScore;
+  }
+  else
+    i = 0;
   for (std::map<int, std::string>::iterator it = _score.begin(); it != _score.end(); ++it)
   {
     myints[i] = (*it).first;
     i++;
   }
-  std::vector<int> myvector (myints, myints + _score.size());
+  if (_addScore == true)
+    add = 1;
+  std::vector<int> myvector (myints, myints + _score.size() + add);
   std::sort (myvector.begin(), myvector.end());
   iter_type from (myvector.begin());
   iter_type until (myvector.end());
   std::reverse_iterator<iter_type> rev_until (from);
   std::reverse_iterator<iter_type> rev_from (until);
-  
   while (rev_from != rev_until && max > 0)
   {
-    if (_score.find((*rev_from)) != _score.end())
+    if (_score.find((*rev_from)) != _score.end() || (*rev_from) == _newScore)
     {
       convToString(s, (*rev_from));
-      _text->addText(_step1, id, std::make_pair(15, y), _score.find((*rev_from))->second, true);
-      id++;
       _text->addText(_step1, id, std::make_pair(700, y), s, false);
+      id++;
+      if (_score.find((*rev_from)) != _score.end())
+        _text->addText(_step1, id, std::make_pair(15, y), _score.find((*rev_from))->second, true);
+      else
+        _text->addText(_step1, id, std::make_pair(15, y), _scoreToAdd, true);
       y += 80;
       id++;
       rev_from++;
@@ -326,6 +441,53 @@ void    Menu::score()
     }
   }
 }
+
+/*void  Menu::getPseudo(int y, int id)
+{
+  std::string       s;
+  key               k;
+  char              c;
+  int               pos;
+  bool              change;
+  bool              next;
+
+  pos = 0;
+  c = 65;
+  change = true;
+  while (pos < 6)
+  {
+    next = false;
+    k = _event->getInput();
+    switch (k)
+    {
+      case MUP:
+      {
+        c--;
+        if (c == 64)
+          c = 90;
+        change = true;
+        break;
+      }
+      case MDOWN:
+      {
+        c++;
+        if (c == 91)
+          c = 65;
+        change = true;
+        break;
+      }
+      case MRIGHT:
+      {
+        next = true;
+        change = true;
+        pos++;
+        break;
+      }
+      default:
+        break;
+    }
+   
+}*/
 
 bool    Menu::initLogo()
 {

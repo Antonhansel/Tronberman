@@ -55,8 +55,8 @@ bool		Engine::start()
                 {
                     while (_core->update())
                         _core->draw();
+                  _menu->reset(_core->getPlayer());
                 }
-                _menu->reset();
                 //_core->reset();
             }
             else
