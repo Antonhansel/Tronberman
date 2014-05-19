@@ -92,7 +92,7 @@ void    Menu::manageEventInputScore(key &k)
 {
   if (_stepM == SCORE)
   {
-    const char *str;
+    const char *str = NULL;
     char c;
 
     if (_scoreToAdd.compare(""))
@@ -134,12 +134,35 @@ void    Menu::manageEventInputScore(key &k)
         _timer = 0;
         _pos++;
         if (_pos >= 6)
+        {
           _addScore = false;
-        break;           
+          saveInFile();
+        }
+        break;
       }
+      case MRETURN:
+        if (_pos > 2)
+        {
+          _pos = 7;
+          saveInFile();          
+        }
+        break;
       default:
         break;
     }
+  }
+}
+
+void    Menu::saveInFile()
+{
+  std::ofstream file("score", std::ios::app);
+  std::string   s("");
+
+  if (file.is_open())
+  {
+    convToString(s, _newScore);
+    file << _scoreToAdd << "\t" << s << "\n";
+    file.close();
   }
 }
 
@@ -160,9 +183,7 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
   {
     _timer = 0;
     s += (((int)(k)) - 23) + 48;
-    if (convToInt(s) <= max && convToInt(s) >= min)
-      _text->addNb(&_step1, n, s);
-    else
+    if (convToInt(s) > max || convToInt(s) < min)
       s.assign(s.substr(0, s.length() - 1));
     (this->*_func[_stepM])();
   }
@@ -170,7 +191,6 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
   {
     _timer = 0;
     s.assign(s.substr(0, s.length() - 1));
-    _text->addNb(&_step1, n, s);
     (this->*_func[_stepM])();
   }
 }
@@ -273,11 +293,13 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         break;
       case MRETURN:
       {
-        if (_pos < 6)
+        if ((_pos >= 6 && _stepM == SCORE) || (_pos < 6 && _stepM != SCORE))
         {
           _timer = 0;
           chooseStep();          
         }
+        else
+          manageEventInputScore(k);
         break;
       }
       default:
@@ -434,6 +456,11 @@ void    Menu::score()
   }
   else
     i = 0;
+  if (_score.size() == 0 && _addScore == false)
+  {
+    _text->addText(_step1, 1, std::make_pair(600, 380), "NOT YET SCORE", true);
+    return;    
+  }
   for (std::map<int, std::string>::iterator it = _score.begin(); it != _score.end(); ++it)
   {
     myints[i] = (*it).first;
@@ -559,6 +586,4 @@ void  Menu::getScore()
     }
     file.close();
   }
-  else
-    _score[-1] = "NO SCORE YET";
 }

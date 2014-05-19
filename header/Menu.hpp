@@ -122,6 +122,7 @@ private:
     void  getScore();
     void  manageEventInputScore(key &);
     void  getInputPseudo(char);
+    void  saveInFile();
 };
 
 #endif /* !MENU_HPP_ */
