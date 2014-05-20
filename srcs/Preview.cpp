@@ -43,10 +43,10 @@ bool		Preview::update(gdl::Clock const &clock, gdl::Input &input)
 
 void 		Preview::setCameraAngle()
 {
-  // _angle = _angle + 0.2;
-  // if (_angle > 360)
-  //   _angle = 0;
-	_angle = 100;
+  _angle = _angle + 0.2;
+  if (_angle > 360)
+    _angle = 0;
+	//_angle = 100;
   _posx = cos((_angle/180) * PI) * 30 + _xend;
   _posz = sin((_angle/180) * PI) * 30 + _xend;
   _camera->moveCamera(vec3(_posx + _xend, _posy, _posz - _xend/8), vec3(_xend, 0,_xend), vec3(0,1,0), 3);

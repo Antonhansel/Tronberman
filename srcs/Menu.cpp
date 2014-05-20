@@ -53,7 +53,8 @@ bool  Menu::drawBackground()
   _background = new Background(40, 40, 10.0f);
   if (_background->initialize() == false)
     return (false);
-  _background->translate(glm::vec3(20, 0, 20));
+  _background->translate(glm::vec3(30, 0, 40));
+  //_background->translate(glm::vec3(20, 0, 20));
   //_background->rotate(glm::vec3(30, 0, 100));
   return (true);
 }
