@@ -26,6 +26,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _stopIntro = false;
   _event = NULL;
   _cubeanim = new CubeAnim(camera, loader);
+  _preview = new Preview(camera, loader);
   _timer = 0;
   _back = -1;
   _stepM = HOME;
@@ -37,6 +38,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[STEP12] = &Menu::step12;
   _func[SCORE] = &Menu::score;
   _addScore = false;
+  _previewMode = false;
   home();
 }
 
@@ -49,16 +51,16 @@ Menu::~Menu()
 bool  Menu::drawBackground()
 {
   _background = new Background(40, 40, 10.0f);
-  //_background = new Background(130, 130, 10.0f);
   if (_background->initialize() == false)
     return (false);
   _background->translate(glm::vec3(20, 0, 20));
-  _background->rotate(glm::vec3(30, 0, 100));
+  //_background->rotate(glm::vec3(30, 0, 100));
   return (true);
 }
 
 bool	Menu::initialize()
-{ 
+{
+
   if (_cubeanim->initIntro() == false)
     return (false);
   if (drawBackground() == false)
@@ -67,6 +69,55 @@ bool	Menu::initialize()
     return (false);
   std::cout << "Menu init ended" << std::endl;
   return (true);
+}
+
+bool    Menu::update()
+{
+  _camera->setPlayer(1);
+  _clock = _camera->getClock();
+  _input = _camera->getInput();
+  _timer += _clock.getElapsed();
+  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
+    return (false);
+  if (_isLaunch == true)
+    return (false);
+  if (_event == NULL && _stopIntro == true)
+    _event = new AInput(_input, MENU);
+  if (_stopIntro == true)
+  {
+    _event->setInput(_input);
+    _background->update(_clock, _input);
+    event(_step1);
+  }
+  if (_previewMode == true)
+  {
+    if ((_preview->update(_clock, _input)) == false)
+      _previewMode = false;
+  }
+  _cubeanim->update();
+  return (true);
+}
+
+void    Menu::draw()
+{
+  type LastType = BLOCKD;
+
+  if (_input.getKey(SDLK_SPACE))
+    {
+      _cubeanim->stopIntro(true);
+      _stopIntro = true;
+    }
+  _cubeanim->rotate();
+  _loader->bindTexture(LastType);
+  _cubeanim->draw(_shader, LastType);
+  if (_cubeanim->getStatus())
+    _background->draw(_shader, _clock);
+  if (_stopIntro)
+    _text->draw(_step1, _isSelect);
+  drawLogo();
+    if (_previewMode == true)
+    _preview->draw(_shader, _clock);
+  _camera->flushContext();
 }
 
 void    Menu::manageEventInput()
@@ -214,6 +265,18 @@ void    Menu::startGenerator()
     }
 }
 
+void    Menu::startPreview()
+{
+  if (_preview->initialize() == true)
+  {
+    _previewMode = true;
+  }
+  else
+  {
+    std::cout << "Failed to initialize preview mode" << std::endl;
+  }
+}
+
 void    Menu::chooseStep()
 {
   bool  play = true;
@@ -222,6 +285,10 @@ void    Menu::chooseStep()
     _stepM = HOME;
   else if (_isSelect == 0 && _stepM == HOME)
     _stepM = STEP1;
+  else if (_isSelect == 1 && _stepM == STEP1)
+  {
+    startPreview();
+  }
   else if (_isSelect == 0 && _stepM == STEP1)
   {
     _isSelect = 0;
@@ -312,48 +379,6 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         break;
     }
   }
-}
-
-bool    Menu::update()
-{
-  _camera->setPlayer(1);
-  _clock = _camera->getClock();
-  _input = _camera->getInput();
-  _timer += _clock.getElapsed();
-  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
-    return (false);
-  if (_isLaunch == true)
-    return (false);
-  if (_event == NULL && _stopIntro == true)
-    _event = new AInput(_input, MENU);
-  if (_stopIntro == true)
-  {
-    _event->setInput(_input);
-    event(_step1);
-  }
-  _cubeanim->update();
-  _background->update(_clock, _input);
-  return (true);
-}
-
-void    Menu::draw()
-{
-  type LastType = BLOCKD;
-
-  if (_input.getKey(SDLK_SPACE))
-    {
-      _cubeanim->stopIntro(true);
-      _stopIntro = true;
-    }
-  _cubeanim->rotate();
-  _loader->bindTexture(LastType);
-  _cubeanim->draw(_shader, LastType);
-  if (_cubeanim->getStatus())
-    _background->draw(_shader, _clock);
-  if (_stopIntro)
-    _text->draw(_step1, _isSelect);
-  drawLogo();
-  _camera->flushContext();
 }
 
 void    Menu::reset(const std::map<int, Player*> &p)

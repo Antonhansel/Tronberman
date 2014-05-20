@@ -24,8 +24,7 @@ void  Camera::previewMode(bool state)
 {
   if (state == true)
   {
-    glViewport(_width/3,_height/3,_width/4, _height/4);
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, _width/3, _height/3);
   }
   else
   {
@@ -106,6 +105,14 @@ void 	Camera::flushContext()
 
 void 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
 {
+  if (screen == 3)
+  {
+  _transformation = lookAt(vec1, vec2, vec3);
+  _shader.setUniform("view", _transformation);
+  _shader.bind();
+  } 
+  else
+  {
   if (_tilt != 0)
   {
     vec2.z += _tilt/10;
@@ -127,6 +134,7 @@ void 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
   _transformation = lookAt(vec1, vec2, vec3);
   _shader.setUniform("view", _transformation);
   _shader.bind();
+  }
 }
   
 BasicShader &Camera::getShader()

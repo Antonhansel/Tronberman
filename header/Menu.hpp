@@ -35,6 +35,7 @@
 # include "AInput.hpp"
 # include "Map.hpp"
 # include "Player.hpp"
+# include "Preview.hpp"
 
 # define DELAY  0.15
 
@@ -81,41 +82,8 @@ public:
   Map       *getMap() const;
   void      setIsSelect();
   void      startGenerator();
+  void      startPreview();
   //int  operator=(const std::string &);
-
-private:
-  int         _isSelect;
-  CubeAnim *_cubeanim;
-  Background *_background;
-  Camera		*_camera;
-  bool      _stopIntro;
-  Loader    *_loader;
-  Clock			_clock;
-  Input			_input;
-  BasicShader		_shader;
-  Text			*_text;
-  int       _players;
-  bool      _isLaunch;
-  AInput    *_event;
-  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
-  std::map<stepM, void (Menu::*)()>    _func;
-  float     _timer;
-  int       _back;
-  int       _min;
-  int       _max;
-  stepM     _stepM;
-  bool      _addScore;
-  int       _newScore;
-  int       _pos;
-  std::string       _sizeMap;
-  std::string       _nbPlayer;
-  std::string       _nbBots;
-  std::string       _scoreToAdd;
-  gdl::Texture      _texture;
-  gdl::Geometry     _geometry;
-  Map               *_map;
-  std::map<int, std::string> _score;
-
   private:
     int   convToInt(const std::string &) const;
     void  convToString(std::string &, int) const;
@@ -123,6 +91,43 @@ private:
     void  manageEventInputScore(key &);
     void  getInputPseudo(char);
     void  saveInFile();
+private:
+  bool          _previewMode;
+  int           _isSelect;
+  bool          _stopIntro;
+  Clock			    _clock;
+  Input			    _input;
+  BasicShader		_shader;
+  int           _players;
+  bool          _isLaunch;
+  float         _timer;
+  int           _back;
+  int           _min;
+  int           _max;
+  stepM         _stepM;
+  bool          _addScore;
+  int           _newScore;
+  int           _pos;
+private:
+  Map               *_map;
+  Text              *_text;
+  AInput            *_event;
+  Loader            *_loader;
+  CubeAnim          *_cubeanim;
+  Background        *_background;
+  Camera            *_camera;
+  Preview           *_preview;
+private:
+  std::string       _sizeMap;
+  std::string       _nbPlayer;
+  std::string       _nbBots;
+  std::string       _scoreToAdd;
+  gdl::Texture      _texture;
+  gdl::Geometry     _geometry;
+private:
+  std::map<int, std::string> _score;
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
+  std::map<stepM, void (Menu::*)()>    _func;
 };
 
 #endif /* !MENU_HPP_ */

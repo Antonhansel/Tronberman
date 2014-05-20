@@ -15,14 +15,27 @@
 # include "Camera.hpp"
 # include "Loader.hpp"
 
+#define PI 3.14159
+
 class Preview
 {
 public:
 	Preview(Camera *, Loader *);
 	~Preview();
+	bool		initialize();
+	bool		update(gdl::Clock const &clock, gdl::Input &input);
+	void		draw(gdl::AShader &shader, gdl::Clock const &clock);
+	void 		setCameraAngle();
 private:
-	Camera *_camera;
-	Loader *_loader;
+	Camera 	*_camera;
+	Loader 	*_loader;
+	Map 	*_map;
+	Saving 	*_saving;
+	float			_angle;
+  	float			_posy;
+  	float			_posz;
+  	float			_posx;
+  	float			_xend;
 };
 
 #endif /*!_PREVIEW_HPP_*/

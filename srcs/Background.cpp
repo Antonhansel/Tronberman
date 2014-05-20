@@ -49,7 +49,7 @@ bool	Background::initialize()
 		return (false);
 	}
   _geometry.setColor(glm::vec4(1, 1, 0, 1));
-    _geometry.pushVertex(glm::vec3(-_height, _width, -0.5));
+  _geometry.pushVertex(glm::vec3(-_height, _width, -0.5));
   _geometry.pushVertex(glm::vec3(-_height, -_width, -0.5));
   _geometry.pushVertex(glm::vec3(_height, -_width, -0.5));
   _geometry.pushVertex(glm::vec3(_height, _width, -0.5));
