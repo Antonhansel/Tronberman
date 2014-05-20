@@ -43,19 +43,19 @@ void	Hud::updatePlayer1(Player *cur)
 	{
 		bombPlayer1  = cur->getStock();	
 		delGeometry(_player1[NBBOMB]);
-		_player1[NBBOMB] = this->putstr(convertToString(bombPlayer1, "Bombs").c_str(), 32, false);
+		_player1[NBBOMB] = this->putstr(convertToString(bombPlayer1, "Bombs").c_str(), 32, true);
 	}
 	if (cur->getRange() != rangePlayer1)
 	{
 		rangePlayer1  = cur->getRange();
 		delGeometry(_player1[NBRANGE]);
-		_player1[NBRANGE] = this->putstr(convertToString(rangePlayer1, "Range").c_str(), 32, false);
+		_player1[NBRANGE] = this->putstr(convertToString(rangePlayer1, "Range").c_str(), 32, true);
 	}
 	if (cur->getLife() != lifePlayer1)
 	{
 		lifePlayer1  = cur->getLife() + 1;
 		delGeometry(_player1[NBLIFE]);
-		_player1[NBLIFE] = this->putstr(convertToString(lifePlayer1, "Life ").c_str(), 32, false);
+		_player1[NBLIFE] = this->putstr(convertToString(lifePlayer1, "Life ").c_str(), 32, true);
 	}
 }
 
@@ -65,19 +65,19 @@ void	Hud::updatePlayer2(Player *cur)
 	{
 		bombPlayer2  = cur->getStock();	
 		delGeometry(_player2[NBBOMB]);
-		_player2[NBBOMB] = this->putstr(convertToString(bombPlayer2, "Bombs").c_str(), 32, false);
+		_player2[NBBOMB] = this->putstr(convertToString(bombPlayer2, "Bombs").c_str(), 32, true);
 	}
 	if (cur->getRange() != rangePlayer2)
 	{
 		rangePlayer2  = cur->getRange();
 		delGeometry(_player2[NBRANGE]);
-		_player2[NBRANGE] = this->putstr(convertToString(rangePlayer2, "Range").c_str(), 32, false);
+		_player2[NBRANGE] = this->putstr(convertToString(rangePlayer2, "Range").c_str(), 32, true);
 	}
 	if (cur->getLife() != lifePlayer2)
 	{
 		lifePlayer2  = cur->getLife() + 1;
 		delGeometry(_player2[NBLIFE]);
-		_player2[NBLIFE] = this->putstr(convertToString(lifePlayer2, "Life ").c_str(), 32, false);
+		_player2[NBLIFE] = this->putstr(convertToString(lifePlayer2, "Life ").c_str(), 32, true);
 	}
 }
 

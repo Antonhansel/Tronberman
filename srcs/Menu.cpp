@@ -37,8 +37,10 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[STEP11] = &Menu::step11;
   _func[STEP12] = &Menu::step12;
   _func[SCORE] = &Menu::score;
+  _func[LOADM] = &Menu::load;
   _addScore = false;
   _previewMode = false;
+  _exit = false;
   home();
 }
 
@@ -78,7 +80,7 @@ bool    Menu::update()
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _timer += _clock.getElapsed();
-  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
+  if (_exit || _input.getInput(SDL_QUIT))
     return (false);
   if (_isLaunch == true)
     return (false);
@@ -198,6 +200,7 @@ void    Menu::manageEventInputScore(key &k)
         if (_pos > 2)
         {
           _pos = 7;
+          _addScore = false;
           saveInFile();          
         }
         break;
@@ -253,6 +256,7 @@ void    Menu::startGenerator()
 {
     Generator *gen = new Generator(_camera, _loader, convToInt(_sizeMap));
 
+    _isSelect = 0;
     if (gen->initialize() == false)
     {
       std::cout << "Error on initializing the map Generator" << std::endl;
@@ -282,52 +286,81 @@ void    Menu::chooseStep()
 {
   bool  play = true;
 
-  if (_isSelect == 3 && _stepM == STEP1)
-    _stepM = HOME;
-  else if (_isSelect == 0 && _stepM == HOME)
-    _stepM = STEP1;
-  else if (_isSelect == 1 && _stepM == STEP1)
+  switch (_isSelect)
   {
-    startPreview();
-  }
-  else if (_isSelect == 0 && _stepM == STEP1)
-  {
-    _isSelect = 0;
-    _stepM = STEP11;
-  }
-  else if (_isSelect == 3 && _stepM == STEP11)
-  {
-    if (convToInt(_sizeMap) >= 10 && convToInt(_nbPlayer) != 0 && convToInt(_nbBots) != 0)
+    case 0:
+    {
+      if (_stepM == HOME)
+        _stepM = STEP1;
+      else if (_stepM == STEP1)
+      {
+        _isSelect = 0;
+        _stepM = STEP11;
+      }
+      else if (_stepM == SCORE)
+        _stepM = HOME;
+      else if (_stepM == LOADM)
+        _stepM = STEP1;
+      break;
+    }
+    case 1:
+    {
+      if (_stepM == STEP1)
+        _stepM = LOADM;
+      else if (_stepM == STEP12)
+      {
+        _stepM = STEP1;
+        startGenerator();
+      }
+      break;
+    }
+    case 2:
+    {
+      if (_stepM == STEP1)
+        _stepM = STEP12;
+      else if (_stepM == STEP12)
+      {
+        _stepM = STEP1;
+        _isSelect = 0;
+      }
+      else if (_stepM == HOME)
+      {
+        _isSelect = 0;
+        getScore();
+        _stepM = SCORE;
+      }
+      break;
+    }
+    case 3:
+    {
+      if (_stepM == STEP1)
+        _stepM = HOME;
+      else if (_stepM == STEP11)
+      {
+        if (convToInt(_sizeMap) >= 10 && atLeastPlayer())
         {
           _map = new Map(getMapSize());
           _isLaunch = true;
           _cubeanim->changeVolum(0.4f);
         }
+      }
+      break;
+    }
+    case 4:
+      if (_stepM == STEP11)
+        _stepM = STEP1;
+      else if (_stepM == HOME)
+        _exit = true;
+      break;
+    default:
+      play = false;
+      break;
   }
-  else if (_isSelect == 2 && _stepM == STEP1)
-    _stepM = STEP12;
-  else if (_isSelect == 1 && _stepM == STEP12)
-  {
-    _stepM = STEP1;
-    _isSelect = 0;
-    startGenerator();
-  }
-  else if (_isSelect == 2 && _stepM == STEP12)
-  {
-    _stepM = STEP1;
-    _isSelect = 0;
-  }
-  else if (_isSelect == 4 && _stepM == STEP11)
-    _stepM = STEP1;
-  else if (_isSelect == 2 && _stepM == HOME)
-  {
-    getScore();
-    _stepM = SCORE;
-  }
-  else
-    play = false;
   if (play == true)
+  {
     (this->*_func[_stepM])();
+    _oldStep = _stepM;    
+  }
 }
 
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
@@ -340,21 +373,21 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
     switch (k)
     {
       case MUP:
-        if ((_pos < 6 && _stepM != SCORE) || (_pos >= 6 && _stepM == SCORE))
+        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _isSelect--;
           if (_isSelect == - 1)
-            _isSelect = s.size() - 1;
+            _isSelect = _max;
           _timer = 0;          
         }
         else
           manageEventInputScore(k);
         break;
       case MDOWN:
-        if ((_pos < 6 && _stepM != SCORE) || (_pos >= 6 && _stepM == SCORE))
+        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _isSelect++;
-          if (_isSelect == ((int)(s.size())))
+          if (_isSelect == _max + 1)
             _isSelect = 0;
           _timer = 0;
         }
@@ -363,7 +396,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         break;
       case MRETURN:
       {
-        if ((_pos >= 6 && _stepM == SCORE) || (_pos < 6 && _stepM != SCORE))
+        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _timer = 0;
           chooseStep();          
@@ -385,6 +418,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
 void    Menu::reset(const std::map<int, Player*> &p)
 {
   int   max;
+  int   i;
 
   _isLaunch = false;
   _isSelect = 0;
@@ -398,9 +432,11 @@ void    Menu::reset(const std::map<int, Player*> &p)
   _addScore = true;
   for (std::map<int, Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
   {
-    if ((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2)
-      _addScore = false;
+    if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
+      i++;
   }
+  if (i > 4)
+    _addScore = false;
   if (_addScore == true)
   {
     getScore();
@@ -415,13 +451,24 @@ bool    Menu::launch() const
   return (_isLaunch);
 }
 
+bool    Menu::atLeastPlayer()
+{
+  if ((convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= convToInt(_sizeMap) / 10)
+    return (true);
+  else
+    return (false);
+}
+
 void    Menu::home()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "LOCAL", true);
   _text->addText(_step1, 1, std::make_pair(15, 380), "ONLINE", true);
   _text->addText(_step1, 2, std::make_pair(15, 460), "SCORE", true);
+  _text->addText(_step1, 3, std::make_pair(15, 540), "OPTION", true);
+  _text->addText(_step1, 4, std::make_pair(15, 620), "EXIT", true);
   _isSelect = 0;
+  _max = 4;
 }
 
 void    Menu::step1()
@@ -435,6 +482,7 @@ void    Menu::step1()
   _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD GAME", true);
   _text->addText(_step1, 2, std::make_pair(15, 460), "MAP BUILDER", true);
   _text->addText(_step1, 3, std::make_pair(15, 540), "BACK", true);
+  _max = 3;
 }
 
 void    Menu::step11()
@@ -448,6 +496,7 @@ void    Menu::step11()
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
   _text->addText(_step1, 6, std::make_pair(700, 380), _nbPlayer.c_str(), false);
   _text->addText(_step1, 7, std::make_pair(700, 460), _nbBots.c_str(), false);
+  _max = 4;
 }
 
 void    Menu::step12()
@@ -458,6 +507,7 @@ void    Menu::step12()
   _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
+  _max = 2;
 }
 
 void    Menu::score()
@@ -478,6 +528,7 @@ void    Menu::score()
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "BACK", true);
+  _max = 0;
   if (_addScore == true)
   {
     i = 1;
@@ -520,6 +571,15 @@ void    Menu::score()
       max--;
     }
   }
+}
+
+void    Menu::load()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 620), "BACK", true);
+  startPreview();
+  _max = 0;
 }
 
 bool    Menu::initLogo()

@@ -51,7 +51,8 @@ enum stepM
     SCORE,
     STEP2,
     STEP3,
-    BUILDER
+    BUILDER,
+    LOADM
   };
 
 class Menu : public Game
@@ -76,6 +77,7 @@ public:
   void      step11();
   void      step12();
   void      score();
+  void      load();
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
@@ -91,6 +93,7 @@ public:
     void  manageEventInputScore(key &);
     void  getInputPseudo(char);
     void  saveInFile();
+    bool  atLeastPlayer();
 private:
   bool          _previewMode;
   int           _isSelect;
@@ -105,9 +108,11 @@ private:
   int           _min;
   int           _max;
   stepM         _stepM;
+  stepM         _oldStep;
   bool          _addScore;
   int           _newScore;
   int           _pos;
+  bool          _exit;
 private:
   Map               *_map;
   Text              *_text;
