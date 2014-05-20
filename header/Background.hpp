@@ -27,6 +27,10 @@ private:
 	float			_speed;
 	float			_width;
 	float			_height;
+	bool 			_dir;
+	float 			_spin;
+	float 			_x;
+	float 			_z;
 };
 
 #endif /*!_BACKGROUND_HPP_*/

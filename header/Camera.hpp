@@ -48,6 +48,7 @@ public:
   Input 		&getInput();
   void      setMode();
   void      tiltMode();
+  void      previewMode(bool);
 private:
   float   _tilt;
   int     _mode;

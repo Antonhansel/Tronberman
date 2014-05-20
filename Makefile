@@ -32,6 +32,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Bonus.cpp \
 				srcs/Saving.cpp \
 				srcs/Generator.cpp \
+				srcs/Preview.cpp \
 				srcs/AInput.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)

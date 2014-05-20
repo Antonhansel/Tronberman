@@ -11,6 +11,7 @@
 # include "Generator.hpp"
 # include "Menu.hpp"
 # include "CubeAnim.hpp"
+# include "Preview.hpp"
 
 Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
 {
@@ -47,10 +48,11 @@ Menu::~Menu()
 
 bool  Menu::drawBackground()
 {
-  _background = new Background(130, 130, 10.0f);
+  _background = new Background(40, 40, 10.0f);
+  //_background = new Background(130, 130, 10.0f);
   if (_background->initialize() == false)
     return (false);
-  _background->translate(glm::vec3(0, 0, 20));
+  _background->translate(glm::vec3(20, 0, 20));
   _background->rotate(glm::vec3(30, 0, 100));
   return (true);
 }
@@ -330,6 +332,7 @@ bool    Menu::update()
     event(_step1);
   }
   _cubeanim->update();
+  _background->update(_clock, _input);
   return (true);
 }
 

@@ -20,6 +20,19 @@ Camera::Camera(const int width, const int height)
 Camera::~Camera()
 {}
 
+void  Camera::previewMode(bool state)
+{
+  if (state == true)
+  {
+    glViewport(_width/3,_height/3,_width/4, _height/4);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+  else
+  {
+    glViewport(0,0,_width, _height);
+  }
+}
+
 void  Camera::setMode()
 {
   if (_mode == 1)

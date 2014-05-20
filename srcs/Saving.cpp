@@ -1,3 +1,13 @@
+/*
+** Saving.cpp for Saving in /home/apollo/rendu/cpp_bomberman/srcs
+**
+** Made by Antonin Ribeaud
+** Login   <ribeau_a@epitech.net>
+**
+** Started on  Tue May  20 10:56:43 2014 Antonin Ribeaud
+** Last update Tue May  20 10:56:43 2014 Antonin Ribeaud
+*/
+
 #include "Saving.hpp"
 
 Saving::Saving(std::string &file_name) : _name(file_name)
