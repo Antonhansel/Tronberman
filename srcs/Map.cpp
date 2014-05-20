@@ -174,3 +174,13 @@ void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
 {
     _spawns = spawns;
 }
+
+AObject **Map::getMap() const
+{
+    return _map;
+}
+
+std::vector<std::pair<int, int> > Map::getSpawn() const
+{
+    return _spawns;
+}

@@ -38,13 +38,15 @@
 # include "Loader.hpp"
 # include "Bombs.hpp"
 # include "Sound.hpp"
-# include "Menu.hpp"
+//# include "Menu.hpp"
 
 #define POSX 0
 #define POSY 0
 
 #define POSX1 1
 #define POSY1 0
+
+class Menu;
 
 class Core : public gdl::Game
 {

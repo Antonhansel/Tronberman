@@ -1,24 +1,44 @@
-/*
-** Saving.cpp for Saving in /home/apollo/rendu/cpp_bomberman/srcs
-**
-** Made by Antonin Ribeaud
-** Login   <ribeau_a@epitech.net>
-**
-** Started on  Tue May  20 10:56:43 2014 Antonin Ribeaud
-** Last update Tue May  20 10:56:43 2014 Antonin Ribeaud
-*/
-
 #include "Saving.hpp"
 
-Saving::Saving(std::string &file_name) : _name(file_name)
+Saving::Saving(std::vector<std::string> &fileName)
 {
-  if (loadMap(file_name) == false)
+  _isGood = true;
+  while (!fileName.empty())
   {
-    _isGood = false;
-    std::cout << "Failed to Load" << std::endl;
+    bool  error;
+
+    _nbrLine = 0;
+    _name = fileName.back();
+    error = true;
+    error = loadMap(fileName.back());
+    if (error == false)
+      std::cout << "Failed to Load the map: \"" << fileName.back() << "\"." << std::endl;
+    else
+      addListMap();
+    fileName.pop_back();
   }
+  if (_listMap.size() == 0)
+    _isGood = false;
+}
+
+Saving::Saving(std::string &fileName, Core *core) : _name(fileName)
+{
+  Map *m = core->getMap();
+  _map = m->getMap();
+  _player = core->getPlayer();
+  _spawn = m->getSpawn();
+  _sizeMap = m->getSize();
+  _nbrPlayer = 0;
+  _nbrBot = 0;
+  _file.open(fileName.c_str());
+  if (!_file.is_open())
+    std::cout << "Error opening." << std::endl; 
   else
-    _isGood = true;
+  {
+    if (saveMap() == false)
+      std::cout << "Error saving" << std::endl;
+    _file.close();
+  }
 }
 
 Saving::~Saving()
@@ -34,7 +54,6 @@ bool    Saving::loadSize(std::list<std::string> &file)
   std::string       str;
   std::string       in = "<size>";
   std::string       out = "</size>";
-
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
@@ -127,8 +146,7 @@ bool    Saving::loadMap(std::string &file_name)
 
   while (std::getline(infile, str))
     file.push_back(str);
-  _nbrLine = 1;
-  if (file.size() > 0)
+  if (file.size() > 2)
   {
     while ((pos = file.front().find("<map>")) == std::string::npos
           && file.size() > 0)
@@ -152,13 +170,14 @@ bool    Saving::loadMap(std::string &file_name)
         error = loadSpawn(file);
       if (error == false)
         return false;
-      std::cout << file.front() << std::endl;
       if (file.front() == "")
       {
         file.pop_front();
         _nbrLine++;
       }
     }
+    if (_sizeMap == 0)
+      return false;
   }
   else
   {
@@ -211,13 +230,72 @@ bool        Saving::myBalise(std::string &in, std::string &out,
   return (true);
 }
 
-Map                 *Saving::returnMap()
+bool    Saving::savePlayer()
 {
-  if (_isGood == false)
-    return NULL;
+  for (int i = 1; i <= _nbrPlayer; i++)
+  {
+    _file << "<player>" << std::endl;
+    _file << "<id>" << _player[i]->getId() << "</id>" << std::endl;
+    _file << "<life>" << _player[i]->getLife() << "</life>" << std::endl;
+    _file << "<range>" << _player[i]->getRange() << "</range>" << std::endl;
+    _file << "<stock>" << _player[i]->getStock() << "</stock>" << std::endl;
+    _file << "<shield>" << _player[i]->getShield() << "</shield>" << std::endl;
+    _file << "</player>" << std::endl;
+  }
+  return (true);
+}
+
+bool    Saving::saveSpawn()
+{
+  std::vector<std::pair<int, int> >    obj;
+
+  obj = _spawn;
+  while (!obj.empty())
+  {
+    std::pair<int, int> pos = obj.front();
+    _file << "<spawn>" << pos.second << " " << pos.first << "</spawn>" << std::endl;
+    obj.pop_back();
+  }
+  return true;
+}
+
+bool    Saving::saveMap()
+{
+  _file << "<?xml version=\"1.0\" encoding=\"utf-8\"?>" << std::endl;
+  _file << "<map>" << std::endl;
+  _file << "<size>" << _sizeMap << "</size>" << std::endl;
+  for (int y = 0; y < _sizeMap; y++)
+    {
+      for (int x = 0; x < _sizeMap; x++)
+      {
+        if (_map[x * y] != NULL)
+        {
+          type t = _map[x * y]->getType();
+          if (t != BOMB && t != BONUS && t != LASER)
+          {
+            _file << "<case>" << y << " " << x << " " << 
+            _map[x * y]->getType() << "</case>"<< std::endl;
+        }
+      }
+    }
+  }
+  saveSpawn();
+  _file << "</map>" << std::endl;
+  return true;
+}
+
+std::vector<Map *>                      Saving::getListMap()
+{
+  return _listMap;
+}
+
+void                                    Saving::addListMap()
+{
   Map *myMap = new Map(_sizeMap);
+
   myMap->setMap(_map);
   myMap->setSpawn(_spawn);
   myMap->setSize(_sizeMap);
-  return myMap;
+  std::cout << "Map \"" << _name << "\" load correctly." << std::endl;
+  _listMap.push_back(myMap);
 }

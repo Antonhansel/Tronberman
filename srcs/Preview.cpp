@@ -15,9 +15,9 @@ Preview::Preview(Camera *camera, Loader *loader)
 	_camera = camera;
 	_loader = loader;
 	_angle = 0;
-  _posy = 20;
-  _posx = 0;
-  _posz = -30;
+	_posy = 20;
+	_posx = 0;
+	_posz = -30;
 }
 
 Preview::~Preview()
@@ -26,11 +26,13 @@ Preview::~Preview()
 
 bool		Preview::initialize()
 {
-	std::string path = "./ressources/maps/save_file.xml";
-	_saving = new Saving(path);
-	_map = _saving->returnMap();
+	std::vector<std::string> paths;
+
+	paths.push_back("./ressources/maps/save_file.xml");
+	_saving = new Saving(paths);
+	_maps = _saving->getListMap();
 	std::cout << "PREVIEW STARTED" << std::endl;
-	_xend = _map->getSize()/2;
+	_xend = _maps.back()->getSize()/2;
 	return (true);
 }
 
@@ -54,6 +56,7 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
   type LastType = static_cast<type>(-1);
   AObject     *tmp;
+  Map 			*_map = _maps.back();
 
   	_camera->previewMode(true);
 	setCameraAngle();

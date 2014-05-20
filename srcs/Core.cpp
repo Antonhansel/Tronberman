@@ -8,8 +8,9 @@
 // Last update Sun May 11 00:12:10 2014 Mehdi Chouag
 */
 
-#include "Core.hpp"
 #include <unistd.h>
+#include "Menu.hpp"
+#include "Core.hpp"
 
 Core::Core(Camera *cam, Loader *loader, Menu *menu)
 {

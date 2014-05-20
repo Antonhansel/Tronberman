@@ -12,8 +12,6 @@
 # define _PREVIEW_HPP_
 
 # include "Saving.hpp"
-# include "Camera.hpp"
-# include "Loader.hpp"
 
 #define PI 3.14159
 
@@ -29,7 +27,7 @@ public:
 private:
 	Camera 	*_camera;
 	Loader 	*_loader;
-	Map 	*_map;
+	std::vector<Map*> 	_maps;
 	Saving 	*_saving;
 	float			_angle;
   	float			_posy;

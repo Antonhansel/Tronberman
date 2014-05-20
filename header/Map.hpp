@@ -19,7 +19,7 @@ public:
 
   AObject     *getCase(int, int) const;
   std::vector<std::pair<int, int> >   &setSpawn(int nb);
-  std::vector<std::pair<int, int> >   &getSpawn();
+  std::vector<std::pair<int, int> >   getSpawn() const;
   void    addCube(int, int, type);
   void    addCube(int, int, AObject *);
   void    deleteCube(int, int);
@@ -27,6 +27,7 @@ public:
   int     getSize() const;
   void    setSize(int);
   void    setMap(AObject **);
+  AObject **getMap() const;
   void    setSpawn(std::vector<std::pair<int, int> > &);
 
 private:
