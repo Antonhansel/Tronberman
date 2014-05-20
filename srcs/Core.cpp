@@ -280,7 +280,7 @@ void  Core::checkAlive()
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)
-    num++;
+      num++;
   }
   if (num == 1)
     _endgame = true;

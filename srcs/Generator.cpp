@@ -95,15 +95,28 @@ bool Generator::changeSize()
 
 void 	Generator::placeCube()
 {
-	if ((_cube->getPos().first > 0 && _cube->getPos().first < _size) && 
-		_cube->getPos().second > 0 && _cube->getPos().second < _size)
-	{
-		if (_input.getKey(SDLK_SPACE))
-		{
-		  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
-		  	_camera->tiltMode();
-		}
-	}
+  std::pair<float, float> pos;
+  int  exist = 0;
+
+  if (_input.getKey(SDLK_SPACE))
+    {
+    pos = _cube->getPos();
+  	if ((pos.first > 0 && pos.first < _size) && 
+  		pos.second > 0 && pos.second < _size)
+  	{
+      std::vector<AObject *>::iterator it;
+      for (it = _objects.begin(); it != _objects.end(); ++it)
+      {
+        if ((*it)->getPos() == pos)
+          exist++;
+      }
+      if (exist == 1)
+  		{
+  		  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
+  		  	_camera->tiltMode();
+  		}
+  	}
+  }
 }
 
 void 	Generator::changeType()
@@ -128,7 +141,7 @@ void 	Generator::moveCursor()
 
 bool Generator::update()
 {
-	_clock = _camera->getClock();
+	   _clock = _camera->getClock();
   	_input = _camera->getInput();
   	_time += _clock.getElapsed();
   	if (_time > 0.03)

@@ -463,12 +463,12 @@ void    Menu::score()
 {
   int   y;
   int   id;
-  int myints[_score.size()];
-  int i;
+  int   myints[_score.size()];
+  int   i;
   std::string s;
   typedef std::vector<int>::iterator iter_type;
-  int   max;
-  int   add;
+  int     max;
+  int     add;
 
   max = 5;
   y = 380;
