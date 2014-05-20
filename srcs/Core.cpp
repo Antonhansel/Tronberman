@@ -18,7 +18,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _cam = cam;
   _menu = menu;
   _sound = new Sound();
-
+  _hud = new Hud(cam, loader);
 }
 
 void  Core::setValues(Map *map)
@@ -55,6 +55,7 @@ Core::~Core()
 
   //delete _map;
   delete _sound;
+  delete _hud;
 }
 
 bool	Core::initialize()
@@ -235,6 +236,9 @@ bool	Core::update()
     else
       ++it6;
   }
+  if (_players == 2)
+    _hud->update(_player[2]);
+  _hud->update(_player[1]);
   return (true);
 }
 
@@ -306,12 +310,16 @@ void	Core::draw()
      glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);
   }
   if (_player[1]->isAlive() == true)
+  {
     drawAll(_player[1]);
+    _hud->draw(_player[1]);
+  }
   if (_players == 2 && _player[2]->isAlive() == true)
   {
     if (_screen == 0)
       _cam->changeFocus(_player[2], 2);
     drawAll(_player[2]);
+    _hud->draw(_player[2]);
   }
   _cam->flushContext();
 }

@@ -5,7 +5,7 @@
 ## Login   <ribeau_a@epitech.net>
 ##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Sat May 10 22:39:35 2014 Mehdi Chouag
+## Last update Tue May 20 22:34:02 2014 Mehdi Chouag
 ##
 
 NAME		=	bomberman
@@ -33,7 +33,8 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Saving.cpp \
 				srcs/Generator.cpp \
 				srcs/Preview.cpp \
-				srcs/AInput.cpp
+				srcs/AInput.cpp \
+				srcs/Hud.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

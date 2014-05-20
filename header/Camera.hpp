@@ -49,6 +49,7 @@ public:
   void      setMode();
   void      tiltMode();
   void      previewMode(bool);
+  bool      isSplit() const;
 private:
   float   _tilt;
   int     _mode;

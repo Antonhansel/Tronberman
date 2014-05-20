@@ -36,7 +36,10 @@ void  Camera::setMode()
 {
   if (_mode == 1)
     {
-      _projection = glm::ortho(0.0f, (float)_width, (float)_height, 0.0f, -1.0f, 1.0f);
+      if (_players == 1)
+        _projection = glm::ortho(0.0f, (float)_width, (float)_height, 0.0f, -1.0f, 1.0f);
+      else
+        _projection = glm::ortho(0.0f, (float)_width / 2, (float)_height, 0.0f, -1.0f, 1.0f);
       _shader.bind();
       _shader.setUniform("view", glm::mat4(1));
       _shader.setUniform("projection", _projection);
@@ -44,7 +47,10 @@ void  Camera::setMode()
     }
   else
     {
-      _projection = perspective(60.0f, ((float)_width) / (float)_height, 0.1f, 100.0f);
+      if (_players == 1)
+        _projection = perspective(60.0f, ((float)_width) / (float)_height, 0.1f, 100.0f);
+      else
+        _projection = perspective(60.0f, ((float)_width / 2) / (float)_height, 0.1f, 100.0f);
       _shader.bind();
       _shader.setUniform("view", _transformation);
       _shader.setUniform("projection", _projection);
@@ -208,4 +214,9 @@ int  Camera::genSplit(Player *player1, Player *player2)
     setPlayer(1);
     return (1);
   }
+}
+
+bool  Camera::isSplit() const
+{
+  return ((_players == 2) ? true :  false);
 }

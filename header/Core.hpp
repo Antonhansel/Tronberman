@@ -38,7 +38,7 @@
 # include "Loader.hpp"
 # include "Bombs.hpp"
 # include "Sound.hpp"
-//# include "Menu.hpp"
+# include "Hud.hpp"
 
 #define POSX 0
 #define POSY 0
@@ -73,6 +73,7 @@ private:
   int       _screen;
   float     _dist;
   int 			_percent;
+  Hud       *_hud;
   Menu      *_menu;
   Camera 		*_cam;
   Loader    *_loader;

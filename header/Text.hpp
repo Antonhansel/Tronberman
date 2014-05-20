@@ -20,14 +20,14 @@
 
 class Text
 {
-private:
+protected:
   int		         _firstChar;
   Camera        *_camera;
   Loader        *_loader;
   type          _lastType;
   glm::mat4     _transformation;
 
-private:
+protected:
   int getColumn(char c);
   int getOtherColumn(char c);
   void textureBind(int, int);
