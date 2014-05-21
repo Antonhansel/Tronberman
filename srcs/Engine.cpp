@@ -24,7 +24,6 @@ Engine::~Engine()
 
 bool 		Engine::init()
 {
-  std::string str = "save_file.xml";
   _camera = new Camera(HEIGHT, WIDTH);
   _camera->initScene();
   _loader = new Loader();
@@ -37,6 +36,7 @@ bool 		Engine::init()
 
 bool		Engine::start()
 {
+  std::string test = "text.xml";
     bool		quit(false);
 
     if (_menu->initialize())
@@ -55,6 +55,7 @@ bool		Engine::start()
                 {
                     while (_core->update())
                         _core->draw();
+                  Saving(test, _core);
                   _menu->reset(_core->getPlayer());
                 }
                 //_core->reset();

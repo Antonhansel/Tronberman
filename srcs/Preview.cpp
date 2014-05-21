@@ -9,6 +9,8 @@
 */
 
 #include "Preview.hpp"
+#include <sys/types.h>
+#include <dirent.h>
 
 Preview::Preview(Camera *camera, Loader *loader)
 {
@@ -24,15 +26,48 @@ Preview::~Preview()
 {
 }
 
+bool 		Preview::checkName(const char *str1)
+{
+	std::string pp = "..";
+	std::string p = ".";
+	std::string tocheck = str1;
+
+	if (pp == str1 || p == str1)
+		return (false);
+	return (true);
+}
+
+std::string 	Preview::makePath(const char *str1)
+{
+	std::string path = PATH;
+
+	path += str1;
+	return (path);
+}
+
+void 		Preview::getPaths()
+{
+	DIR 			*mydir;
+	struct dirent 	*currentdir;
+	mydir = opendir(PATH);
+	while ((currentdir = readdir(mydir)) != NULL)
+	{
+		if (checkName(currentdir->d_name) && 
+			checkName(currentdir->d_name))
+		_paths.push_back(makePath(currentdir->d_name));
+	}
+}
+
 bool		Preview::initialize()
 {
-	std::vector<std::string> paths;
-
-	paths.push_back("./ressources/maps/yolo.xml");
-	_saving = new Saving(paths);
+	getPaths();
+	_saving = new Saving(_paths);
 	_maps = _saving->getListMap();
 	std::cout << "PREVIEW STARTED" << std::endl;
+	if (_maps.size() == 0)
+		return (false);
 	_xend = _maps.back()->getSize()/2;
+	_map = _maps.back();
 	return (true);
 }
 
@@ -54,9 +89,8 @@ void 		Preview::setCameraAngle()
 
 void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
-  type LastType = static_cast<type>(-1);
-  AObject     *tmp;
-  Map 			*_map = _maps.back();
+  	type LastType = static_cast<type>(-1);
+  	AObject     *tmp;
 
   	_camera->previewMode(true);
 	setCameraAngle();
@@ -65,14 +99,15 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 	    for (int y = 0; y < _map->getSize(); ++y)
 	    {
 		  tmp = _map->getCase(x, y);
-		   	if (!tmp)
-		        continue;
+		 	if (tmp)
+		 	{
 		  if (tmp->getType() != LastType)
 		      {
 		        LastType = tmp->getType();
 		        _loader->bindTexture(LastType);
 		      }
 		   _loader->drawGeometry(shader, tmp->getTransformation());
+		}
 		}
 	}
   _camera->previewMode(false);

@@ -29,8 +29,8 @@ public:
   void    setMap(AObject **);
   AObject **getMap() const;
   void    setSpawn(std::vector<std::pair<int, int> > &);
-
 private:
+  std::vector<std::string> _paths;
   AObject **_map;
   int     _size_x;
   int     _size_y;

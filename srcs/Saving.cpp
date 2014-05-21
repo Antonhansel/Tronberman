@@ -51,7 +51,7 @@ Saving::Saving(std::string &fileName, Core *core) : _name(fileName)
   }
 }
 
-Saving::Saving(std::string &fileName, AObject **&objects, int size)
+Saving::Saving(std::string &fileName, AObject **objects, int size)
 {
   _name = fileName;
   _map = objects;

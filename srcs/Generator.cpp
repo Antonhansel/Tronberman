@@ -10,7 +10,6 @@
 
 #include "Generator.hpp"
 #include "Saving.hpp"
-#include "time.h"
 
 Generator::Generator(Camera *camera, Loader *loader, int size)
 {
@@ -24,8 +23,10 @@ Generator::Generator(Camera *camera, Loader *loader, int size)
 
 Generator::~Generator()
 {
-  std::string name = "./ressources/maps/yolo.xml";
+  std::string name = "./ressources/maps/";
 
+  name += rand();
+  name += ".xml";
   Saving(name, _map, _size);
   // for (int i = 0; i < _size * _size; ++i)
   //   {

@@ -14,6 +14,7 @@
 # include "Saving.hpp"
 
 #define PI 3.14159
+#define PATH "./ressources/maps/"
 
 class Preview
 {
@@ -24,7 +25,12 @@ public:
 	bool		update(gdl::Clock const &clock, gdl::Input &input);
 	void		draw(gdl::AShader &shader, gdl::Clock const &clock);
 	void 		setCameraAngle();
+	void 	getPaths();
+	bool 	checkName(const char *);
+	std::string	makePath(const char *);
 private:
+	Map 			*_map;
+	std::vector<std::string> _paths;
 	Camera 	*_camera;
 	Loader 	*_loader;
 	std::vector<Map*> 	_maps;
