@@ -37,23 +37,6 @@ AObject     *Map::getCase(int x, int y) const
     return _map[x * _size_x + y];
 }
 
-void Map::addCube(int x, int y, type blockType)
-{
-    std::pair<float, float>     pos;
-    AObject     *tmp;
-
-    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
-        return;
-    if (_map[x * _size_x + y])
-        deleteCube(x, y);
-    tmp = create<Cube>();
-    pos = std::make_pair(x, y);
-    tmp->setType(blockType);
-    tmp->setPos(pos);
-    tmp->initialize();
-    _map[x * _size_x + y] = tmp;
-}
-
 void Map::addCube(int x, int y, AObject *obj)
 {
     std::pair<float, float>     pos;
@@ -73,6 +56,23 @@ void Map::deleteCube(int x, int y)
         return;
     delete _map[x * _size_x + y];
     _map[x * _size_x + y] = NULL;
+}
+
+void Map::addCube(int x, int y, type blockType)
+{
+    std::pair<float, float>     pos;
+    AObject     *tmp;
+
+    if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
+        return;
+    if (_map[x * _size_x + y])
+        deleteCube(x, y);
+    tmp = create<Cube>();
+    pos = std::make_pair(x, y);
+    tmp->setType(blockType);
+    tmp->setPos(pos);
+    tmp->initialize();
+    _map[x * _size_x + y] = tmp;
 }
 
 void    Map::_outline()

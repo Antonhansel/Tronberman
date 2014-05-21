@@ -1,3 +1,13 @@
+/*
+** Saving.cpp for saving in /home/apollo/rendu/cpp_bomberman/srcs
+**
+** Made by Antonin Ribeaud
+** Login   <ribeau_a@epitech.net>
+**
+** Started on  Wed May  21 01:14:50 2014 Antonin Ribeaud
+** Last update Wed May  21 01:14:50 2014 Antonin Ribeaud
+*/
+
 #include "Saving.hpp"
 
 Saving::Saving(std::vector<std::string> &fileName)
@@ -28,6 +38,24 @@ Saving::Saving(std::string &fileName, Core *core) : _name(fileName)
   _player = core->getPlayer();
   _spawn = m->getSpawn();
   _sizeMap = m->getSize();
+  _nbrPlayer = 0;
+  _nbrBot = 0;
+  _file.open(fileName.c_str());
+  if (!_file.is_open())
+    std::cout << "Error opening." << std::endl; 
+  else
+  {
+    if (saveMap() == false)
+      std::cout << "Error saving" << std::endl;
+    _file.close();
+  }
+}
+
+Saving::Saving(std::string &fileName, AObject **&objects, int size)
+{
+  _name = fileName;
+  _map = objects;
+  _sizeMap = size;
   _nbrPlayer = 0;
   _nbrBot = 0;
   _file.open(fileName.c_str());

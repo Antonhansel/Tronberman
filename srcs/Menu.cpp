@@ -267,6 +267,7 @@ void    Menu::startGenerator()
       {
         gen->draw();
       }
+      delete gen;
     }
 }
 
