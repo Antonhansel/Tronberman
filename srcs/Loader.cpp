@@ -49,7 +49,7 @@ bool 	Loader::loadTextures()
     return (false);
 
   _textures[BLOCKD]->bind();
-  //   GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
+  // GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
   // GLfloat mat_ambient_color[] = { 0.8F,0.8F,0.2F,1.0F };
   // GLfloat mat_diffuse[] = { 0.1F,0.5F,0.8F,1.0F };
   // GLfloat no_shininess[] = { 0.0F };

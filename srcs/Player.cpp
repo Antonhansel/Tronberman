@@ -105,8 +105,8 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
     if (_isAlive == true)
     {
-    float trans = static_cast<float>(clock.getElapsed()) * _speed;
-    std::map<int, std::pair<float, float> > keymap;
+    float trans = static_cast<float>(clock.getElapsed()) *  _speed;
+    std::map<int, std::pair<float, float> >                 keymap;
     std::pair<float, float> i;
     glm::vec3                               rotation = glm::vec3(0);
     key                                      key;

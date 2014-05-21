@@ -9,6 +9,8 @@
 */
 
 #include "Generator.hpp"
+#include "Saving.hpp"
+#include "time.h"
 
 Generator::Generator(Camera *camera, Loader *loader, int size)
 {
@@ -16,12 +18,20 @@ Generator::Generator(Camera *camera, Loader *loader, int size)
 	_camera = camera;
 	_loader = loader;
 	_time = 0;
+  _map = new AObject *[_size * _size];
+  memset(_map, 0, (_size * _size) * sizeof(AObject *));
 }
 
 Generator::~Generator()
 {
-  	for (unsigned int it1 = 1; it1 < _objects.size(); it1++)
-  		delete _objects[it1];
+  std::string name = "./ressources/maps/yolo.xml";
+
+  Saving(name, _map, _size);
+  // for (int i = 0; i < _size * _size; ++i)
+  //   {
+  //       if (_map[i])
+  //         delete _map[i];
+  //   }
 }
 
 bool 	Generator::drawBackground()
@@ -36,32 +46,52 @@ void 	Generator::draw()
 	_shader = _camera->getShader();
 	_camera->moveCamera(vec3(_cube->getPos().first, 10, _cube->getPos().second + -10), vec3(_cube->getPos().first, 0, _cube->getPos().second), vec3(0,1,0), 1);
 	_loader->bindTexture(LastType);
-	for (size_t i = 0; i < _objects.size(); ++i)
+  std::pair<int, int> pos;
+  AObject     *tmp;
+
+  for (int x = 0 ; x <= _size; ++x)
+  {
+    for (int y = 0; y <= _size; ++y)
     {
-      if (_objects[i]->getType() != LastType)
+      tmp = getCase(x, y);
+      if (!tmp)
+        continue;
+      if (tmp->getType() != LastType)
       {
-        LastType = _objects[i]->getType();
+        LastType = tmp->getType();
         _loader->bindTexture(LastType);
       }
-      _loader->drawGeometry(_shader, _objects[i]->getTransformation());
+      _loader->drawGeometry(_shader, tmp->getTransformation());
     }
-    _floor->draw(_shader, _clock);
-    _camera->flushContext();
+  } 
+  _loader->bindTexture(_cube->getType());
+  _loader->drawGeometry(_shader, _cube->getTransformation());
+  _floor->draw(_shader, _clock);
+  _camera->flushContext();
 }
 
 bool Generator::cleanObjects(int i)
 {
-	if (_size + i != 100 && _size + i != 10)
+	if (_size + i != 40 && _size + i != 10)
 	{
 		std::cout << _size + i << std::endl; 
 		_size += i;
 	}
-  	for (unsigned int it1 = 1; it1 < _objects.size(); it1++)
-  		delete _objects[it1];
-    _objects.clear();
+  for (int i = 0; i < _size * _size; ++i)
+  {
+      if (_map[i])
+         delete _map[i];
+  }
 	if (initialize() == false)
 		return (false);
 	return (true);
+}
+
+AObject     *Generator::getCase(int x, int y) const
+{
+    if (x < 0 || x >= _size || y < 0 || y >= _size)
+        return NULL;
+    return _map[x * _size + y];
 }
 
 bool Generator::initCursor(int x, int z)
@@ -74,7 +104,6 @@ bool Generator::initCursor(int x, int z)
   pos = std::make_pair(x, z);
   _cube->setPos(pos);
   _cube->translate(glm::vec3(0, 1, 0));
-  _objects.push_back(_cube);
   return (true);
 }
 
@@ -96,7 +125,6 @@ bool Generator::changeSize()
 void 	Generator::placeCube()
 {
   std::pair<float, float> pos;
-  int  exist = 0;
 
   if (_input.getKey(SDLK_SPACE))
     {
@@ -104,17 +132,8 @@ void 	Generator::placeCube()
   	if ((pos.first > 0 && pos.first < _size) && 
   		pos.second > 0 && pos.second < _size)
   	{
-      std::vector<AObject *>::iterator it;
-      for (it = _objects.begin(); it != _objects.end(); ++it)
-      {
-        if ((*it)->getPos() == pos)
-          exist++;
-      }
-      if (exist == 1)
-  		{
   		  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
   		  	_camera->tiltMode();
-  		}
   	}
   }
 }
@@ -158,22 +177,35 @@ bool Generator::update()
     return (true);
 }
 
-bool		Generator::addCube(int x, int z, type thetype)
+void Generator::deleteCube(int x, int y)
 {
-  AObject	*cube = create<Cube>();
-  std::pair<float, float> pos;
+    if (x < 0 || x >= _size || y < 0 || y >= _size)
+        return;
+    delete _map[x * _size + y];
+    _map[x * _size + y] = NULL;
+}
 
-  cube->setType(thetype);
-  if (cube->initialize() == false)
-    return (false);
-  pos = std::make_pair(x, z);
-  cube->setPos(pos);
-  _objects.push_back(cube);
-  return (true);
+void Generator::addCube(int x, int y, type blockType)
+{
+    std::pair<float, float>     pos;
+    AObject     *tmp;
+
+    if (x < 0 || x >= _size || y < 0 || y >= _size)
+        return;
+    if (_map[x * _size + y])
+        deleteCube(x, y);
+    tmp = create<Cube>();
+    pos = std::make_pair(x, y);
+    tmp->setType(blockType);
+    tmp->setPos(pos);
+    tmp->initialize();
+    _map[x * _size + y] = tmp;
 }
 
 bool 	Generator::initialize()
 {
+  _map = new AObject *[_size * _size];
+    memset(_map, 0, (_size * _size) * sizeof(AObject *));
 	if (initCursor(round(_size/2), round(_size/2)) == false)
 		return (false);
 	if (drawBackground() == false)

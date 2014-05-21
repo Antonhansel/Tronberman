@@ -22,7 +22,7 @@ class Generator
 public:
 	Generator(Camera *, Loader *, int);
 	~Generator();
-	bool 	addCube(int, int, type);
+	void 	addCube(int, int, type);
 	bool 	initialize();
 	bool 	initCursor(int, int);
 	bool 	drawBackground();
@@ -33,12 +33,14 @@ public:
 	void 	changeType();
 	void 	placeCube();
 	void 	moveCursor();
+	void 	deleteCube(int, int);
+	AObject     *getCase(int x, int y) const;
 private:
-	AObject	*_cube;
-	Camera *_camera;
-	Loader *_loader;
-	int 	_size;
-	std::vector<AObject*> _objects;
+	AObject			*_cube;
+	Camera 			*_camera;
+	Loader 			*_loader;
+	int 			_size;
+	AObject 		**_map;
 	Clock			_clock;
   	Input			_input;
   	BasicShader		_shader;

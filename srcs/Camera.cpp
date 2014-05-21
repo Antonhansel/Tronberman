@@ -24,7 +24,7 @@ void  Camera::previewMode(bool state)
 {
   if (state == true)
   {
-    glViewport(0, 0, _width/3, _height/3);
+    glViewport(0, 400, _width/2, _height/2);
   }
   else
   {

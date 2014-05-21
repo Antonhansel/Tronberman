@@ -17,10 +17,11 @@ private:
 	int									_nbrBot;
 	bool								_isGood;
 	int									_nbrLine;
-
+	
 public:
 	Saving(std::vector<std::string> &);
 	Saving(std::string &, Core *);
+	Saving(std::string &fileName, AObject **&, int);
 	~Saving();
 	bool    loadSize(std::list<std::string> &);
 	bool    loadCase(std::list<std::string> &);
