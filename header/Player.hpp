@@ -19,6 +19,14 @@
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
+enum dirr
+  {
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST
+  };
+
 class Bonus;
 
 class AInput;
@@ -47,6 +55,7 @@ protected:
   double        _timer;
   bool          _isAlive;
   int           _score;
+  dirr          _dir;
 
 public:
   void    setPlayer(int);
