@@ -2,3 +2,5 @@ bomberman
 *.d
 *.o
 gmon.out
+score
+

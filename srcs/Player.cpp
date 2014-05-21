@@ -16,7 +16,7 @@ Player::Player()
     _stock = 1;
     _range = 1;
     _x = 0;
-    _life = 1;
+    _life = 100;
     _begin = false;
     _input = NULL;
     _key[PUP] = &Player::up;
@@ -26,6 +26,7 @@ Player::Player()
     _shield = 1;
     _isAlive = true;
     _score = 0;
+    _dir = NORTH;
 }
 
 Player::~Player()
@@ -37,6 +38,16 @@ bool    Player::initialize()
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
+     _geometry.setColor(glm::vec4(1, 1, 0, 1));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
+  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
+  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
+  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  //_geometry.build();
     return (true);
 }
 
@@ -46,6 +57,7 @@ void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
     glPopMatrix();
+    //_geometry.draw(shader, getTransformation(), GL_QUADS);
 }
 
 void    Player::setMap(Map *map)
@@ -65,9 +77,16 @@ void    Player::setSpeed(float speed)
 
 bool    Player::_checkMove(float x, float y)
 {
-    AObject *cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
+    AObject *cas;
+
+    if (_dir == NORTH || _dir == WEST)
+      cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
+    else if (_dir == SOUTH || _dir == EAST)
+      cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
     if (!cas || cas->getType() == BONUS)
+    {
         return (true);
+    }
     else
         return (false);
 }
@@ -106,21 +125,36 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         _anim = 2;
         rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
         rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
+        switch ((int)(rotation.y))
+        {
+            case 0:
+                _dir = NORTH;
+                break;
+            case -180:
+                _dir = SOUTH;
+                break;
+            case 270:
+                _dir = EAST;
+                break;
+            case 90:
+                _dir = WEST;
+        }
         rotate(rotation);
     }
     if (_onBomb() ||
                 (_checkMove(
-                    i.first,
+                    i.first + 0.2,
+                    i.second)
+                // left
+                && _checkMove(
+                    i.first + 0.2,
+                    i.second + 0.3)
+                && _checkMove(
+                    i.first + 0.6,
                     i.second)
                 && _checkMove(
-                    i.first + 0.4,
-                    i.second + 0.4)
-                && _checkMove(
-                    i.first,
-                    i.second + 0.4)
-                && _checkMove(
-                    i.first + 0.4,
-                    i.second)
+                    i.first + 0.6,
+                    i.second + 0.3)
                 ))
             {
                 _pos.first += i.first;
@@ -170,7 +204,15 @@ std::pair<float, float>    Player::left(float &trans)
 
 std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
 {
-  float temp1;
+    if (_dir == WEST)
+        return (std::make_pair(floor(pos.first + 0.4), floor(pos.second)));
+    else if (_dir == NORTH)
+        return (std::make_pair(floor(pos.first + 0.6), floor(pos.second)));
+    else if (_dir == EAST)
+        return (std::make_pair(floor(pos.first + 0.6), floor(pos.second)));
+    else
+        return (std::make_pair(ceil(pos.first), ceil(pos.second)));
+  /*float temp1;
   float temp2;
   temp1 = floor(pos.first);
   temp2 = ceil(pos.first);
@@ -184,7 +226,7 @@ std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
     pos.second = temp1;
   else
     pos.second = temp2;  
-  return (pos);
+  return (pos);*/
 }
 
 int     Player::getStock() const
