@@ -121,7 +121,7 @@ void    Menu::draw()
 
 void    Menu::manageEventInput()
 {
-  if (_stepM == STEP12 || _stepM == STEP11)
+  if (_stepM == STEP11)
   {
     switch (_isSelect)
     {
@@ -138,6 +138,8 @@ void    Menu::manageEventInput()
         break;
     }
   }
+  if (_stepM == STEP12 && _isSelect == 0)
+    getInputNb(_sizeMap, 5, 4, 30, 0);
 }
 
 void    Menu::manageEventInputScore(key &k)
@@ -374,7 +376,7 @@ void    Menu::home()
 
 void    Menu::step1()
 {
-  _sizeMap.assign("50");
+  _sizeMap.assign("30");
   _nbPlayer.assign("1");
   _nbBots.assign("1");
   _isSelect = 0;
