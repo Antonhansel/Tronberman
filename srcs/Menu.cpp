@@ -148,7 +148,7 @@ void    Menu::manageEventInput()
           getInputNb(_nbPlayer, 6, 1, 2, 1);
         break;
       case 1:
-          getInputNb(_nbBots, 7, 2, 10/*convToInt(_sizeMap) / 10*/, 0);
+          getInputNb(_nbBots, 7, 2, _map->getSize() / 10, 0);
         break;
     }
 
@@ -600,6 +600,8 @@ void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11) 
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) : 0;
+  if (_stepM == LOADG)
+    _map = _preview->getMap();
 }
 
 void  Menu::select1()
@@ -610,13 +612,12 @@ void  Menu::select1()
   (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
- std::cout << "-------> " << _stepM << std::endl;
 }
 
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0) 
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : 0;
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG) ? (_isLaunch = true) : 0;
   if (_stepM == SCORE)
      getScore();
 }
