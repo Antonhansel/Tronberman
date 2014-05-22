@@ -28,6 +28,7 @@ public:
 	bool 	checkName(const char *);
 	std::string	makePath(const char *);
 	void 	changeMap(int);
+	Map 	*getMap() const;
 private:
 	double 		_time;
 	std::vector<Map*>::iterator _it;

@@ -147,3 +147,8 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 	}
   _camera->previewMode(false);
 }
+
+Map 	*Preview::getMap() const
+{
+	return (_map);
+}
