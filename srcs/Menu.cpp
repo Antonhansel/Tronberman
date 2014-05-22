@@ -38,6 +38,11 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[STEP12] = &Menu::step12;
   _func[SCORE] = &Menu::score;
   _func[LOADM] = &Menu::load;
+  _step[0] = &Menu::select0;
+  _step[1] = &Menu::select1;
+  _step[2] = &Menu::select2;
+  _step[3] = &Menu::select3;
+  _step[4] = &Menu::select4;
   _addScore = false;
   _previewMode = false;
   _exit = false;
@@ -48,6 +53,8 @@ Menu::~Menu()
 {
   delete _text;
   delete _background;
+  delete _cubeanim;
+  delete _preview;
 }
 
 bool  Menu::drawBackground()
@@ -56,22 +63,12 @@ bool  Menu::drawBackground()
   if (_background->initialize() == false)
     return (false);
   _background->translate(glm::vec3(30, 0, 40));
-  //_background->translate(glm::vec3(20, 0, 20));
-  //_background->rotate(glm::vec3(30, 0, 100));
   return (true);
 }
 
 bool	Menu::initialize()
 {
-
-  if (_cubeanim->initIntro() == false)
-    return (false);
-  if (drawBackground() == false)
-    return (false);
-  if (!initLogo())
-    return (false);
-  std::cout << "Menu init ended" << std::endl;
-  return (true);
+  return ((!_cubeanim->initIntro()) || (!drawBackground()) || (!initLogo()) ? false : true);
 }
 
 bool    Menu::update()
@@ -80,9 +77,7 @@ bool    Menu::update()
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _timer += _clock.getElapsed();
-  if (_exit || _input.getInput(SDL_QUIT))
-    return (false);
-  if (_isLaunch == true)
+  if (_exit || _input.getInput(SDL_QUIT) || _isLaunch)
     return (false);
   if (_event == NULL && _stopIntro == true)
     _event = new AInput(_input, MENU);
@@ -92,11 +87,8 @@ bool    Menu::update()
     _background->update(_clock, _input);
     event(_step1);
   }
-  if (_previewMode == true)
-  {
-    if ((_preview->update(_clock, _input)) == false)
-      _previewMode = false;
-  }
+  if (_previewMode && !(_preview->update(_clock, _input)))
+    _previewMode = false;
   else
     _cubeanim->update();
   return (true);
@@ -158,14 +150,7 @@ void    Menu::manageEventInputScore(key &k)
     if (_scoreToAdd.compare(""))
     {
       str = _scoreToAdd.c_str();
-      if (str[_pos] != '\0')
-      {
-        c = str[_pos];
-      }
-      else
-      {
-        c = 65;        
-      }
+      c = (str[_pos] != '\0') ? (str[_pos]) : 65;
     }
     else
       c = 65;
@@ -175,8 +160,7 @@ void    Menu::manageEventInputScore(key &k)
       {
         _timer = 0;
         c--;
-        if (c == 64)
-          c = 90;
+        (c == 64) ? (c = 90) : 0;
         getInputPseudo(c);
         break;
       }
@@ -184,8 +168,7 @@ void    Menu::manageEventInputScore(key &k)
       {
         _timer = 0;
         c++;
-        if (c == 91)
-          c = 65;
+        (c == 91) ? (c = 65) : 0;
         getInputPseudo(c);
         break; 
       }
@@ -262,108 +245,28 @@ void    Menu::startGenerator()
 
     _isSelect = 0;
     if (gen->initialize() == false)
-    {
       std::cout << "Error on initializing the map Generator" << std::endl;
-    }
     else
     {
       while (gen->update() == true)
-      {
         gen->draw();
-      }
       delete gen;
     }
 }
 
 void    Menu::startPreview()
 {
-  if (_preview->initialize() == true)
-  {
-    _previewMode = true;
-  }
-  else
-  {
-    std::cout << "Failed to initialize preview mode" << std::endl;
-  }
+  (_preview->initialize()) ? (_previewMode = true) : std::cout << "Failed to initialize preview mode" << std::endl;
 }
 
 void    Menu::chooseStep()
 {
   bool  play = true;
 
-  switch (_isSelect)
-  {
-    case 0:
-    {
-      if (_stepM == HOME)
-        _stepM = STEP1;
-      else if (_stepM == STEP1)
-      {
-        _isSelect = 0;
-        _stepM = STEP11;
-      }
-      else if (_stepM == SCORE)
-        _stepM = HOME;
-      else if (_stepM == LOADM)
-       {
-        _previewMode = false;
-        _stepM = STEP1;
-        }
-      break;
-    }
-    case 1:
-    {
-      if (_stepM == STEP1)
-        _stepM = LOADM;
-      else if (_stepM == STEP12)
-      {
-        _stepM = STEP1;
-        startGenerator();
-      }
-      break;
-    }
-    case 2:
-    {
-      if (_stepM == STEP1)
-        _stepM = STEP12;
-      else if (_stepM == STEP12)
-      {
-        _stepM = STEP1;
-        _isSelect = 0;
-      }
-      else if (_stepM == HOME)
-      {
-        _isSelect = 0;
-        getScore();
-        _stepM = SCORE;
-      }
-      break;
-    }
-    case 3:
-    {
-      if (_stepM == STEP1)
-        _stepM = HOME;
-      else if (_stepM == STEP11)
-      {
-        if (convToInt(_sizeMap) >= 10 && atLeastPlayer())
-        {
-          _map = new Map(getMapSize());
-          _isLaunch = true;
-          _cubeanim->changeVolum(0.4f);
-        }
-      }
-      break;
-    }
-    case 4:
-      if (_stepM == STEP11)
-        _stepM = STEP1;
-      else if (_stepM == HOME)
-        _exit = true;
-      break;
-    default:
-      play = false;
-      break;
-  }
+  if (_isSelect >= 0 && _isSelect <= 4)
+    (this->*_step[_isSelect])();
+  else
+    play = false;
   if (play == true)
   {
     (this->*_func[_stepM])();
@@ -384,9 +287,8 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _isSelect--;
-          if (_isSelect == - 1)
-            _isSelect = _max;
-          _timer = 0;          
+          (_isSelect == - 1) ? (_isSelect = _max) : 0;
+          _timer = 0;
         }
         else
           manageEventInputScore(k);
@@ -395,8 +297,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _isSelect++;
-          if (_isSelect == _max + 1)
-            _isSelect = 0;
+          (_isSelect == _max + 1) ? (_isSelect = 0) : 0;
           _timer = 0;
         }
         else
@@ -433,18 +334,13 @@ void    Menu::reset(const std::map<int, Player*> &p)
   max = 0;
   _pos = 0;
   _scoreToAdd.assign("");
-  if (p.find(1)->second->getScore() > max)
-    max = p.find(1)->second->getScore();
-  if (p.find(2) != p.end() && p.find(2)->second->getScore() > max)
-    max = p.find(2)->second->getScore();
+  (p.find(1)->second->getScore() > max) ? (max = p.find(1)->second->getScore()) : 0;
+  (p.find(2) != p.end() && p.find(2)->second->getScore() > max) ? (max = p.find(2)->second->getScore()) : 0; 
   _addScore = true;
   for (std::map<int, Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
-  {
     if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
       i++;
-  }
-  if (i > 4)
-    _addScore = false;
+  (i > 4) ? (_addScore = false) : 0; 
   if (_addScore == true)
   {
     getScore();
@@ -459,12 +355,9 @@ bool    Menu::launch() const
   return (_isLaunch);
 }
 
-bool    Menu::atLeastPlayer()
+bool    Menu::atLeastPlayer() const
 {
-  if ((convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= convToInt(_sizeMap) / 10)
-    return (true);
-  else
-    return (false);
+  return (((convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= convToInt(_sizeMap) / 10) ? true : false);
 }
 
 void    Menu::home()
@@ -537,13 +430,7 @@ void    Menu::score()
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "BACK", true);
   _max = 0;
-  if (_addScore == true)
-  {
-    i = 1;
-    myints[0] = _newScore;
-  }
-  else
-    i = 0;
+  (_addScore) ? (i = 1, myints[0] = _newScore) : (i = 0);
   if (_score.size() == 0 && _addScore == false)
   {
     _text->addText(_step1, 1, std::make_pair(600, 380), "NOT YET SCORE", true);
@@ -554,8 +441,7 @@ void    Menu::score()
     myints[i] = (*it).first;
     i++;
   }
-  if (_addScore == true)
-    add = 1;
+  (_addScore) ? (add = 1) : 0;
   std::vector<int> myvector (myints, myints + _score.size() + add);
   std::sort (myvector.begin(), myvector.end());
   iter_type from (myvector.begin());
@@ -676,11 +562,45 @@ void  Menu::getScore()
       std::getline(file, res, '\n');
       found = res.find('\t');
       if (found != std::string::npos)
-      {
         _score[convToInt(res.substr(found, res.length()))] = res.substr(0, found);
-      }
       res.clear();
     }
     file.close();
   }
+}
+
+void  Menu::select0()
+{
+  (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11) 
+  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false, _stepM = STEP1) : 0;
+}
+
+void  Menu::select1()
+{
+  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1) : 0;
+  if (_stepM == STEP1)
+   startGenerator(); 
+}
+
+void  Menu::select2()
+{
+  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0) 
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : 0;
+  if (_stepM == SCORE)
+     getScore();
+}
+
+void  Menu::select3()
+{
+  bool isAnime(false);
+
+  (_stepM == STEP1) ? (_stepM = HOME) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer())) 
+  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : 0;
+  if (isAnime)
+    _cubeanim->changeVolum(0.4f);
+}
+
+void  Menu::select4()
+{
+  (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : 0;
 }
