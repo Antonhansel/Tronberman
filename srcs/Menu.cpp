@@ -38,6 +38,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[STEP12] = &Menu::step12;
   _func[SCORE] = &Menu::score;
   _func[LOADM] = &Menu::load;
+  _func[LOADG] = &Menu::loadGame;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -140,6 +141,17 @@ void    Menu::manageEventInput()
   }
   if (_stepM == STEP12 && _isSelect == 0)
     getInputNb(_sizeMap, 5, 4, 30, 0);
+  if (_stepM == LOADG)
+    switch (_isSelect)
+    {
+      case 0:
+          getInputNb(_nbPlayer, 6, 1, 2, 1);
+        break;
+      case 1:
+          getInputNb(_nbBots, 7, 2, 10/*convToInt(_sizeMap) / 10*/, 0);
+        break;
+    }
+
 }
 
 void    Menu::manageEventInputScore(key &k)
@@ -413,6 +425,18 @@ void    Menu::step12()
   _max = 2;
 }
 
+void    Menu::loadGame()
+{
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 380), "NB PLAYER", true);
+  _text->addText(_step1, 1, std::make_pair(15, 460), "BOTS", true);
+  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);
+  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 4, std::make_pair(700, 380), _nbPlayer.c_str(), false);
+  _text->addText(_step1, 5, std::make_pair(700, 460), _nbBots.c_str(), false);
+  _max = 3;
+}
+
 void    Menu::score()
 {
   int   y;
@@ -473,9 +497,10 @@ void    Menu::load()
 {
   _isSelect = 0;
   _text->deleteAllText(_step1);
-  _text->addText(_step1, 0, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
   startPreview();
-  _max = 0;
+  _max = 1;
 }
 
 bool    Menu::initLogo()
@@ -574,14 +599,18 @@ void  Menu::getScore()
 void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11) 
-  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false, _stepM = STEP1) : 0;
+  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) : 0;
 }
 
 void  Menu::select1()
 {
-  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1) : 0;
-  if (_stepM == STEP1)
-   startGenerator(); 
+  stepM k;
+
+  k = STEP1;
+  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) : 0;
+  if (k != LOADM && _stepM == STEP1)
+   startGenerator();
+ std::cout << "-------> " << _stepM << std::endl;
 }
 
 void  Menu::select2()
@@ -597,7 +626,7 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = HOME) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer())) 
-  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : 0;
+  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
 }

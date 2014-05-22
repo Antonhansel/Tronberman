@@ -325,6 +325,5 @@ void                                    Saving::addListMap()
   myMap->setMap(_map);
   myMap->setSpawn(_spawn);
   myMap->setSize(_sizeMap);
-  std::cout << "Map \"" << _name << "\" load correctly." << std::endl;
   _listMap.push_back(myMap);
 }

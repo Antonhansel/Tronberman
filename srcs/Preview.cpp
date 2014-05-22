@@ -63,8 +63,8 @@ void 		Preview::getPaths()
 bool		Preview::initialize()
 {
 	getPaths();
-	_saving = new Saving(_paths);
-	_maps = _saving->getListMap();
+	Saving _saving(_paths);
+	_maps = _saving.getListMap();
 	std::cout << "PREVIEW STARTED" << std::endl;
 	if (_maps.size() == 0)
 		return (false);
