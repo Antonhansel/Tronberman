@@ -28,7 +28,10 @@ public:
 	void 	getPaths();
 	bool 	checkName(const char *);
 	std::string	makePath(const char *);
+	void 	changeMap(int);
 private:
+	double 		_time;
+	std::vector<Map*>::iterator _it;
 	Map 			*_map;
 	std::vector<std::string> _paths;
 	Camera 	*_camera;

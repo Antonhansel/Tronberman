@@ -97,7 +97,8 @@ bool    Menu::update()
     if ((_preview->update(_clock, _input)) == false)
       _previewMode = false;
   }
-  _cubeanim->update();
+  else
+    _cubeanim->update();
   return (true);
 }
 
@@ -111,15 +112,18 @@ void    Menu::draw()
       _stopIntro = true;
     }
   _cubeanim->rotate();
-  _loader->bindTexture(LastType);
-  _cubeanim->draw(_shader, LastType);
+  if (_previewMode == false)
+  {
+    _loader->bindTexture(LastType);
+    _cubeanim->draw(_shader, LastType);
+  }
   if (_cubeanim->getStatus())
     _background->draw(_shader, _clock);
   if (_stopIntro)
     _text->draw(_step1, _isSelect);
-  drawLogo();
-    if (_previewMode == true)
+  if (_previewMode == true)
     _preview->draw(_shader, _clock);
+  drawLogo();
   _camera->flushContext();
 }
 
@@ -301,7 +305,10 @@ void    Menu::chooseStep()
       else if (_stepM == SCORE)
         _stepM = HOME;
       else if (_stepM == LOADM)
+       {
+        _previewMode = false;
         _stepM = STEP1;
+        }
       break;
     }
     case 1:

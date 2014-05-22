@@ -24,7 +24,7 @@ void  Camera::previewMode(bool state)
 {
   if (state == true)
   {
-    glViewport(0, 400, _width/2, _height/2);
+    glViewport(0, 0, _width, _height);
   }
   else
   {
@@ -113,9 +113,9 @@ void 	Camera::moveCamera(vec3 vec1, vec3 vec2, vec3 vec3, int screen)
 {
   if (screen == 3)
   {
-  _transformation = lookAt(vec1, vec2, vec3);
-  _shader.setUniform("view", _transformation);
-  _shader.bind();
+    _transformation = lookAt(vec1, vec2, vec3);
+    _shader.setUniform("view", _transformation);
+    _shader.bind();
   } 
   else
   {

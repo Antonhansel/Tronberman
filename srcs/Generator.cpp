@@ -144,7 +144,7 @@ void 	Generator::changeType()
 	if (_input.getKey(SDLK_KP_1))
 	  	_cube->setType(BLOCKD);
 	if (_input.getKey(SDLK_KP_2))
-	    _cube->setType(BLOCK);	
+	    _cube->setType(BLOCK);
 }
 
 void 	Generator::moveCursor()
@@ -206,7 +206,7 @@ void Generator::addCube(int x, int y, type blockType)
 bool 	Generator::initialize()
 {
   _map = new AObject *[_size * _size];
-    memset(_map, 0, (_size * _size) * sizeof(AObject *));
+   memset(_map, 0, (_size * _size) * sizeof(AObject *));
 	if (initCursor(round(_size/2), round(_size/2)) == false)
 		return (false);
 	if (drawBackground() == false)

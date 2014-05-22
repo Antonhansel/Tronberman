@@ -307,7 +307,7 @@ bool    Saving::saveMap()
       }
     }
   }
-  saveSpawn();
+  //saveSpawn();
   _file << "</map>" << std::endl;
   return true;
 }
