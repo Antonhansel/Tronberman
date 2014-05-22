@@ -24,6 +24,7 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	lifePlayer1 = 0;
 	lifePlayer2 = 0;
 	_col1 = 0;
+	_fps = 0;
 }
 
 void	Hud::setScreen(int screen)
@@ -81,6 +82,16 @@ void	Hud::updatePlayer2(Player *cur)
 	}
 }
 
+void	Hud::updateFPS(int fps)
+{
+	if (_fps != fps)
+	{
+		_fps = fps;
+		delGeometry(_affFPS);
+		_affFPS = this->putstr(convertToString(_fps, "FPS").c_str(), 64, true); 
+	}
+}
+
 void	Hud::draw(Player *cur)
 {
 	updateRep();
@@ -132,6 +143,23 @@ void	Hud::drawPlayer2()
   	}
 }
 
+void		Hud::drawFPS() const
+{
+	int col;
+	glm::mat4 transformation;
+
+	col = 0;
+	_loader->bindTexture(SELECTED);
+	_camera->setMode();
+    for (size_t i(0); i != _affFPS.size(); i++)
+      {
+        transformation = glm::translate(glm::mat4(1), glm::vec3(col, 940, 0));
+        _affFPS[i]->draw(_camera->getShader(), transformation, GL_QUADS);
+        col += 50;
+      }
+    _camera->setMode();
+}
+
 std::string Hud::convertToString(int value, const std::string text)
 {
 	std::stringstream ss;
@@ -148,6 +176,7 @@ Hud::~Hud()
 		delGeometry((*it).second);
 	for (it = _player2.begin(); it != _player2.end(); ++it)
 		delGeometry((*it).second);
+	delGeometry(_affFPS);
 }
 
 void	Hud::delGeometry(std::vector<Geometry *> &v)

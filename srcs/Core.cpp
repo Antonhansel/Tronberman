@@ -178,13 +178,12 @@ void  Core::FPS()
   if (_lasttime > 1)
   {
     std::cout << _frames << std::endl;
+    _hud->updateFPS(_frames);
     _lasttime = 0;
     _frames = 1;
   }
   else
-  {
     _frames++;
-  }
 }
 
 void  Core::spawnBomb(Player *player)
@@ -331,6 +330,7 @@ void	Core::draw()
     drawAll(_player[2]);
     _hud->draw(_player[2]);
   }
+  _hud->drawFPS();
   _cam->flushContext();
 }
 

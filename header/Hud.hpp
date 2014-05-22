@@ -26,7 +26,9 @@ public:
 	~Hud();
 	void 	init(Player *);
 	void	update(Player *);
+	void	updateFPS(int);
 	void	draw(Player *);
+	void	drawFPS() const;
 	void 	setScreen(int);
 
 private:
@@ -49,10 +51,11 @@ private:
 	int 	_row2;
 	int 	_row1;
 	int 	_col1;
-	int 	_col2;
+	int 	_fps;
 	glm::mat4 _transformation;
 	std::map<int, void(Hud::*)(Player *) > _updatePlayer;
 	std::map<int, void(Hud::*)() > _drawPlayer;
 	std::map<Display, std::vector<gdl::Geometry *> > _player1;
 	std::map<Display, std::vector<gdl::Geometry *> > _player2;
+	std::vector<gdl::Geometry *> _affFPS;
 };
