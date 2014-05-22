@@ -19,6 +19,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _menu = menu;
   _sound = new Sound();
   _hud = new Hud(cam, loader);
+  _displayFPS = false;
 }
 
 void  Core::reset()
@@ -26,6 +27,7 @@ void  Core::reset()
   std::cout << "TEST" << std::endl;
   _players = 1;
   _nb_bot = 0;
+  _displayFPS = false;
 }
 
 void  Core::setValues(Map *map)
@@ -177,8 +179,8 @@ void  Core::FPS()
   _lasttime += _clock.getElapsed();
   if (_lasttime > 1)
   {
-    std::cout << _frames << std::endl;
-    _hud->updateFPS(_frames);
+    if (_displayFPS == true)
+      _hud->updateFPS(_frames);
     _lasttime = 0;
     _frames = 1;
   }
@@ -215,6 +217,10 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
+  if (_input.getKey(SDLK_f))
+      _displayFPS = true;
+  else if (_input.getKey(SDLK_g))
+    _displayFPS = false;
   FPS();
   _time += _clock.getElapsed();
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
@@ -330,7 +336,8 @@ void	Core::draw()
     drawAll(_player[2]);
     _hud->draw(_player[2]);
   }
-  _hud->drawFPS();
+  if (_displayFPS)
+    _hud->drawFPS();
   _cam->flushContext();
 }
 

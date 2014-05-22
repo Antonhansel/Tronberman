@@ -73,6 +73,7 @@ public:
   void      setValues(Map *map);
   void      reset();
 private:
+  bool      _displayFPS;
   int       _screen;
   float     _dist;
   int 			_percent;
