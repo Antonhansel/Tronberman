@@ -170,6 +170,8 @@ bool Generator::update()
   			return (false);
 		if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
 	    	return (false);
+    if (_input.getKey(SDLK_BACKSPACE))
+      deleteCube(_cube->getPos().first, _cube->getPos().second);
 	    moveCursor();
 	    changeType();
 	    placeCube();
