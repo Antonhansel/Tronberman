@@ -93,7 +93,13 @@ public:
     void  manageEventInputScore(key &);
     void  getInputPseudo(char);
     void  saveInFile();
-    bool  atLeastPlayer();
+    bool  atLeastPlayer() const;
+    void  select0();
+    void  select1();
+    void  select2();
+    void  select3();
+    void  select4();
+
 private:
   bool          _previewMode;
   int           _isSelect;
@@ -133,6 +139,7 @@ private:
   std::map<int, std::string> _score;
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _step1;
   std::map<stepM, void (Menu::*)()>    _func;
+  std::map<int, void (Menu::*)()>      _step;
 };
 
 #endif /* !MENU_HPP_ */
