@@ -25,7 +25,8 @@ Generator::~Generator()
 {
   std::string name = "./ressources/maps/";
 
-  name += rand();
+  for (int i = 0 ; i < 10 ; i++)
+    name += (rand()%26)+97;
   name += ".xml";
   Saving(name, _map, _size);
   // for (int i = 0; i < _size * _size; ++i)
