@@ -89,7 +89,7 @@ bool    Menu::update()
   }
   if (_previewMode && !(_preview->update(_clock, _input)))
     _previewMode = false;
-  else
+  else if (_previewMode == false)
     _cubeanim->update();
   return (true);
 }
