@@ -296,18 +296,18 @@ bool    Saving::saveMap()
     {
       for (int x = 0; x < _sizeMap; x++)
       {
-        if (_map[x * y] != NULL)
+        if (_map[x + _sizeMap * y] != NULL)
         {
-          type t = _map[x * y]->getType();
+          type t = _map[x + _sizeMap * y]->getType();
           if (t != BOMB && t != BONUS && t != LASER)
           {
             _file << "<case>" << y << " " << x << " " << 
-            _map[x * y]->getType() << "</case>"<< std::endl;
+            _map[x + _sizeMap * y]->getType() << "</case>"<< std::endl;
         }
       }
     }
   }
-  //saveSpawn();
+  saveSpawn();
   _file << "</map>" << std::endl;
   return true;
 }
