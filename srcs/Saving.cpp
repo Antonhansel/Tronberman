@@ -31,7 +31,7 @@ Saving::Saving(std::vector<std::string> &fileName)
     _isGood = false;
 }
 
-Saving::Saving(std::string &fileName, Core *core) : _name(fileName)
+Saving::Saving(std::string fileName, Core *core) : _name(fileName)
 {
   Map *m = core->getMap();
   _map = m->getMap();
@@ -40,13 +40,15 @@ Saving::Saving(std::string &fileName, Core *core) : _name(fileName)
   _sizeMap = m->getSize();
   _nbrPlayer = 0;
   _nbrBot = 0;
-  _file.open(fileName.c_str());
+  _file.open(_name.c_str());
   if (!_file.is_open())
     std::cout << "Error opening." << std::endl; 
   else
   {
     if (saveMap() == false)
       std::cout << "Error saving" << std::endl;
+    else
+      std::cout << "\"" <<_name << "\" was saving." << std::endl;
     _file.close();
   }
 }
@@ -71,7 +73,6 @@ Saving::Saving(std::string &fileName, AObject **objects, int size)
 
 Saving::~Saving()
 {
-	delete _map;
 	while (_spawn.size() > 0)
 		_spawn.pop_back();
 }

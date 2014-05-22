@@ -46,6 +46,8 @@
 #define POSX1 1
 #define POSY1 0
 
+# define PATH "./ressources/maps/"
+
 class Menu;
 
 class Core : public gdl::Game

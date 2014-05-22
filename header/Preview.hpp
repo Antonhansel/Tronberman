@@ -14,7 +14,6 @@
 # include "Saving.hpp"
 
 #define PI 3.14159
-#define PATH "./ressources/maps/"
 
 class Preview
 {

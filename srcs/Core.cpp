@@ -205,6 +205,7 @@ bool	Core::update()
   std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;;
+  std::string     str = "";
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
@@ -214,6 +215,8 @@ bool	Core::update()
     return false;
   if (_input.getKey(SDLK_KP_0))
     spawnBomb(_player[1]);
+  if (_input.getKey(SDLK_o))
+    Saving(_map->getName(), this);
   if (_input.getKey(SDLK_SPACE) && _players == 2)
     spawnBomb(_player[2]);
   for (it = _player.begin(); it != _player.end(); ++it)

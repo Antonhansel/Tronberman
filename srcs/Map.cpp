@@ -10,8 +10,9 @@
 
 #include "Map.hpp"
 
-Map::Map(int size)
+Map::Map(int size) : _name(PATH)
 {
+    genereteName();
     _size_x = size;
     _size_y = size;
     std::cout << "SIZE" << size << std::endl;
@@ -35,6 +36,20 @@ AObject     *Map::getCase(int x, int y) const
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return NULL;
     return _map[x * _size_x + y];
+}
+
+void    Map::genereteName()
+{
+  std::string acceptes="abcdefghijklmnopqrstuvwyz";
+  acceptes+="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  for (int i = 0; i < 10; i++)
+  {
+    size_t pos = rand()%52;
+
+    _name +=acceptes[pos];
+  }
+  _name += ".xml";
 }
 
 void Map::addCube(int x, int y, AObject *obj)
@@ -183,4 +198,9 @@ AObject **Map::getMap() const
 std::vector<std::pair<int, int> > Map::getSpawn() const
 {
     return _spawns;
+}
+
+std::string     Map::getName() const
+{
+  return _name;
 }

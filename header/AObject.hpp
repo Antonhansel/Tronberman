@@ -55,7 +55,8 @@ enum key
   MSIX,
   MSEVEN,
   MHEIGHT,
-  MNINE
+  MNINE,
+  PSAVE
 };
 
 class AObject

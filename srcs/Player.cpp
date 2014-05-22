@@ -84,9 +84,7 @@ bool    Player::_checkMove(float x, float y)
     else if (_dir == SOUTH || _dir == EAST)
       cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
     if (!cas || cas->getType() == BONUS)
-    {
         return (true);
-    }
     else
         return (false);
 }
@@ -145,7 +143,6 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
                 (_checkMove(
                     i.first + 0.2,
                     i.second)
-                // left
                 && _checkMove(
                     i.first + 0.2,
                     i.second + 0.3)

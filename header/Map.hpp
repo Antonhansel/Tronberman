@@ -9,6 +9,8 @@
 # include <utility>
 # include "Factory.hpp"
 
+# define PATH "./ressources/maps/"
+
 class AObject;
 
 class Map
@@ -20,24 +22,28 @@ public:
   AObject     *getCase(int, int) const;
   std::vector<std::pair<int, int> >   &setSpawn(int nb);
   std::vector<std::pair<int, int> >   getSpawn() const;
-  void    addCube(int, int, type);
-  void    addCube(int, int, AObject *);
-  void    deleteCube(int, int);
+  std::string     getName() const;
+  void            addCube(int, int, type);
+  void            addCube(int, int, AObject *);
+  void            deleteCube(int, int);
   bool    check_pos(int x, int y);
   int     getSize() const;
   void    setSize(int);
   void    setMap(AObject **);
   AObject **getMap() const;
   void    setSpawn(std::vector<std::pair<int, int> > &);
+  void    genereteName();
+
 private:
   std::vector<std::string> _paths;
-  AObject **_map;
-  int     _size_x;
-  int     _size_y;
+  AObject       **_map;
+  std::string   _name;
+  int           _size_x;
+  int           _size_y;
   std::vector<std::pair<int, int> >   _spawns;
-  void    _deleteSide(int x, int y);
-  void		_outline();
-  void    _drawWall();
+  void          _deleteSide(int x, int y);
+  void		      _outline();
+  void          _drawWall();
 };
 
 #endif /* !MAP_HPP */
