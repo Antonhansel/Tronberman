@@ -394,7 +394,7 @@ void    Menu::step1()
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD GAME", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD CUSTOM MAP", true);
   _text->addText(_step1, 2, std::make_pair(15, 460), "MAP BUILDER", true);
   _text->addText(_step1, 3, std::make_pair(15, 540), "BACK", true);
   _max = 3;

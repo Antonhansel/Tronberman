@@ -21,6 +21,13 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _hud = new Hud(cam, loader);
 }
 
+void  Core::reset()
+{
+  std::cout << "TEST" << std::endl;
+  _players = 1;
+  _nb_bot = 0;
+}
+
 void  Core::setValues(Map *map)
 {
   std::vector<std::pair<int, int> >    obj;
@@ -334,5 +341,6 @@ Map       *Core::getMap()
 
 std::map<int, Player*>  Core::getPlayer()
 {
+  reset();
   return _player;
 }

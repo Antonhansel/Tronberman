@@ -56,7 +56,6 @@ bool		Engine::start()
                         _core->draw();
                   _menu->reset(_core->getPlayer());
                 }
-                //_core->reset();
             }
             else
                 quit = true;

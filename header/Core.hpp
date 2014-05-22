@@ -71,6 +71,7 @@ public:
   Map       *getMap();
   std::map<int, Player*>  getPlayer();
   void      setValues(Map *map);
+  void      reset();
 private:
   int       _screen;
   float     _dist;
