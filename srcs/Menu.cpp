@@ -157,7 +157,7 @@ void    Menu::manageEventInput()
 
 void    Menu::manageEventInputScore(key &k)
 {
-  if (_stepM == SCORE)
+  if (_stepM == SCORE && _addScore)
   {
     const char *str = NULL;
     char c;
@@ -214,7 +214,7 @@ void    Menu::manageEventInputScore(key &k)
 
 void    Menu::saveInFile()
 {
-  std::ofstream file("score", std::ios::app);
+  std::ofstream file(".score", std::ios::app);
   std::string   s("");
 
   if (file.is_open())
@@ -356,14 +356,11 @@ void    Menu::reset(const std::map<int, Player*> &p)
     if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
       i++;
   (i > 4) ? (_addScore = false) : 0; 
-  if (_addScore == true)
-  {
-    getScore();
-    _stepM = SCORE;
-    _newScore = max;
-  }
+
+  getScore();
+  _stepM = SCORE;
+  _newScore = max;
   (this->*_func[_stepM])();
-  std::cout << "TESTTESTTEST" << std::endl;
 }
 
 bool    Menu::launch() const
@@ -580,7 +577,7 @@ void  Menu::setIsSelect()
 
 void  Menu::getScore()
 {
-  std::ifstream file("score", std::ios::in);
+  std::ifstream file(".score", std::ios::in);
   std::string   res;
   std::size_t   found;
 
