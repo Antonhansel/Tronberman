@@ -611,7 +611,7 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) : 0;
+  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
 }
@@ -619,7 +619,7 @@ void  Menu::select1()
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0) 
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG) ? (_isLaunch = true) : 0;
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
   if (_stepM == SCORE)
      getScore();
 }
