@@ -11,40 +11,16 @@
 #ifndef _CORE_HPP_
 # define _CORE_HPP_
 
-# include <Game.hh>
-# include <Clock.hh>
-# include <Input.hh>
-# include <SdlContext.hh>
-# include <Geometry.hh>
-# include <Texture.hh>
-# include <Model.hh>
-# include <glm/glm.hpp>
-# include <BasicShader.hh>
-# include <glm/gtc/matrix_transform.hpp>
-# include <OpenGL.hh>
-# include <vector>
-# include <iostream>
-# include <map>
-# include <math.h>
 # include "Camera.hpp"
-# include "Loading.hpp"
 # include "Background.hpp"
 # include "AObject.hpp"
 # include "Floor.hpp"
-# include "Cube.hpp"
-# include "Char.hpp"
 # include "Map.hpp"
 # include "Factory.hpp"
 # include "Loader.hpp"
 # include "Bombs.hpp"
 # include "Sound.hpp"
 # include "Hud.hpp"
-
-#define POSX 0
-#define POSY 0
-
-#define POSX1 1
-#define POSY1 0
 
 # define PATH "./ressources/maps/"
 
@@ -75,7 +51,6 @@ public:
 private:
   bool      _displayFPS;
   int       _screen;
-  float     _dist;
   int 			_percent;
   Hud       *_hud;
   Menu      *_menu;
@@ -98,9 +73,7 @@ private:
   double        _lasttime;
   gdl::BasicShader	_shader;
   std::vector< std::pair<double, AObject*> > _explosion;
-  std::map<type, gdl::Texture*> _textures;
   std::map<int, Player*>	_player;
-  std::vector<AObject*> _loading;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
   bool        _endgame;

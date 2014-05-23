@@ -11,19 +11,6 @@
 #ifndef _CAMERA_HPP_
 # define _CAMERA_HPP_
 
-# include <Game.hh> 
-# include <Clock.hh> 
-# include <Input.hh> 
-# include <SdlContext.hh> 
-# include <Geometry.hh> 
-# include <Texture.hh> 
-# include <Model.hh>
-# include <glm/glm.hpp>
-# include <BasicShader.hh>
-# include <glm/gtc/matrix_transform.hpp>
-# include <OpenGL.hh>
-# include <vector>
-# include <iostream>
 # include "Player.hpp"
 
 using namespace gdl;

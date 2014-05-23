@@ -5,7 +5,7 @@
 # include <iostream>
 # include <fstream>
 # include <map>
-# include <stdlib.h>
+# include <cstdlib>
 # include <utility>
 # include "Factory.hpp"
 

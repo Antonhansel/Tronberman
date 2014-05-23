@@ -15,7 +15,6 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Menu.cpp \
 				srcs/CubeAnim.cpp \
 				srcs/Core.cpp \
-				srcs/Char.cpp \
 				srcs/AObject.cpp \
 				srcs/Cube.cpp \
 				srcs/Engine.cpp \

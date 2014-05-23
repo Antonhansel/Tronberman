@@ -12,10 +12,7 @@
 # define FACTORY_HPP_
 
 # include "Cube.hpp"
-# include "Char.hpp"
 # include "Mybot.hpp"
-# include "Bombs.hpp"
-# include "Bonus.hpp"
 
 template<typename T>
 T	*create()

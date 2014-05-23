@@ -1,0 +1,45 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 14.09.2011 19:40:51
+
+newmtl dde4a20e_dds
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.700000 0.700000 0.700000
+	Kd 0.700000 0.700000 0.700000
+	Ks 0.100000 0.100000 0.100000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Franck\Desktop\3DCap\Portal2\Textures\dde4a20e.dds
+	map_Kd C:\Users\Franck\Desktop\3DCap\Portal2\Textures\dde4a20e.dds
+
+newmtl 6e39c17d_dds
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.700000 0.700000 0.700000
+	Kd 0.700000 0.700000 0.700000
+	Ks 0.100000 0.100000 0.100000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Franck\Desktop\3DCap\Portal2\Textures\6e39c17d.dds
+	map_Kd C:\Users\Franck\Desktop\3DCap\Portal2\Textures\6e39c17d.dds
+
+newmtl 682a5673_dds
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.700000 0.700000 0.700000
+	Kd 0.700000 0.700000 0.700000
+	Ks 0.100000 0.100000 0.100000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Franck\Desktop\3DCap\Portal2\Textures\682a5673.dds
+	map_Kd C:\Users\Franck\Desktop\3DCap\Portal2\Textures\682a5673.dds
+	map_d C:\Users\Franck\Desktop\3DCap\Portal2\Textures\682a5673.dds

@@ -8,8 +8,9 @@
 // Last update Sat May 10 00:58:19 2014 Mehdi Chouag
 //
 
-#include "Player.hpp"
+#include "Bombs.hpp"
 #include "Map.hpp"
+#include "Bonus.hpp"
 
 Player::Player()
 {

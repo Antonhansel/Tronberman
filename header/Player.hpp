@@ -11,11 +11,10 @@
 #ifndef _PLAYER_HPP_
 # define _PLAYER_HPP_
 
-# include <map>
-# include <utility>
 # include "AObject.hpp"
 # include "Model.hh"
 # include "AInput.hpp"
+
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 

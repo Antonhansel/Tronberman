@@ -51,7 +51,6 @@ void  Core::setValues(Map *map)
   _percent = 15;
   _time = 0;
   _frames = 0;
-  //_lasttime = 0;
   _endgame = false;
   std::cout << "test" << std::endl;
 }
@@ -86,8 +85,6 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
-  for (size_t i = 0; i < _loading.size(); ++i)
-    delete _loading[i];
   return (true);
 }
 
@@ -109,7 +106,7 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(int posx, int posy, int screen)
 {
-  Player *chara = create<Char>();
+  Player *chara = create<Player>();
   std::pair<float, float> pos;
 
   if (chara->initialize() == false)
@@ -319,7 +316,7 @@ void	Core::draw()
   {
     pos = _cam->genPos(_player[1], _player[2]);
     _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second),
-     glm::vec3(pos.first, _dist, pos.second), glm::vec3(0, 1, 0), 1);
+     glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), 1);
   }
   if (_player[1]->isAlive() == true)
   {
