@@ -39,16 +39,16 @@ void Floor::draw(gdl::AShader &shader, gdl::Clock const &clock)
 bool	Floor::initialize()
 {
 	//if (_texture.load("./ressources/assets/cobblestone.tga") == false)
-	if (_texture.load("./ressources/assets/bg.tga") == false)
+	if (_texture.load("./ressources/assets/floor.tga") == false)
 	{
 		std::cerr << "Cannot load the floor texture" << std::endl;
 		return (false);
 	}
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
-	_geometry.pushVertex(glm::vec3(_width, -0.5, -_height));
+	_geometry.pushVertex(glm::vec3(_width, -0.5, 0));
 	_geometry.pushVertex(glm::vec3(_width, -0.5, _height));
-	_geometry.pushVertex(glm::vec3(-_width, -0.5, _height));
-	_geometry.pushVertex(glm::vec3(-_width, -0.5, -_height));
+	_geometry.pushVertex(glm::vec3(0, -0.5, _height));
+	_geometry.pushVertex(glm::vec3(0, -0.5, 0));
 	_geometry.pushUv(glm::vec2(0.0f, 0.0f));
 	_geometry.pushUv(glm::vec2(1.0f, 0.0f));
 	_geometry.pushUv(glm::vec2(1.0f, 1.0f));

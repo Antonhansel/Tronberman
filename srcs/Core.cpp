@@ -40,7 +40,6 @@ void  Core::reset()
     delete _explosion[i].second;
   _explosion.clear();
   _displayFPS = false;
-  std::cout << "TEST" << std::endl;
 }
 
 void  Core::setValues(Map *map)
@@ -48,7 +47,6 @@ void  Core::setValues(Map *map)
   std::vector<std::pair<int, int> >    obj;
   
   _players = _menu->getNbPlayer();
-  std::cout << "player : " << _players << std::endl;
   _map = map;
   _width = _menu->getMapSize();
   _height = _width;
@@ -66,7 +64,7 @@ void  Core::setValues(Map *map)
   _time = 0;
   _frames = 0;
   _endgame = false;
-  std::cout << "test" << std::endl;
+
 }
 
 Core::~Core()
