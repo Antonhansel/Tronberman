@@ -142,6 +142,7 @@ void    Menu::manageEventInput()
   if (_stepM == STEP12 && _isSelect == 0)
     getInputNb(_sizeMap, 5, 4, 30, 0);
   if (_stepM == LOADG)
+  {    
     switch (_isSelect)
     {
       case 0:
@@ -151,7 +152,7 @@ void    Menu::manageEventInput()
           getInputNb(_nbBots, 7, 2, _map->getSize() / 10, 0);
         break;
     }
-
+  }
 }
 
 void    Menu::manageEventInputScore(key &k)

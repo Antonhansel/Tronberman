@@ -24,7 +24,6 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
 
 void  Core::reset()
 {
-  std::cout << "TEST" << std::endl;
   _players = 1;
   _nb_bot = 0;
   _displayFPS = false;
@@ -34,7 +33,7 @@ void  Core::setValues(Map *map)
 {
   std::vector<std::pair<int, int> >    obj;
   _players = _menu->getNbPlayer();
-  std::cout << _players << std::endl;
+  std::cout << "player : " << _players << std::endl;
   _map = map;
   _width = _menu->getMapSize();
   _height = _width;
@@ -43,7 +42,6 @@ void  Core::setValues(Map *map)
   _posx = obj.begin()->first;
   _posy = obj.begin()->second;
   _nb_bot = _menu->getNbBots();
-  std::cout << "player " << _players << "-" << obj.size() << std::endl; 
   if (_players == 2)
   {
     obj.erase(obj.begin());
@@ -285,8 +283,7 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (size_t i = 1; i <= _player.size(); i++)
   {
-    if (i == 2 && _players == 1)
-       nb_p = 1;
+    nb_p = (i == 2 && _players == 1) ? 1 : 0;
     _player[i + nb_p]->draw(_shader, _clock);
   }
 }
