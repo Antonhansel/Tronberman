@@ -17,7 +17,7 @@ Player::Player()
     _stock = 1;
     _range = 1;
     _x = 0;
-    _life = 100;
+    _life = 1;
     _begin = false;
     _input = NULL;
     _key[PUP] = &Player::up;
@@ -39,17 +39,22 @@ bool    Player::initialize()
     _model.load( "./ressources/assets/bomberman_white_run.FBX");
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
-     _geometry.setColor(glm::vec4(1, 1, 0, 1));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
-  //_geometry.build();
     return (true);
+}
+
+void  Player::spawnBomb()
+{
+  std::pair<float, float> pos;
+
+    pos = realPos(getPos());
+ if (_bombs->find(pos) == _bombs->end())
+  {
+     Bombs *b = new Bombs();
+     b->setObjects(_map, _sound, _bombs);
+     b->setPlayerTab(_playermap);
+     b->makeBomb((Player*)this);
+     (*_bombs)[pos] = b;
+   }
 }
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -58,7 +63,6 @@ void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
     glPopMatrix();
-    //_geometry.draw(shader, getTransformation(), GL_QUADS);
 }
 
 void    Player::setMap(Map *map)
@@ -210,21 +214,21 @@ std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
         return (std::make_pair(floor(pos.first + 0.6), floor(pos.second)));
     else
         return (std::make_pair(ceil(pos.first), ceil(pos.second)));
-  /*float temp1;
-  float temp2;
-  temp1 = floor(pos.first);
-  temp2 = ceil(pos.first);
-  if (temp1 - pos.first > pos.first - temp2)
-    pos.first = temp1;
-  else
-    pos.first = temp2;
-  temp1 = floor(pos.second);
-  temp2 = ceil(pos.second);
-  if (temp1 - pos.second > pos.second - temp2)
-    pos.second = temp1;
-  else
-    pos.second = temp2;  
-  return (pos);*/
+  // float temp1;
+  // float temp2;
+  // temp1 = floor(pos.first);
+  // temp2 = ceil(pos.first);
+  // if (temp1 - pos.first > pos.first - temp2)
+  //   pos.first = temp1;
+  // else
+  //   pos.first = temp2;
+  // temp1 = floor(pos.second);
+  // temp2 = ceil(pos.second);
+  // if (temp1 - pos.second > pos.second - temp2)
+  //   pos.second = temp1;
+  // else
+  //   pos.second = temp2;  
+  // return (pos);
 }
 
 int     Player::getStock() const
@@ -250,6 +254,11 @@ int   Player::getId() const
 int   Player::getRange() const
 {
     return (_range);
+}
+
+void  Player::setBombs(std::map<std::pair<float, float>, Bombs *>  *bombs)
+{
+    _bombs = bombs;
 }
 
 void  Player::setRange(int range)
@@ -301,4 +310,14 @@ void    Player::setScore(int newScore)
 int     Player::getScore() const
 {
     return (_score);
+}
+
+void    Player::setPlayerTab(std::map<int, Player*> *playermap)
+{
+    _playermap = playermap;
+}
+
+void Player::setSound(Sound *sound)
+{
+    _sound = sound;
 }

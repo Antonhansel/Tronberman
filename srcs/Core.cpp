@@ -116,6 +116,9 @@ bool   Core::makeChar(int posx, int posy, int screen)
   chara->setPlayer(screen);
   chara->setMap(_map);
   chara->setId(screen);
+  chara->setBombs(&_bombs);
+  chara->setSound(_sound);
+  chara->setPlayerTab(&_player);
   _player[screen] = chara;
   return (true);
 }
@@ -131,6 +134,9 @@ bool   Core::makeBot(int posx, int posy, int id)
   chara->setPos(pos);
   chara->setMap(_map);
   chara->setId(id);
+  chara->setBombs(&_bombs);
+  chara->setPlayerTab(&_player);
+  chara->setSound(_sound),
   _player[id] = chara;
   return (true);
 }
@@ -183,23 +189,6 @@ void  Core::FPS()
     _frames++;
 }
 
-void  Core::spawnBomb(Player *player)
-{
-  std::pair<float, float> pos;
-
-  pos = player->getPos();
-  pos.first = floor(pos.first);
-  pos.second = floor(pos.second);
-  if (_bombs.find(pos) == _bombs.end())
-  {
-     Bombs *b = new Bombs();
-     b->setObjects(_map, _sound, &_bombs);
-     b->setPlayerTab(&_player);
-     b->makeBomb(player);
-     _bombs[pos] = b;
-   }
-}
-
 bool	Core::update()
 {
   checkAlive();
@@ -208,7 +197,6 @@ bool	Core::update()
   std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;;
-  std::string     str = "";
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
@@ -221,11 +209,11 @@ bool	Core::update()
   if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
     return false;
   if (_input.getKey(SDLK_KP_0))
-    spawnBomb(_player[1]);
+    _player[1]->spawnBomb();
   if (_input.getKey(SDLK_o))
     Saving(_map->getName(), this);
   if (_input.getKey(SDLK_SPACE) && _players == 2)
-    spawnBomb(_player[2]);
+    _player[2]->spawnBomb();
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)

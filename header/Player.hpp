@@ -14,7 +14,7 @@
 # include "AObject.hpp"
 # include "Model.hh"
 # include "AInput.hpp"
-
+# include "Sound.hpp"
 
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
@@ -27,8 +27,8 @@ enum dirr
   };
 
 class Bonus;
-
 class AInput;
+class Bombs;
 
 class Player : public AObject
 {
@@ -55,6 +55,7 @@ protected:
   bool          _isAlive;
   int           _score;
   dirr          _dir;
+  std::map<int, Player*>  *_playermap;
 
 public:
   void    setPlayer(int);
@@ -81,14 +82,19 @@ public:
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
+  void    spawnBomb();
+  void    setSound(Sound *sound);
   std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;
-
+  void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
+  void    setPlayerTab(std::map<int, Player*> *playermap);
 private:
   std::pair<float, float> up(float &);
   std::pair<float, float> right(float &);
   std::pair<float, float> left(float &);
   std::pair<float, float> down(float &);
+  std::map<std::pair<float, float>, Bombs *>  *_bombs;
+  Sound         *_sound;
 };
 
 #endif /* !_PLAYER_HPP_ */
