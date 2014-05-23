@@ -36,7 +36,11 @@ Player::~Player()
 bool    Player::initialize()
 {
     _speed = 7;
-    _model.load( "./ressources/assets/bomberman_white_run.FBX");
+    if (_model.load( "./ressources/assets/bomberman_white_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
     return (true);

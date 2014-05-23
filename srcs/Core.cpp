@@ -27,8 +27,8 @@ void  Core::reset()
   std::map<int, Player *>::const_iterator it;
   std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
 
-  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
-    delete (*it).second;
+  // for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+  //   delete (*it).second;
   _bombs.clear();
   for (it = _player.begin(); it != _player.end(); ++it)
     delete (*it).second;
@@ -40,6 +40,7 @@ void  Core::reset()
     delete _explosion[i].second;
   _explosion.clear();
   _displayFPS = false;
+  std::cout << "TEST" << std::endl;
 }
 
 void  Core::setValues(Map *map)
@@ -285,6 +286,16 @@ void  Core::checkAlive()
   int num;
 
   num = 0;
+  if (_players == 2)
+  {
+    if (!_player[1]->isAlive() && !_player[2]->isAlive())
+      _endgame = true;
+  
+  }
+  else if (!_player[1]->isAlive())
+    _endgame = true;
+  else
+  {
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)
@@ -292,6 +303,7 @@ void  Core::checkAlive()
   }
   if (num == 1)
     _endgame = true;
+  }
 }
 
 void	Core::draw()

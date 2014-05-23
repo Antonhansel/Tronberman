@@ -46,20 +46,17 @@ bool		Engine::start()
                 _menu->draw();
             if (_menu->launch() == true)
             {
-                // getter depuis le menu
-                // setter vers core
-                std::cout << "LAUNCHING THE MENU" << std::endl;
-                _core->setValues(_menu->getMap());
-                if (_core->initialize())
-                {
-                    while (_core->update())
-                      _core->draw();
-                  _menu->reset(_core->getPlayer());
-                  _core->reset();
-                }
+              _core->setValues(_menu->getMap());
+              if (_core->initialize())
+              {
+                  while (_core->update())
+                    _core->draw();
+                _menu->reset(_core->getPlayer());
+                _core->reset();
+              }
             }
             else
-                quit = true;
+              quit = true;
         }
     }
     return (false);

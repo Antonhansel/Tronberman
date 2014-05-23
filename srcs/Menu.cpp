@@ -363,6 +363,7 @@ void    Menu::reset(const std::map<int, Player*> &p)
     _newScore = max;
   }
   (this->*_func[_stepM])();
+  std::cout << "TESTTESTTEST" << std::endl;
 }
 
 bool    Menu::launch() const

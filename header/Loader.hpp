@@ -24,6 +24,7 @@ public:
 private:
 	std::vector<gdl::Texture*> _textures;
 	gdl::Geometry 		_geometry;
+	gdl::Model 			_model;
 };
 
 #endif	/*!_LOADER_HPP_*/

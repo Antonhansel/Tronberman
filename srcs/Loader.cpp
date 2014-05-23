@@ -47,7 +47,11 @@ bool 	Loader::loadTextures()
   _textures[SELECTED] = new gdl::Texture();
   if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
     return (false);
-
+  if (_model.load( "./ressources/assets/bomberman_white_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
   _textures[BLOCKD]->bind();
   // GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
   // GLfloat mat_ambient_color[] = { 0.8F,0.8F,0.2F,1.0F };
