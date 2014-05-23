@@ -51,7 +51,6 @@ public:
 private:
   bool      _displayFPS;
   int       _screen;
-  int 			_percent;
   Hud       *_hud;
   Menu      *_menu;
   Camera 		*_cam;

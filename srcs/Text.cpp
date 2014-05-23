@@ -11,10 +11,10 @@
 #include "Text.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace glm;
-
 Text::Text(Camera *camera, Loader *load) : _firstChar(0)
 {
+  glAlphaFunc(GL_GREATER, 0.1f);
+  glEnable(GL_ALPHA_TEST);
   _camera = camera;
   _loader = load;
   _lastType = UNSELECTED;
@@ -25,52 +25,26 @@ Text::~Text()
 
 int	Text::getColumn(char c)
 {
-  if (c == '.')
-    {
-      _firstChar = ' ';
-      return (16);
-    }
-  if (c >= '0' && c <= '9')
-    {
-      _firstChar = '0';
-      return (15);
-    }
-  if (c >= '@' && c <= 'O')
-    {
-      _firstChar = '@';
-      return (14);
-    }
-  if (c >= 'P' && c <= '\\')
-    {
-      _firstChar = 'P';
-      return (13);
-    }
-  return (0);
+  int ret;
+
+  ret = 0;
+  (c == '.') ? (_firstChar = ' ', ret = 16) : 0;
+  (c >= '0' && c <= '9') ? (_firstChar = '0', ret = 15) : 0;
+  (c >= '@' && c <= 'O') ? (_firstChar = '@', ret = 14) : 0;
+  (c >= 'P' && c <= '\\') ? (_firstChar = 'P', ret = 13) : 0;
+  return (ret);
 }
 
 int Text::getOtherColumn(char c)
 {
-  if (c == '.')
-    {
-      _firstChar = ' ';
-      return (8);
-    }
-  if (c >= '0' && c <= '9')
-    {
-      _firstChar = '0';
-      return (7);
-    }
-  if (c >= '@' && c <= 'O')
-    {
-      _firstChar = '@';
-      return (6);
-    }
-  if (c >= 'P' && c <= '\\')
-    {
-      _firstChar = 'P';
-      return (5);
-    }
-  return (0);
+  int ret;
+
+  ret = 0;
+  (c == '.') ? (_firstChar = ' ', ret = 8) : 0;
+  (c >= '0' && c <= '9') ? (_firstChar = '0', ret = 7) : 0;
+  (c >= '@' && c <= 'O') ? (_firstChar = '@', ret = 6) : 0;
+  (c >= 'P' && c <= '\\') ? (_firstChar = 'P', ret = 5) : 0;
+  return (ret);
 }
 
 void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool other)
@@ -79,8 +53,6 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool o
   int	div;
 
   glDisable(GL_DEPTH_TEST);
-  glAlphaFunc(GL_GREATER, 0.1f);
-  glEnable(GL_ALPHA_TEST);
   c -= (c >= 'a' && c <= 'z') ? 32 : 0;
   div = other ? getColumn(c) : getOtherColumn(c);
   geometry->pushVertex(glm::vec3(0, 0, 0));
@@ -109,10 +81,12 @@ std::vector<gdl::Geometry *> Text::putstr(const char *str, int size, bool other)
 
 void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &map, int isSelect)
 {
-  int __attribute__((unused))col(0);
-  int __attribute__((unused))row(0);
+  int col;
+  int row;
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::const_iterator it;
 
+  row = 0;
+  col = 0;
   _loader->bindTexture(_lastType);
   _camera->setMode();
   for (it = map.begin(); it != map.end(); ++it)
@@ -152,15 +126,8 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it; 
   for (it = old->begin(); it != old->end(); ++it)
   {
-    // AVERIFIER !!!!!! MERKI CHOUAGI
-    /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end();)
-    {
-      v = (*it).second.erase(v);
-    }*/
     if (cptr < words.size())
-    {
       (*it).second = putstr(words[cptr].second.c_str(), 64, words[cptr].first);      
-    }
     else
       (*it).second = putstr("", 64, true);
     cptr++;
@@ -173,8 +140,6 @@ void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl
   it = old->begin();
   for (int i = 0; i < index; i++)
     ++it;
-  /*for (std::vector<gdl::Geometry *>::iterator v = (*it).second.begin(); v != (*it).second.end(); ++v)
-    v = (*it).second.erase(v);*/
   (*it).second = putstr(input.c_str(), 64, false);
 }
 
@@ -196,7 +161,5 @@ void  Text::deleteAllText(std::map<std::pair<int, std::pair<int, int> >, std::ve
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
 
   for (it = t.begin(); it != t.end(); ++it)
-  {
     deleteText(t, (*it).first);
-  }
 }

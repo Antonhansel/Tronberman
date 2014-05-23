@@ -24,14 +24,28 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
 
 void  Core::reset()
 {
-  _players = 1;
-  _nb_bot = 0;
+  std::map<int, Player *>::const_iterator it;
+  std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
+
+  for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
+    delete (*it).second;
+  _bombs.clear();
+  for (it = _player.begin(); it != _player.end(); ++it)
+    delete (*it).second;
+  _player.clear();
+  for (size_t i(0); i != _other.size(); i++)
+    delete _other[i];
+  _other.clear();
+  for (size_t i(0); i != _explosion.size(); i++)
+    delete _explosion[i].second;
+  _explosion.clear();
   _displayFPS = false;
 }
 
 void  Core::setValues(Map *map)
 {
   std::vector<std::pair<int, int> >    obj;
+  
   _players = _menu->getNbPlayer();
   std::cout << "player : " << _players << std::endl;
   _map = map;
@@ -48,7 +62,6 @@ void  Core::setValues(Map *map)
     _posx2 = obj.begin()->first;
     _posy2 = obj.begin()->second;
   }
-  _percent = 15;
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -57,9 +70,6 @@ void  Core::setValues(Map *map)
 
 Core::~Core()
 {
-  std::map< std::pair<float, float>, AObject *>::iterator it;
-
-  //delete _map;
   delete _sound;
   delete _hud;
 }
@@ -68,11 +78,7 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
-  if (drawFloor() == false)
-    return (false);
-  if (drawChar() == false)
-    return (false);
-  if (drawBot(_nb_bot) == false)
+  if (!drawFloor() || !drawChar() || !drawBot(_nb_bot))
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
   {
@@ -325,11 +331,10 @@ void	Core::draw()
 
 Map       *Core::getMap()
 {
-  return _map;
+  return (_map);
 }
 
 std::map<int, Player*>  Core::getPlayer()
 {
-  reset();
-  return _player;
+  return (_player);
 }

@@ -53,8 +53,9 @@ bool		Engine::start()
                 if (_core->initialize())
                 {
                     while (_core->update())
-                        _core->draw();
+                      _core->draw();
                   _menu->reset(_core->getPlayer());
+                  _core->reset();
                 }
             }
             else
