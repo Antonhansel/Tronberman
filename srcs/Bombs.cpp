@@ -142,9 +142,9 @@ void    Bombs::newBomb(std::pair<float, float> &check)
             std::cout << "DEAD\n";
             if ((*it).second->getId() != _player->getId())
               _player->setScore(_player->getScore() + 1000);
-              (*it).second->setScore((*it).second->getScore() - 100);
-              std::cout << "Score: " << (*it).second->getScore() << std::endl;
-              (*it).second->setIsAlive();
+            (*it).second->setScore((*it).second->getScore() - 100);
+            std::cout << "Score: " << (*it).second->getScore() << std::endl;
+            (*it).second->setIsAlive();
           }
           else if ((*it).second->isAlive() == true)
           {

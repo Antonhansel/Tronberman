@@ -38,7 +38,7 @@ Generator::~Generator()
 
 bool 	Generator::drawBackground()
 {
-  _floor = new Floor(100, 100, 10.0f);
+  _floor = new Floor(_size, _size, 10.0f);
   return (_floor->initialize());
 }
 

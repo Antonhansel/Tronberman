@@ -64,7 +64,7 @@ private:
   int			_width;
   int			_height;
   Map		        *_map;
-  Sound			*_sound;
+  Sound			    *_sound;
   gdl::Clock		_clock;
   gdl::Input		_input;
   double        _time;

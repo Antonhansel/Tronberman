@@ -288,20 +288,18 @@ void  Core::checkAlive()
   {
     if (!_player[1]->isAlive() && !_player[2]->isAlive())
       _endgame = true;
-  
   }
   else if (!_player[1]->isAlive())
     _endgame = true;
-  else
-  {
+ 
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)
       num++;
   }
+  std::cout << num << std::endl;
   if (num == 1)
     _endgame = true;
-  }
 }
 
 void	Core::draw()
