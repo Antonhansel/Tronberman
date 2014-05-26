@@ -19,6 +19,7 @@ Saving::Saving(std::vector<std::string> &fileName)
 
     _nbrLine = 0;
     _name = fileName.back();
+    _sizeMap = 0;
     error = true;
     error = loadMap(fileName.back());
     if (error == false)
@@ -113,6 +114,8 @@ bool    Saving::loadCase(std::list<std::string> &file)
   int y;
   int t;
 
+  if (_sizeMap == 0)
+    return false;
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
     return false;
@@ -147,6 +150,8 @@ bool    Saving::loadSpawn(std::list<std::string> &file)
   int x;
   int y;
 
+  if (_sizeMap == 0)
+    return false;
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
     return false;
@@ -170,48 +175,38 @@ bool    Saving::loadMap(std::string &file_name)
   std::list<std::string>  file;
   std::string             str;
   std::ifstream           infile(file_name.c_str());
-  std::size_t             pos;
+  size_t                  pos = 0;
   bool                    error;
 
   while (std::getline(infile, str))
     file.push_back(str);
-  if (file.size() > 2)
+  while (!file.empty() && (pos = file.front().find("<map>")) == std::string::npos)
   {
-    while ((pos = file.front().find("<map>")) == std::string::npos
-          && file.size() > 0)
-    {
-      file.pop_front();
-      _nbrLine++;
-    }
+    file.pop_front();
+   _nbrLine++;
+  }
+  if (!file.empty())
+  {
     _nbrLine++;
     file.pop_front();
-    std::string front;
-    while ((pos = file.front().find("</map")) == std::string::npos
-          && file.size() > 0)
-    {
-      error = true;
-      front = file.front();
-      if ((pos = front.find("<size>")) != std::string::npos)
-        error = loadSize(file);
-      if ((pos = front.find("<case>")) != std::string::npos)
-        error = loadCase(file);
-      if ((pos = front.find("<spawn>")) != std::string::npos)
-        error = loadSpawn(file);
-      if (error == false)
-        return false;
-      if (file.front() == "")
-      {
-        file.pop_front();
-        _nbrLine++;
-      }
-    }
-    if (_sizeMap == 0)
-      return false;
   }
-  else
+  std::string front;
+  while (!file.empty() && (pos = file.front().find("</map")) == std::string::npos)
   {
-    std::cout << "The map is not found." << std::endl;    
-    return false;
+    error = true;
+    front = file.front();
+    if ((pos = front.find("<size>")) != std::string::npos)
+      error = loadSize(file);
+    if ((pos = front.find("<case>")) != std::string::npos)
+      error = loadCase(file);
+    if ((pos = front.find("<spawn>")) != std::string::npos)
+      error = loadSpawn(file);
+    if (error == false)
+      return false;
+    file.pop_front();
+    if (file.empty())
+      return false;
+    _nbrLine++;
   }
   return true;
 }
@@ -315,15 +310,26 @@ bool    Saving::saveMap()
 
 std::vector<Map *>                      Saving::getListMap()
 {
+  if (_listMap.empty() || _listMap.size() < 5)
+  {
+    while (_listMap.empty() || _listMap.size() < 5)
+    {
+      _listMap.push_back(new Map((rand() % 30) + 10));
+    }
+  }
   return _listMap;
 }
 
 void                                    Saving::addListMap()
 {
-  Map *myMap = new Map(_sizeMap);
+  Map *myMap = NULL;
 
-  myMap->setMap(_map);
-  myMap->setSpawn(_spawn);
-  myMap->setSize(_sizeMap);
-  _listMap.push_back(myMap);
+  if (_sizeMap >= 10)
+    myMap = new Map(_sizeMap);
+  if (myMap != NULL && _map != NULL)
+    myMap->setMap(_map);
+  if (myMap != NULL && !_spawn.empty())
+    myMap->setSpawn(_spawn);
+  if (myMap != NULL)
+    _listMap.push_back(myMap);
 }
