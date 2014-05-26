@@ -11,7 +11,7 @@
 #include "Bonus.hpp"
 
 Bonus::Bonus() :
-	_isTaken(false), _time(0)
+	_time(0)
 {
 	_ptrFunct[BONUS1] = &Bonus::giveBonus1;
 	_ptrFunct[BONUS2] = &Bonus::giveBonus2;
@@ -33,13 +33,14 @@ bool	Bonus::initialize()
 		_bonus = BONUS2;
 	else
 		_bonus = BONUS3;
-  scale(glm::vec3(0.9, 0.9, 0.9));
+  scale(glm::vec3(0.7, 0.7, 0.7));
   return (true);
 }
 
 void	Bonus::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_time += clock.getElapsed();
+	std::cout << "test" << std::endl;
 }
 
 void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)

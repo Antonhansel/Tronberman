@@ -299,7 +299,6 @@ void  Core::checkAlive()
     if ((*it).second->isAlive() == true)
       num++;
   }
-  std::cout << num << std::endl;
   if (num == 1)
     _endgame = true;
 }

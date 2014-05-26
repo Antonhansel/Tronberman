@@ -38,17 +38,17 @@ public:
   void      previewMode(bool);
   bool      isSplit() const;
 private:
-  float   _tilt;
-  int     _mode;
-  float			_width;
-  float			_height;
-  int 			_players;
-  mat4			_transformation;
-  mat4			_projection;
+  float         _tilt;
+  int           _mode;
+  float			    _width;
+  float			    _height;
+  int 			    _players;
+  mat4			    _transformation;
+  mat4			    _projection;
   SdlContext		_context;
-  Clock			_clock;
+  Clock			    _clock;
   BasicShader		_shader;
-  Input			_input;
+  Input			    _input;
 };
 
 #endif /*!_CAMERA_HPP_*/

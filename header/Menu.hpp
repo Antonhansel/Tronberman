@@ -1,9 +1,9 @@
 //
 // Menu.hpp for Menu in /home/chouag_m/rendu/old
-// 
+//
 // Made by Mehdi Chouag
 // Login   <chouag_m@epitech.net>
-// 
+//
 // Started on  Sat May  3 17:42:13 2014 Mehdi Chouag
 // Last update Tue May 13 19:24:11 2014 Mehdi Chouag
 //
@@ -12,13 +12,13 @@
 # define MENU_HPP_
 
 # include "Camera.hpp"
-# include <Game.hh> 
-# include <Clock.hh> 
-# include <Input.hh> 
-# include <SdlContext.hh> 
-# include <Geometry.hh> 
-# include <Texture.hh> 
-# include <Model.hh> 
+# include <Game.hh>
+# include <Clock.hh>
+# include <Input.hh>
+# include <SdlContext.hh>
+# include <Geometry.hh>
+# include <Texture.hh>
+# include <Model.hh>
 # include <glm/glm.hpp>
 # include <BasicShader.hh>
 # include <glm/gtc/matrix_transform.hpp>
@@ -113,7 +113,6 @@ private:
   bool          _isLaunch;
   float         _timer;
   int           _back;
-  int           _min;
   int           _max;
   stepM         _stepM;
   stepM         _oldStep;

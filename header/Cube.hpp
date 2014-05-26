@@ -15,8 +15,6 @@
 
 class Cube : public AObject
 {
-private:
-  type		_type;
 public:
 	Cube();
 	~Cube();
