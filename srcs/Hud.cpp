@@ -73,11 +73,12 @@ void	Hud::updatePlayer1(Player *cur)
 	if (_timerDouble == true)
 	{
 		delGeometry(_player1[TIMER]);
-		_player1[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
+		if (_timer > 0)
+			_player1[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
 	}
 	else
-	{
-		_time = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 64, true);		
+	{	if (_timer > 0)
+			_time = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 64, true);		
 	}
 }
 
@@ -109,7 +110,10 @@ void	Hud::updatePlayer2(Player *cur)
 	if (_timerDouble == true)
 	{
 		delGeometry(_player2[TIMER]);
-		_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
+		if (_timer > 0)
+		{
+			_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
+		}
 	}
 /*	else
 		delGeometry(_player2[TIMER]);*/
@@ -131,7 +135,7 @@ void	Hud::draw(Player *cur)
 	_loader->bindTexture(SELECTED);
   	_camera->setMode();
   	(this->*_drawPlayer[cur->getId()])();
-  	if (_timerDouble == false)
+  	if (_timerDouble == false && _timer > 0)
   		drawTimer();
   	_camera->setMode();
 }
@@ -140,7 +144,7 @@ void	Hud::drawTimer()
 {
 	int	col;
 
-	col = 750;
+	col = 650;
 	for (std::vector<Geometry *>::iterator it = _time.begin(); it != _time.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 0, 0));
