@@ -168,10 +168,10 @@ void  Bombs::explosion(std::pair<float, float> pos, int playerId)
   range = _player->getRange();
   check.first = pos.first;
   check.second = pos.second;
-  explosePosY(pos.second + range, check);
   exploseNegY(pos.second - range, check);
-  explosePosX(pos.first + range, check);
   exploseNegX(pos.first - range, check);
+  explosePosY(pos.second + range, check);
+  explosePosX(pos.first + range, check);
 }
 
 void  Bombs::explosePosY(float y, std::pair<float, float> check)

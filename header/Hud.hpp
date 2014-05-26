@@ -16,7 +16,8 @@ enum Display
 {
 	NBLIFE = 0,
 	NBRANGE = 1,
-	NBBOMB = 2
+	NBBOMB = 2,
+	TIMER = 3
 };
 
 class Hud : public Text
@@ -30,7 +31,8 @@ public:
 	void	draw(Player *);
 	void	drawFPS() const;
 	void 	setScreen(int);
-
+	bool	setClock(gdl::Clock &);
+	void	resetClock();
 private:
 	std::string convertToString(int, const std::string);
 	void 		delGeometry(std::vector<Geometry *> &);
@@ -39,6 +41,7 @@ private:
 	void		updatePlayer1(Player *);
 	void		updatePlayer2(Player *);
 	void		updateRep();
+	void		drawTimer();
 
 private:
 	int 	_screen;
@@ -52,10 +55,13 @@ private:
 	int 	_row1;
 	int 	_col1;
 	int 	_fps;
+	float	_timer;
+	bool	_timerDouble;
 	glm::mat4 _transformation;
 	std::map<int, void(Hud::*)(Player *) > _updatePlayer;
 	std::map<int, void(Hud::*)() > _drawPlayer;
 	std::map<Display, std::vector<gdl::Geometry *> > _player1;
 	std::map<Display, std::vector<gdl::Geometry *> > _player2;
+	std::vector<gdl::Geometry *>	_time;
 	std::vector<gdl::Geometry *> _affFPS;
 };
