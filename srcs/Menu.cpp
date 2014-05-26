@@ -39,6 +39,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[SCORE] = &Menu::score;
   _func[LOADM] = &Menu::load;
   _func[LOADG] = &Menu::loadGame;
+  _func[LOADPREVIOUS] = &Menu::loadPrevious;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -356,7 +357,6 @@ void    Menu::reset(const std::map<int, Player*> &p)
     if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
       i++;
   (i > 4) ? (_addScore = false) : 0;
-
   getScore();
   _stepM = SCORE;
   _newScore = max;
@@ -393,10 +393,11 @@ void    Menu::step1()
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD CUSTOM MAP", true);
-  _text->addText(_step1, 2, std::make_pair(15, 460), "MAP BUILDER", true);
-  _text->addText(_step1, 3, std::make_pair(15, 540), "BACK", true);
-  _max = 3;
+  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD GAME", true);
+  _text->addText(_step1, 2, std::make_pair(15, 460), "LOAD CUSTOM MAP", true);
+  _text->addText(_step1, 3, std::make_pair(15, 540), "MAP BUILDER", true);
+  _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
+  _max = 4;
 }
 
 void    Menu::step11()
@@ -508,6 +509,16 @@ void    Menu::load()
   _max = 1;
 }
 
+void    Menu::loadPrevious()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
+  startPreview();
+  _max = 1;
+}
+
 bool    Menu::initLogo()
 {
   if (!_texture.load("./ressources/assets/logo.tga"))
@@ -601,6 +612,22 @@ void  Menu::getScore()
   }
 }
 
+// void    Menu::step1()
+// {
+//   _sizeMap.assign("30");
+//   _nbPlayer.assign("1");
+//   _nbBots.assign("1");
+//   _isSelect = 0;
+//   _text->deleteAllText(_step1);
+//   _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
+//   _text->addText(_step1, 1, std::make_pair(15, 460), "LOAD GAME", true);
+//   _text->addText(_step1, 2, std::make_pair(15, 460), "LOAD CUSTOM MAP", true);
+//   _text->addText(_step1, 3, std::make_pair(15, 540), "MAP BUILDER", true);
+//   _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
+//   _max = 4;
+// }
+
+
 void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
@@ -614,14 +641,15 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) : 0;
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
 }
 
 void  Menu::select2()
 {
-  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
+  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
   : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
   if (_stepM == SCORE)
      getScore();
@@ -631,7 +659,7 @@ void  Menu::select3()
 {
   bool isAnime(false);
 
-  (_stepM == STEP1) ? (_stepM = HOME) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
+  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
   ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
@@ -639,5 +667,5 @@ void  Menu::select3()
 
 void  Menu::select4()
 {
-  (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : 0;
+  (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : (_stepM == STEP1) ? (_stepM = HOME) : 0;
 }
