@@ -99,6 +99,15 @@ bool    Player::_checkMove(float x, float y)
         return (false);
 }
 
+bool    Player::_checkMove2(float x, float y)
+{
+    AObject *cas = _map->getCase(x, y);
+    if (!cas || cas->getType() == BONUS)
+        return (true);
+    else
+        return (false);
+}
+
 bool    Player::_onBomb()
 {
     AObject     *tmp;
@@ -323,7 +332,11 @@ void    Player::setPlayerTab(std::map<int, Player*> *playermap)
     _playermap = playermap;
 }
 
-void Player::setSound(Sound *sound)
+void    Player::setSound(Sound *sound)
 {
     _sound = sound;
 }
+
+void    Player::setObj(gdl::Clock const &clock)
+{}
+
