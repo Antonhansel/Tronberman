@@ -53,7 +53,8 @@ enum stepM
     STEP3,
     BUILDER,
     LOADM,
-    LOADG
+    LOADG,
+    LOADPREVIOUS
   };
 
 class Menu : public Game
@@ -80,6 +81,7 @@ public:
   void      score();
   void      load();
   void      loadGame();
+  void      loadPrevious();
   int       getMapSize() const;
   int       getNbPlayer() const;
   int       getNbBots() const;
