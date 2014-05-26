@@ -1,27 +1,36 @@
-/*
-** Mybot.hpp for Mybot in /home/apollo/rendu/cpp_bomberman/header
-**
-** Made by Antonin Ribeaud
-** Login   <ribeau_a@epitech.net>
-**
-** Started on  Fri May  23 15:42:07 2014 Antonin Ribeaud
-** Last update Fri May  23 15:42:07 2014 Antonin Ribeaud
-*/
-
 #ifndef _MYBOT_HPP_
 # define _MYBOT_HPP_
 
-# include "Bombs.hpp"
+# include "Player.hpp"
 # include "Map.hpp"
+
+enum dir
+{
+  LEFT,
+  UP,
+  RIGHT,
+  DOWN
+};
 
 class Mybot : public Player
 {
 public:
   Mybot();
   ~Mybot();
-  bool			isSafe(int, int);
+  void    setObj(gdl::Clock const &);
+
 private:
-  bool			lineSave(int, int, int, int);
+  bool    lineSafe(int, int, int, int) const;
+  bool    isSafe(int, int) const;
+  bool    setObjDef(int, int, int, dir);
+  void    setObjDef(int, int);
+  void    setObjOff(int, int);
+  void    moveTo(int, int, int, int);
+  int     my_rand();
+
+  int     _x_obj;
+  int     _y_obj;
+  int     _lastrand;
 };
 
 #endif /* MYBOT_HPP */

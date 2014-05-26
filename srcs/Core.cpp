@@ -242,6 +242,8 @@ bool	Core::update()
   if (_players == 2)
     _hud->update(_player[2]);
   _hud->update(_player[1]);
+  for (int i = 3; i <= _nb_bot + 2; i++)
+    _player[i]->setObj(_clock);
   return (true);
 }
 
