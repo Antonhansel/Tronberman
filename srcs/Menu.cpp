@@ -142,7 +142,7 @@ void    Menu::manageEventInput()
   if (_stepM == STEP12 && _isSelect == 0)
     getInputNb(_sizeMap, 5, 4, 30, 0);
   if (_stepM == LOADG)
-  {    
+  {
     switch (_isSelect)
     {
       case 0:
@@ -185,7 +185,7 @@ void    Menu::manageEventInputScore(key &k)
         c++;
         (c == 91) ? (c = 65) : 0;
         getInputPseudo(c);
-        break; 
+        break;
       }
       case MRIGHT:
       {
@@ -203,7 +203,7 @@ void    Menu::manageEventInputScore(key &k)
         {
           _pos = 7;
           _addScore = false;
-          saveInFile();          
+          saveInFile();
         }
         break;
       default:
@@ -236,7 +236,7 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
   key   k;
 
-  if ((k = _event->getInput()) != NONE && 
+  if ((k = _event->getInput()) != NONE &&
       k != MBACKSPACE && k != MUP && k != MDOWN &&
         k != MLEFT && k != MRIGHT && s.size() < size)
   {
@@ -285,7 +285,7 @@ void    Menu::chooseStep()
   if (play == true)
   {
     (this->*_func[_stepM])();
-    _oldStep = _stepM;    
+    _oldStep = _stepM;
   }
 }
 
@@ -323,7 +323,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
         if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
         {
           _timer = 0;
-          chooseStep();          
+          chooseStep();
         }
         else
           manageEventInputScore(k);
@@ -342,7 +342,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
 void    Menu::reset(const std::map<int, Player*> &p)
 {
   int   max;
-  int   i;
+  int   i = 0;
 
   _isLaunch = false;
   _isSelect = 0;
@@ -350,12 +350,12 @@ void    Menu::reset(const std::map<int, Player*> &p)
   _pos = 0;
   _scoreToAdd.assign("");
   (p.find(1)->second->getScore() > max) ? (max = p.find(1)->second->getScore()) : 0;
-  (p.find(2) != p.end() && p.find(2)->second->getScore() > max) ? (max = p.find(2)->second->getScore()) : 0; 
+  (p.find(2) != p.end() && p.find(2)->second->getScore() > max) ? (max = p.find(2)->second->getScore()) : 0;
   _addScore = true;
   for (std::map<int, Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
     if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
       i++;
-  (i > 4) ? (_addScore = false) : 0; 
+  (i > 4) ? (_addScore = false) : 0;
 
   getScore();
   _stepM = SCORE;
@@ -459,7 +459,7 @@ void    Menu::score()
   if (_score.size() == 0 && _addScore == false)
   {
     _text->addText(_step1, 1, std::make_pair(600, 380), "NOT YET SCORE", true);
-    return;    
+    return;
   }
   for (std::map<int, std::string>::iterator it = _score.begin(); it != _score.end(); ++it)
   {
@@ -582,7 +582,7 @@ void  Menu::getScore()
   std::size_t   found;
 
   if (file.is_open())
-  { 
+  {
     while (!file.eof())
     {
       std::getline(file, res, '\n');
@@ -597,7 +597,7 @@ void  Menu::getScore()
 
 void  Menu::select0()
 {
-  (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11) 
+  (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) : 0;
   if (_stepM == LOADG)
     _map = _preview->getMap();
@@ -615,7 +615,7 @@ void  Menu::select1()
 
 void  Menu::select2()
 {
-  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0) 
+  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
   : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
   if (_stepM == SCORE)
      getScore();
@@ -625,7 +625,7 @@ void  Menu::select3()
 {
   bool isAnime(false);
 
-  (_stepM == STEP1) ? (_stepM = HOME) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer())) 
+  (_stepM == STEP1) ? (_stepM = HOME) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
   ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);

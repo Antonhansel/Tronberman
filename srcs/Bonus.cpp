@@ -11,7 +11,7 @@
 #include "Bonus.hpp"
 
 Bonus::Bonus() :
-	_isTaken(false), _time(0)
+	_time(0)
 {
 	_ptrFunct[BONUS1] = &Bonus::giveBonus1;
 	_ptrFunct[BONUS2] = &Bonus::giveBonus2;

@@ -31,7 +31,6 @@ private:
 	typeBonus				_bonus;
 	std::pair<float, float>	_pos;
 	Map						*_map;
-	bool					_isTaken;
 	float					_time;
     std::map<typeBonus, void (Bonus::*)(Player *)>  _ptrFunct;
 

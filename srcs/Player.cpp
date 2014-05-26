@@ -86,7 +86,7 @@ void    Player::setSpeed(float speed)
 
 bool    Player::_checkMove(float x, float y)
 {
-    AObject *cas;
+    AObject *cas = NULL;
 
     if (_dir == NORTH || _dir == WEST)
       cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
@@ -231,7 +231,7 @@ std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
   // if (temp1 - pos.second > pos.second - temp2)
   //   pos.second = temp1;
   // else
-  //   pos.second = temp2;  
+  //   pos.second = temp2;
   // return (pos);
 }
 
