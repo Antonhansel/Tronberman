@@ -15,7 +15,7 @@
 Player::Player()
 {
     _stock = 1;
-    _range = 1;
+    _range = 2;
     _x = 0;
     _life = 1;
     _begin = false;
@@ -53,11 +53,12 @@ void  Player::spawnBomb()
     pos = realPos(getPos());
  if (_bombs->find(pos) == _bombs->end())
   {
-     Bombs *b = new Bombs();
-     b->setObjects(_map, _sound, _bombs);
-     b->setPlayerTab(_playermap);
-     b->makeBomb((Player*)this);
-     (*_bombs)[pos] = b;
+    _sound->putBombs(30);
+    Bombs *b = new Bombs();
+    b->setObjects(_map, _sound, _bombs);
+    b->setPlayerTab(_playermap);
+    b->makeBomb((Player*)this);
+    (*_bombs)[pos] = b;
    }
 }
 
@@ -175,6 +176,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
     if (tmp && tmp->getType() == BONUS)
     {
         static_cast<Bonus*>(tmp)->addToPlayer(this);
+        _sound->bonus(30);
         _map->deleteCube(_pos.first, _pos.second);
     }
   }

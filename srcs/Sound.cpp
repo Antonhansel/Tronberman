@@ -13,26 +13,37 @@
 Sound::Sound()
 {
   _music = new sf::Music;
-  _soundEffect[BOMB_S] = &Sound::bomb; 
-  _soundEffect[BONUS_S] = &Sound::bonus; 
+  _soundEffect[BOMB_S] = &Sound::bomb;
+  _soundEffect[BONUS_S] = &Sound::bonus;
+  _soundEffect[PBOMB_S] = &Sound::bonus;
+  _soundEffect[DEATH_S] = &Sound::bonus;
+  _soundEffect[HIT_S] = &Sound::hit;
   // _soundEffect[WALK_S] = &Sound::walk; 
   // _soundEffect[DEAD_S] = &Sound::dead;
   _effect[BOMB_S] = new sf::Music;
   _effect[BONUS_S] = new sf::Music;
+  _effect[PBOMB_S] = new sf::Music;
+  _effect[DEATH_S] = new sf::Music;
+  _effect[HIT_S] = new sf::Music;
+  
   // _effect[WALK_S] = new sf::Music;
   // _effect[DEAD_S] = new sf::Music;
   _effect[BOMB_S]->openFromFile("./ressources/sounds/bomb.wav");
   // _effect[WALK_S]->openFromFile("./ressources/sounds/walk.wav");
   _effect[BONUS_S]->openFromFile("./ressources/sounds/bonus.wav");
   // _effect[DEAD_S]->openFromFile("./ressources/sounds/dead.wav");
+  _effect[PBOMB_S]->openFromFile("./ressources/sounds/pbombs.wav");
+  _effect[DEATH_S]->openFromFile("./ressources/sounds/death.wav");
+  _effect[HIT_S]->openFromFile("./ressources/sounds/hit.wav");
 }
 
 Sound::~Sound()
 {
-  // for (int i = 0; i < 4; ++i)
-  //   delete _effect[i];
   delete _effect[BOMB_S];
   delete _effect[BONUS_S];
+  delete _effect[PBOMB_S];
+  delete _effect[DEATH_S];
+  delete _effect[HIT_S];
   delete _music;
 }
 
@@ -53,6 +64,23 @@ void	Sound::bonus(int volume)
   _effect[BONUS_S]->play();
 }
 
+void  Sound::putBombs(int volume)
+{
+  _effect[PBOMB_S]->setVolume(volume);
+  _effect[PBOMB_S]->play();
+}
+
+void  Sound::death(int volume)
+{
+  _effect[DEATH_S]->setVolume(volume);
+  _effect[DEATH_S]->play();
+}
+
+void  Sound::hit(int volume)
+{
+  _effect[HIT_S]->setVolume(volume);
+  _effect[HIT_S]->play();
+}
 // void	Sound::walk(int volume)
 // {
 //   _effect[WALK_S]->setVolume(volume);
