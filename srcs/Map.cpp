@@ -127,7 +127,7 @@ void    Map::_deleteSide(int x, int y)
         for (int j = y; j <= y + 1; j++)
         {
             tmp = getCase(i, j);
-            if (tmp && (tmp->getType() == BLOCKD || tmp->getType() == BLOCK))
+            if (tmp && (tmp->getType() == BLOCKD))
                 deleteCube(i, j);
         }
     }
