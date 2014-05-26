@@ -446,6 +446,7 @@ void    Menu::score()
   typedef std::vector<int>::iterator iter_type;
   int     max;
   int     add;
+  bool    d = true;
 
   max = 5;
   y = 380;
@@ -483,13 +484,18 @@ void    Menu::score()
       if (_score.find((*rev_from)) != _score.end())
         _text->addText(_step1, id, std::make_pair(15, y), _score.find((*rev_from))->second, true);
       else
+      {
+         d = false;
         _text->addText(_step1, id, std::make_pair(15, y), _scoreToAdd, true);
+       }
       y += 80;
       id++;
       rev_from++;
       max--;
     }
   }
+  if (d == true)
+    _addScore = false;
 }
 
 void    Menu::load()
