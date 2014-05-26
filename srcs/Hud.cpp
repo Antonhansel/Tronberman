@@ -115,8 +115,6 @@ void	Hud::updatePlayer2(Player *cur)
 			_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
 		}
 	}
-/*	else
-		delGeometry(_player2[TIMER]);*/
 }
 
 void	Hud::updateFPS(int fps)
@@ -158,13 +156,9 @@ void	Hud::drawPlayer1()
 	std::map<Display, std::vector<gdl::Geometry *> >::const_iterator it;
 	int col;
 	int row;
-	//int	max;
 
 	col = _col1;
 	row = 0;
-	//max = 0;
-	/*if (_timerDouble == true)
-		max = 1;*/
 	for (it = _player1.begin(); it != _player1.end(); ++it)
     {
       for (size_t i(0); i != (*it).second.size(); i++)
@@ -183,13 +177,9 @@ void	Hud::drawPlayer2()
 	std::map<Display, std::vector<gdl::Geometry *> >::const_iterator it;
 	int col;
 	int row;
-	//int	max;
 
 	col = 0;
 	row = 0;
-	//max = 0;
-	/*if (_timerDouble == true)
-		max = 1;*/
 	for (it = _player2.begin(); it != _player2.end(); ++it)
     {
       for (size_t i(0); i != (*it).second.size(); i++)
