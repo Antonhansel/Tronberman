@@ -75,7 +75,7 @@ void	Hud::updatePlayer1(Player *cur)
 		if (_timer > 0)
 		{
 			delGeometry(_player1[TIMER]);
-			_player1[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, false);
+			_player1[TIMER] = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 32, false);
 		}
 	}
 	else
@@ -83,7 +83,7 @@ void	Hud::updatePlayer1(Player *cur)
 		if (_timer > 0)
 		{
 			delGeometry(_time);
-			_time = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 64, false);
+			_time = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 64, false);
 		}
 	}
 }
@@ -119,7 +119,7 @@ void	Hud::updatePlayer2(Player *cur)
 		if (_timer > 0)
 		{
 			delGeometry(_player2[TIMER]);
-			_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, false);
+			_player2[TIMER] = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 32, false);
 		}
 	}
 }
@@ -149,7 +149,7 @@ void	Hud::drawTimer()
 {
 	int	col;
 
-	col = 650;
+	col = 700;
 	for (std::vector<Geometry *>::iterator it = _time.begin(); it != _time.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 0, 0));
@@ -223,6 +223,14 @@ std::string Hud::convertToString(int value, const std::string text)
 
   	ss << value;
   	return (text + " " + ss.str());
+}
+
+std::string Hud::convertToStringN(int value, const std::string text)
+{
+	std::stringstream ss;
+
+  	ss << value;
+  	return (ss.str() + text);
 }
 
 Hud::~Hud()

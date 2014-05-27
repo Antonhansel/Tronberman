@@ -41,7 +41,7 @@ int Text::getOtherColumn(char c)
 
   ret = 0;
   (c == '.') ? (_firstChar = ' ', ret = 8) : 0;
-  (c >= '0' && c <= '9') ? (_firstChar = '0', ret = 7) : 0;
+  (c >= '0' && c <= ':') ? (_firstChar = '0', ret = 7) : 0;
   (c >= '@' && c <= 'O') ? (_firstChar = '@', ret = 6) : 0;
   (c >= 'P' && c <= '\\') ? (_firstChar = 'P', ret = 5) : 0;
   return (ret);
