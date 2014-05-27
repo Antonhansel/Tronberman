@@ -141,7 +141,7 @@ void    Networking::_receiveFromClient(Client *client)
 void    Networking::_sendToClient(Client *client)
 {
     ssize_t     sizeSent;
-    std::pair<int, message *>     *toSend;
+    std::pair<unsigned int, message *>     *toSend;
 
     do {
         toSend = &*(client->toSend.begin());

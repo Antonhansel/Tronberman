@@ -42,9 +42,9 @@ struct                      Client {
     int                     sockfd;
     int                     lastTick;
     std::string             name;
-    std::list<std::pair<int, message *> >       toSend;
+    std::list<std::pair<unsigned int, message *> >       toSend;
     // first is the start position to send the message, second is the messages
-    std::pair<int, char[sizeof(message) + 1]>   inputBuffer;
+    std::pair<unsigned int, char[sizeof(message) + 1]>   inputBuffer;
     // first is the actual position in the buffer, second is the buffer
 };
 
