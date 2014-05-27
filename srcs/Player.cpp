@@ -64,10 +64,10 @@ void  Player::spawnBomb()
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
-    glPushMatrix();
+    //glPushMatrix();
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-    glPopMatrix();
+    //glPopMatrix();
 }
 
 void    Player::setMap(Map *map)

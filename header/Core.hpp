@@ -21,6 +21,7 @@
 # include "Bombs.hpp"
 # include "Sound.hpp"
 # include "Hud.hpp"
+# include "Particles.hpp"
 
 # define PATH "./ressources/maps/"
 
@@ -72,11 +73,11 @@ private:
   double        _frames;
   double        _lasttime;
   gdl::BasicShader	_shader;
-  std::vector< std::pair<double, AObject*> > _explosion;
   std::map<int, Player*>	_player;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
   bool        _endgame;
+  Particles   *_particles;
 };
 
 #endif /*!_CORE_HPP_*/
