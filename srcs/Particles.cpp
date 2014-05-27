@@ -44,7 +44,7 @@ void 	Particles::draw(gdl::AShader &shader, gdl::Clock const &clock)
 	}
     glEnd();
     glPopMatrix();
-    glEnable(GL_DEPTH_TEST);	
+    glEnable(GL_DEPTH_TEST);
 }
 
 void 	Particles::update(gdl::Clock const &clock)
