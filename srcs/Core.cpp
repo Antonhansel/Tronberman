@@ -354,3 +354,8 @@ std::map<int, Player*>  Core::getPlayer()
 {
   return (_player);
 }
+
+int       Core::getNbrPlayer() const
+{
+  return _players;
+}

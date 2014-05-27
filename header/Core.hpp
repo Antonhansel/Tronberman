@@ -45,6 +45,7 @@ public:
   void      FPS();
   void      checkAlive();
   void      spawnBomb(Player *);
+  int       getNbrPlayer() const;
   Map       *getMap();
   std::map<int, Player*>  getPlayer();
   void      setValues(Map *map);

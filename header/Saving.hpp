@@ -34,7 +34,6 @@ public:
 	bool    loadType(std::list<std::string> &, Player *);
 	bool    loadPlayer(std::string &);
 
-
 	bool    loadSize(std::list<std::string> &);
 	bool    loadCase(std::list<std::string> &);
 	bool    loadSpawn(std::list<std::string> &);
