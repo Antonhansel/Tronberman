@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue May  20 11:00:02 2014 Antonin Ribeaud
-** Last update Tue May  20 11:00:02 2014 Antonin Ribeaud
+// Last update Tue May 27 19:18:37 2014 ribeaud antonin
 */
 
 #include "Preview.hpp"
@@ -52,12 +52,15 @@ void 		Preview::getPaths()
 	DIR 			*mydir;
 	struct dirent 	*currentdir;
 	mydir = opendir(PATH);
-	while ((currentdir = readdir(mydir)) != NULL)
-	{
+	if (mydir != NULL)
+	  {
+	    while ((currentdir = readdir(mydir)) != NULL)
+	      {
 		if (checkName(currentdir->d_name) && 
-			checkName(currentdir->d_name))
-		_paths.push_back(makePath(currentdir->d_name));
-	}
+		    checkName(currentdir->d_name))
+		  _paths.push_back(makePath(currentdir->d_name));
+	      }
+	  }
 }
 
 bool		Preview::initialize()
