@@ -131,12 +131,16 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 
     _shield += clock.getElapsed();
     if (_input == NULL && _player == 1)
+    {
         _input = new AInput(input, KEY1);
+        if (_playermap->find(1) != _playermap->end() && _playermap->find(2) != _playermap->end())
+            _input->setMode(true);
+    }
     else if (_input == NULL && _player == 2)
         _input = new AInput(input, KEY2);
     else if (_id < 3)
         _input->setInput(input);
-    if (_input && (key = _input->getInput()) != NONE)
+    if (_input && (key = _input->getInput()) != NONE && key != PBOMB)
     {
         i = (this->*_key[key])(trans);
         _anim = 2;
@@ -158,6 +162,8 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         }
         rotate(rotation);
     }
+    else if (_input && key == PBOMB)
+        this->spawnBomb();
     if (_onBomb() ||
                 (_checkMove(
                     i.first + 0.2,

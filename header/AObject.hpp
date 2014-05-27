@@ -56,7 +56,9 @@ enum key
   MSEVEN,
   MHEIGHT,
   MNINE,
-  PSAVE
+  PSAVE,
+  FPSOFF,
+  FPSON
 };
 
 class AObject

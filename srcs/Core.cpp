@@ -8,9 +8,9 @@
 // Last update Sun May 11 00:12:10 2014 Mehdi Chouag
 */
 
-#include <unistd.h>
-#include "Menu.hpp"
-#include "Core.hpp"
+#include  <unistd.h>
+#include  "Menu.hpp"
+#include  "Core.hpp"
 
 Core::Core(Camera *cam, Loader *loader, Menu *menu)
 {
@@ -20,6 +20,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _sound = new Sound();
   _hud = new Hud(cam, loader);
   _displayFPS = false;
+  _ainput = NULL;
 }
 
 void  Core::reset()
@@ -27,8 +28,6 @@ void  Core::reset()
   std::map<int, Player *>::const_iterator it;
   std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
 
-  // for (it2 = _bombs.begin(); it2 != _bombs.end(); ++it2)
-  //   delete (*it).second;
   _bombs.clear();
   for (it = _player.begin(); it != _player.end(); ++it)
     delete (*it).second;
@@ -206,20 +205,29 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  if (_input.getKey(SDLK_f))
+  if (_ainput == NULL)
+  {
+    _ainput = new AInput(_input, GAME);
+  }
+  _ainput->setInput(_input);
+  switch (_ainput->getInput())
+  {
+    case FPSON:
       _displayFPS = true;
-  else if (_input.getKey(SDLK_g))
-    _displayFPS = false;
+      break;
+    case FPSOFF:
+      _displayFPS = false;
+      break;
+    case ESCAPE:
+      return (false);
+    case PSAVE:
+      Saving(_map->getName(), this);
+      break;
+    default:
+      break;
+  }
   FPS();
   _time += _clock.getElapsed();
-  if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
-    return false;
-  if (_input.getKey(SDLK_KP_0))
-    _player[1]->spawnBomb();
-  if (_input.getKey(SDLK_o))
-    Saving(_map->getName(), this);
-  if (_input.getKey(SDLK_SPACE) && _players == 2)
-    _player[2]->spawnBomb();
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)
@@ -230,8 +238,6 @@ bool	Core::update()
   for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
   {
     (*it6).second->update(_clock, _input);
-    (*it6).second->bombExplode();
-    (*it6).second->removeExplosion();
     if ((*it6).second->isExplosed() == true)
     {
       _bombs.erase(it6);

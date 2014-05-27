@@ -21,6 +21,7 @@
 # include "Bombs.hpp"
 # include "Sound.hpp"
 # include "Hud.hpp"
+# include  "AInput.hpp"
 
 # define PATH "./ressources/maps/"
 
@@ -77,6 +78,7 @@ private:
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
   bool        _endgame;
+  AInput      *_ainput;
 };
 
 #endif /*!_CORE_HPP_*/

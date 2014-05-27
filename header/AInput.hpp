@@ -21,6 +21,7 @@ enum inputType
 {
 	KEY1,
 	KEY2,
+	GAME,
 	MENU
 };
 
@@ -48,6 +49,8 @@ private:
 	gdl::Input 								_input;
     std::map<inputType, void (AInput::*)()>	_ptrFunct;
     std::map<int, key>						_key;
+    bool 									_mode2;
+    inputType								_type;
 
 public:
 	AInput(gdl::Input &, inputType);
@@ -55,10 +58,12 @@ public:
 	key 	getInput();
 	void	setInput(gdl::Input &);
 	void	createMenuKey();
+	void	setMode(bool);
 
 private:
 	void	createPlayer1Key();
 	void 	createPlayer2Key();
+	void	createGameKey();
 };
 
 #endif /*!AINPUT_HPP_*/
