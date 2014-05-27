@@ -3,8 +3,6 @@
 
 # include "Core.hpp"
 
-//class Player;
-
 class Saving
 {
 private:

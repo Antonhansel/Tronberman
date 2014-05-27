@@ -39,15 +39,10 @@ AObject     *Map::getCase(int x, int y) const
 
 void    Map::genereteName()
 {
-  std::string acceptes="abcdefghijklmnopqrstuvwyz";
-  acceptes+="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  _name = PATH;
 
-  for (int i = 0; i < 10; i++)
-  {
-    size_t pos = rand()%52;
-
-    _name +=acceptes[pos];
-  }
+  for (int i = 0 ; i < 10 ; i++)
+    _name += (rand()%26)+97;
   _name += ".xml";
 }
 

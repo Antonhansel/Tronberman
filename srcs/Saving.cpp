@@ -20,6 +20,7 @@ Saving::Saving(std::vector<std::string> &fileName)
 
     _nbrLine = 0;
     _name = fileName.back();
+    std::cout << _name << std::endl;
     _sizeMap = 0;
     error = true;
     error = loadMap(fileName.back());
@@ -329,46 +330,42 @@ bool    Saving::loadPlayer(std::string &file_name)
 {
   std::list<std::string>  file;
   std::string             str;
+  std::string             front;
   std::ifstream           infile(file_name.c_str());
   size_t                  pos = 0;
   bool                    error;
+  Player *player;
 
   while (std::getline(infile, str))
     file.push_back(str);
   while (!file.empty())
   {
-    while (!file.empty() && (pos = file.front().find("<player>")) == std::string::npos)
+    if (!file.empty() && (pos = file.front().find("<player>")) != std::string::npos)
     {
-      file.pop_front();
-     _nbrLine++;
+      player = new Player();
+      while (!file.empty() && (pos = file.front().find("</player>")) == std::string::npos)
+      {
+        error = true;
+        front = file.front();
+        ((pos = front.find("<id>")) != std::string::npos) ? (error = loadId(file, player)) : 0;
+        ((pos = front.find("<type>")) != std::string::npos) ? (error = loadType(file, player)) : 0;
+        ((pos = front.find("<life>")) != std::string::npos) ? (error = loadLife(file, player)) : 0;
+        ((pos = front.find("<range>")) != std::string::npos) ? (error = loadRange(file, player)) : 0;
+        ((pos = front.find("<stock>")) != std::string::npos) ? (error = loadStock(file, player)) : 0;
+        file.pop_front();
+        if (file.empty() || error == false)
+          return false;
+        _nbrLine++;
+      }
+      _player[player->getId()] = player;
     }
-    if (!file.empty())
+    else
     {
       _nbrLine++;
       file.pop_front();
     }
-    std::string front;
-    Player *player;
-    player = new Player();
-    while (!file.empty() && (pos = file.front().find("</player>")) == std::string::npos)
-    {
-      error = true;
-      front = file.front();
-      ((pos = front.find("<id>")) != std::string::npos) ? (error = loadId(file, player)) : 0;
-      ((pos = front.find("<type>")) != std::string::npos) ? (error = loadType(file, player)) : 0;
-      ((pos = front.find("<life>")) != std::string::npos) ? (error = loadLife(file, player)) : 0;
-      ((pos = front.find("<range>")) != std::string::npos) ? (error = loadRange(file, player)) : 0;
-      ((pos = front.find("<stock>")) != std::string::npos) ? (error = loadStock(file, player)) : 0;
-      if (error == false)
-        return false;
-      file.pop_front();
-      if (file.empty())
-        return false;
-      _nbrLine++;
-    }
-    _player[player->getId()] = player;
   }
-  return true;
+  return (true);
 }
 
 void        Saving::myParseur(std::vector<int> &tab, std::string &str)
