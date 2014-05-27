@@ -48,7 +48,7 @@ bool	Background::initialize()
 		std::cerr << "Cannot load the floor texture" << std::endl;
 		return (false);
 	}
-  _geometry.setColor(glm::vec4(1, 1, 0, 1));
+  _geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushVertex(glm::vec3(-_height, _width, -0.5));
   _geometry.pushVertex(glm::vec3(-_height, -_width, -0.5));
   _geometry.pushVertex(glm::vec3(_height, -_width, -0.5));

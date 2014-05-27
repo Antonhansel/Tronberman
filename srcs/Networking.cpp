@@ -9,6 +9,7 @@
 //
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <poll.h>
 #include <netdb.h>
@@ -110,10 +111,53 @@ const std::list<Client *>   Networking::getPlayers() const
 void    Networking::refreshPlayers()
 {
     fd_set      sets[3];
+    int         max = 0;
 
     FD_ZERO(&sets[0]);
     FD_ZERO(&sets[1]);
     FD_ZERO(&sets[2]);
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+    {
         FD_SET((*i)->sockfd, &sets[0]);
+        if (!(*i)->toSend.empty())
+            FD_SET((*i)->sockfd, &sets[1]);
+        max = ((*i)->sockfd > max) ? (*i)->sockfd + 1 : max;
+    }
+    select(max, &sets[0], &sets[1], &sets[2], NULL);
+    for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+    {
+        if (FD_ISSET((*i)->sockfd, &sets[0]))
+            _receiveFromClient(*i);
+        if (FD_ISSET((*i)->sockfd, &sets[1]))
+            _sendToClient(*i);
+    }
+}
+
+void    Networking::_receiveFromClient(Client *client)
+{
+
+}
+
+void    Networking::_sendToClient(Client *client)
+{
+    ssize_t     sizeSent;
+    std::pair<unsigned int, message *>     *toSend;
+
+    do {
+        toSend = &*(client->toSend.begin());
+        sizeSent = send(client->sockfd,
+            &toSend->second[toSend->first],
+            sizeof(*toSend->second) - toSend->first,
+            MSG_NOSIGNAL | MSG_DONTWAIT);
+        if (sizeSent < 0 && errno == EPIPE)
+        {
+            // TODO : treat disconnection of player
+        }
+        toSend->first += sizeSent;
+        if (toSend->first >= sizeof(*toSend->second))
+        {
+            client->toSend.pop_front();
+            delete toSend;
+        }
+    } while (sizeSent > 0);
 }

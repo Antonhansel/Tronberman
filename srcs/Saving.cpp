@@ -350,16 +350,11 @@ bool    Saving::loadPlayer(std::string &file_name)
     {
       error = true;
       front = file.front();
-      if ((pos = front.find("<id>")) != std::string::npos)
-        error = loadId(file, player);
-      if ((pos = front.find("<type>")) != std::string::npos)
-        error = loadType(file, player);
-      if ((pos = front.find("<life>")) != std::string::npos)
-        error = loadLife(file, player);
-      if ((pos = front.find("<range>")) != std::string::npos)
-        error = loadRange(file, player);
-      if ((pos = front.find("<stock>")) != std::string::npos)
-        error = loadStock(file, player);
+      error = ((pos = front.find("<id>")) != std::string::npos) ? loadId(file, player) : false;
+      error = (error != false && (pos = front.find("<type>")) != std::string::npos) ? loadType(file, player) : false;
+      error = (error != false && (pos = front.find("<life>")) != std::string::npos) ? loadLife(file, player) : false;
+      error = (error != false && (pos = front.find("<range>")) != std::string::npos) ? loadRange(file, player) : false;
+      error = (error != false && (pos = front.find("<stock>")) != std::string::npos) ? loadStock(file, player) : false;
       if (error == false)
         return false;
       file.pop_front();
@@ -473,14 +468,21 @@ bool    Saving::saveMap()
 
 std::vector<Map *>                      Saving::getListMap()
 {
-  if (_listMap.empty() || _listMap.size() < 5)
+  return _listMap;
+}
+
+std::vector<Map *>                      Saving::getCostumListMap()
+{
+  std::vector<Map *> lmaps;
+
+  if (lmaps.empty() || lmaps.size() < 5)
   {
-    while (_listMap.empty() || _listMap.size() < 5)
+    while (lmaps.empty() || lmaps.size() < 5)
     {
-      _listMap.push_back(new Map((rand() % 30) + 10));
+      lmaps.push_back(new Map((rand() % 30) + 10));
     }
   }
-  return _listMap;
+  return lmaps;
 }
 
 std::vector< std::map<int, Player *> >  Saving::getListPlayer()

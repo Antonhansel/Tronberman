@@ -41,7 +41,8 @@ public:
 	bool    loadMap(std::string &);
 	void	myParseur(std::vector<int> &, std::string &);
 	bool	myBalise(std::string &, std::string &, std::string &, std::string &);
-	std::vector<Map *>     getListMap();
+	std::vector<Map *>		getListMap();
+	std::vector<Map *>		getCostumListMap();
 	std::vector< std::map<int, Player *> >    getListPlayer();
 	void	addListMap();
 	void	addListPlayer();
