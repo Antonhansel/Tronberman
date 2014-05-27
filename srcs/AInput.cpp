@@ -1,17 +1,18 @@
 # include "AInput.hpp"
 
 AInput::AInput(gdl::Input &input, inputType t) :
-	_input(input)
+	_input(input), _type(t)
 {
+	_mode2 = false;
 	_ptrFunct[KEY1] = &AInput::createPlayer1Key;
 	_ptrFunct[KEY2] = &AInput::createPlayer2Key;
 	_ptrFunct[MENU] = &AInput::createMenuKey;
-	(this->*_ptrFunct[t])();
+	_ptrFunct[GAME] = &AInput::createGameKey;
+	(this->*_ptrFunct[_type])();
 }
 
 AInput::~AInput()
 {
-
 }
 
 key	AInput::getInput()
@@ -37,6 +38,10 @@ void	AInput::createPlayer1Key()
 	_key[SDLK_DOWN] = PDOWN;
 	_key[SDLK_LEFT] = PLEFT;
 	_key[SDLK_RIGHT] = PRIGHT;
+	if (_mode2 == false)
+		_key[SDLK_SPACE] = PBOMB;
+	else
+		_key[SDLK_KP_0] = PBOMB; 
 }
 
 void	AInput::createPlayer2Key()
@@ -45,6 +50,7 @@ void	AInput::createPlayer2Key()
 	_key[SDLK_s] = PDOWN;
 	_key[SDLK_q] = PLEFT;
 	_key[SDLK_d] = PRIGHT;
+	_key[SDLK_SPACE] = PBOMB;
 }
 
 void	AInput::createMenuKey()
@@ -66,4 +72,20 @@ void	AInput::createMenuKey()
 	_key[SDLK_KP_7] = MSEVEN;
 	_key[SDLK_KP_8] = MHEIGHT;
 	_key[SDLK_KP_9] = MNINE;
+}
+
+void	AInput::createGameKey()
+{
+	_key[SDLK_g] = FPSOFF;
+	_key[SDLK_f] = FPSON;
+	_key[SDLK_ESCAPE] = ESCAPE;
+	_key[SDL_QUIT] = ESCAPE;
+	_key[SDLK_o] = PSAVE;
+}
+
+void	AInput::setMode(bool nMod)
+{
+	_mode2 = nMod;
+	_key.clear();
+	(this->*_ptrFunct[_type])();
 }

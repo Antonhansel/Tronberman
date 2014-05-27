@@ -31,7 +31,9 @@ Bombs::~Bombs()
 
 void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
 {
-   _time += clock.getElapsed();
+  _time += clock.getElapsed();
+  this->bombExplode();
+  this->removeExplosion();
 }
 
 void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
