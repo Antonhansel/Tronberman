@@ -21,9 +21,7 @@
 # include <map>
 
 # define NUM_PARTICLES    1000
-# define NUM_DEBRIS       100
-//# define MAXPARTICLES 50
-
+# define SPEED 	1
 class Particles
 {
 public:
@@ -41,22 +39,10 @@ private:
 	  float   color[3];
 	};
 	typedef struct particleData    particleData;
-
-	struct debrisData
-	{
-	  float   position[3];
-	  float   speed[3];
-	  float   orientation[3];
-	  float   orientationSpeed[3];
-	  float   color[3];
-	  float   scale[3];
-	};
-	typedef struct debrisData    debrisData;
 	gdl::Geometry 		_geometry;
 	int 		_partNumber;
 	int 		fuel;
 	particleData particles[NUM_PARTICLES];
-	debrisData 		debris[NUM_DEBRIS];
 };
 
 #endif /*_PARTICLES_HPP_*/
