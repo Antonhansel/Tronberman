@@ -18,7 +18,6 @@ class Map
 public:
   Map(int);
   ~Map();
-
   AObject     *getCase(int, int) const;
   std::vector<std::pair<int, int> >   &setSpawn(int nb);
   std::vector<std::pair<int, int> >   getSpawn() const;
