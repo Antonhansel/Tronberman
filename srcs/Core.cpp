@@ -39,6 +39,7 @@ void  Core::reset()
   for (size_t i(0); i != _explosion.size(); i++)
     delete _explosion[i].second;
   _explosion.clear();
+  _hud->resetClock();
   _displayFPS = false;
 }
 
@@ -239,9 +240,17 @@ bool	Core::update()
     else
       ++it6;
   }
+  _hud->setClock(_clock);
   if (_players == 2)
+  {
     _hud->update(_player[2]);
+    _hud->setScreen(_screen + 1);
+  }
+  else
+    _hud->setScreen(2);
   _hud->update(_player[1]);
+  for (int i = 3; i <= _nb_bot + 2; i++)
+    _player[i]->setObj(_clock);
   return (true);
 }
 
@@ -297,7 +306,6 @@ void  Core::checkAlive()
     if ((*it).second->isAlive() == true)
       num++;
   }
-  std::cout << num << std::endl;
   if (num == 1)
     _endgame = true;
 }

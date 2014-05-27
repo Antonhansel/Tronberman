@@ -44,6 +44,7 @@ protected:
   Map           *_map;
   int           _player;
   bool          _checkMove(float y, float x);
+  bool          _checkMove2(float y, float x);
   bool          _onBomb();
   float         _x;
   int           _life;
@@ -65,6 +66,7 @@ public:
   void    setIsAlive();
   void    setScore(int);
   int     getScore() const;
+  virtual void setObj(gdl::Clock const &);
 
 public:
   Player();

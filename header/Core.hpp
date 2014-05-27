@@ -25,6 +25,7 @@
 # define PATH "./ressources/maps/"
 
 class Menu;
+class Player;
 
 class Core : public gdl::Game
 {

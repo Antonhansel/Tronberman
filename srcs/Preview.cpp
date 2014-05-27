@@ -64,6 +64,7 @@ bool		Preview::initialize()
 {
 	getPaths();
 	Saving _saving(_paths);
+	_players = _saving.getListPlayer();
 	_maps = _saving.getListMap();
 	std::cout << "PREVIEW STARTED" << std::endl;
 	if (_maps.size() == 0)

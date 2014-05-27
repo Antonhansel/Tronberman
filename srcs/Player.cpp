@@ -15,7 +15,7 @@
 Player::Player()
 {
     _stock = 1;
-    _range = 1;
+    _range = 2;
     _x = 0;
     _life = 1;
     _begin = false;
@@ -53,11 +53,12 @@ void  Player::spawnBomb()
     pos = realPos(getPos());
  if (_bombs->find(pos) == _bombs->end())
   {
-     Bombs *b = new Bombs();
-     b->setObjects(_map, _sound, _bombs);
-     b->setPlayerTab(_playermap);
-     b->makeBomb((Player*)this);
-     (*_bombs)[pos] = b;
+    _sound->putBombs(30);
+    Bombs *b = new Bombs();
+    b->setObjects(_map, _sound, _bombs);
+    b->setPlayerTab(_playermap);
+    b->makeBomb((Player*)this);
+    (*_bombs)[pos] = b;
    }
 }
 
@@ -92,6 +93,15 @@ bool    Player::_checkMove(float x, float y)
       cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
     else if (_dir == SOUTH || _dir == EAST)
       cas = _map->getCase(floor(_pos.first + x), floor(_pos.second + y));
+    if (!cas || cas->getType() == BONUS)
+        return (true);
+    else
+        return (false);
+}
+
+bool    Player::_checkMove2(float x, float y)
+{
+    AObject *cas = _map->getCase(x, y);
     if (!cas || cas->getType() == BONUS)
         return (true);
     else
@@ -175,6 +185,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
     if (tmp && tmp->getType() == BONUS)
     {
         static_cast<Bonus*>(tmp)->addToPlayer(this);
+        _sound->bonus(30);
         _map->deleteCube(_pos.first, _pos.second);
     }
   }
@@ -321,7 +332,11 @@ void    Player::setPlayerTab(std::map<int, Player*> *playermap)
     _playermap = playermap;
 }
 
-void Player::setSound(Sound *sound)
+void    Player::setSound(Sound *sound)
 {
     _sound = sound;
 }
+
+void    Player::setObj(gdl::Clock const &clock)
+{}
+

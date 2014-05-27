@@ -9,6 +9,7 @@
 */
 
 #include "Saving.hpp"
+//#include "Player.hpp"
 
 Saving::Saving(std::vector<std::string> &fileName)
 {
@@ -19,12 +20,17 @@ Saving::Saving(std::vector<std::string> &fileName)
 
     _nbrLine = 0;
     _name = fileName.back();
+    _sizeMap = 0;
     error = true;
     error = loadMap(fileName.back());
+    error = loadPlayer(fileName.back());
     if (error == false)
       std::cout << "Failed to Load the map: \"" << fileName.back() << "\"." << std::endl;
     else
+    {
       addListMap();
+      addListPlayer();
+    }
     fileName.pop_back();
   }
   if (_listMap.size() == 0)
@@ -38,7 +44,7 @@ Saving::Saving(std::string fileName, Core *core) : _name(fileName)
   _player = core->getPlayer();
   _spawn = m->getSpawn();
   _sizeMap = m->getSize();
-  _nbrPlayer = 0;
+  _nbrPlayer = _player.size();
   _nbrBot = 0;
   _file.open(_name.c_str());
   if (!_file.is_open())
@@ -100,6 +106,111 @@ bool    Saving::loadSize(std::list<std::string> &file)
   return true;
 }
 
+bool    Saving::loadRange(std::list<std::string> &file, Player *player)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<range>";
+  std::string       out = "</range>";
+
+  str = file.front();
+  if (myBalise(in, out, str, file.front()) == false)
+    return false;
+  myParseur(tab, str);
+  if (tab.size() != 1)
+  {
+    std::cout << "Error line " << _nbrLine << ":" << std::endl;
+    std::cout << "Bad value '" << str << "'" << std::endl;
+    return (false);
+  }
+  player->setRange(tab.back());
+  return true;
+}
+
+bool    Saving::loadStock(std::list<std::string> &file, Player *player)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<stock>";
+  std::string       out = "</stock>";
+
+  str = file.front();
+  if (myBalise(in, out, str, file.front()) == false)
+    return false;
+  myParseur(tab, str);
+  if (tab.size() != 1)
+  {
+    std::cout << "Error line " << _nbrLine << ":" << std::endl;
+    std::cout << "Bad value '" << str << "'" << std::endl;
+    return (false);
+  }
+  player->setStock(tab.back());
+  return true;
+}
+
+bool    Saving::loadId(std::list<std::string> &file, Player *player)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<id>";
+  std::string       out = "</id>";
+
+  str = file.front();
+  if (myBalise(in, out, str, file.front()) == false)
+    return false;
+  myParseur(tab, str);
+  if (tab.size() != 1)
+  {
+    std::cout << "Error line " << _nbrLine << ":" << std::endl;
+    std::cout << "Bad value '" << str << "'" << std::endl;
+    return (false);
+  }
+  player->setId(tab.back());
+  return true;
+}
+
+bool    Saving::loadLife(std::list<std::string> &file, Player *player)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<life>";
+  std::string       out = "</life>";
+
+  str = file.front();
+  if (myBalise(in, out, str, file.front()) == false)
+    return false;
+  myParseur(tab, str);
+  if (tab.size() != 1)
+  {
+    std::cout << "Error line " << _nbrLine << ":" << std::endl;
+    std::cout << "Bad value '" << str << "'" << std::endl;
+    return (false);
+  }
+  player->setLife(tab.back());
+  return true;
+}
+
+bool    Saving::loadType(std::list<std::string> &file, Player *player)
+{
+  std::vector<int> tab;
+  std::string       str;
+  std::string       in = "<life>";
+  std::string       out = "</life>";
+
+  str = file.front();
+  if (myBalise(in, out, str, file.front()) == false)
+    return false;
+  myParseur(tab, str);
+  if (tab.size() != 1)
+  {
+    std::cout << "Error line " << _nbrLine << ":" << std::endl;
+    std::cout << "Bad value '" << str << "'" << std::endl;
+    return (false);
+  }
+  player->setType((type)(tab.back()));
+  return true;
+}
+
 bool    Saving::loadCase(std::list<std::string> &file)
 {
   std::vector<int> tab;
@@ -113,6 +224,8 @@ bool    Saving::loadCase(std::list<std::string> &file)
   int y;
   int t;
 
+  if (_sizeMap == 0)
+    return false;
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
     return false;
@@ -147,6 +260,8 @@ bool    Saving::loadSpawn(std::list<std::string> &file)
   int x;
   int y;
 
+  if (_sizeMap == 0)
+    return false;
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
     return false;
@@ -170,48 +285,84 @@ bool    Saving::loadMap(std::string &file_name)
   std::list<std::string>  file;
   std::string             str;
   std::ifstream           infile(file_name.c_str());
-  std::size_t             pos;
+  size_t                  pos = 0;
   bool                    error;
 
   while (std::getline(infile, str))
     file.push_back(str);
-  if (file.size() > 2)
+  while (!file.empty() && (pos = file.front().find("<map>")) == std::string::npos)
   {
-    while ((pos = file.front().find("<map>")) == std::string::npos
-          && file.size() > 0)
-    {
-      file.pop_front();
-      _nbrLine++;
-    }
+    file.pop_front();
+   _nbrLine++;
+  }
+  if (!file.empty())
+  {
     _nbrLine++;
     file.pop_front();
-    std::string front;
-    while ((pos = file.front().find("</map")) == std::string::npos
-          && file.size() > 0)
+  }
+  std::string front;
+  while (!file.empty() && (pos = file.front().find("</map")) == std::string::npos)
+  {
+    error = true;
+    front = file.front();
+    if ((pos = front.find("<size>")) != std::string::npos)
+      error = loadSize(file);
+    if ((pos = front.find("<case>")) != std::string::npos)
+      error = loadCase(file);
+    if ((pos = front.find("<spawn>")) != std::string::npos)
+      error = loadSpawn(file);
+    if (error == false)
+      return false;
+    file.pop_front();
+    if (file.empty())
+      return false;
+    _nbrLine++;
+  }
+  return true;
+}
+
+bool    Saving::loadPlayer(std::string &file_name)
+{
+  std::list<std::string>  file;
+  std::string             str;
+  std::ifstream           infile(file_name.c_str());
+  size_t                  pos = 0;
+  bool                    error;
+
+  while (std::getline(infile, str))
+    file.push_back(str);
+  while (!file.empty() && (pos = file.front().find("<player>")) == std::string::npos)
+  {
+    file.pop_front();
+   _nbrLine++;
+  }
+  if (!file.empty())
+  {
+    _nbrLine++;
+    file.pop_front();
+  }
+  std::string front;
+  Player *player;
+  while (!file.empty())
+  {
+    player = new Player();
+    while (!file.empty() && (pos = file.front().find("</player")) == std::string::npos)
     {
       error = true;
       front = file.front();
-      if ((pos = front.find("<size>")) != std::string::npos)
-        error = loadSize(file);
-      if ((pos = front.find("<case>")) != std::string::npos)
-        error = loadCase(file);
-      if ((pos = front.find("<spawn>")) != std::string::npos)
-        error = loadSpawn(file);
+      error = ((pos = front.find("<id>")) != std::string::npos) ? loadId(file, player) : false;
+      error = (error != false && (pos = front.find("<type>")) != std::string::npos) ? loadType(file, player) : false;
+      error = (error != false && (pos = front.find("<life>")) != std::string::npos) ? loadLife(file, player) : false;
+      error = (error != false && (pos = front.find("<range>")) != std::string::npos) ? loadRange(file, player) : false;
+      error = (error != false && (pos = front.find("<stock>")) != std::string::npos) ? loadStock(file, player) : false;
       if (error == false)
         return false;
-      if (file.front() == "")
-      {
-        file.pop_front();
-        _nbrLine++;
-      }
+      file.pop_front();
+      if (file.empty())
+        return false;
+      _nbrLine++;
     }
-    if (_sizeMap == 0)
-      return false;
-  }
-  else
-  {
-    std::cout << "The map is not found." << std::endl;    
-    return false;
+    _player[_player.size() + 1] = player;
   }
   return true;
 }
@@ -261,14 +412,15 @@ bool        Saving::myBalise(std::string &in, std::string &out,
 
 bool    Saving::savePlayer()
 {
+  std::cout << _nbrPlayer << std::endl;
   for (int i = 1; i <= _nbrPlayer; i++)
   {
     _file << "<player>" << std::endl;
     _file << "<id>" << _player[i]->getId() << "</id>" << std::endl;
+    _file << "<type>" << _player[i]->getType() << "</type>" << std::endl;
     _file << "<life>" << _player[i]->getLife() << "</life>" << std::endl;
     _file << "<range>" << _player[i]->getRange() << "</range>" << std::endl;
     _file << "<stock>" << _player[i]->getStock() << "</stock>" << std::endl;
-    _file << "<shield>" << _player[i]->getShield() << "</shield>" << std::endl;
     _file << "</player>" << std::endl;
   }
   return (true);
@@ -310,6 +462,7 @@ bool    Saving::saveMap()
   }
   saveSpawn();
   _file << "</map>" << std::endl;
+  savePlayer();
   return true;
 }
 
@@ -318,12 +471,40 @@ std::vector<Map *>                      Saving::getListMap()
   return _listMap;
 }
 
+std::vector<Map *>                      Saving::getCostumListMap()
+{
+  std::vector<Map *> lmaps;
+
+  if (lmaps.empty() || lmaps.size() < 5)
+  {
+    while (lmaps.empty() || lmaps.size() < 5)
+    {
+      lmaps.push_back(new Map((rand() % 30) + 10));
+    }
+  }
+  return lmaps;
+}
+
+std::vector< std::map<int, Player *> >  Saving::getListPlayer()
+{
+  return _players;
+}
+
+void                                    Saving::addListPlayer()
+{
+  _players.push_back(_player);
+}
+
 void                                    Saving::addListMap()
 {
-  Map *myMap = new Map(_sizeMap);
+  Map *myMap = NULL;
 
-  myMap->setMap(_map);
-  myMap->setSpawn(_spawn);
-  myMap->setSize(_sizeMap);
-  _listMap.push_back(myMap);
+  if (_sizeMap >= 10)
+    myMap = new Map(_sizeMap);
+  if (myMap != NULL && _map != NULL)
+    myMap->setMap(_map);
+  if (myMap != NULL && !_spawn.empty())
+    myMap->setSpawn(_spawn);
+  if (myMap != NULL)
+    _listMap.push_back(myMap);
 }

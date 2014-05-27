@@ -25,12 +25,19 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	lifePlayer2 = 0;
 	_col1 = 0;
 	_fps = 0;
+	_timer = 120;
+	_timerDouble = false;
 }
 
 void	Hud::setScreen(int screen)
 {
-	if (screen == 2)
+	if (screen == 1)
+	{
 		_col1 = 1600;
+		_timerDouble = true;
+	}
+	else
+		_timerDouble = false;
 }
 
 void	Hud::update(Player *cur)
@@ -40,6 +47,11 @@ void	Hud::update(Player *cur)
 
 void	Hud::updatePlayer1(Player *cur)
 {
+	int	minuts = 0;
+	int	seconds = 0;
+
+	seconds = ((int)(_timer)) % 60;
+	minuts = _timer / 60;
 	if (cur->getStock() != bombPlayer1)
 	{
 		bombPlayer1  = cur->getStock();	
@@ -58,10 +70,31 @@ void	Hud::updatePlayer1(Player *cur)
 		delGeometry(_player1[NBLIFE]);
 		_player1[NBLIFE] = this->putstr(convertToString(lifePlayer1, "Life ").c_str(), 32, true);
 	}
+	if (_timerDouble == true)
+	{
+		if (_timer > 0)
+		{
+			delGeometry(_player1[TIMER]);
+			_player1[TIMER] = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 32, false);
+		}
+	}
+	else
+	{	
+		if (_timer > 0)
+		{
+			delGeometry(_time);
+			_time = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 64, false);
+		}
+	}
 }
 
 void	Hud::updatePlayer2(Player *cur)
 {
+	int	minuts = 0;
+	int	seconds = 0;
+
+	seconds = ((int)(_timer)) % 60;
+	minuts = _timer / 60;
 	if (cur->getStock() != bombPlayer2)
 	{
 		bombPlayer2  = cur->getStock();	
@@ -79,6 +112,15 @@ void	Hud::updatePlayer2(Player *cur)
 		lifePlayer2  = cur->getLife() + 1;
 		delGeometry(_player2[NBLIFE]);
 		_player2[NBLIFE] = this->putstr(convertToString(lifePlayer2, "Life ").c_str(), 32, true);
+	}
+	if (_timerDouble == true)
+	{
+		
+		if (_timer > 0)
+		{
+			delGeometry(_player2[TIMER]);
+			_player2[TIMER] = this->putstr((convertToStringN(minuts, ":") + convertToStringN(seconds, "")).c_str(), 32, false);
+		}
 	}
 }
 
@@ -98,7 +140,22 @@ void	Hud::draw(Player *cur)
 	_loader->bindTexture(SELECTED);
   	_camera->setMode();
   	(this->*_drawPlayer[cur->getId()])();
+  	if (_timerDouble == false && _timer > 0)
+  		drawTimer();
   	_camera->setMode();
+}
+
+void	Hud::drawTimer()
+{
+	int	col;
+
+	col = 700;
+	for (std::vector<Geometry *>::iterator it = _time.begin(); it != _time.end(); ++it)
+	{
+		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 0, 0));
+		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
+		col += 40;
+	}
 }
 
 void	Hud::drawPlayer1()
@@ -168,6 +225,14 @@ std::string Hud::convertToString(int value, const std::string text)
   	return (text + " " + ss.str());
 }
 
+std::string Hud::convertToStringN(int value, const std::string text)
+{
+	std::stringstream ss;
+
+  	ss << value;
+  	return (ss.str() + text);
+}
+
 Hud::~Hud()
 {
 	std::map<Display, std::vector<gdl::Geometry *> >::iterator it;
@@ -191,4 +256,20 @@ void	Hud::updateRep()
 		_col1 = 700;
 	else
 		_col1 = 1600;
+}
+
+bool 	Hud::setClock(gdl::Clock &c)
+{
+	if (_timer > 0)
+	{
+		_timer -= c.getElapsed();
+		return (false);		
+	}
+	_timer = -1;
+	return (true);
+}
+
+void	Hud::resetClock()
+{
+	_timer = 120;
 }

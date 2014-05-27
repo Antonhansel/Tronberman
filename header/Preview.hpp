@@ -37,6 +37,7 @@ private:
 	Camera 	*_camera;
 	Loader 	*_loader;
 	std::vector<Map*> 	_maps;
+	std::vector< std::map<int, Player *> > 	_players;
 	//Saving 	_saving;
 	float			_angle;
   	float			_posy;

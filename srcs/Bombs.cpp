@@ -140,6 +140,7 @@ void    Bombs::newBomb(std::pair<float, float> &check)
           if ((*it).second->getLife() == 0 && (*it).second->isAlive() == true)
           {
             std::cout << "DEAD\n";
+            _sound->death(80);
             if ((*it).second->getId() != _player->getId())
               _player->setScore(_player->getScore() + 1000);
             (*it).second->setScore((*it).second->getScore() - 100);
@@ -148,6 +149,7 @@ void    Bombs::newBomb(std::pair<float, float> &check)
           }
           else if ((*it).second->isAlive() == true)
           {
+            _sound->hit(10);
             (*it).second->setLife((*it).second->getLife() - 1);
             (*it).second->setScore((*it).second->getScore() - 50);
             _player->setScore(_player->getScore() + 100);
@@ -166,10 +168,10 @@ void  Bombs::explosion(std::pair<float, float> pos, int playerId)
   range = _player->getRange();
   check.first = pos.first;
   check.second = pos.second;
-  explosePosY(pos.second + range, check);
   exploseNegY(pos.second - range, check);
-  explosePosX(pos.first + range, check);
   exploseNegX(pos.first - range, check);
+  explosePosY(pos.second + range, check);
+  explosePosX(pos.first + range, check);
 }
 
 void  Bombs::explosePosY(float y, std::pair<float, float> check)
