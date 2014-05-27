@@ -37,7 +37,7 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
-  delete _particles;
+  //delete _particles;
 }
 
 void  Core::setValues(Map *map)
@@ -87,7 +87,7 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  _particles = new Particles();
+  //_particles = new Particles();
   std::cout << "Load done!" << std::endl;
   return (true);
 }
@@ -256,7 +256,7 @@ bool	Core::update()
   _hud->update(_player[1]);
   for (int i = 3; i <= _nb_bot + 2; i++)
     _player[i]->setObj(_clock);
-  _particles->update(_clock);
+  //_particles->update(_clock);
   return (true);
 }
 
@@ -291,7 +291,7 @@ void  Core::drawAll(AObject *cur_char)
     nb_p = (i == 2 && _players == 1) ? 1 : 0;
     _player[i + nb_p]->draw(_shader, _clock);
   }
-  _particles->draw(_shader, _clock);
+  //_particles->draw(_shader, _clock);
 }
 
 void  Core::checkAlive()
