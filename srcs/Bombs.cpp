@@ -34,6 +34,7 @@ void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
   _time += clock.getElapsed();
   this->bombExplode();
   this->removeExplosion();
+  rotate(glm::vec3(5, 0, 0));
 }
 
 void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
