@@ -72,13 +72,19 @@ void	Hud::updatePlayer1(Player *cur)
 	}
 	if (_timerDouble == true)
 	{
-		delGeometry(_player1[TIMER]);
 		if (_timer > 0)
-			_player1[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
+		{
+			delGeometry(_player1[TIMER]);
+			_player1[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, false);
+		}
 	}
 	else
-	{	if (_timer > 0)
-			_time = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 64, true);		
+	{	
+		if (_timer > 0)
+		{
+			delGeometry(_time);
+			_time = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 64, false);
+		}
 	}
 }
 
@@ -109,10 +115,11 @@ void	Hud::updatePlayer2(Player *cur)
 	}
 	if (_timerDouble == true)
 	{
-		delGeometry(_player2[TIMER]);
+		
 		if (_timer > 0)
 		{
-			_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, true);
+			delGeometry(_player2[TIMER]);
+			_player2[TIMER] = this->putstr((convertToString(minuts, " : ") + convertToString(seconds, "")).c_str(), 32, false);
 		}
 	}
 }
@@ -250,6 +257,7 @@ bool 	Hud::setClock(gdl::Clock &c)
 		_timer -= c.getElapsed();
 		return (false);		
 	}
+	_timer = -1;
 	return (true);
 }
 
