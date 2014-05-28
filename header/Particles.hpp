@@ -20,8 +20,10 @@
 # include <OpenGL.hh>
 # include <map>
 
-# define NUM_PARTICLES    1000
-# define SPEED 	1
+# define NUM_PARTICLES    100	
+# define SPEED 	0.05
+# define NUM_DEBRIS 100
+
 class Particles
 {
 public:
@@ -36,13 +38,24 @@ private:
 	{
 	  float   position[3];
 	  float   speed[3];
-	  float   color[3];
 	};
 	typedef struct particleData    particleData;
-	gdl::Geometry 		_geometry;
-	int 		_partNumber;
-	int 		fuel;
+	struct debrisData
+	{
+	  float   position[3];
+	  float   speed[3];
+	  float   orientation[3];
+	  float   orientationSpeed[3];
+	  float   scale[3];
+	};
+typedef struct debrisData    debrisData;
+	gdl::Geometry 		_cubegeo;
+	gdl::Geometry		_trigeo;
+	int 				_partNumber;
+	int 				fuel;
+	glm::mat4 			_transformation;
 	particleData particles[NUM_PARTICLES];
+	debrisData       debris[NUM_DEBRIS];
 };
 
 #endif /*_PARTICLES_HPP_*/
