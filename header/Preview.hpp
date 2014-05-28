@@ -21,17 +21,21 @@ public:
 	Preview(Camera *, Loader *);
 	~Preview();
 	bool		initialize();
-	bool		update(gdl::Clock const &clock, gdl::Input &input);
-	void		draw(gdl::AShader &shader, gdl::Clock const &clock);
+	bool		initializeSave();
+	bool		update(gdl::Clock const &, gdl::Input &, bool);
+	void		draw(gdl::AShader &, gdl::Clock const &);
 	void 		setCameraAngle();
-	void 	getPaths();
+	void 	getPaths(const char *);
 	bool 	checkName(const char *);
-	std::string	makePath(const char *);
+	std::string	makePath(const char *, const char *);
 	void 	changeMap(int);
+	void 	changeMapSave(int);
 	Map 	*getMap() const;
+	std::map<int, Player*>	&getPlayer() const;
 private:
 	double 		_time;
 	std::vector<Map*>::iterator _it;
+	std::vector<std::map<int, Player *> >::iterator _itPlayer;
 	Map 			*_map;
 	std::vector<std::string> _paths;
 	Camera 	*_camera;

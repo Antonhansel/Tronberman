@@ -62,7 +62,21 @@ void  Core::setValues(Map *map)
   _time = 0;
   _frames = 0;
   _endgame = false;
+}
 
+void  Core::setSave(Map *map, std::map<int, Player *> &player)
+{
+  std::vector<std::pair<int, int> >    obj;
+
+  _player = player;
+  _players = (player.find(2) != player.end()) ? 2 : 1;
+  _nb_bot = _player.size() - _players;
+  _map = map;
+  _width = _menu->getMapSize();
+  _height = _width;
+  _time = 0;
+  _frames = 0;
+  _endgame = false;
 }
 
 Core::~Core()
@@ -364,5 +378,5 @@ std::map<int, Player*>  Core::getPlayer()
 
 int       Core::getNbrPlayer() const
 {
-  return _players;
+  return (_players);
 }

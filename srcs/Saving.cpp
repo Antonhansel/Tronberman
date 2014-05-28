@@ -20,7 +20,6 @@ Saving::Saving(std::vector<std::string> &fileName)
 
     _nbrLine = 0;
     _name = fileName.back();
-    std::cout << _name << std::endl;
     _sizeMap = 0;
     error = true;
     error = loadMap(fileName.back());
@@ -476,26 +475,24 @@ bool    Saving::saveMap()
   saveSpawn();
   _file << "</map>" << std::endl;
   savePlayer();
-  return true;
+  return (true);
 }
 
 std::vector<Map *>                      Saving::getListMap()
 {
-  return _listMap;
+  return (_listMap);
 }
 
 std::vector<Map *>                      Saving::getCostumListMap()
 {
   while (_listMap.empty() || _listMap.size() < 5)
-  {
-    _listMap.push_back(new Map((rand() % 30) + 10));
-  }
-  return _listMap;
+    _listMap.push_back(new Map((rand() % 20) + 10));
+  return (_listMap);
 }
 
 std::vector< std::map<int, Player *> >  Saving::getListPlayer()
 {
-  return _players;
+  return (_players);
 }
 
 void                                    Saving::addListPlayer()

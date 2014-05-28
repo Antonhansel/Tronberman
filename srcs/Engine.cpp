@@ -46,7 +46,10 @@ bool		Engine::start()
                 _menu->draw();
             if (_menu->launch() == true)
             {
-              _core->setValues(_menu->getMap());
+              if (_menu->isSave())
+                _core->setSave(_menu->getMap(), _menu->getPlayer());
+              else
+                _core->setValues(_menu->getMap());
               if (_core->initialize())
               {
                   while (_core->update())

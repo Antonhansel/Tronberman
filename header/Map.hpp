@@ -10,6 +10,7 @@
 # include "Factory.hpp"
 
 # define PATH "./ressources/maps/"
+# define SAVE "./ressources/save/"
 
 class AObject;
 

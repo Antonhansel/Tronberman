@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue May  20 11:00:02 2014 Antonin Ribeaud
-// Last update Tue May 27 19:18:37 2014 ribeaud antonin
+** Last update Tue May  20 11:00:02 2014 Antonin Ribeaud
 */
 
 #include "Preview.hpp"
@@ -25,8 +25,7 @@ Preview::Preview(Camera *camera, Loader *loader)
 }
 
 Preview::~Preview()
-{
-}
+{}
 
 bool 		Preview::checkName(const char *str1)
 {
@@ -39,42 +38,56 @@ bool 		Preview::checkName(const char *str1)
 	return (true);
 }
 
-std::string 	Preview::makePath(const char *str1)
+std::string 	Preview::makePath(const char *str1, const char *p)
 {
-	std::string path = PATH;
+	std::string path = p;
 
 	path += str1;
 	return (path);
 }
 
-void 		Preview::getPaths()
+void 		Preview::getPaths(const char * path)
 {
 	DIR 			*mydir;
 	struct dirent 	*currentdir;
-	mydir = opendir(PATH);
-	if (mydir != NULL)
-	  {
-	    while ((currentdir = readdir(mydir)) != NULL)
-	      {
-		if (checkName(currentdir->d_name) && 
-		    checkName(currentdir->d_name))
-		  _paths.push_back(makePath(currentdir->d_name));
-	      }
-	  }
+	mydir = opendir(path);
+	_paths.clear();
+	if (mydir != NULL) 
+		while ((currentdir = readdir(mydir)) != NULL)
+		{
+			if (checkName(currentdir->d_name) && 
+				checkName(currentdir->d_name))
+			_paths.push_back(makePath(currentdir->d_name, path));
+		}
 }
 
 bool		Preview::initialize()
 {
-	getPaths();
+	getPaths(PATH);
 	Saving _saving(_paths);
-	_players = _saving.getListPlayer();
-	_maps = _saving.getListMap();
-	std::cout << "PREVIEW STARTED" << std::endl;
+	_maps = _saving.getCostumListMap();
 	if (_maps.size() == 0)
 		return (false);
 	_it = _maps.begin();
 	_map = (*_it);
-    _xend = _map->getSize()/2;
+    _xend = _map->getSize() / 2;
+	return (true);
+}
+
+bool		Preview::initializeSave()
+{
+	
+	getPaths(SAVE);
+	Saving _saving(_paths);
+	_maps = _saving.getListMap();
+	_players = _saving.getListPlayer();
+	std::cout << "PREVIEW STARTED  : INIT 2" << std::endl;
+	if (_maps.size() == 0)
+		return (false);
+	_it = _maps.begin();
+	_map = (*_it);
+	_itPlayer = _players.begin();
+    _xend = _map->getSize() / 2;
 	return (true);
 }
 
@@ -100,7 +113,38 @@ void 		Preview::changeMap(int i)
     _xend = _map->getSize()/2;
 }
 
-bool		Preview::update(gdl::Clock const &clock, gdl::Input &input)
+void 		Preview::changeMapSave(int i)
+{
+	if (i == 1)
+	{
+		_it++;
+		_itPlayer++;
+		if (_it == _maps.end())
+		{
+			_it = _maps.begin();
+			_itPlayer = _players.begin();
+		}
+	}
+	else if (i == -1)
+	{
+		if (_it == _maps.begin())
+		{
+			_it = _maps.end();
+			_it--;
+			_itPlayer = _players.begin();
+			_itPlayer--;
+		}
+		else
+		{
+			_itPlayer--;
+			_it--;
+		}
+	}
+    _map = (*_it);
+    _xend = _map->getSize()/2;
+}
+
+bool		Preview::update(gdl::Clock const &clock, gdl::Input &input, bool isSave)
 {
 
 	_time += clock.getElapsed();
@@ -108,9 +152,19 @@ bool		Preview::update(gdl::Clock const &clock, gdl::Input &input)
 	{
 		_time = 0;
 		if (input.getInput(SDLK_LEFT))
-			changeMap(-1);
+		{
+			if (!isSave)
+				changeMap(-1);
+			else
+				changeMapSave(-1);
+		}
 		else if (input.getInput(SDLK_RIGHT))
-			changeMap(1);
+		{
+			if (!isSave)
+				changeMap(1);
+			else
+				changeMapSave(1);
+		}
 	}
 	return (true);
 }
@@ -154,5 +208,10 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 Map 	*Preview::getMap() const
 {
-	return (_map);
+	return ((_maps.size() == 0) ? NULL :_map );
+}
+
+std::map<int, Player*>	&Preview::getPlayer() const
+{
+	return ((*_itPlayer));
 }

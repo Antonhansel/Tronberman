@@ -48,6 +48,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _addScore = false;
   _previewMode = false;
   _exit = false;
+  _isSave = false;
   home();
 }
 
@@ -89,7 +90,7 @@ bool    Menu::update()
     _background->update(_clock, _input);
     event(_step1);
   }
-  if (_previewMode && !(_preview->update(_clock, _input)))
+  if (_previewMode && !(_preview->update(_clock, _input, _isSave)))
     _previewMode = false;
   else if (_previewMode == false)
     _cubeanim->update();
@@ -360,6 +361,7 @@ void    Menu::reset(const std::map<int, Player*> &p)
   getScore();
   _stepM = SCORE;
   _newScore = max;
+  _previewMode = false;
   (this->*_func[_stepM])();
 }
 
@@ -515,7 +517,7 @@ void    Menu::loadPrevious()
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
   _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
-  startPreview();
+  _previewMode = _preview->initializeSave();
   _max = 1;
 }
 
@@ -631,8 +633,9 @@ void  Menu::getScore()
 void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
-  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) : 0;
-  if (_stepM == LOADG)
+  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) 
+  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) : 0;
+  if (_stepM == LOADG || (_isLaunch && _isSave))
     _map = _preview->getMap();
 }
 
@@ -641,7 +644,7 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
   : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
@@ -649,8 +652,8 @@ void  Menu::select1()
 
 void  Menu::select2()
 {
-  (_stepM == STEP1) ? (_stepM = LOADM) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
+  (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
   if (_stepM == SCORE)
      getScore();
 }
@@ -668,4 +671,14 @@ void  Menu::select3()
 void  Menu::select4()
 {
   (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : (_stepM == STEP1) ? (_stepM = HOME) : 0;
+}
+
+bool  Menu::isSave() const
+{
+  return (_isSave);
+}
+
+std::map<int, Player*>  &Menu::getPlayer() const
+{
+  return (_preview->getPlayer());
 }
