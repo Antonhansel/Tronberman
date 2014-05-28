@@ -188,10 +188,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
                 _pos.second += i.second;
                 translate(glm::vec3(i.first, 0, i.second));
             }
-    if (_anim == 2)
-        _anim = 1;
-    else
-        _anim = 0;
+    
     tmp = _map->getCase(_pos.first, _pos.second);
     if (tmp && tmp->getType() == BONUS)
     {
@@ -200,6 +197,10 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         _map->deleteCube(_pos.first, _pos.second);
     }
     }
+    if (_anim == 2)
+        _anim = 1;
+    else
+        _anim = 0;
   }
 }
 
