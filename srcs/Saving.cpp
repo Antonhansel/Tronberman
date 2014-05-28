@@ -20,7 +20,6 @@ Saving::Saving(std::vector<std::string> &fileName)
 
     _nbrLine = 0;
     _name = fileName.back();
-    std::cout << _name << std::endl;
     _sizeMap = 0;
     error = true;
     error = loadMap(fileName.back());
@@ -41,7 +40,6 @@ Saving::Saving(std::vector<std::string> &fileName)
 
 Saving::Saving(std::string fileName, Core *core) : _name(fileName)
 {
-  std::cout << fileName << std::endl;
   Map *m = core->getMap();
   _map = m->getMap();
   _player = core->getPlayer();
@@ -56,8 +54,6 @@ Saving::Saving(std::string fileName, Core *core) : _name(fileName)
   {
     if (saveMap() == false)
       std::cout << "Error saving" << std::endl;
-    else
-      std::cout << "\"" <<_name << "\" was saving." << std::endl;
     _file.close();
   }
 }
@@ -462,8 +458,6 @@ bool        Saving::myBalise(std::string &in, std::string &out,
 
 bool    Saving::savePlayer()
 {
-  std::cout << "players = " << _nbrPlayer << std::endl;
-  std::cout << "bots = " << _nbrBot << std::endl;
   std::pair<float, float> pos;
 
   for (int i = 1; i <= _nbrPlayer; i++)
@@ -528,7 +522,6 @@ bool    Saving::saveMap()
       }
     }
   }
- // saveSpawn();
   _file << "</map>" << std::endl;
   savePlayer();
   return true;
@@ -536,21 +529,21 @@ bool    Saving::saveMap()
 
 std::vector<Map *>                      Saving::getListMap()
 {
-  return _listMap;
+  return (_listMap);
 }
 
 std::vector<Map *>                      Saving::getCostumListMap()
 {
   while (_listMap.empty() || _listMap.size() < 5)
   {
-    _listMap.push_back(new Map((rand() % 30) + 10));
+    _listMap.push_back(new Map((rand() % 20) + 10));
   }
-  return _listMap;
+  return (_listMap);
 }
 
 std::vector< std::map<int, Player *> >  Saving::getListPlayer()
 {
-  return _players;
+  return (_players);
 }
 
 void                                    Saving::addListPlayer()

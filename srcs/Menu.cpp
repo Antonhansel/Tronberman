@@ -614,22 +614,6 @@ void  Menu::getScore()
   }
 }
 
-// void    Menu::step1()
-// {
-//   _sizeMap.assign("30");
-//   _nbPlayer.assign("1");
-//   _nbBots.assign("1");
-//   _isSelect = 0;
-//   _text->deleteAllText(_step1);
-//   _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
-//   _text->addText(_step1, 1, std::make_pair(15, 460), "LOAD GAME", true);
-//   _text->addText(_step1, 2, std::make_pair(15, 460), "LOAD CUSTOM MAP", true);
-//   _text->addText(_step1, 3, std::make_pair(15, 540), "MAP BUILDER", true);
-//   _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
-//   _max = 4;
-// }
-
-
 void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
