@@ -236,19 +236,21 @@ void    Menu::getInputPseudo(char c)
 
 void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
-  key   k;
+  std::vector<key>  ret;
 
-  if ((k = _event->getInput()) != NONE &&
-      k != MBACKSPACE && k != MUP && k != MDOWN &&
-        k != MLEFT && k != MRIGHT && s.size() < size)
+  ret = _event->getInput();
+  if (!AInput::getKey(ret, NONE) &&
+    !AInput::getKey(ret, MBACKSPACE) && !AInput::getKey(ret, MUP) &&
+    !AInput::getKey(ret, MDOWN) && !AInput::getKey(ret, MLEFT) &&
+    !AInput::getKey(ret, MRIGHT) && s.size() < size)
   {
     _timer = 0;
-    s += (((int)(k)) - 23) + 48;
+    s += (((int)(ret[0])) - 23) + 48;
     if (convToInt(s) > max || convToInt(s) < min)
       s.assign(s.substr(0, s.length() - 1));
     (this->*_func[_stepM])();
   }
-  else if (k == MBACKSPACE)
+  else if (AInput::getKey(ret, MBACKSPACE))
   {
     _timer = 0;
     s.assign(s.substr(0, s.length() - 1));
@@ -293,50 +295,53 @@ void    Menu::chooseStep()
 
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
 {
-  key   k;
+  std::vector<key>   k;
 
   k = _event->getInput();
   if (_timer > DELAY)
   {
-    switch (k)
+    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
     {
-      case MUP:
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
-        {
-          _isSelect--;
-          (_isSelect == - 1) ? (_isSelect = _max) : 0;
-          _timer = 0;
-        }
-        else
-          manageEventInputScore(k);
-        break;
-      case MDOWN:
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
-        {
-          _isSelect++;
-          (_isSelect == _max + 1) ? (_isSelect = 0) : 0;
-          _timer = 0;
-        }
-        else
-          manageEventInputScore(k);
-        break;
-      case MRETURN:
+      switch ((*it))
       {
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+        case MUP:
+         if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+         {
+           _isSelect--;
+           (_isSelect == - 1) ? (_isSelect = _max) : 0;
+           _timer = 0;
+         }
+         else
+           manageEventInputScore((*it));
+         break;
+        case MDOWN:
+          if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+          {
+           _isSelect++;
+            (_isSelect == _max + 1) ? (_isSelect = 0) : 0;
+            _timer = 0;
+          }
+          else
+            manageEventInputScore((*it));
+          break;
+        case MRETURN:
         {
-          _timer = 0;
-          chooseStep();
+          if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+          {
+           _timer = 0;
+            chooseStep();
+          }
+          else
+            manageEventInputScore((*it));
+          break;
         }
-        else
-          manageEventInputScore(k);
-        break;
+        default:
+          if (_pos < 6 && _stepM == SCORE)
+           manageEventInputScore((*it));
+          else
+            manageEventInput();
+          break;
       }
-      default:
-        if (_pos < 6 && _stepM == SCORE)
-          manageEventInputScore(k);
-        else
-          manageEventInput();
-        break;
     }
   }
 }

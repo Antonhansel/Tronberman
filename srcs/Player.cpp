@@ -120,13 +120,14 @@ bool    Player::_onBomb()
 
 void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
+    std::vector<key> k;
+
     if (_isAlive == true)
     {
     float trans = static_cast<float>(clock.getElapsed()) *  _speed;
     std::map<int, std::pair<float, float> >                 keymap;
     std::pair<float, float> i;
     glm::vec3                               rotation = glm::vec3(0);
-    key                                      key;
     AObject                                 *tmp;
 
     _shield += clock.getElapsed();
@@ -140,44 +141,48 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         _input = new AInput(input, KEY2);
     else if (_id < 3)
         _input->setInput(input);
-    if (_input && (key = _input->getInput()) != NONE && key != PBOMB)
+    if (_player == 2 || _player == 1)
+        k = _input->getInput();
+    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
     {
-        i = (this->*_key[key])(trans);
-        _anim = 2;
-        rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
-        rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
-        switch ((int)(rotation.y))
+        if (_input && !AInput::getKey(k, NONE) && !AInput::getKey(k, PBOMB))
         {
-            case 0:
-                _dir = NORTH;
-                break;
-            case -180:
-                _dir = SOUTH;
-                break;
-            case 270:
-                _dir = EAST;
-                break;
-            case 90:
-                _dir = WEST;
+            i = (this->*_key[(*it)])(trans);
+            _anim = 2;
+            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
+            switch ((int)(rotation.y))
+            {
+                case 0:
+                    _dir = NORTH;
+                    break;
+                case -180:
+                    _dir = SOUTH;
+                    break;
+                case 270:
+                    _dir = EAST;
+                    break;
+                case 90:
+                    _dir = WEST;
+            }
+            rotate(rotation);
         }
-        rotate(rotation);
-    }
-    else if (_input && key == PBOMB)
-        this->spawnBomb();
-    if (_onBomb() ||
-                (_checkMove(
-                    i.first + 0.2,
-                    i.second)
-                && _checkMove(
-                    i.first + 0.2,
-                    i.second + 0.3)
-                && _checkMove(
-                    i.first + 0.6,
-                    i.second)
-                && _checkMove(
-                    i.first + 0.6,
-                    i.second + 0.3)
-                ))
+        else if (_input && AInput::getKey(k, PBOMB))
+            this->spawnBomb(); 
+        if (_onBomb() ||
+                    (_checkMove(
+                        i.first + 0.2,
+                        i.second)
+                    && _checkMove(
+                        i.first + 0.2,
+                        i.second + 0.3)
+                    && _checkMove(
+                        i.first + 0.6,
+                        i.second)
+                    && _checkMove(
+                        i.first + 0.6,
+                        i.second + 0.3)
+                    ))
             {
                 _pos.first += i.first;
                 _pos.second += i.second;
@@ -193,6 +198,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         static_cast<Bonus*>(tmp)->addToPlayer(this);
         _sound->bonus(30);
         _map->deleteCube(_pos.first, _pos.second);
+    }
     }
   }
 }
