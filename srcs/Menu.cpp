@@ -647,7 +647,7 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
+  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
 }

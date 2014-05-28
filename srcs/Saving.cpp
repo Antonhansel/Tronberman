@@ -9,7 +9,6 @@
 */
 
 #include "Saving.hpp"
-//#include "Player.hpp"
 
 Saving::Saving(std::vector<std::string> &fileName)
 {
@@ -21,7 +20,6 @@ Saving::Saving(std::vector<std::string> &fileName)
     _nbrLine = 0;
     _name = fileName.back();
     _sizeMap = 0;
-    error = true;
     error = loadMap(fileName.back());
     _nbrLine = 0;
     error = loadPlayer(fileName.back());
@@ -97,7 +95,7 @@ bool    Saving::loadSize(std::list<std::string> &file)
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 1)
   {
@@ -108,7 +106,7 @@ bool    Saving::loadSize(std::list<std::string> &file)
   _sizeMap = tab.back();
   _map = new AObject *[_sizeMap * _sizeMap];
   memset(_map, 0, (_sizeMap * _sizeMap) * sizeof(AObject *));
-  return true;
+  return (true);
 }
 
 bool    Saving::loadName(std::list<std::string> &file)
@@ -120,7 +118,7 @@ bool    Saving::loadName(std::list<std::string> &file)
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   std::cout << "load map " << str << std::endl;
   if (str == "")
   {
@@ -129,7 +127,7 @@ bool    Saving::loadName(std::list<std::string> &file)
     return (false);
   }
   _name = str;
-  return true;
+  return (true);
 }
 
 bool    Saving::loadRange(std::list<std::string> &file, Player *player)
@@ -141,7 +139,7 @@ bool    Saving::loadRange(std::list<std::string> &file, Player *player)
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 1)
   {
@@ -171,7 +169,7 @@ bool    Saving::loadStock(std::list<std::string> &file, Player *player)
     return (false);
   }
   player->setStock(tab.back());
-  return true;
+  return (true);
 }
 
 bool    Saving::loadId(std::list<std::string> &file, Player *player)
@@ -225,7 +223,7 @@ bool    Saving::loadType(std::list<std::string> &file, Player *player)
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 1)
   {
@@ -234,7 +232,7 @@ bool    Saving::loadType(std::list<std::string> &file, Player *player)
     return (false);
   }
   player->setType((type)(tab.back()));
-  return true;
+  return (true);
 }
 bool    Saving::loadPos(std::list<std::string> &file, Player *player)
 {
@@ -245,7 +243,7 @@ bool    Saving::loadPos(std::list<std::string> &file, Player *player)
 
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 2)
   {
@@ -259,7 +257,7 @@ bool    Saving::loadPos(std::list<std::string> &file, Player *player)
   pos.second = tab.back();
   std::cout << pos.first << " " << pos.second << std::endl;
   player->setPos(pos);
-  return true;
+  return (true);
 }
 
 bool    Saving::loadCase(std::list<std::string> &file)
@@ -276,10 +274,10 @@ bool    Saving::loadCase(std::list<std::string> &file)
   int t;
 
   if (_sizeMap == 0)
-    return false;
+    return (false);
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 3)
   {
@@ -299,7 +297,7 @@ bool    Saving::loadCase(std::list<std::string> &file)
   tmp->setPos(pos);
   tmp->initialize();
   _map[x * _sizeMap + y] = tmp;
-  return true;
+  return (true);
 }
 
 bool    Saving::loadSpawn(std::list<std::string> &file)
@@ -312,10 +310,10 @@ bool    Saving::loadSpawn(std::list<std::string> &file)
   int y;
 
   if (_sizeMap == 0)
-    return false;
+    return (false);
   str = file.front();
   if (myBalise(in, out, str, file.front()) == false)
-    return false;
+    return (false);
   myParseur(tab, str);
   if (tab.size() != 2)
   {
@@ -328,7 +326,7 @@ bool    Saving::loadSpawn(std::list<std::string> &file)
   y = tab.back();
   tab.pop_back();
   _spawn.push_back(std::make_pair(x, y));
-  return true;
+  return (true);
 }
 
 bool    Saving::loadMap(std::string &file_name)
@@ -361,13 +359,13 @@ bool    Saving::loadMap(std::string &file_name)
     ((pos = front.find("<case>")) != std::string::npos) ? (error = loadCase(file)) : 0;
     ((pos = front.find("<spawn>")) != std::string::npos) ? (error = loadSpawn(file)) : 0;
     if (error == false)
-      return false;
+      return (false);
     file.pop_front();
     if (file.empty())
-      return false;
+      return (false);
     _nbrLine++;
   }
-  return true;
+  return (true);
 }
 
 bool    Saving::loadPlayer(std::string &file_name)
@@ -524,7 +522,7 @@ bool    Saving::saveMap()
   }
   _file << "</map>" << std::endl;
   savePlayer();
-  return true;
+  return (true);
 }
 
 std::vector<Map *>                      Saving::getListMap()
