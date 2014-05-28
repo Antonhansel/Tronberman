@@ -8,6 +8,7 @@ AInput::AInput(gdl::Input &input, inputType t) :
 	_ptrFunct[KEY2] = &AInput::createPlayer2Key;
 	_ptrFunct[MENU] = &AInput::createMenuKey;
 	_ptrFunct[GAME] = &AInput::createGameKey;
+	_ptrFunct[GENERATOR] = &AInput::createGeneratorKey;
 	(this->*_ptrFunct[_type])();
 }
 
@@ -81,6 +82,22 @@ void	AInput::createGameKey()
 	_key[SDLK_ESCAPE] = ESCAPE;
 	_key[SDL_QUIT] = ESCAPE;
 	_key[SDLK_o] = PSAVE;
+}
+
+void	AInput::createGeneratorKey()
+{
+	_key[SDLK_KP_PLUS] = GPLUS;
+	_key[SDLK_KP_MINUS] = GMINUS;
+	_key[SDLK_SPACE] = SPACE;
+	_key[SDLK_KP_1] = KP1;
+	_key[SDLK_KP_2] = KP2;
+	_key[SDLK_UP] = PUP;
+	_key[SDLK_DOWN] = PDOWN;
+	_key[SDLK_LEFT] = PLEFT;
+	_key[SDLK_RIGHT] = PRIGHT;
+	_key[SDLK_ESCAPE] = ESCAPE;
+	_key[SDLK_BACKSPACE] = MBACKSPACE;
+	_key[SDL_QUIT] = ESCAPE;
 }
 
 void	AInput::setMode(bool nMod)

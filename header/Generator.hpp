@@ -16,6 +16,7 @@
 # include "Loader.hpp"
 # include "Factory.hpp"
 # include "Floor.hpp"
+# include "AInput.hpp"
 
 class Generator
 {
@@ -46,6 +47,8 @@ private:
   	BasicShader		_shader;
   	AObject			*_floor;
   	double 			_time;
+  	AInput			*_ainput;
+  	key				_k;
 };
 
 #endif /*_GENERATOR_HPP_*/

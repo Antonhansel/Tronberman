@@ -22,7 +22,8 @@ enum inputType
 	KEY1,
 	KEY2,
 	GAME,
-	MENU
+	MENU,
+	GENERATOR
 };
 
 /*enum key
@@ -64,6 +65,7 @@ private:
 	void	createPlayer1Key();
 	void 	createPlayer2Key();
 	void	createGameKey();
+	void	createGeneratorKey();
 };
 
 #endif /*!AINPUT_HPP_*/
