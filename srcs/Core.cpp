@@ -21,6 +21,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _hud = new Hud(cam, loader);
   _displayFPS = false;
   _ainput = NULL;
+  _isSave = false;
 }
 
 void  Core::reset()
@@ -76,6 +77,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
   _height = _width;
   _time = 0;
   _frames = 0;
+  _isSave = _menu->isSave();
   _endgame = false;
 }
 
@@ -161,12 +163,15 @@ bool   Core::makeBot(int posx, int posy, int id)
 
 bool		Core::drawChar()
 {
-  if (makeChar(_posx, _posy, 1) == false)
-    return (false);
-  if (_players == 2)
+  if (!_isSave)
   {
-    if (makeChar(_posx2, _posy2, 2) == false)
+    if (makeChar(_posx, _posy, 1) == false)
       return (false);
+    if (_players == 2)
+    {
+      if (makeChar(_posx2, _posy2, 2) == false)
+        return (false);
+    }
   }
   return (true);
 }
@@ -179,18 +184,21 @@ bool    Core::drawBot(int nb)
   int   i;
 
   i = 0;
-  if (nb > 0)
-    spawn = _map->setSpawn(nb);
-  while (++i <= nb && nb > 0)
-    {
-      x = spawn.begin()->first;
-      y = spawn.begin()->second;
-      if (makeBot(x, y, i + 2) == false)
-        return (false);
-      if (i < nb)
-        spawn.erase(spawn.begin());
-    }
-  return true;
+  if (!_isSave)
+  {
+    if (nb > 0)
+      spawn = _map->setSpawn(nb);
+    while (++i <= nb && nb > 0)
+      {
+        x = spawn.begin()->first;
+        y = spawn.begin()->second;
+        if (makeBot(x, y, i + 2) == false)
+          return (false);
+        if (i < nb)
+          spawn.erase(spawn.begin());
+      }
+  }
+  return (true);
 }
 
 void  Core::FPS()
