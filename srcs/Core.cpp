@@ -87,7 +87,7 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  _particles = new Particles();
+  _particles = new Particles(_loader);
   std::cout << "Load done!" << std::endl;
   return (true);
 }
@@ -256,7 +256,7 @@ bool	Core::update()
   _hud->update(_player[1]);
   for (int i = 3; i <= _nb_bot + 2; i++)
     _player[i]->setObj(_clock);
-  _particles->update(_clock);
+  _particles->update(_clock, _input);
   return (true);
 }
 

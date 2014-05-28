@@ -19,21 +19,25 @@
 # include <glm/gtc/matrix_transform.hpp>
 # include <OpenGL.hh>
 # include <map>
+# include "Loader.hpp"
 
-# define NUM_PARTICLES    100	
-# define SPEED 	0.05
+# define NUM_PARTICLES 100	
+# define SPEED 1.5
 # define NUM_DEBRIS 100
+# define COEFFSPEED 2
 
 class Particles
 {
 public:
-	Particles();
+	Particles(Loader *loader);
 	~Particles();
 	void 	draw(gdl::AShader &shader, gdl::Clock const &clock);
-	void 	update(gdl::Clock const &clock);
+	void 	update(gdl::Clock const &clock, gdl::Input &input);
 	void 	genParticles(glm::vec3 vec);
 	void 	newSpeed (float dest[3]);
+	void 	reset();
 private:
+	gdl::Texture 		_texpart;
 	struct particleData
 	{
 	  float   position[3];
@@ -53,9 +57,11 @@ typedef struct debrisData    debrisData;
 	gdl::Geometry		_trigeo;
 	int 				_partNumber;
 	int 				fuel;
+	Loader				*_loader;
 	glm::mat4 			_transformation;
 	particleData particles[NUM_PARTICLES];
 	debrisData       debris[NUM_DEBRIS];
+	bool _display;
 };
 
 #endif /*_PARTICLES_HPP_*/
