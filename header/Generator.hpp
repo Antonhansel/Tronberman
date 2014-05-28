@@ -30,10 +30,10 @@ public:
 	bool 	cleanObjects(int);
 	bool 	update();
 	void 	draw();
-	bool 	changeSize();
-	void 	changeType();
-	void 	placeCube();
-	void 	moveCursor();
+	bool 	changeSize(key &);
+	void 	changeType(key &);
+	void 	placeCube(key &);
+	void 	moveCursor(key &);
 	void 	deleteCube(int, int);
 	AObject     *getCase(int x, int y) const;
 private:
@@ -48,7 +48,7 @@ private:
   	AObject			*_floor;
   	double 			_time;
   	AInput			*_ainput;
-  	key				_k;
+  	std::vector<key>				_k;
 };
 
 #endif /*_GENERATOR_HPP_*/

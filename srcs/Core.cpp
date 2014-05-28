@@ -217,6 +217,7 @@ void  Core::FPS()
 
 bool	Core::update()
 {
+  std::vector<key>  k;
   checkAlive();
   if (_endgame == true)
     return (false);
@@ -231,21 +232,25 @@ bool	Core::update()
     _ainput = new AInput(_input, GAME);
   }
   _ainput->setInput(_input);
-  switch (_ainput->getInput())
+  k = _ainput->getInput();
+  for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
   {
-    case FPSON:
-      _displayFPS = true;
-      break;
-    case FPSOFF:
-      _displayFPS = false;
-      break;
-    case ESCAPE:
-      return (false);
-    case PSAVE:
-      Saving(_map->getName(), this);
-      break;
-    default:
-      break;
+    switch ((*it))
+    {
+      case FPSON:
+        _displayFPS = true;
+        break;
+      case FPSOFF:
+        _displayFPS = false;
+        break;
+      case ESCAPE:
+       return (false);
+      case PSAVE:
+       Saving(_map->getName(), this);
+       break;
+      default:
+        break;
+    }
   }
   FPS();
   _time += _clock.getElapsed();

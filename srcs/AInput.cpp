@@ -16,16 +16,18 @@ AInput::~AInput()
 {
 }
 
-key	AInput::getInput()
+std::vector<key>	AInput::getInput()
 {
-	for (std::map<int, key>::const_iterator it = _key.begin(); it != _key.end(); ++it)
+	std::vector<key> in;
+
+	for (std::map<int, key>::iterator it = _key.begin(); it != _key.end(); ++it)
 	{
 		if (_input.getKey((*it).first))
 		{
-			return ((*it).second);
+			in.push_back((*it).second);
 		}
 	}
-	return (NONE);
+	return (in);
 }
 
 void	AInput::setInput(gdl::Input &input)
@@ -105,4 +107,14 @@ void	AInput::setMode(bool nMod)
 	_mode2 = nMod;
 	_key.clear();
 	(this->*_ptrFunct[_type])();
+}
+
+bool	AInput::getKey(std::vector<key> &vk, key k)
+{
+	for (std::vector<key>::const_iterator it = vk.begin(); it != vk.end(); ++it)
+	{
+		if ((*it) == k)
+			return (true);
+	}
+	return (false);
 }
