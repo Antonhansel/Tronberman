@@ -30,11 +30,13 @@ public:
 	bool    loadLife(std::list<std::string> &, Player *);
 	bool    loadId(std::list<std::string> &, Player *);
 	bool    loadType(std::list<std::string> &, Player *);
+	bool    loadPos(std::list<std::string> &, Player *);
 	bool    loadPlayer(std::string &);
 
 	bool    loadSize(std::list<std::string> &);
 	bool    loadCase(std::list<std::string> &);
 	bool    loadSpawn(std::list<std::string> &);
+	bool    loadName(std::list<std::string> &);
 	bool    loadMap(std::string &);
 	void	myParseur(std::vector<int> &, std::string &);
 	bool	myBalise(std::string &, std::string &, std::string &, std::string &);

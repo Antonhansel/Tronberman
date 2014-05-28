@@ -18,6 +18,7 @@ Generator::Generator(Camera *camera, Loader *loader, int size)
 	_loader = loader;
 	_time = 0;
   _map = new AObject *[_size * _size];
+  _ainput = new AInput(_camera->getInput(), GENERATOR);
   memset(_map, 0, (_size * _size) * sizeof(AObject *));
 }
 
@@ -28,12 +29,7 @@ Generator::~Generator()
   for (int i = 0 ; i < 10 ; i++)
     name += (rand()%26)+97;
   name += ".xml";
-  Saving(name, _map, _size);
-  // for (int i = 0; i < _size * _size; ++i)
-  //   {
-  //       if (_map[i])
-  //         delete _map[i];
-  //   }
+  Saving(name, _map, _size); 
 }
 
 bool 	Generator::drawBackground()
@@ -111,12 +107,12 @@ bool Generator::initCursor(int x, int z)
 
 bool Generator::changeSize()
 {
-  	if (_input.getKey(SDLK_KP_PLUS))
+  	if (_k == GPLUS)
   	{
   		if (cleanObjects(1) == false)
   			return (false);
   	}
-  	if (_input.getKey(SDLK_KP_MINUS))
+  	if (_k == GMINUS)
   	{
   		if (cleanObjects(-1) == false)
   			return (false);
@@ -128,7 +124,7 @@ void 	Generator::placeCube()
 {
   std::pair<float, float> pos;
 
-  if (_input.getKey(SDLK_SPACE))
+  if (_k == SPACE)
     {
     pos = _cube->getPos();
   	if ((pos.first > 0 && pos.first < _size) && 
@@ -142,21 +138,21 @@ void 	Generator::placeCube()
 
 void 	Generator::changeType()
 {
-	if (_input.getKey(SDLK_KP_1))
+	if (_k == KP1)
 	  	_cube->setType(BLOCKD);
-	if (_input.getKey(SDLK_KP_2))
+	if (_k == KP2)
 	    _cube->setType(BLOCK);
 }
 
 void 	Generator::moveCursor()
 {
-	if (_input.getKey(SDLK_UP) && _cube->getPos().second + 1 < _size - 1)
+	if (_k == PUP && _cube->getPos().second + 1 < _size - 1)
 		_cube->translate(glm::vec3(0, 0, 1));
-	if (_input.getKey(SDLK_DOWN) && _cube->getPos().second - 1 > 0)
+	if (_k == PDOWN && _cube->getPos().second - 1 > 0)
 		_cube->translate(glm::vec3(0, 0, -1));
-	if (_input.getKey(SDLK_LEFT) && _cube->getPos().first + 1 < _size - 1)
+	if (_k == PLEFT && _cube->getPos().first + 1 < _size - 1)
 		_cube->translate(glm::vec3(1, 0, 0));
-	if (_input.getKey(SDLK_RIGHT) && _cube->getPos().first - 1 > 0)
+	if (_k == PRIGHT && _cube->getPos().first - 1 > 0)
 		_cube->translate(glm::vec3(-1, 0, 0));
 }
 
@@ -164,17 +160,19 @@ bool Generator::update()
 {
 	   _clock = _camera->getClock();
   	_input = _camera->getInput();
+    _ainput->setInput(_input);
   	_time += _clock.getElapsed();
   	if (_time > 0.03)
   	{
+      _k = _ainput->getInput();
   		if (changeSize() == false)
   			return (false);
-		if (_input.getKey(SDLK_ESCAPE) || _input.getInput(SDL_QUIT))
+		  if (_k == ESCAPE)
 	    	return (false);
-    if (_input.getKey(SDLK_BACKSPACE))
-      deleteCube(_cube->getPos().first, _cube->getPos().second);
-	    moveCursor();
-	    changeType();
+      if (_k == MBACKSPACE)
+        deleteCube(_cube->getPos().first, _cube->getPos().second);
+      moveCursor();
+      changeType();
 	    placeCube();
 	    _time = 0;
 	}

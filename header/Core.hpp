@@ -24,8 +24,6 @@
 # include "AInput.hpp"
 # include "Particles.hpp"
 
-# define PATH "./ressources/maps/"
-
 class Menu;
 class Player;
 
@@ -50,8 +48,9 @@ public:
   int       getNbrPlayer() const;
   Map       *getMap();
   std::map<int, Player*>  getPlayer();
-  void      setValues(Map *map);
+  void      setValues(Map *);
   void      reset();
+  void      setSave(Map *, std::map<int, Player*> &);
 private:
   bool      _displayFPS;
   int       _screen;

@@ -54,7 +54,8 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool o
 
   glDisable(GL_DEPTH_TEST);
   c -= (c >= 'a' && c <= 'z') ? 32 : 0;
-  div = other ? getColumn(c) : getOtherColumn(c);
+  div = (other) ? getColumn(c) : getOtherColumn(c);
+  (c >= '0' && c <= '9') ? (div = getOtherColumn(c)) : 0;
   geometry->pushVertex(glm::vec3(0, 0, 0));
   geometry->pushVertex(glm::vec3(size, 0, 0));
   geometry->pushVertex(glm::vec3(size, size, 0));

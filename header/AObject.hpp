@@ -58,7 +58,12 @@ enum key
   MNINE,
   PSAVE,
   FPSOFF,
-  FPSON
+  FPSON,
+  GPLUS,
+  GMINUS,
+  KP1,
+  KP2,
+  SPACE
 };
 
 class AObject

@@ -89,6 +89,8 @@ public:
   void      setIsSelect();
   void      startGenerator();
   void      startPreview();
+  bool      isSave() const;
+  std::map<int, Player *> &getPlayer() const;
   //int  operator=(const std::string &);
   private:
     int   convToInt(const std::string &) const;
@@ -105,6 +107,7 @@ public:
     void  select4();
 
 private:
+  bool          _isSave;
   bool          _previewMode;
   int           _isSelect;
   bool          _stopIntro;

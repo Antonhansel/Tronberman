@@ -10,7 +10,7 @@
 
 #include "Map.hpp"
 
-Map::Map(int size) : _name(PATH)
+Map::Map(int size) : _name(SAVE)
 {
     genereteName();
     _size_x = size;
@@ -39,10 +39,8 @@ AObject     *Map::getCase(int x, int y) const
 
 void    Map::genereteName()
 {
-  _name = PATH;
-
   for (int i = 0 ; i < 10 ; i++)
-    _name += (rand()%26)+97;
+    _name += (rand() % 26) + 97;
   _name += ".xml";
 }
 
@@ -196,5 +194,6 @@ std::vector<std::pair<int, int> > Map::getSpawn() const
 
 std::string     Map::getName() const
 {
+    std::cout << "NAME OF DIRECTORY : " << _name << std::endl;
   return _name;
 }
