@@ -101,7 +101,7 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  _particles = new Particles(_loader);
+  _particles = new ParticleEngine(_loader);
   std::cout << "Load done!" << std::endl;
   return (true);
 }
