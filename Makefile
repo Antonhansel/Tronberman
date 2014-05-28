@@ -1,11 +1,10 @@
-##
 ## Makefile for Makefile in /home/apollo/rendu/bestbomberman
 ##
 ## Made by ribeaud antonin
 ## Login   <ribeau_a@epitech.net>
 ##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Tue May 20 22:34:02 2014 Mehdi Chouag
+## Last update Wed May 28 18:37:03 2014 ribeaud antonin
 ##
 
 NAME		=	bomberman
@@ -15,7 +14,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Menu.cpp \
 				srcs/CubeAnim.cpp \
 				srcs/Core.cpp \
-				srcs/Particles.cpp \
+				srcs/ParticleEngine.cpp \
 				srcs/AObject.cpp \
 				srcs/Cube.cpp \
 				srcs/Engine.cpp \

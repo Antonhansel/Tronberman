@@ -22,7 +22,7 @@
 # include "Sound.hpp"
 # include "Hud.hpp"
 # include "AInput.hpp"
-# include "Particles.hpp"
+# include "ParticleEngine.hpp"
 
 class Menu;
 class Player;
@@ -79,7 +79,7 @@ private:
   std::map<std::pair<float, float>, Bombs *>  _bombs;
   bool        _endgame;
   AInput      *_ainput;
-  Particles   *_particles;
+  ParticleEngine   *_particles;
 };
 
 #endif /*!_CORE_HPP_*/

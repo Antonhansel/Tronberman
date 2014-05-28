@@ -21,6 +21,7 @@ public:
 	bool 		loadTextures();
 	void 		bindTexture(type);
 	void 		drawGeometry(gdl::AShader &, glm::mat4 );
+	void 		pushTexture(gdl::Geometry *);
 private:
 	std::vector<gdl::Texture*> _textures;
 	gdl::Geometry 		_geometry;

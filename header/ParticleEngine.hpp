@@ -1,5 +1,5 @@
 /*
-** Particles.hpp for particles in /home/apollo/rendu/cpp_bomberman/header
+** ParticleEngine.hpp for particles in /home/apollo/rendu/cpp_bomberman/header
 **
 ** Made by Antonin Ribeaud
 ** Login   <ribeau_a@epitech.net>
@@ -21,23 +21,23 @@
 # include <map>
 # include "Loader.hpp"
 
-# define NUM_PARTICLES 100	
+# define NUM_PARTICLES 50	
 # define SPEED 1.5
-# define NUM_DEBRIS 100
+# define NUM_DEBRIS 50
 # define COEFFSPEED 2
+# define FUEL 150
 
-class Particles
+class ParticleEngine
 {
 public:
-	Particles(Loader *loader);
-	~Particles();
+	ParticleEngine(Loader *loader);
+	~ParticleEngine();
 	void 	draw(gdl::AShader &shader, gdl::Clock const &clock);
 	void 	update(gdl::Clock const &clock, gdl::Input &input);
 	void 	genParticles(glm::vec3 vec);
 	void 	newSpeed (float dest[3]);
 	void 	reset();
 private:
-	gdl::Texture 		_texpart;
 	struct particleData
 	{
 	  float   position[3];
@@ -53,12 +53,12 @@ private:
 	  float   scale[3];
 	};
 typedef struct debrisData    debrisData;
-	gdl::Geometry 		_cubegeo;
 	gdl::Geometry		_trigeo;
 	int 				_partNumber;
-	int 				fuel;
+	int 				_fuel;
 	Loader				*_loader;
-	glm::mat4 			_transformation;
+	glm::mat4 			_transpart;
+	glm::mat4			_transdeb;
 	particleData particles[NUM_PARTICLES];
 	debrisData       debris[NUM_DEBRIS];
 	bool _display;

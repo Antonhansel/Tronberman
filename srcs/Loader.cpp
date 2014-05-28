@@ -70,10 +70,8 @@ bool 	Loader::loadTextures()
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  pushTexture(&_geometry);
+
 
   vec = glm::vec3(0.0, 0.0, 1.0);
   //face
@@ -83,62 +81,46 @@ bool 	Loader::loadTextures()
   _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  pushTexture(&_geometry);
 
-vec = glm::vec3(-1.0, 0.0, 0.0);
+
+  vec = glm::vec3(-1.0, 0.0, 0.0);
   _geometry.setColor(glm::vec4(1, 0, 1, 1));
   _geometry.pushNormal(vec);
   _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  pushTexture(&_geometry);
 
-vec = glm::vec3(1.0, 0.0, 0.0);
-//droite
+
+  vec = glm::vec3(1.0, 0.0, 0.0);
   _geometry.setColor(glm::vec4(0, 1, 1, 1));
   _geometry.pushNormal(vec);
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  pushTexture(&_geometry);
 
   vec = glm::vec3(0.0, 1.0, 0.0);
-//dessus
   _geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushNormal(vec);
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  _geometry.pushUv(glm::vec2(0.0f, 1.0f));
-
-  //dessous 
-  // _geometry.setColor(glm::vec4(1, 0, 0, 1));
-  // _geometry.pushNormal(vec);
-  // _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  // _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  // _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  // _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  // _geometry.pushUv(glm::vec2(0.0f, 0.0f));
-  // _geometry.pushUv(glm::vec2(1.0f, 0.0f));
-  // _geometry.pushUv(glm::vec2(1.0f, 1.0f));
-  // _geometry.pushUv(glm::vec2(0.0f, 1.0f));
+  pushTexture(&_geometry);
   _geometry.build();
 	return (true);
+}
+
+void  Loader::pushTexture(gdl::Geometry *geometry)
+{
+  geometry->pushUv(glm::vec2(0.0f, 0.0f));
+  geometry->pushUv(glm::vec2(1.0f, 0.0f));
+  geometry->pushUv(glm::vec2(1.0f, 1.0f));
+  geometry->pushUv(glm::vec2(0.0f, 1.0f));
 }
 
 void Loader::drawGeometry(gdl::AShader &shader, glm::mat4 trans)
