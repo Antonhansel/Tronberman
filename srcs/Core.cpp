@@ -283,12 +283,13 @@ bool	Core::update()
 void  Core::drawAll(AObject *cur_char)
 {
   std::pair<int, int> pos;
-  type LastType = static_cast<type>(-1);
+  type LastType = BLOCKD;
   AObject     *tmp;
   int         nb_p;
 
   nb_p = 0;
   pos = cur_char->getPos();
+  _loader->bindTexture(LastType);
   for (int x = pos.first - (30/(_screen+1)); x < pos.first + (30/(_screen+1)); ++x)
   {
     for (int y = pos.second - (30/(_screen+1)); y < pos.second + (30/(_screen+1)); ++y)
@@ -327,7 +328,6 @@ void  Core::checkAlive()
   }
   else if (!_player[1]->isAlive())
     _endgame = true;
- 
   for (it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it).second->isAlive() == true)
