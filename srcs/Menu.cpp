@@ -13,7 +13,7 @@
 # include "CubeAnim.hpp"
 # include "Preview.hpp"
 
-Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
+Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(camera)
 {
   _camera->setPlayer(1);
   _loader = loader;
@@ -53,6 +53,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _exit = false;
   _isSave = false;
   _ipAddr.assign("192.168.0.1");
+  _engine = engine;
   _nbPort.assign("6666");
   home();
 }
@@ -134,34 +135,60 @@ void    Menu::manageEventInput()
     switch (_isSelect)
     {
       case 0:
-        getInputNb(_sizeMap, 5, 4, 5000, 0);
+        getInputNb(_sizeMap, 4, 5000, 0);
         break;
       case 1:
         if (_stepM == STEP11)
-          getInputNb(_nbPlayer, 6, 1, 2, 1);
+          getInputNb(_nbPlayer, 1, 2, 1);
         break;
       case 2:
         if (_stepM == STEP11)
-          getInputNb(_nbBots, 7, 2, convToInt(_sizeMap) / 10, 0);
+          getInputNb(_nbBots, 2, convToInt(_sizeMap) / 10, 0);
         break;
     }
   }
   if (_stepM == STEP12 && _isSelect == 0)
-    getInputNb(_sizeMap, 5, 4, 30, 0);
+    getInputNb(_sizeMap, 4, 30, 0);
   if (_stepM == LOADG)
   {
     switch (_isSelect)
     {
       case 0:
-          getInputNb(_nbPlayer, 6, 1, 2, 1);
+          getInputNb(_nbPlayer, 1, 2, 1);
         break;
       case 1:
-          getInputNb(_nbBots, 7, 2, _map->getSize() / 10, 0);
+          getInputNb(_nbBots, 2, _map->getSize() / 10, 0);
         break;
     }
   }  
   if ((_stepM == SERVER && _isSelect == 0) || (_stepM == CLIENT && _isSelect == 1))
-    getInputNb(_nbPort, 3, 5, 65000, 1);
+    getInputNb(_nbPort, 5, 65000, 1);
+  if (_stepM == CLIENT && _isSelect == 0)
+    getInputAddr(_ipAddr, 15);
+}
+
+void    Menu::getInputAddr(std::string &s, size_t size)
+{
+  std::vector<key>  ret;
+
+  std::cout << "GETKEY" << std::endl;
+  ret = _event->getInput();
+  if (!AInput::getKey(ret, NONE) &&
+    !AInput::getKey(ret, MBACKSPACE) && !AInput::getKey(ret, MUP) &&
+    !AInput::getKey(ret, MDOWN) && !AInput::getKey(ret, MLEFT) &&
+    !AInput::getKey(ret, MRIGHT) && s.size() < size)
+  {
+    _timer = 0;
+    s += (((int)(ret[0])) - 23) + 48;
+    s.assign(s.substr(0, s.length() - 1));
+    (this->*_func[_stepM])();
+  }
+  else if (AInput::getKey(ret, MBACKSPACE))
+  {
+    _timer = 0;
+    s.assign(s.substr(0, s.length() - 1));
+    (this->*_func[_stepM])();
+  }
 }
 
 void    Menu::manageEventInputScore(key &k)
@@ -241,7 +268,7 @@ void    Menu::getInputPseudo(char c)
   (this->*_func[_stepM])();
 }
 
-void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
+void    Menu::getInputNb(std::string &s, size_t size, int max, int min)
 {
   std::vector<key>  ret;
 
@@ -264,7 +291,6 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
     (this->*_func[_stepM])();
   }
 }
-
 
 void    Menu::startGenerator()
 {
@@ -696,7 +722,7 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
+  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
   : (_stepM == CLIENT) ? (_stepM = ONLINE) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);

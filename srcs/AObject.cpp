@@ -9,16 +9,18 @@
 */
 
 #include "AObject.hpp"
+# include "ParticleEngine.hpp"
+
 
 AObject::AObject() :
 	_position(), _rotation(), _scale(1, 1, 1)
 {
   _transformationDirty = true;
+  _particles = NULL;
 }
 
 AObject::~AObject()
 {
-
 }
 
 void		AObject::setPos(std::pair<float, float> &pos)
@@ -62,6 +64,11 @@ void		AObject::setType(type Type)
 type		AObject::getType() const
 {
   return (_type);
+}
+
+void  AObject::setParticle(ParticleEngine *particles)
+{
+    _particles = particles;
 }
 
 glm::mat4 	AObject::getTransformation()

@@ -13,13 +13,13 @@
 # define SAVE "./ressources/save/"
 
 class AObject;
-
 class Map
 {
 public:
   Map(int);
   Map(int, std::string &);
   ~Map();
+  Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;
   std::vector<std::pair<int, int> >   &setSpawn(int nb);
   std::vector<std::pair<int, int> >   getSpawn() const;
@@ -37,6 +37,7 @@ public:
   void    genereteName();
 
 private:
+  ParticleEngine  *_engine;
   std::vector<std::string> _paths;
   AObject       **_map;
   std::string   _name;

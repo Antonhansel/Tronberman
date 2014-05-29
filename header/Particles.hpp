@@ -1,11 +1,11 @@
 /*
-** Particles.hpp for particles in /home/apollo/rendu/cpp_bomberman/header
+** Particles.hpp for Particles in /home/apollo/rendu/cpp_bomberman/header
 **
 ** Made by Antonin Ribeaud
 ** Login   <ribeau_a@epitech.net>
 **
-** Started on  Mon May  26 19:36:33 2014 Antonin Ribeaud
-** Last update Mon May  26 19:36:33 2014 Antonin Ribeaud
+** Started on  Wed May  28 18:59:00 2014 Antonin Ribeaud
+** Last update Wed May  28 18:59:00 2014 Antonin Ribeaud
 */
 
 #ifndef _PARTICLES_HPP_
@@ -18,26 +18,17 @@
 # include <BasicShader.hh>
 # include <glm/gtc/matrix_transform.hpp>
 # include <OpenGL.hh>
-# include <map>
 # include "Loader.hpp"
 
-# define NUM_PARTICLES 100	
+# define NUM_PARTICLES 30
 # define SPEED 1.5
-# define NUM_DEBRIS 100
+# define NUM_DEBRIS 30
 # define COEFFSPEED 2
+# define FUEL 50
 
 class Particles
 {
-public:
-	Particles(Loader *loader);
-	~Particles();
-	void 	draw(gdl::AShader &shader, gdl::Clock const &clock);
-	void 	update(gdl::Clock const &clock, gdl::Input &input);
-	void 	genParticles(glm::vec3 vec);
-	void 	newSpeed (float dest[3]);
-	void 	reset();
 private:
-	gdl::Texture 		_texpart;
 	struct particleData
 	{
 	  float   position[3];
@@ -52,16 +43,20 @@ private:
 	  float   orientationSpeed[3];
 	  float   scale[3];
 	};
-typedef struct debrisData    debrisData;
-	gdl::Geometry 		_cubegeo;
-	gdl::Geometry		_trigeo;
-	int 				_partNumber;
-	int 				fuel;
+	typedef struct debrisData    debrisData;
+	int 				_fuel;
 	Loader				*_loader;
-	glm::mat4 			_transformation;
-	particleData particles[NUM_PARTICLES];
-	debrisData       debris[NUM_DEBRIS];
-	bool _display;
+	glm::mat4 			_transpart;
+	glm::mat4			_transdeb;
+	particleData 	_particles[NUM_PARTICLES];
+	debrisData       _debris[NUM_DEBRIS];
+public:
+	Particles(Loader *loader, glm::vec3 &);
+	~Particles();
+	void 	draw(gdl::AShader &shader);
+	void 	update();
+	int 	getFuel() const;
+	void 	newSpeed(float dest[3]);
 };
 
-#endif /*_PARTICLES_HPP_*/
+#endif /*!PARTICLES_HPP_*/

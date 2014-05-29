@@ -4,172 +4,103 @@
 ** Made by Antonin Ribeaud
 ** Login   <ribeau_a@epitech.net>
 **
-** Started on  Mon May  26 15:49:08 2014 Antonin Ribeaud
-** Last update Mon May  26 15:49:08 2014 Antonin Ribeaud
+** Started on  Wed May  28 18:41:58 2014 Antonin Ribeaud
+** Last update Wed May  28 18:41:58 2014 Antonin Ribeaud
 */
 
 #include "Particles.hpp"
-#include <sstream> 
-#include <iostream>
 
-Particles::Particles(Loader *loader)
+Particles::Particles(Loader *loader, glm::vec3 &vec)
 {
-  _loader = loader;
-  reset();
-  _texpart.load("./ressources/assets/BLOCKD.tga");
-  _cubegeo.setColor(glm::vec4(1, 1, 1, 1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, 0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.setColor(glm::vec4(1, 1, 0, 1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, -0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.setColor(glm::vec4(1, 0, 1, 1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, 0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.setColor(glm::vec4(0, 1, 1, 1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, -0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.setColor(glm::vec4(1, 1, 1, 1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, 0.1, 0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.setColor(glm::vec4(1, 0, 0, 1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, -0.1));
-  _cubegeo.pushVertex(glm::vec3(0.1, -0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, 0.1));
-  _cubegeo.pushVertex(glm::vec3(-0.1, -0.1, -0.1));
-  _cubegeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _cubegeo.pushUv(glm::vec2(1.0f, 1.0f));
-  _cubegeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _cubegeo.build();
-  _trigeo.setColor(glm::vec4(1, 1, 1, 1));
-  _trigeo.pushVertex(glm::vec3(0.0, 0.5, 0.0));
-  _trigeo.pushVertex(glm::vec3(-0.25, 0.0, 0.0));
-  _trigeo.pushVertex(glm::vec3(0.25, 0.0, 0.0));
-  _trigeo.pushUv(glm::vec2(0.0f, 0.0f));
-  _trigeo.pushUv(glm::vec2(1.0f, 0.0f));
-  _trigeo.pushUv(glm::vec2(0.0f, 1.0f));
-  _trigeo.build();
-  _display = true;
-}
-
-Particles::~Particles()
-{}
-
-void  Particles::reset()
-{
-  for (int i = 0; i < NUM_PARTICLES; i++)
+	_loader = loader;
+	  for (int i = 0; i < NUM_PARTICLES; i++)
     {
-      particles[i].position[0] = 10.0;
-      particles[i].position[1] = 0.0;
-      particles[i].position[2] = 10.0;
-      newSpeed(particles[i].speed);
+      _particles[i].position[0] = vec.x;
+      _particles[i].position[1] = vec.y;
+      _particles[i].position[2] = vec.z;
+      newSpeed(_particles[i].speed);
     }
    for (int i = 0; i < NUM_DEBRIS; i++)
     {
-      debris[i].position[0] = 10.0;
-      debris[i].position[1] = 0.0;
-      debris[i].position[2] = 10.0;
+      _debris[i].position[0] = vec.x;
+      _debris[i].position[1] = vec.y;
+      _debris[i].position[2] = vec.z;
 
-      debris[i].orientation[0] = 0.0;
-      debris[i].orientation[1] = 0.0;
-      debris[i].orientation[2] = 0.0;
-      debris[i].scale[0] = (3.0 * 
+      _debris[i].orientation[0] = 0.0;
+      _debris[i].orientation[1] = 0.0;
+      _debris[i].orientation[2] = 0.0;
+      _debris[i].scale[0] = (3.0 * 
           ((GLfloat) rand ()) / ((GLfloat) RAND_MAX)) - 1.0;
-      debris[i].scale[1] = (3.0 * 
+      _debris[i].scale[1] = (3.0 *
           ((GLfloat) rand ()) / ((GLfloat) RAND_MAX)) - 1.0;
-      debris[i].scale[2] = (3.0 * 
+      _debris[i].scale[2] = (3.0 *
           ((GLfloat) rand ()) / ((GLfloat) RAND_MAX)) - 1.0;
-      
-      newSpeed (debris[i].speed);
-      newSpeed (debris[i].orientationSpeed);
+
+      newSpeed(_debris[i].speed);
+      newSpeed(_debris[i].orientationSpeed);
     }
-    fuel = 100;
+	_fuel = FUEL;
 }
 
-void 	Particles::draw(gdl::AShader &shader, gdl::Clock const &clock)
+Particles::~Particles()
 {
-  _texpart.bind();
-  if (fuel > 0)
+
+}
+
+void 	Particles::draw(gdl::AShader &shader)
+{
+  if (_fuel > 0)
   {
     for (int i = 0; i < NUM_PARTICLES; i++)
   	{
-  		_transformation = glm::translate(glm::mat4(), glm::vec3(particles[i].position[0], particles[i].position[1], 
-      particles[i].position[2]));
-  	 _cubegeo.draw(shader, _transformation, GL_QUADS);
+  	  _transpart = glm::translate(glm::mat4(), glm::vec3(_particles[i].position[0], _particles[i].position[1], 
+      _particles[i].position[2]));
+      _transpart = glm::scale(_transpart, glm::vec3(0.3, 0.3, 0.3));
+      _loader->drawGeometry(shader, _transpart);
   	}
     for (int i = 0; i < NUM_DEBRIS; i++)
     {
-      _transformation = glm::translate(glm::mat4(), glm::vec3(debris[i].position[0], debris[i].position[1], 
-        debris[i].position[2]));
-      _transformation = glm::scale(_transformation, glm::vec3(debris[i].scale[0], debris[i].scale[1], debris[i].scale[2]));
-      _transformation = glm::rotate(_transformation, debris[i].orientation[0], glm::vec3(1, 0, 0));
-      _transformation = glm::rotate(_transformation, debris[i].orientation[1], glm::vec3(0, 1, 0));
-      _transformation = glm::rotate(_transformation, debris[i].orientation[2], glm::vec3(0, 0, 1));   
-      _trigeo.draw(shader, _transformation, GL_TRIANGLES);
+      _transdeb = glm::translate(glm::mat4(), glm::vec3(_debris[i].position[0], _debris[i].position[1], 
+      _debris[i].position[2]));
+      _transdeb = glm::scale(_transdeb, glm::vec3(_debris[i].scale[0], _debris[i].scale[1], _debris[i].scale[2]));
+      _transdeb = glm::rotate(_transdeb, _debris[i].orientation[0], glm::vec3(1, 0, 0));
+      _transdeb = glm::rotate(_transdeb, _debris[i].orientation[1], glm::vec3(0, 1, 0));
+      _transdeb = glm::rotate(_transdeb, _debris[i].orientation[2], glm::vec3(0, 0, 1));
+      _loader->drawParticules(shader, _transdeb);
     }
   }
 }
 
-void 	Particles::update(gdl::Clock const &clock, gdl::Input &input)
+void 	Particles::update()
 {
-    if (fuel > 0 && _display)
+    if (_fuel > 0)
 	   {
 	  for (int i = 0; i < NUM_PARTICLES; i++)
 	    {
-	      particles[i].position[0] += particles[i].speed[0] * SPEED;
-	      particles[i].position[1] += particles[i].speed[1] * SPEED;
-	      particles[i].position[2] += particles[i].speed[2] * SPEED;
+	      _particles[i].position[0] += _particles[i].speed[0] * SPEED;
+	      _particles[i].position[1] += _particles[i].speed[1] * SPEED;
+	      _particles[i].position[2] += _particles[i].speed[2] * SPEED;
 	     }
     for (int i = 0; i < NUM_DEBRIS; i++)
       {
-        debris[i].position[0] += debris[i].speed[0] * 0.1;
-        debris[i].position[1] += debris[i].speed[1] * 0.1;
-        debris[i].position[2] += debris[i].speed[2] * 0.1;
+        _debris[i].position[0] += _debris[i].speed[0] * 0.1;
+        _debris[i].position[1] += _debris[i].speed[1] * 0.1;
+        _debris[i].position[2] += _debris[i].speed[2] * 0.1;
         
-        debris[i].orientation[0] += debris[i].orientationSpeed[0] * 10;
-        debris[i].orientation[1] += debris[i].orientationSpeed[1] * 10;
-        debris[i].orientation[2] += debris[i].orientationSpeed[2] * 10;
+        _debris[i].orientation[0] += _debris[i].orientationSpeed[0] * 10;
+        _debris[i].orientation[1] += _debris[i].orientationSpeed[1] * 10;
+        _debris[i].orientation[2] += _debris[i].orientationSpeed[2] * 10;
       }
-    fuel--;
+    _fuel--;
     }
-  if (input.getKey(SDLK_b))
-      reset();
-  if (input.getKey(SDLK_j))
-      _display = !_display;
 }
 
-void Particles::newSpeed (float dest[3])
+int 	Particles::getFuel() const
+{
+	return (_fuel);
+}
+
+void 	Particles::newSpeed (float dest[3])
 {
   float    x;
   float    y;
@@ -179,6 +110,6 @@ void Particles::newSpeed (float dest[3])
   y = (COEFFSPEED * ((GLfloat) rand ()) / ((GLfloat) RAND_MAX)) - 1.0;
   z = (COEFFSPEED * ((GLfloat) rand ()) / ((GLfloat) RAND_MAX)) - 1.0;
   dest[0] = x;
-  dest[1] = y;
+  dest[1] = abs(y);
   dest[2] = z;
 }

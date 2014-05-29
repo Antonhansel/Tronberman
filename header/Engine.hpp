@@ -35,6 +35,7 @@ private:
   void    save_spawn();
   
 private:
+  ParticleEngine    *_engine;
   Camera	*_camera;
   Core		*_core;
   Menu		*_menu;

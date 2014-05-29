@@ -50,7 +50,7 @@ enum stepM
 class Menu : public Game
 {
 public:
-  Menu(Camera *, Loader *);
+  Menu(Camera *, Loader *, ParticleEngine *);
   ~Menu();
   bool			initialize();
   bool			update();
@@ -61,7 +61,8 @@ public:
   void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
   void      chooseStep();
   void      manageEventInput();
-  void      getInputNb(std::string &, int, size_t, int, int);
+  void      getInputNb(std::string &, size_t, int, int);
+  void      getInputAddr(std::string &, size_t);
   void      home();
   bool      initLogo();
   void      drawLogo();
@@ -127,6 +128,7 @@ private:
   Background        *_background;
   Camera            *_camera;
   Preview           *_preview;
+  ParticleEngine    *_engine;
 private:
   std::string       _sizeMap;
   std::string       _nbPlayer;

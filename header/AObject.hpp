@@ -1,3 +1,13 @@
+/*
+** AObject.hpp for AObject in /home/apollo/rendu/cpp_bomberman/header
+**
+** Made by Antonin Ribeaud
+** Login   <ribeau_a@epitech.net>
+**
+** Started on  Thu May  29 11:50:59 2014 Antonin Ribeaud
+** Last update Thu May  29 11:50:59 2014 Antonin Ribeaud
+*/
+
 #ifndef _AOBJECT_HPP_
 # define _AOBJECT_HPP_
 
@@ -15,6 +25,7 @@
 # include <vector>
 # include <iostream>
 
+class ParticleEngine;
 class Map;
 
 enum type
@@ -82,7 +93,7 @@ public:
   void			setType(type);
   glm::mat4 		getTransformation();
   type			getType() const;
-
+  void  setParticle(ParticleEngine *particles);
   void  setTexture(gdl::Texture *);
 protected:
   bool                    _transformationDirty;
@@ -93,6 +104,7 @@ protected:
   glm::vec3	              _rotation;
   glm::vec3	              _scale;
   gdl::Texture            *_texture;
+  ParticleEngine          *_particles;
 };
 
 #endif /*!_AOBJECT_HPP_*/

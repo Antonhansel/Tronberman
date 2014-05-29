@@ -20,17 +20,23 @@ Engine::~Engine()
   delete _menu;
   delete _core;
   delete _loader;
+  delete _engine;
 }
 
 bool 		Engine::init()
 {
+  glm::vec3 vec;
+
   _camera = new Camera(HEIGHT, WIDTH);
   _camera->initScene();
   _loader = new Loader();
+  _engine = new ParticleEngine(_loader);
+  vec = glm::vec3(1, 1, 1);
+  _engine->spawnParticles(vec);
   if (_loader->loadTextures() == false)
   	return (false);
-  _menu = new Menu(_camera, _loader);
-  _core = new Core(_camera, _loader, _menu);
+  _menu = new Menu(_camera, _loader, _engine);
+  _core = new Core(_camera, _loader, _menu, _engine);
   return (true);
 }
 
