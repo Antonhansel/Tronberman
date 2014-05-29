@@ -21,7 +21,7 @@
 #include "BomberException.hpp"
 #include "Networking.hh"
 
-Networking::Networking(int port)
+Networking::Networking(Core &core, int port) : _core(core)
 {
     struct protoent *pe;
     int         tmp;
@@ -42,7 +42,7 @@ Networking::Networking(int port)
     _closed = false;
 }
 
-Networking::Networking(std::string &port, std::string &addr)
+Networking::Networking(Core &core, std::string &port, std::string &addr) : _core(core)
 {
     struct addrinfo     hints;
     struct addrinfo     *info;
@@ -135,13 +135,34 @@ void    Networking::refreshPlayers()
 
 void    Networking::_receiveFromClient(Client *client)
 {
+    ssize_t     sizeRecv;
+
+    do {
+        sizeRecv = recv(client->sockfd,
+            &client->inputBuffer.second[client->inputBuffer.first],
+            sizeof(Message),
+            MSG_DONTWAIT);
+        client->inputBuffer.first += sizeRecv;
+        if (client->inputBuffer.first >= sizeof(Message))
+        {
+            _treatMessage(client, reinterpret_cast<Message *>(client->inputBuffer.second));
+            memmove(client->inputBuffer.second,
+                &client->inputBuffer.second[client->inputBuffer.first],
+                client->inputBuffer.first - sizeof(Message));
+            client->inputBuffer.first -= sizeof(Message);
+        }
+    } while (sizeRecv > 0);
+}
+
+void    Networking::_treatMessage(Client *client, Message *message)
+{
 
 }
 
 void    Networking::_sendToClient(Client *client)
 {
     ssize_t     sizeSent;
-    std::pair<unsigned int, message *>     *toSend;
+    std::pair<unsigned int, Message *>     *toSend;
 
     do {
         toSend = &*(client->toSend.begin());

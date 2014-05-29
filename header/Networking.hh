@@ -15,6 +15,8 @@
 #include <string>
 #include <list>
 
+#include "Core.hpp"
+
 enum    MSG_TYPE {
     OWN_MOVE = 1,
     OWN_BOMB = 2,
@@ -22,7 +24,7 @@ enum    MSG_TYPE {
     PLAYER_UPDATE = 4,
 };
 
-struct          message {
+struct          Message {
     MSG_TYPE    type;
     union       data {
         struct player {
@@ -42,17 +44,17 @@ struct                      Client {
     int                     sockfd;
     int                     lastTick;
     std::string             name;
-    std::list<std::pair<unsigned int, message *> >       toSend;
+    std::list<std::pair<unsigned int, Message *> >       toSend;
     // first is the start position to send the message, second is the messages
-    std::pair<unsigned int, char[sizeof(message) + 1]>   inputBuffer;
+    std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   inputBuffer;
     // first is the actual position in the buffer, second is the buffer
 };
 
 
 class Networking {
     public:
-        Networking(int port); // if server
-        Networking(std::string &port, std::string &addr); // if client
+        Networking(Core &, int port); // if server
+        Networking(Core &, std::string &port, std::string &addr); // if client
         ~Networking();
         bool                            newPlayers();
         // Called in loop to accept new clients, return true if new connections, else false
@@ -62,9 +64,11 @@ class Networking {
         // Get the list of clients
         void                            refreshPlayers();
     private:
+        Core                    &_core;
         bool                    _closed;
         int                     _sockfd;
         std::list<Client *>     _players;
         void    _receiveFromClient(Client *);
         void    _sendToClient(Client *);
+        void    _treatMessage(Client *, Message *);
 };
