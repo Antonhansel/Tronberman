@@ -12,7 +12,7 @@
 #include  "Menu.hpp"
 #include  "Core.hpp"
 
-Core::Core(Camera *cam, Loader *loader, Menu *menu)
+Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
 {
   _loader = loader;
   _cam = cam;
@@ -21,6 +21,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu)
   _hud = new Hud(cam, loader);
   _displayFPS = false;
   _ainput = NULL;
+  _particles = particles;
 }
 
 void  Core::reset()
@@ -37,27 +38,23 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
-  delete _particles;
 }
 
 void  Core::setValues(Map *map)
-{
-  std::vector<std::pair<int, int> >    obj;
-  
+{  
   _players = _menu->getNbPlayer();
   _map = map;
   _width = _menu->getMapSize();
   _height = _width;
-  obj = _map->setSpawn(_players);
-  std::cout << obj.size() << std::endl;
-  _posx = obj.begin()->first;
-  _posy = obj.begin()->second;
   _nb_bot = _menu->getNbBots();
+  _obj = _map->setSpawn(_players + _nb_bot);
+  _posx = _obj.begin()->first;
+  _posy = _obj.begin()->second;
   if (_players == 2)
   {
-    obj.erase(obj.begin());
-    _posx2 = obj.begin()->first;
-    _posy2 = obj.begin()->second;
+    _obj.erase(_obj.begin());
+    _posx2 = _obj.begin()->first;
+    _posy2 = _obj.begin()->second;
   }
   _time = 0;
   _frames = 0;
@@ -101,7 +98,6 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  _particles = new ParticleEngine(_loader);
   std::cout << "Load done!" << std::endl;
   return (true);
 }
@@ -173,22 +169,19 @@ bool		Core::drawChar()
 
 bool    Core::drawBot(int nb)
 {
-  std::vector<std::pair<int, int> >    spawn;
   int   x;
   int   y;
   int   i;
 
   i = 0;
-  if (nb > 0)
-    spawn = _map->setSpawn(nb);
   while (++i <= nb && nb > 0)
     {
-      x = spawn.begin()->first;
-      y = spawn.begin()->second;
+      x = _obj.begin()->first;
+      y = _obj.begin()->second;
       if (makeBot(x, y, i + 2) == false)
         return (false);
       if (i < nb)
-        spawn.erase(spawn.begin());
+        _obj.erase(_obj.begin());
     }
   return true;
 }
@@ -283,9 +276,9 @@ void  Core::drawAll(AObject *cur_char)
 
   nb_p = 0;
   pos = cur_char->getPos();
-  for (int x = pos.first - 30; x < pos.first + 30; ++x)
+  for (int x = pos.first - (30/(_screen+1)); x < pos.first + (30/(_screen+1)); ++x)
   {
-    for (int y = pos.second - 30; y < pos.second + 30; ++y)
+    for (int y = pos.second - (30/(_screen+1)); y < pos.second + (30/(_screen+1)); ++y)
     {
       tmp = _map->getCase(x, y);
       if (!tmp)

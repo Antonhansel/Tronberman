@@ -60,7 +60,7 @@ enum stepM
 class Menu : public Game
 {
 public:
-  Menu(Camera *, Loader *);
+  Menu(Camera *, Loader *, ParticleEngine *);
   ~Menu();
   bool			initialize();
   bool			update();
@@ -134,6 +134,7 @@ private:
   Background        *_background;
   Camera            *_camera;
   Preview           *_preview;
+  ParticleEngine    *_engine;
 private:
   std::string       _sizeMap;
   std::string       _nbPlayer;

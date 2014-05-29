@@ -22,7 +22,6 @@
 # include "Sound.hpp"
 # include "Hud.hpp"
 # include "AInput.hpp"
-# include "ParticleEngine.hpp"
 
 class Menu;
 class Player;
@@ -30,7 +29,7 @@ class Player;
 class Core : public gdl::Game
 {
 public:
-  Core(Camera *cam, Loader *loader, Menu *menu);
+  Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *);
   ~Core();
   bool			initialize();
   void			draw();
@@ -52,6 +51,7 @@ public:
   void      reset();
   void      setSave(Map *, std::map<int, Player*> &);
 private:
+  std::vector<std::pair<int, int> >    _obj;
   bool      _displayFPS;
   int       _screen;
   Hud       *_hud;

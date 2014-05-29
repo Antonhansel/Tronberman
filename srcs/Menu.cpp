@@ -13,7 +13,7 @@
 # include "CubeAnim.hpp"
 # include "Preview.hpp"
 
-Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
+Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(camera)
 {
   _camera->setPlayer(1);
   _loader = loader;
@@ -49,6 +49,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _previewMode = false;
   _exit = false;
   _isSave = false;
+  _engine = engine;
   home();
 }
 
@@ -647,7 +648,7 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
+  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
 }

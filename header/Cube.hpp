@@ -12,6 +12,7 @@
 # define _CUBE_HPP_
 
 # include "AObject.hpp"
+# include "ParticleEngine.hpp"
 
 class Cube : public AObject
 {

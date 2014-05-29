@@ -20,12 +20,15 @@ public:
 	~Loader();
 	bool 		loadTextures();
 	void 		bindTexture(type);
-	void 		drawGeometry(gdl::AShader &, glm::mat4 );
+	void 		drawGeometry(gdl::AShader &, glm::mat4);
 	void 		pushTexture(gdl::Geometry *);
+	void 		loadParticules();
+	void 		drawParticules(gdl::AShader &, glm::mat4);
 private:
 	std::vector<gdl::Texture*> _textures;
 	gdl::Geometry 		_geometry;
 	gdl::Model 			_model;
+	gdl::Geometry 		_trigeo;
 };
 
 #endif	/*!_LOADER_HPP_*/

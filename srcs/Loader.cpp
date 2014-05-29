@@ -65,13 +65,11 @@ bool 	Loader::loadTextures()
   // glMaterialfv(GL_FRONT,GL_EMISSION,mat_emission);
 	_geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushNormal(vec);
-  // gauche
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
   pushTexture(&_geometry);
-
 
   vec = glm::vec3(0.0, 0.0, 1.0);
   //face
@@ -83,7 +81,6 @@ bool 	Loader::loadTextures()
   _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
   pushTexture(&_geometry);
 
-
   vec = glm::vec3(-1.0, 0.0, 0.0);
   _geometry.setColor(glm::vec4(1, 0, 1, 1));
   _geometry.pushNormal(vec);
@@ -92,7 +89,6 @@ bool 	Loader::loadTextures()
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
   pushTexture(&_geometry);
-
 
   vec = glm::vec3(1.0, 0.0, 0.0);
   _geometry.setColor(glm::vec4(0, 1, 1, 1));
@@ -112,7 +108,25 @@ bool 	Loader::loadTextures()
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
   pushTexture(&_geometry);
   _geometry.build();
+  loadParticules();
 	return (true);
+}
+
+void  Loader::loadParticules()
+{
+  _trigeo.setColor(glm::vec4(1, 1, 1, 1));
+  _trigeo.pushVertex(glm::vec3(0.0, 0.5, 0.0));
+  _trigeo.pushVertex(glm::vec3(-0.25, 0.0, 0.0));
+  _trigeo.pushVertex(glm::vec3(0.25, 0.0, 0.0));
+  _trigeo.pushUv(glm::vec2(0.0f, 0.0f));
+  _trigeo.pushUv(glm::vec2(1.0f, 0.0f));
+  _trigeo.pushUv(glm::vec2(0.0f, 1.0f));
+  _trigeo.build();
+}
+
+void  Loader::drawParticules(gdl::AShader &shader, glm::mat4 trans)
+{
+  _trigeo.draw(shader, trans, GL_TRIANGLES);
 }
 
 void  Loader::pushTexture(gdl::Geometry *geometry)

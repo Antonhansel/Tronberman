@@ -19,6 +19,19 @@ Map::Map(int size) : _name(SAVE)
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();
     _outline();
+    _engine = NULL;
+}
+
+Map::Map(int size, ParticleEngine *engine)
+{
+    _engine = engine;
+    genereteName();
+    _size_x = size;
+    _size_y = size;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+    _drawWall();
+    _outline();
 }
 
 Map::~Map()
@@ -68,7 +81,7 @@ void Map::deleteCube(int x, int y)
 void Map::addCube(int x, int y, type blockType)
 {
     std::pair<float, float>     pos;
-    AObject     *tmp;
+    AObject *tmp;
 
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
@@ -158,6 +171,11 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
         _spawns.push_back(std::make_pair(x, y));
         _deleteSide(x, y);
     }
+    for (int i = 0; i < _size_x *_size_x; i++)
+    {
+        if (_map[i])
+         _map[i]->setParticle(_engine);
+    }
     return (_spawns);
 }
 
@@ -180,6 +198,11 @@ void    Map::setMap(AObject **map)
 void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
 {
     _spawns = spawns;
+    for (int i = 0; i < _size_x *_size_x; i++)
+    {
+        if (_map[i])
+         _map[i]->setParticle(_engine);
+    }
 }
 
 AObject **Map::getMap() const
@@ -195,5 +218,5 @@ std::vector<std::pair<int, int> > Map::getSpawn() const
 std::string     Map::getName() const
 {
     std::cout << "NAME OF DIRECTORY : " << _name << std::endl;
-  return _name;
+    return _name;
 }
