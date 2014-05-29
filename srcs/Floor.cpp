@@ -19,14 +19,6 @@ Floor::Floor(float width, float height, float speed)
 
 void Floor::update(gdl::Clock const &clock, gdl::Input &input)
 {
-	// if (input.getKey(SDLK_UP))
-	// 	translate(glm::vec3(0, 0, -1) * static_cast<float>(clock.getElapsed()) * _speed);
-	// if (input.getKey(SDLK_DOWN))
-	// 	translate(glm::vec3(0, 0, 1) * static_cast<float>(clock.getElapsed()) * _speed);
-	// if (input.getKey(SDLK_LEFT))
-	// 	translate(glm::vec3(-1, 0, 0) * static_cast<float>(clock.getElapsed()) * _speed);
-	// if (input.getKey(SDLK_RIGHT))
-	// 	translate(glm::vec3(1, 0, 0) * static_cast<float>(clock.getElapsed()) * _speed);
 }
 
 void Floor::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -38,7 +30,6 @@ void Floor::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 bool	Floor::initialize()
 {
-	//if (_texture.load("./ressources/assets/cobblestone.tga") == false)
 	if (_texture.load("./ressources/assets/floor.tga") == false)
 	{
 		std::cerr << "Cannot load the floor texture" << std::endl;
