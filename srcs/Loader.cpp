@@ -12,10 +12,23 @@
 
 Loader::Loader()
 {
+  _modelCount = 0;
 }
 
 Loader::~Loader()
 {
+}
+
+std::string Loader::getModel()
+{
+  _modelCount++;
+  // if (_modelCount >= 0)
+    return ("./ressources/assets/bomberman_white_run.FBX");
+}
+
+void    Loader::reset()
+{
+  _modelCount = 0;
 }
 
 bool 	Loader::loadTextures()

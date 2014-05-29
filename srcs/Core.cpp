@@ -39,6 +39,7 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
+  _loader->reset();
 }
 
 void  Core::setValues(Map *map)
@@ -290,9 +291,9 @@ void  Core::drawAll(AObject *cur_char)
   nb_p = 0;
   pos = cur_char->getPos();
   _loader->bindTexture(LastType);
-  for (int x = pos.first - (30/(_screen+1)); x < pos.first + (30/(_screen+1)); ++x)
+  for (int x = pos.first - (30); x < pos.first + (30); ++x)
   {
-    for (int y = pos.second - (30/(_screen+1)); y < pos.second + (30/(_screen+1)); ++y)
+    for (int y = pos.second - (30); y < pos.second + (30); ++y)
     {
       tmp = _map->getCase(x, y);
       if (!tmp)
