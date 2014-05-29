@@ -88,7 +88,7 @@ bool	CubeAnim::initFmod()
 {
   FMOD_System_Create(&system);
   FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);
-  resultat = FMOD_System_CreateSound(system, "./ressources/sounds/intro.mp3", FMOD_SOFTWARE | FMOD_2D | FMOD_CREATESTREAM, 0, &musique);
+  resultat = FMOD_System_CreateSound(system, "./ressources/sounds/intro.mp3", FMOD_SOFTWARE | FMOD_2D | FMOD_CREATESTREAM | FMOD_LOOP_NORMAL, 0, &musique);
   if (resultat != FMOD_OK)
     {
       std::cout << "Impossible to open the audio .mp3" << std::endl;

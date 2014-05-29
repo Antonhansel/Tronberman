@@ -309,7 +309,8 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (size_t i = 1; i <= _player.size(); i++)
   {
-    nb_p = (i == 2 && _players == 1) ? 1 : 0;
+    if (i == 2 && _players == 1)
+      nb_p = 1;
     _player[i + nb_p]->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock);
