@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 16:31:08 2014 Antonin Ribeaud
-// Last update Sun May 11 00:12:10 2014 Mehdi Chouag
+// Last update Thu May 29 15:46:20 2014 ribeaud antonin
 */
 
 #include  <unistd.h>
@@ -22,6 +22,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
   _displayFPS = false;
   _ainput = NULL;
   _particles = particles;
+  _isSave = false;
 }
 
 void  Core::reset()
@@ -73,6 +74,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
   _height = _width;
   _time = 0;
   _frames = 0;
+  _isSave = _menu->isSave();
   _endgame = false;
 }
 
@@ -157,12 +159,15 @@ bool   Core::makeBot(int posx, int posy, int id)
 
 bool		Core::drawChar()
 {
-  if (makeChar(_posx, _posy, 1) == false)
-    return (false);
-  if (_players == 2)
+  if (!_isSave)
   {
-    if (makeChar(_posx2, _posy2, 2) == false)
+    if (makeChar(_posx, _posy, 1) == false)
       return (false);
+    if (_players == 2)
+    {
+      if (makeChar(_posx2, _posy2, 2) == false)
+        return (false);
+    }
   }
   return (true);
 }
@@ -174,6 +179,8 @@ bool    Core::drawBot(int nb)
   int   i;
 
   i = 0;
+  if (!_isSave)
+  {
   while (++i <= nb && nb > 0)
     {
       x = _obj.begin()->first;
@@ -183,6 +190,7 @@ bool    Core::drawBot(int nb)
       if (i < nb)
         _obj.erase(_obj.begin());
     }
+  }
   return true;
 }
 
@@ -202,6 +210,7 @@ void  Core::FPS()
 
 bool	Core::update()
 {
+  std::vector<key>  k;
   checkAlive();
   if (_endgame == true)
     return (false);
@@ -216,21 +225,25 @@ bool	Core::update()
     _ainput = new AInput(_input, GAME);
   }
   _ainput->setInput(_input);
-  switch (_ainput->getInput())
+  k = _ainput->getInput();
+  for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
   {
-    case FPSON:
-      _displayFPS = true;
-      break;
-    case FPSOFF:
-      _displayFPS = false;
-      break;
-    case ESCAPE:
-      return (false);
-    case PSAVE:
-      Saving(_map->getName(), this);
-      break;
-    default:
-      break;
+    switch ((*it))
+    {
+      case FPSON:
+        _displayFPS = true;
+        break;
+      case FPSOFF:
+        _displayFPS = false;
+        break;
+      case ESCAPE:
+       return (false);
+      case PSAVE:
+       Saving(_map->getName(), this);
+       break;
+      default:
+        break;
+    }
   }
   FPS();
   _time += _clock.getElapsed();

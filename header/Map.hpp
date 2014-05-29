@@ -17,12 +17,14 @@ class Map
 {
 public:
   Map(int);
+  Map(int, std::string &);
   ~Map();
   Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;
   std::vector<std::pair<int, int> >   &setSpawn(int nb);
   std::vector<std::pair<int, int> >   getSpawn() const;
   std::string     getName() const;
+  void            setName(std::string &);
   void            addCube(int, int, type);
   void            addCube(int, int, AObject *);
   void            deleteCube(int, int);

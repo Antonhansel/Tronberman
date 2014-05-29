@@ -56,10 +56,11 @@ private:
 public:
 	AInput(gdl::Input &, inputType);
 	~AInput();
-	key 	getInput();
+	std::vector<key> 	getInput();
 	void	setInput(gdl::Input &);
 	void	createMenuKey();
 	void	setMode(bool);
+	static bool	getKey(std::vector<key> &, key);
 
 private:
 	void	createPlayer1Key();

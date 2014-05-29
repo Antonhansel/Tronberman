@@ -105,14 +105,14 @@ bool Generator::initCursor(int x, int z)
   return (true);
 }
 
-bool Generator::changeSize()
+bool Generator::changeSize(key &k)
 {
-  	if (_k == GPLUS)
+  	if (k == GPLUS)
   	{
   		if (cleanObjects(1) == false)
   			return (false);
   	}
-  	if (_k == GMINUS)
+  	if (k == GMINUS)
   	{
   		if (cleanObjects(-1) == false)
   			return (false);
@@ -120,11 +120,11 @@ bool Generator::changeSize()
   	return (true);
 }
 
-void 	Generator::placeCube()
+void 	Generator::placeCube(key &k)
 {
   std::pair<float, float> pos;
 
-  if (_k == SPACE)
+  if (k == SPACE)
     {
     pos = _cube->getPos();
   	if ((pos.first > 0 && pos.first < _size) && 
@@ -136,23 +136,23 @@ void 	Generator::placeCube()
   }
 }
 
-void 	Generator::changeType()
+void 	Generator::changeType(key &k)
 {
-	if (_k == KP1)
+	if (k == KP1)
 	  	_cube->setType(BLOCKD);
-	if (_k == KP2)
+	if (k == KP2)
 	    _cube->setType(BLOCK);
 }
 
-void 	Generator::moveCursor()
+void 	Generator::moveCursor(key &k)
 {
-	if (_k == PUP && _cube->getPos().second + 1 < _size - 1)
+	if (k == PUP && _cube->getPos().second + 1 < _size - 1)
 		_cube->translate(glm::vec3(0, 0, 1));
-	if (_k == PDOWN && _cube->getPos().second - 1 > 0)
+	if (k == PDOWN && _cube->getPos().second - 1 > 0)
 		_cube->translate(glm::vec3(0, 0, -1));
-	if (_k == PLEFT && _cube->getPos().first + 1 < _size - 1)
+	if (k == PLEFT && _cube->getPos().first + 1 < _size - 1)
 		_cube->translate(glm::vec3(1, 0, 0));
-	if (_k == PRIGHT && _cube->getPos().first - 1 > 0)
+	if (k == PRIGHT && _cube->getPos().first - 1 > 0)
 		_cube->translate(glm::vec3(-1, 0, 0));
 }
 
@@ -162,9 +162,22 @@ bool Generator::update()
   	_input = _camera->getInput();
     _ainput->setInput(_input);
   	_time += _clock.getElapsed();
+    _k = _ainput->getInput();
   	if (_time > 0.03)
   	{
-      _k = _ainput->getInput();
+      for (std::vector<key>::iterator it = _k.begin(); it != _k.end(); ++it)
+      {
+        if (changeSize((*it)) == false)
+         return (false);
+        if ((*it) == ESCAPE)
+          return (false);
+        if ((*it) == MBACKSPACE)
+          deleteCube(_cube->getPos().first, _cube->getPos().second);
+        moveCursor((*it));
+        changeType((*it));
+        placeCube((*it));
+      }
+   /*   _k = _ainput->getInput();
   		if (changeSize() == false)
   			return (false);
 		  if (_k == ESCAPE)
@@ -173,7 +186,7 @@ bool Generator::update()
         deleteCube(_cube->getPos().first, _cube->getPos().second);
       moveCursor();
       changeType();
-	    placeCube();
+	    placeCube();*/
 	    _time = 0;
 	}
     return (true);

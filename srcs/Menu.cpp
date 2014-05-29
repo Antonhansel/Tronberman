@@ -40,6 +40,9 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _func[LOADM] = &Menu::load;
   _func[LOADG] = &Menu::loadGame;
   _func[LOADPREVIOUS] = &Menu::loadPrevious;
+  _func[ONLINE] = &Menu::online;
+  _func[SERVER] = &Menu::server;
+  _func[CLIENT] = &Menu::client;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -50,6 +53,7 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _exit = false;
   _isSave = false;
   _engine = engine;
+  _nbPort.assign("6666");
   home();
 }
 
@@ -155,7 +159,9 @@ void    Menu::manageEventInput()
           getInputNb(_nbBots, 7, 2, _map->getSize() / 10, 0);
         break;
     }
-  }
+  }  
+  if (_stepM == SERVER && _isSelect == 0)
+    getInputNb(_nbPort, 3, 5, 65000, 1);
 }
 
 void    Menu::manageEventInputScore(key &k)
@@ -237,19 +243,21 @@ void    Menu::getInputPseudo(char c)
 
 void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
 {
-  key   k;
+  std::vector<key>  ret;
 
-  if ((k = _event->getInput()) != NONE &&
-      k != MBACKSPACE && k != MUP && k != MDOWN &&
-        k != MLEFT && k != MRIGHT && s.size() < size)
+  ret = _event->getInput();
+  if (!AInput::getKey(ret, NONE) &&
+    !AInput::getKey(ret, MBACKSPACE) && !AInput::getKey(ret, MUP) &&
+    !AInput::getKey(ret, MDOWN) && !AInput::getKey(ret, MLEFT) &&
+    !AInput::getKey(ret, MRIGHT) && s.size() < size)
   {
     _timer = 0;
-    s += (((int)(k)) - 23) + 48;
+    s += (((int)(ret[0])) - 23) + 48;
     if (convToInt(s) > max || convToInt(s) < min)
       s.assign(s.substr(0, s.length() - 1));
     (this->*_func[_stepM])();
   }
-  else if (k == MBACKSPACE)
+  else if (AInput::getKey(ret, MBACKSPACE))
   {
     _timer = 0;
     s.assign(s.substr(0, s.length() - 1));
@@ -294,50 +302,53 @@ void    Menu::chooseStep()
 
 void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
 {
-  key   k;
+  std::vector<key>   k;
 
   k = _event->getInput();
   if (_timer > DELAY)
   {
-    switch (k)
+    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
     {
-      case MUP:
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
-        {
-          _isSelect--;
-          (_isSelect == - 1) ? (_isSelect = _max) : 0;
-          _timer = 0;
-        }
-        else
-          manageEventInputScore(k);
-        break;
-      case MDOWN:
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
-        {
-          _isSelect++;
-          (_isSelect == _max + 1) ? (_isSelect = 0) : 0;
-          _timer = 0;
-        }
-        else
-          manageEventInputScore(k);
-        break;
-      case MRETURN:
+      switch ((*it))
       {
-        if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+        case MUP:
+         if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+         {
+           _isSelect--;
+           (_isSelect == - 1) ? (_isSelect = _max) : 0;
+           _timer = 0;
+         }
+         else
+           manageEventInputScore((*it));
+         break;
+        case MDOWN:
+          if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+          {
+           _isSelect++;
+            (_isSelect == _max + 1) ? (_isSelect = 0) : 0;
+            _timer = 0;
+          }
+          else
+            manageEventInputScore((*it));
+          break;
+        case MRETURN:
         {
-          _timer = 0;
-          chooseStep();
+          if ((_pos >= 6 && _stepM == SCORE && _addScore == true) || _addScore == false)
+          {
+           _timer = 0;
+            chooseStep();
+          }
+          else
+            manageEventInputScore((*it));
+          break;
         }
-        else
-          manageEventInputScore(k);
-        break;
+        default:
+          if (_pos < 6 && _stepM == SCORE)
+           manageEventInputScore((*it));
+          else
+            manageEventInput();
+          break;
       }
-      default:
-        if (_pos < 6 && _stepM == SCORE)
-          manageEventInputScore(k);
-        else
-          manageEventInput();
-        break;
     }
   }
 }
@@ -426,6 +437,38 @@ void    Menu::step12()
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
   _max = 2;
+}
+
+void    Menu::online()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "CREATE", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "JOIN", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _max = 2;
+}
+
+void    Menu::server()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "PORT", true);
+  _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
+  _max = 2;
+}
+
+void    Menu::client()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "ADDRESS", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
+  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);  
+  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _max = 3;
 }
 
 void    Menu::loadGame()
@@ -619,7 +662,8 @@ void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) 
-  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) : 0;
+  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) 
+  : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
   if (_stepM == LOADG || (_isLaunch && _isSave))
     _map = _preview->getMap();
 }
@@ -630,7 +674,8 @@ void  Menu::select1()
 
   k = STEP1;
   (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
-  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) : 0;
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) 
+  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
 }
@@ -638,7 +683,8 @@ void  Menu::select1()
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) 
+  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
 }
@@ -648,7 +694,8 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
+  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
+  : (_stepM == CLIENT) ? (_stepM = ONLINE) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
 }

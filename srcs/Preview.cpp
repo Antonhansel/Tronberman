@@ -76,7 +76,6 @@ bool		Preview::initialize()
 
 bool		Preview::initializeSave()
 {
-	
 	getPaths(SAVE);
 	Saving _saving(_paths);
 	_maps = _saving.getListMap();

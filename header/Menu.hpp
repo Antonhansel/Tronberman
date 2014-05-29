@@ -54,7 +54,10 @@ enum stepM
     BUILDER,
     LOADM,
     LOADG,
-    LOADPREVIOUS
+    LOADPREVIOUS,
+    ONLINE,
+    SERVER,
+    CLIENT
   };
 
 class Menu : public Game
@@ -105,6 +108,9 @@ public:
     void  select2();
     void  select3();
     void  select4();
+    void  online();
+    void  server();
+    void  client();
 
 private:
   bool          _isSave;
@@ -138,6 +144,7 @@ private:
 private:
   std::string       _sizeMap;
   std::string       _nbPlayer;
+  std::string       _nbPort;
   std::string       _nbBots;
   std::string       _scoreToAdd;
   gdl::Texture      _texture;

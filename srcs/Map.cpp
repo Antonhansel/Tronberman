@@ -34,6 +34,12 @@ Map::Map(int size, ParticleEngine *engine)
     _outline();
 }
 
+Map::Map(int size, std::string &name) : _name(name)
+{
+    _size_x = size;
+    _size_y = size;
+}
+
 Map::~Map()
 {
     for (int i = 0; i < _size_x * _size_y; ++i)
@@ -217,6 +223,10 @@ std::vector<std::pair<int, int> > Map::getSpawn() const
 
 std::string     Map::getName() const
 {
-    std::cout << "NAME OF DIRECTORY : " << _name << std::endl;
-    return _name;
+     return _name;
+}
+
+void            Map::setName(std::string &name)
+{
+    _name = name;
 }

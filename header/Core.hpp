@@ -52,6 +52,7 @@ public:
   void      setSave(Map *, std::map<int, Player*> &);
 private:
   std::vector<std::pair<int, int> >    _obj;
+  bool      _isSave;
   bool      _displayFPS;
   int       _screen;
   Hud       *_hud;
