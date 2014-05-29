@@ -52,6 +52,7 @@ public:
   void      reset();
   void      setSave(Map *, std::map<int, Player*> &);
 private:
+  bool      _isSave;
   bool      _displayFPS;
   int       _screen;
   Hud       *_hud;

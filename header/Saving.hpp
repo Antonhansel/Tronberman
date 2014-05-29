@@ -32,6 +32,7 @@ public:
 	bool    loadType(std::list<std::string> &, Player *);
 	bool    loadPos(std::list<std::string> &, Player *);
 	bool    loadPlayer(std::string &);
+	bool    loadBot(std::string &);
 
 	bool    loadSize(std::list<std::string> &);
 	bool    loadCase(std::list<std::string> &);

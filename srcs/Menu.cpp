@@ -40,6 +40,9 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _func[LOADM] = &Menu::load;
   _func[LOADG] = &Menu::loadGame;
   _func[LOADPREVIOUS] = &Menu::loadPrevious;
+  _func[ONLINE] = &Menu::online;
+  _func[SERVER] = &Menu::server;
+  _func[CLIENT] = &Menu::client;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -49,6 +52,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _previewMode = false;
   _exit = false;
   _isSave = false;
+  _nbPort.assign("6666");
   home();
 }
 
@@ -154,7 +158,9 @@ void    Menu::manageEventInput()
           getInputNb(_nbBots, 7, 2, _map->getSize() / 10, 0);
         break;
     }
-  }
+  }  
+  if (_stepM == SERVER && _isSelect == 0)
+    getInputNb(_nbPort, 3, 5, 65000, 1);
 }
 
 void    Menu::manageEventInputScore(key &k)
@@ -432,6 +438,38 @@ void    Menu::step12()
   _max = 2;
 }
 
+void    Menu::online()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "CREATE", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "JOIN", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _max = 2;
+}
+
+void    Menu::server()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "PORT", true);
+  _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
+  _max = 2;
+}
+
+void    Menu::client()
+{
+  _isSelect = 0;
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "ADDRESS", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
+  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);  
+  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _max = 3;
+}
+
 void    Menu::loadGame()
 {
   _text->deleteAllText(_step1);
@@ -623,7 +661,8 @@ void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) 
-  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) : 0;
+  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) 
+  : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
   if (_stepM == LOADG || (_isLaunch && _isSave))
     _map = _preview->getMap();
 }
@@ -634,7 +673,8 @@ void  Menu::select1()
 
   k = STEP1;
   (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
-  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) : 0;
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) 
+  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
 }
@@ -642,7 +682,8 @@ void  Menu::select1()
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) : 0;
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) 
+  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
 }
@@ -652,7 +693,8 @@ void  Menu::select3()
   bool isAnime(false);
 
   (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) : 0;
+  ? (_map = new Map(getMapSize()), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
+  : (_stepM == CLIENT) ? (_stepM = ONLINE) : 0;
   if (isAnime)
     _cubeanim->changeVolum(0.4f);
 }
