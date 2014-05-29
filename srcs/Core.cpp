@@ -39,6 +39,7 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
+  _loader->reset();
 }
 
 void  Core::setValues(Map *map)
