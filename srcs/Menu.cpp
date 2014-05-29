@@ -52,6 +52,7 @@ Menu::Menu(Camera *camera, Loader *loader) : _camera(camera)
   _previewMode = false;
   _exit = false;
   _isSave = false;
+  _ipAddr.assign("192.168.0.1");
   _nbPort.assign("6666");
   home();
 }
@@ -159,7 +160,7 @@ void    Menu::manageEventInput()
         break;
     }
   }  
-  if (_stepM == SERVER && _isSelect == 0)
+  if ((_stepM == SERVER && _isSelect == 0) || (_stepM == CLIENT && _isSelect == 1))
     getInputNb(_nbPort, 3, 5, 65000, 1);
 }
 
@@ -263,6 +264,7 @@ void    Menu::getInputNb(std::string &s, int n, size_t size, int max, int min)
     (this->*_func[_stepM])();
   }
 }
+
 
 void    Menu::startGenerator()
 {
@@ -461,12 +463,13 @@ void    Menu::server()
 
 void    Menu::client()
 {
-  _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "ADDRESS", true);
   _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
   _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);  
   _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 5, std::make_pair(700, 300), _ipAddr.c_str(), false);
+  _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
   _max = 3;
 }
 
@@ -674,7 +677,7 @@ void  Menu::select1()
   k = STEP1;
   (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
   : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) 
-  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT) : 0;
+  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
 }

@@ -12,19 +12,6 @@
 # define MENU_HPP_
 
 # include "Camera.hpp"
-# include <Game.hh>
-# include <Clock.hh>
-# include <Input.hh>
-# include <SdlContext.hh>
-# include <Geometry.hh>
-# include <Texture.hh>
-# include <Model.hh>
-# include <glm/glm.hpp>
-# include <BasicShader.hh>
-# include <glm/gtc/matrix_transform.hpp>
-# include <OpenGL.hh>
-# include <vector>
-# include <iostream>
 # include "CubeAnim.hpp"
 # include "Loader.hpp"
 # include "Background.hpp"
@@ -145,6 +132,7 @@ private:
   std::string       _nbPlayer;
   std::string       _nbPort;
   std::string       _nbBots;
+  std::string       _ipAddr;
   std::string       _scoreToAdd;
   gdl::Texture      _texture;
   gdl::Geometry     _geometry;
