@@ -67,6 +67,7 @@ enum key
   MSEVEN,
   MHEIGHT,
   MNINE,
+  MDOT,
   PSAVE,
   FPSOFF,
   FPSON,

@@ -75,6 +75,7 @@ void	AInput::createMenuKey()
 	_key[SDLK_KP_7] = MSEVEN;
 	_key[SDLK_KP_8] = MHEIGHT;
 	_key[SDLK_KP_9] = MNINE;
+	_key[SDLK_KP_PERIOD] = MDOT;
 }
 
 void	AInput::createGameKey()

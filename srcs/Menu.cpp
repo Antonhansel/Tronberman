@@ -171,7 +171,6 @@ void    Menu::getInputAddr(std::string &s, size_t size)
 {
   std::vector<key>  ret;
 
-  std::cout << "GETKEY" << std::endl;
   ret = _event->getInput();
   if (!AInput::getKey(ret, NONE) &&
     !AInput::getKey(ret, MBACKSPACE) && !AInput::getKey(ret, MUP) &&
@@ -179,8 +178,10 @@ void    Menu::getInputAddr(std::string &s, size_t size)
     !AInput::getKey(ret, MRIGHT) && s.size() < size)
   {
     _timer = 0;
-    s += (((int)(ret[0])) - 23) + 48;
-    s.assign(s.substr(0, s.length() - 1));
+    if (ret[0] != MDOT)
+      s += (((int)(ret[0])) - 23) + 48;
+    else
+      s += '.';
     (this->*_func[_stepM])();
   }
   else if (AInput::getKey(ret, MBACKSPACE))
