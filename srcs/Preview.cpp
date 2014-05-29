@@ -25,7 +25,9 @@ Preview::Preview(Camera *camera, Loader *loader)
 }
 
 Preview::~Preview()
-{}
+{
+	
+}
 
 bool 		Preview::checkName(const char *str1)
 {

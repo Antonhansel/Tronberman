@@ -44,7 +44,8 @@ enum stepM
     LOADPREVIOUS,
     ONLINE,
     SERVER,
-    CLIENT
+    CLIENT,
+    OPTION
   };
 
 class Menu : public Game
@@ -99,6 +100,8 @@ public:
     void  online();
     void  server();
     void  client();
+    void  option();
+    void  changeOption();
 
 private:
   bool          _isSave;
@@ -130,6 +133,8 @@ private:
   Preview           *_preview;
   ParticleEngine    *_engine;
 private:
+  std::string       _volume;
+  int               _vol;
   std::string       _sizeMap;
   std::string       _nbPlayer;
   std::string       _nbPort;
