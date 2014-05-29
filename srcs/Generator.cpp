@@ -75,10 +75,10 @@ bool Generator::cleanObjects(int i)
 		std::cout << _size + i << std::endl; 
 		_size += i;
 	}
-  for (int i = 0; i < _size * _size; ++i)
+  for (int j = 0; j < _size - i * _size - i ; ++j)
   {
-      if (_map[i])
-         delete _map[i];
+      if (_map[j])
+         delete _map[j];
   }
 	if (initialize() == false)
 		return (false);
@@ -177,16 +177,6 @@ bool Generator::update()
         changeType((*it));
         placeCube((*it));
       }
-   /*   _k = _ainput->getInput();
-  		if (changeSize() == false)
-  			return (false);
-		  if (_k == ESCAPE)
-	    	return (false);
-      if (_k == MBACKSPACE)
-        deleteCube(_cube->getPos().first, _cube->getPos().second);
-      moveCursor();
-      changeType();
-	    placeCube();*/
 	    _time = 0;
 	}
     return (true);

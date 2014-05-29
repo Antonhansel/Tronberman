@@ -33,7 +33,7 @@ namespace gdl
 		int			getAnimationFrameNumber(int stack);
 		int			getAnimationFrameNumber(std::string const &name);
 
-		// Get the time of one animation frame
+		// Get the time of one animation frame (in seconds)
 		float		getFrameDuration();
 
 		// Create a sub animation depending on the name or index of a model animation
