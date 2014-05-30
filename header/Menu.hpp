@@ -44,7 +44,8 @@ enum stepM
     LOADPREVIOUS,
     ONLINE,
     SERVER,
-    CLIENT
+    CLIENT,
+    OPTION
   };
 
 class Menu : public Game
@@ -82,6 +83,7 @@ public:
   void      startPreview();
   bool      isSave() const;
   std::map<int, Player *> &getPlayer() const;
+  bool      getFx() const;
   //int  operator=(const std::string &);
   private:
     int   convToInt(const std::string &) const;
@@ -99,6 +101,9 @@ public:
     void  online();
     void  server();
     void  client();
+    void  option();
+    void  changeOption();
+    void  getFxState();
 
 private:
   bool          _isSave;
@@ -119,6 +124,8 @@ private:
   int           _newScore;
   int           _pos;
   bool          _exit;
+  int           _vol;
+  bool          _isFx;
 private:
   Map               *_map;
   Text              *_text;
@@ -130,6 +137,8 @@ private:
   Preview           *_preview;
   ParticleEngine    *_engine;
 private:
+  std::string       _fx;
+  std::string       _volume;
   std::string       _sizeMap;
   std::string       _nbPlayer;
   std::string       _nbPort;

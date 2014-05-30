@@ -34,7 +34,8 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Generator.cpp \
 				srcs/Preview.cpp \
 				srcs/AInput.cpp \
-				srcs/Hud.cpp
+				srcs/Hud.cpp \
+				srcs/Md5.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

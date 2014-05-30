@@ -39,10 +39,12 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
+  _loader->reset();
 }
 
 void  Core::setValues(Map *map)
-{  
+{
+  _sound->setEffect(_menu->getFx());  
   _players = _menu->getNbPlayer();
   _map = map;
   _width = _menu->getMapSize();
@@ -66,6 +68,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
 {
   std::vector<std::pair<int, int> >    obj;
 
+  _sound->setEffect(_menu->getFx());
   _player = player;
   _players = (player.find(2) != player.end()) ? 2 : 1;
   _nb_bot = _player.size() - _players;
@@ -239,8 +242,22 @@ bool	Core::update()
       case ESCAPE:
        return (false);
       case PSAVE:
-       Saving(_map->getName(), this);
-       break;
+      {
+        std::string name("");
+        if ((name = _map->getName()).size() == 0)
+        {
+          name.assign("./ressources/save/");
+          for (int i = 0 ; i < 10 ; i++)
+            name += (rand()%26)+97;
+          name += ".xml";
+          _map->setName(name);
+        }
+        std::string t(name);
+        Saving  *s = new Saving(t);
+        s->saveGame(_map, _player, 0);
+        delete(s);
+        break;
+      }
       default:
         break;
     }
@@ -290,9 +307,9 @@ void  Core::drawAll(AObject *cur_char)
   nb_p = 0;
   pos = cur_char->getPos();
   _loader->bindTexture(LastType);
-  for (int x = pos.first - (30/(_screen+1)); x < pos.first + (30/(_screen+1)); ++x)
+  for (int x = pos.first - (30); x < pos.first + (30); ++x)
   {
-    for (int y = pos.second - (30/(_screen+1)); y < pos.second + (30/(_screen+1)); ++y)
+    for (int y = pos.second - (30); y < pos.second + (30); ++y)
     {
       tmp = _map->getCase(x, y);
       if (!tmp)

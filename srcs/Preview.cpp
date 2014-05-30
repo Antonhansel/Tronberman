@@ -8,10 +8,9 @@
 ** Last update Tue May  20 11:00:02 2014 Antonin Ribeaud
 */
 
-#include "Preview.hpp"
-#include "Saving.hpp"
 #include <sys/types.h>
 #include <dirent.h>
+#include "Preview.hpp"
 
 Preview::Preview(Camera *camera, Loader *loader)
 {
@@ -63,9 +62,15 @@ void 		Preview::getPaths(const char * path)
 
 bool		Preview::initialize()
 {
+	_save.clear();
 	getPaths(PATH);
-	Saving _saving(_paths);
-	_maps = _saving.getCostumListMap();
+	for (std::vector<std::string>::const_iterator it = _paths.begin(); it != _paths.end(); ++it)
+	{
+		Saving *s = new Saving((*it));
+		s->getSavedGame();
+		_save.push_back(s);
+	}
+	_maps = Saving::getMapList(_save);
 	if (_maps.size() == 0)
 		return (false);
 	_it = _maps.begin();
@@ -76,11 +81,16 @@ bool		Preview::initialize()
 
 bool		Preview::initializeSave()
 {
+	_save.clear();
 	getPaths(SAVE);
-	Saving _saving(_paths);
-	_maps = _saving.getListMap();
-	_players = _saving.getListPlayer();
-	std::cout << "PREVIEW STARTED  : INIT 2" << std::endl;
+	for (std::vector<std::string>::const_iterator it = _paths.begin(); it != _paths.end(); ++it)
+	{
+		Saving *s = new Saving((*it));
+		s->getSavedGame();
+		_save.push_back(s);
+	}
+	_maps = Saving::getMapList(_save);
+	_players = Saving::getPlayerList(_save);
 	if (_maps.size() == 0)
 		return (false);
 	_it = _maps.begin();
@@ -207,7 +217,7 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 Map 	*Preview::getMap() const
 {
-	return ((_maps.size() == 0) ? NULL :_map );
+	return ((_maps.size() == 0) ? NULL : _map );
 }
 
 std::map<int, Player*>	&Preview::getPlayer() const

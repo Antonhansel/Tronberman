@@ -43,6 +43,7 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _func[ONLINE] = &Menu::online;
   _func[SERVER] = &Menu::server;
   _func[CLIENT] = &Menu::client;
+  _func[OPTION] = &Menu::option;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -52,14 +53,19 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _previewMode = false;
   _exit = false;
   _isSave = false;
+  _isFx = true;
   _ipAddr.assign("192.168.0.1");
   _engine = engine;
+  _vol = 100;
   _nbPort.assign("6666");
+  _volume.assign("100");
+  _fx.assign("ON");
   home();
 }
 
 Menu::~Menu()
 {
+  _text->deleteAllText(_step1);
   delete _text;
   delete _background;
   delete _cubeanim;
@@ -88,8 +94,7 @@ bool    Menu::update()
   _timer += _clock.getElapsed();
   if (_exit || _input.getInput(SDL_QUIT) || _isLaunch)
     return (false);
-  if (_event == NULL && _stopIntro == true)
-    _event = new AInput(_input, MENU);
+  (_event == NULL && _stopIntro == true) ? (_event = new AInput(_input, MENU)) : 0;
   if (_stopIntro == true)
   {
     _event->setInput(_input);
@@ -100,6 +105,7 @@ bool    Menu::update()
     _previewMode = false;
   else if (_previewMode == false)
     _cubeanim->update();
+  _cubeanim->changeVolum((float)_vol / 100.0);
   return (true);
 }
 
@@ -165,6 +171,35 @@ void    Menu::manageEventInput()
     getInputNb(_nbPort, 5, 65000, 1);
   if (_stepM == CLIENT && _isSelect == 0)
     getInputAddr(_ipAddr, 15);
+  changeOption();
+  getFxState();
+}
+
+void    Menu::changeOption()
+{
+  std::stringstream ss;
+  std::vector<key>  ret;
+
+  ret = _event->getInput();
+  if (_stepM == OPTION && _isSelect == 0)
+  {
+    if (AInput::getKey(ret, MRIGHT) && _vol < 100)
+    {
+      _timer = 0;
+      _vol += 10;
+      ss << _vol;
+      _volume = ss.str();
+      (this->*_func[_stepM])();
+    }
+    else if (AInput::getKey(ret, MLEFT) && _vol > 0)
+    {
+      _timer = 0;
+      _vol -= 10;
+      ss << _vol;
+      _volume = (_vol != 0) ? ss.str() : "MUTE";
+      (this->*_func[_stepM])();
+    }
+  }
 }
 
 void    Menu::getInputAddr(std::string &s, size_t size)
@@ -191,6 +226,22 @@ void    Menu::getInputAddr(std::string &s, size_t size)
     (this->*_func[_stepM])();
   }
 }
+
+void    Menu::getFxState()
+{
+  std::vector<key>  ret;
+
+  ret = _event->getInput();
+  if (_stepM == OPTION && _isSelect == 1 
+    && (AInput::getKey(ret, MRIGHT) || AInput::getKey(ret, MLEFT)))
+  {
+    _timer = 0;
+    _isFx = !_isFx;
+    _fx = (_isFx) ? "ON" : "OFF";
+    (this->*_func[_stepM])();
+  }
+}
+
 
 void    Menu::manageEventInputScore(key &k)
 {
@@ -512,6 +563,17 @@ void    Menu::loadGame()
   _max = 3;
 }
 
+void    Menu::option()
+{
+  _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(15, 300), "MUSIC", true);
+  _text->addText(_step1, 1, std::make_pair(15, 380), "FX", true);
+  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 4, std::make_pair(700, 300), _volume.c_str(), true);
+  _text->addText(_step1, 5, std::make_pair(700, 380), _fx.c_str(), true);
+  _max = 2;
+}
+
 void    Menu::score()
 {
   int   y;
@@ -713,20 +775,17 @@ void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
   : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) 
-  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
+  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) 
+  : (_stepM == OPTION) ? (_stepM = HOME) : 0;
   if (_stepM == SCORE)
      getScore();
 }
 
 void  Menu::select3()
 {
-  bool isAnime(false);
-
-  (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, isAnime = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
+  (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
+  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
   : (_stepM == CLIENT) ? (_stepM = ONLINE) : 0;
-  if (isAnime)
-    _cubeanim->changeVolum(0.4f);
 }
 
 void  Menu::select4()
@@ -742,4 +801,9 @@ bool  Menu::isSave() const
 std::map<int, Player*>  &Menu::getPlayer() const
 {
   return (_preview->getPlayer());
+}
+
+bool  Menu::getFx() const
+{
+  return (_isFx);
 }

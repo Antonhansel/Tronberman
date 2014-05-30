@@ -149,7 +149,7 @@ void	Hud::drawTimer()
 {
 	int	col;
 
-	col = 750;
+	col = 800;
 	for (std::vector<Geometry *>::iterator it = _time.begin(); it != _time.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 0, 0));

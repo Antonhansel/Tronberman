@@ -24,7 +24,10 @@ public:
 	void 		pushTexture(gdl::Geometry *);
 	void 		loadParticules();
 	void 		drawParticules(gdl::AShader &, glm::mat4);
+	void 		reset();
+	std::string getModel();
 private:
+	int 			_modelCount;
 	std::vector<gdl::Texture*> _textures;
 	gdl::Geometry 		_geometry;
 	gdl::Model 			_model;
