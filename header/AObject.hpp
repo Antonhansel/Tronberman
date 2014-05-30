@@ -39,7 +39,8 @@ enum type
     BLOCKD = 6,
     BONUS = 7,
     UNSELECTED = 8,
-    SELECTED = 9
+    SELECTED = 9,
+    NOTHING = 10
   };
 
 enum key

@@ -44,7 +44,7 @@ void  Core::reset()
 
 void  Core::setValues(Map *map)
 {
-  _sound->setEffect(_menu->getFx());  
+  _sound->setEffect(_menu->getFx());
   _players = _menu->getNbPlayer();
   _map = map;
   _width = _menu->getMapSize();
@@ -404,3 +404,9 @@ int       Core::getNbrPlayer() const
 {
   return (_players);
 }
+
+gdl::Clock *Core::getClock()
+{
+  return &_clock;
+}
+

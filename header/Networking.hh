@@ -17,6 +17,8 @@
 
 #include "Core.hpp"
 
+#define     MAP_SEND_SIZE   50
+
 enum    MSG_TYPE {
     OWN_MOVE = 1,
     OWN_BOMB = 2,
@@ -26,18 +28,17 @@ enum    MSG_TYPE {
 
 struct          Message {
     MSG_TYPE    type;
-    union       data {
-        struct player {
+    union       {
+        struct {
             unsigned int playerId;
-            unsigned int x;
-            unsigned int y;
-        };
-        struct map {
+            float x;
+            float y;
+        } player;
+        struct {
             int start[2]; // x and y of start of map chunk
-            int width; // width of a line sended
-            char data[256]; // 0 for nothing, 1 for border, 2 for basic block, 3 for destroyable block
-        };
-    };
+            enum type data[MAP_SEND_SIZE * MAP_SEND_SIZE];
+        } map;
+    } data;
 };
 
 struct                      Client {
@@ -48,27 +49,34 @@ struct                      Client {
     // first is the start position to send the message, second is the messages
     std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   inputBuffer;
     // first is the actual position in the buffer, second is the buffer
+    Player                  *player;
 };
 
 
 class Networking {
     public:
-        Networking(Core &, int port); // if server
-        Networking(Core &, std::string &port, std::string &addr); // if client
+        Networking(int port); // if server
+        Networking(std::string &port, std::string &addr); // if client
         ~Networking();
         bool                            newPlayers();
         // Called in loop to accept new clients, return true if new connections, else false
-        void                            finishListening();
+        void                            startGame(Core *);
         // Close listening for new clients
         const std::list<Client *>       getPlayers() const;
         // Get the list of clients
-        void                            refreshPlayers();
+        void                            refreshGame();
     private:
-        Core                    &_core;
+        bool                    _isServer;
+        Core                    *_core;
         bool                    _closed;
         int                     _sockfd;
         std::list<Client *>     _players;
         void    _receiveFromClient(Client *);
         void    _sendToClient(Client *);
+        void    _sendMapUpdate(Client *);
+        void    _sendPlayersUpdate(Client *);
         void    _treatMessage(Client *, Message *);
+        void    _startGameServer();
+        void    _startGameClient();
+        void    _tryPurgeBuffer();
 };
