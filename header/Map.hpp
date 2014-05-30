@@ -22,8 +22,8 @@ public:
   ~Map();
   Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;
-  std::vector<std::pair<int, int> >   &setSpawn(int nb);
-  std::vector<std::pair<int, int> >   getSpawn() const;
+  void        setSpawn(int nb);
+  std::pair<int, int>   getSpawn();
   std::string     getName() const;
   void            setName(std::string &);
   void            addCube(int, int, type);

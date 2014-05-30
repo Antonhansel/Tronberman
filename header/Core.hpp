@@ -40,8 +40,8 @@ public:
   bool			drawBackground();
   bool 			update();
   void      drawAll(AObject *);
-  bool      makeChar(int, int, int);
-  bool      makeBot(int, int, int);
+  bool      makeChar(std::pair<float, float>, int);
+  bool      makeBot(std::pair<float, float>, int);
   void      FPS();
   void      checkAlive();
   void      spawnBomb(Player *);
@@ -53,7 +53,6 @@ public:
   void      setSave(Map *, std::map<int, Player*> &);
   gdl::Clock *getClock();
 private:
-  std::vector<std::pair<int, int> >    _obj;
   bool      _isSave;
   bool      _displayFPS;
   int       _screen;
@@ -62,10 +61,6 @@ private:
   Camera 		*_cam;
   Loader    *_loader;
   int 			_players;
-  float 		_posx;
-  float			_posy;
-  float			_posx2;
-  float			_posy2;
   int       _nb_bot;
   int			_width;
   int			_height;

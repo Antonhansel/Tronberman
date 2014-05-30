@@ -50,15 +50,7 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _obj = _map->setSpawn(_players + _nb_bot);
-  _posx = _obj.begin()->first;
-  _posy = _obj.begin()->second;
-  if (_players == 2)
-  {
-    _obj.erase(_obj.begin());
-    _posx2 = _obj.begin()->first;
-    _posy2 = _obj.begin()->second;
-  }
+  _map->setSpawn(_players + _nb_bot);
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -123,14 +115,12 @@ bool	Core::drawFloor()
   return (floor->initialize());
 }
 
-bool   Core::makeChar(int posx, int posy, int screen)
+bool   Core::makeChar(std::pair<float, float> pos, int screen)
 {
   Player *chara = create<Player>();
-  std::pair<float, float> pos;
 
   if (chara->initialize() == false)
     return (false);
-  pos = std::make_pair(posx, posy);
   chara->setPos(pos);
   chara->setPlayer(screen);
   chara->setMap(_map);
@@ -142,14 +132,12 @@ bool   Core::makeChar(int posx, int posy, int screen)
   return (true);
 }
 
-bool   Core::makeBot(int posx, int posy, int id)
+bool   Core::makeBot(std::pair<float, float> pos, int id)
 {
   Player *chara = create<Mybot>();
-  std::pair<float, float> pos;
 
   if (chara->initialize() == false)
     return (false);
-  pos = std::make_pair(posx, posy);
   chara->setPos(pos);
   chara->setMap(_map);
   chara->setId(id);
@@ -164,11 +152,11 @@ bool		Core::drawChar()
 {
   if (!_isSave)
   {
-    if (makeChar(_posx, _posy, 1) == false)
+    if (makeChar(_map->getSpawn(), 1) == false)
       return (false);
     if (_players == 2)
     {
-      if (makeChar(_posx2, _posy2, 2) == false)
+      if (makeChar(_map->getSpawn(), 2) == false)
         return (false);
     }
   }
@@ -177,22 +165,14 @@ bool		Core::drawChar()
 
 bool    Core::drawBot(int nb)
 {
-  int   x;
-  int   y;
   int   i;
 
   i = 0;
   if (!_isSave)
   {
-  while (++i <= nb && nb > 0)
-    {
-      x = _obj.begin()->first;
-      y = _obj.begin()->second;
-      if (makeBot(x, y, i + 2) == false)
+    while (++i <= nb && nb > 0)
+      if (makeBot(_map->getSpawn(), i + 2) == false)
         return (false);
-//      if (i < nb)
-        _obj.erase(_obj.begin());
-    }
   }
   return true;
 }

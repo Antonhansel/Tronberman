@@ -163,14 +163,30 @@ bool    Map::check_pos(int x, int y)
     return false;
 }
 
-std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
+std::pair<int, int>     Map::getSpawn()
+{
+    int     x;
+    int     y;
+
+    x = 0;
+    y = 0;
+    if (_spawns.size() > 0)
+    {
+        x = _spawns.begin()->first;
+        y = _spawns.begin()->second;
+        _spawns.erase(_spawns.begin());
+    }
+    return (std::make_pair(x, y));
+}
+
+void    Map::setSpawn(int nb)
 {
     int   x;
     int   y;
 
-    srand(time(NULL));
     x = 0;
     y = 0;
+    srand(time(NULL));
     for (int i = 0; i < nb; i++)
     {
         while ((x == 0 && y == 0) || check_pos(x, y))
@@ -188,9 +204,8 @@ std::vector<std::pair<int, int> >   &Map::setSpawn(int nb)
     for (int i = 0; i < _size_x *_size_x; i++)
     {
         if (_map[i])
-         _map[i]->setParticle(_engine);
+            _map[i]->setParticle(_engine);
     }
-    return (_spawns);
 }
 
 int     Map::getSize() const
@@ -222,11 +237,6 @@ void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
 AObject **Map::getMap() const
 {
     return _map;
-}
-
-std::vector<std::pair<int, int> > Map::getSpawn() const
-{
-    return _spawns;
 }
 
 std::string     Map::getName() const
