@@ -21,7 +21,7 @@
 #include "BomberException.hpp"
 #include "Networking.hh"
 
-Networking::Networking(Core &core, int port) : _core(core)
+Networking::Networking(int port)
 {
     struct protoent *pe;
     int         tmp;
@@ -40,15 +40,17 @@ Networking::Networking(Core &core, int port) : _core(core)
     if (listen(_sockfd, 10) == -1)
         throw new BomberException(strerror(errno));
     _closed = false;
+    _isServer = true;
 }
 
-Networking::Networking(Core &core, std::string &port, std::string &addr) : _core(core)
+Networking::Networking(std::string &port, std::string &addr)
 {
     struct addrinfo     hints;
     struct addrinfo     *info;
     struct protoent     *pe;
     int                 s;
 
+    _isServer = false;
     _closed = false;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
@@ -75,10 +77,28 @@ Networking::~Networking()
         close(_sockfd);
 }
 
-void Networking::finishListening()
+void Networking::startGame(Core *core)
 {
+    _core = core;
     _closed = true;
     close(_sockfd);
+    if (_isServer)
+        _startGameServer();
+    else
+        _startGameClient();
+}
+
+void    Networking::_startGameServer()
+{
+    for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+    {
+
+    }
+}
+
+void    Networking::_startGameClient()
+{
+
 }
 
 bool     Networking::newPlayers()
@@ -108,7 +128,7 @@ const std::list<Client *>   Networking::getPlayers() const
     return _players;
 }
 
-void    Networking::refreshPlayers()
+void    Networking::_tryPurgeBuffer()
 {
     fd_set      sets[3];
     int         max = 0;
@@ -156,6 +176,25 @@ void    Networking::_receiveFromClient(Client *client)
 
 void    Networking::_treatMessage(Client *client, Message *message)
 {
+    if (message->type == OWN_MOVE)
+    {
+        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player.x, message->data.player.y);
+        client->player->setPos(pos);
+    }
+    if (message->type == OWN_BOMB)
+        client->player->spawnBomb();
+    if (message->type == MAP_UPDATE)
+    {
+        for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
+            for(unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
+                _core->getMap()->deleteCube(x + message->data.map.start[0],
+                    y + message->data.map.start[1]);
+                if (message->data.map.data[x * MAP_SEND_SIZE + y] != NOTHING)
+                    _core->getMap()->addCube(x + message->data.map.start[0],
+                        y + message->data.map.start[1], message->data.map.data[x * MAP_SEND_SIZE + y]);
+            }
+        }
+    }
 
 }
 
@@ -181,4 +220,46 @@ void    Networking::_sendToClient(Client *client)
             delete toSend;
         }
     } while (sizeSent > 0);
+}
+
+void    Networking::refreshGame()
+{
+    if (_isServer)
+    {
+        _tryPurgeBuffer();
+        for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+        {
+            if (!(*i)->toSend.empty())
+                continue;
+            _sendMapUpdate(*i);
+            _sendPlayersUpdate(*i);
+        }
+        _tryPurgeBuffer();
+    }
+}
+
+void    Networking::_sendMapUpdate(Client *client)
+{
+    Message                 *msg = new Message;
+    std::pair<float, float> pos = client->player->getPos();
+    AObject                 *tmp;
+
+    msg->type = MAP_UPDATE;
+    msg->data.map.start[0] = pos.first - (MAP_SEND_SIZE / 2);
+    msg->data.map.start[0] = pos.second - (MAP_SEND_SIZE / 2);
+    for (unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
+        for (unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
+            tmp = _core->getMap()->getCase(x, y);
+            if (tmp)
+                msg->data.map.data[x * MAP_SEND_SIZE + y] = tmp->getType();
+            else
+                msg->data.map.data[x * MAP_SEND_SIZE + y] = NOTHING;
+        }
+    }
+    client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+}
+
+void    Networking::_sendPlayersUpdate(Client *client)
+{
+
 }

@@ -21,10 +21,9 @@ enum TypeSound
     BOMB_S = 0,
     BONUS_S = 1,
     WALK_S = 2,
-    DEAD_S = 3,
-    PBOMB_S = 4,
-    DEATH_S = 5,
-    HIT_S = 6
+    PBOMB_S = 3,
+    DEATH_S = 4,
+    HIT_S = 5
   };
 
 class Sound
@@ -45,7 +44,7 @@ private:
 private:
   bool          _fx;
   sf::Music			*_music;
-  sf::Music			*_effect[10];
+  sf::Music			*_effect[6];
   std::map<TypeSound, void(Sound::*)(int)> _soundEffect;
 };
 
