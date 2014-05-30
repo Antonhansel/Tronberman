@@ -12,6 +12,7 @@
 
 Sound::Sound()
 {
+  _fx = true;
   _music = new sf::Music;
   _soundEffect[BOMB_S] = &Sound::bomb;
   _soundEffect[BONUS_S] = &Sound::bonus;
@@ -49,7 +50,8 @@ Sound::~Sound()
 
 void	Sound::playSound(TypeSound type, int volume)
 {
-  (this->*_soundEffect[type])(volume);
+  if (_fx)
+    (this->*_soundEffect[type])(volume);
 }
 
 void	Sound::bomb(int volume)
@@ -81,14 +83,8 @@ void  Sound::hit(int volume)
   _effect[HIT_S]->setVolume(volume);
   _effect[HIT_S]->play();
 }
-// void	Sound::walk(int volume)
-// {
-//   _effect[WALK_S]->setVolume(volume);
-//   _effect[WALK_S]->play();
-// }
 
-// void	Sound::dead(int volume)
-// {
-//   _effect[DEAD_S]->setVolume(volume);
-//   _effect[DEAD_S]->play();
-// }
+void  Sound::setEffect(bool effect)
+{
+  _fx = effect;
+}

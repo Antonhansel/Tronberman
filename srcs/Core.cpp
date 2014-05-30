@@ -43,7 +43,8 @@ void  Core::reset()
 }
 
 void  Core::setValues(Map *map)
-{  
+{
+  _sound->setEffect(_menu->getFx());  
   _players = _menu->getNbPlayer();
   _map = map;
   _width = _menu->getMapSize();
@@ -67,6 +68,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
 {
   std::vector<std::pair<int, int> >    obj;
 
+  _sound->setEffect(_menu->getFx());
   _player = player;
   _players = (player.find(2) != player.end()) ? 2 : 1;
   _nb_bot = _player.size() - _players;

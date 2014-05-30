@@ -33,7 +33,9 @@ public:
   Sound();
   ~Sound();
   void	playSound(TypeSound, int);
-  void	playMusic();
+  void  setEffect(bool);
+
+private:
   void	bomb(int);
   void	bonus(int);
   void  putBombs(int);
@@ -41,6 +43,7 @@ public:
   void	death(int);
   void  hit(int);
 private:
+  bool          _fx;
   sf::Music			*_music;
   sf::Music			*_effect[10];
   std::map<TypeSound, void(Sound::*)(int)> _soundEffect;

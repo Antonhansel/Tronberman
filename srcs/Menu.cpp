@@ -53,11 +53,13 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _previewMode = false;
   _exit = false;
   _isSave = false;
+  _isFx = true;
   _ipAddr.assign("192.168.0.1");
   _engine = engine;
   _vol = 100;
   _nbPort.assign("6666");
   _volume.assign("100");
+  _fx.assign("ON");
   home();
 }
 
@@ -92,8 +94,7 @@ bool    Menu::update()
   _timer += _clock.getElapsed();
   if (_exit || _input.getInput(SDL_QUIT) || _isLaunch)
     return (false);
-  if (_event == NULL && _stopIntro == true)
-    _event = new AInput(_input, MENU);
+  (_event == NULL && _stopIntro == true) ? (_event = new AInput(_input, MENU)) : 0;
   if (_stopIntro == true)
   {
     _event->setInput(_input);
@@ -171,6 +172,7 @@ void    Menu::manageEventInput()
   if (_stepM == CLIENT && _isSelect == 0)
     getInputAddr(_ipAddr, 15);
   changeOption();
+  getFxState();
 }
 
 void    Menu::changeOption()
@@ -194,7 +196,6 @@ void    Menu::changeOption()
       _timer = 0;
       _vol -= 10;
       ss << _vol;
-
       _volume = (_vol != 0) ? ss.str() : "MUTE";
       (this->*_func[_stepM])();
     }
@@ -225,6 +226,22 @@ void    Menu::getInputAddr(std::string &s, size_t size)
     (this->*_func[_stepM])();
   }
 }
+
+void    Menu::getFxState()
+{
+  std::vector<key>  ret;
+
+  ret = _event->getInput();
+  if (_stepM == OPTION && _isSelect == 1 
+    && (AInput::getKey(ret, MRIGHT) || AInput::getKey(ret, MLEFT)))
+  {
+    _timer = 0;
+    _isFx = !_isFx;
+    _fx = (_isFx) ? "ON" : "OFF";
+    (this->*_func[_stepM])();
+  }
+}
+
 
 void    Menu::manageEventInputScore(key &k)
 {
@@ -553,7 +570,7 @@ void    Menu::option()
   _text->addText(_step1, 1, std::make_pair(15, 380), "FX", true);
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _volume.c_str(), true);
-  // _text->addText(_step1, 5, std::make_pair(700, 460), _nbBots.c_str(), false);
+  _text->addText(_step1, 5, std::make_pair(700, 380), _fx.c_str(), true);
   _max = 2;
 }
 
@@ -784,4 +801,9 @@ bool  Menu::isSave() const
 std::map<int, Player*>  &Menu::getPlayer() const
 {
   return (_preview->getPlayer());
+}
+
+bool  Menu::getFx() const
+{
+  return (_isFx);
 }

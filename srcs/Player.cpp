@@ -53,7 +53,7 @@ void  Player::spawnBomb()
     pos = realPos(getPos());
  if (_bombs->find(pos) == _bombs->end())
   {
-    _sound->putBombs(30);
+    _sound->playSound(PBOMB_S, 30);
     Bombs *b = new Bombs();
     b->setObjects(_map, _sound, _bombs);
     b->setPlayerTab(_playermap);
@@ -193,7 +193,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
     if (tmp && tmp->getType() == BONUS)
     {
         static_cast<Bonus*>(tmp)->addToPlayer(this);
-        _sound->bonus(30);
+        _sound->playSound(BONUS_S, 30);
         _map->deleteCube(_pos.first, _pos.second);
     }
     }
