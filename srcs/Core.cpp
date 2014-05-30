@@ -79,7 +79,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
     (*it).second->setBombs(&_bombs);
     (*it).second->setSound(_sound);
   }
-  _map = map;
+  _map = saving->getMap();
   _width = _menu->getMapSize();
   _height = _width;
   _time = 0;

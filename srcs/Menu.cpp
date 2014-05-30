@@ -744,6 +744,7 @@ void  Menu::convToString(std::string &s, int i) const
 
 Map   *Menu::getMap() const
 {
+  std::cout << "MAPS SIZE 2222: " << _map->getSize() << " && ADDR : " << _map << std::endl;
   return (_map);
 }
 

@@ -27,9 +27,9 @@ bool	Saving::saveMap(const Map *m)
 	{
 		_file << "<map>" << std::endl;
 		_file << "<size>" << m->getSize() << "</size>" << std::endl;
-		for (int y = 0; y < size; y++)
+		for (int y = 1; y < size - 1; y++)
 		{
-			for (int x = 0; x < size; x++)
+			for (int x = 1; x < size - 1; x++)
 			{
 				ao = m->getCase(x, y);
 				if (ao != NULL)
@@ -163,7 +163,7 @@ bool	Saving::getMapFromFile()
 
 	size = convToDouble(getData("<size>", "</size>"));
 	std::string s;
-	_map = new Map(size, false);
+	_map = new Map(size, true);
 	_map->setName(_fileName);
 	while (resume)
 	{
@@ -225,7 +225,6 @@ void	Saving::getSavedMap()
 		_fileRead.assign(out.str());
 		std::string s = getData("<checksum>", "</checksum>");
 		std::string s1 = calcCheckSum(_fileRead);
-		//std::cout << "Checksum ==> " << s << " && " << s1 << std::endl;
 		if (s.compare(s1) == 0)
 			getMapFromFile();
 		else
@@ -285,7 +284,6 @@ std::map<int, Player *>	Saving::getPlayer()
 	{
 		it->second->setPlayerTab(&_player);
 		it->second->setMap(_map);
-		//it->second->setBombs(&_bombs);
 	}
 	return (_player);
 }
