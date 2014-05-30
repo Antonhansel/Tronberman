@@ -824,3 +824,8 @@ bool  Menu::getFx() const
 {
   return (_isFx);
 }
+
+Saving  *Menu::getSaving() const
+{
+  return (_preview->getInstance());
+}

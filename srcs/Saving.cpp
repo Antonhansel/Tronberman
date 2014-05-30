@@ -136,7 +136,7 @@ std::string	Saving::getData(const std::string& s, const std::string &s1)
 		if ((pos1 = _fileRead.find(s1.c_str(), pos)) != std::string::npos)
 		{
 			ss.assign(_fileRead.substr(pos + s.length(), (pos1 - s.length()) - pos));
-			_fileRead.replace(pos, pos1, "");
+			_fileRead.replace(pos, (pos1 - pos + s1.length() + 1), "");
 		}
 	}
 	return (ss);
@@ -193,7 +193,14 @@ bool	Saving::getPlayerFromFile()
 			id = getDataFromString(s, "<id>", "</id>");
 			std::pair<float, float>	pair;
 			pair = std::make_pair<float, float>(getDataFromString(s, "<posx>", "</posx>"), getDataFromString(s, "<posy>", "</posy>"));
-			_player[id] = new Player();
+			if (id <= 2)
+				_player[id] = new Player();
+			else
+				_player[id] = new Mybot();
+			if (id == 1 || id == 2)
+				_player[id]->setPlayer(id);
+			_player[id]->initialize();
+			_player[id]->setId(id);
 			_player[id]->setShield(getDataFromString(s, "<shield>", "</shield>"));
 			_player[id]->setLife(getDataFromString(s, "<life>", "</life>"));
 			_player[id]->setRange(getDataFromString(s, "<range>", "</range>"));
@@ -254,6 +261,7 @@ void	Saving::getSavedGame()
 
 Map 	*Saving::getMap() const
 {
+	std::cout << "MAPS SIZE = " << _map->getSize() << std::endl;
 	return (_map);
 }
 
@@ -271,8 +279,14 @@ std::vector<Map*> 	Saving::getMapList(std::vector<Saving *> &s)
 	return (v);
 }
 
-std::map<int, Player *>	Saving::getPlayer() const
+std::map<int, Player *>	Saving::getPlayer()
 {
+	for (std::map<int, Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+	{
+		it->second->setPlayerTab(&_player);
+		it->second->setMap(_map);
+		//it->second->setBombs(&_bombs);
+	}
 	return (_player);
 }
 

@@ -35,6 +35,7 @@ public:
 	void 					changeMapSave(int);
 	Map 					*getMap() const;
 	std::map<int, Player*>	&getPlayer() const;
+	Saving 					*getInstance() const;
 
 private:
 	double 											_time;
@@ -52,6 +53,7 @@ private:
   	float											_posx;
   	float											_xend;
   	std::vector<Saving *>							_save;
+  	Saving 											*_s;
 };
 
 #endif /*!_PREVIEW_HPP_*/

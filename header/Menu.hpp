@@ -84,6 +84,7 @@ public:
   bool      isSave() const;
   std::map<int, Player *> &getPlayer() const;
   bool      getFx() const;
+  Saving    *getSaving() const;
   //int  operator=(const std::string &);
   private:
     int   convToInt(const std::string &) const;
