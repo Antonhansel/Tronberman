@@ -61,7 +61,14 @@ void  CubeAnim::changeMusic(int i)
     else
       _itp--;
   }
-
+  if (_paths.size() == 0)
+    std::cout << "Error on loading" << std::endl;
+  else
+  {
+    _itp = _paths.begin();
+    if (loadSound(*_itp) == false)
+      return;
+  }
 }
 
 bool 		CubeAnim::getStatus() const

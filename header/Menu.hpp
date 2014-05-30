@@ -104,6 +104,7 @@ public:
     void  option();
     void  changeOption();
     void  getFxState();
+    void  changeMusic();
 
 private:
   bool          _isSave;

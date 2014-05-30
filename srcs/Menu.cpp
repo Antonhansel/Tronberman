@@ -173,6 +173,22 @@ void    Menu::manageEventInput()
     getInputAddr(_ipAddr, 15);
   changeOption();
   getFxState();
+  changeMusic();
+}
+
+void    Menu::changeMusic()
+{
+  std::vector<key>  ret;
+
+  ret = _event->getInput();
+  if (_stepM == OPTION && _isSelect == 2)
+  {
+    std::cout << "IN---->"  << std::endl;
+    if (AInput::getKey(ret, MRIGHT))
+      _cubeanim->changeMusic(1);
+    else if (AInput::getKey(ret, MLEFT))
+      _cubeanim->changeMusic(-1);
+  }
 }
 
 void    Menu::changeOption()
