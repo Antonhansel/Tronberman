@@ -185,9 +185,15 @@ void    Menu::changeMusic()
   {
     std::cout << "IN---->"  << std::endl;
     if (AInput::getKey(ret, MRIGHT))
+    {
       _cubeanim->changeMusic(1);
+      _timer = 0;
+    }
     else if (AInput::getKey(ret, MLEFT))
+    {
       _cubeanim->changeMusic(-1);
+      _timer = 0;
+    }
   }
 }
 
