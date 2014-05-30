@@ -16,23 +16,16 @@ Sound::Sound()
   _music = new sf::Music;
   _soundEffect[BOMB_S] = &Sound::bomb;
   _soundEffect[BONUS_S] = &Sound::bonus;
-  _soundEffect[PBOMB_S] = &Sound::bonus;
-  _soundEffect[DEATH_S] = &Sound::bonus;
+  _soundEffect[PBOMB_S] = &Sound::putBombs;
+  _soundEffect[DEATH_S] = &Sound::death;
   _soundEffect[HIT_S] = &Sound::hit;
-  // _soundEffect[WALK_S] = &Sound::walk; 
-  // _soundEffect[DEAD_S] = &Sound::dead;
   _effect[BOMB_S] = new sf::Music;
   _effect[BONUS_S] = new sf::Music;
   _effect[PBOMB_S] = new sf::Music;
   _effect[DEATH_S] = new sf::Music;
   _effect[HIT_S] = new sf::Music;
-  
-  // _effect[WALK_S] = new sf::Music;
-  // _effect[DEAD_S] = new sf::Music;
   _effect[BOMB_S]->openFromFile("./ressources/sounds/bomb.wav");
-  // _effect[WALK_S]->openFromFile("./ressources/sounds/walk.wav");
   _effect[BONUS_S]->openFromFile("./ressources/sounds/bonus.wav");
-  // _effect[DEAD_S]->openFromFile("./ressources/sounds/dead.wav");
   _effect[PBOMB_S]->openFromFile("./ressources/sounds/pbombs.wav");
   _effect[DEATH_S]->openFromFile("./ressources/sounds/death.wav");
   _effect[HIT_S]->openFromFile("./ressources/sounds/hit.wav");
