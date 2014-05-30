@@ -3,7 +3,6 @@
 Saving::Saving(const std::string &fileName) :
 	_fileName(fileName)
 {
-	std::cout << "Saving..." << std::endl;
 	_map = NULL;
 }
 
@@ -95,6 +94,7 @@ bool	Saving::saveGame(const Map *map, const std::map<int, Player *> &player, dou
 		saveAllPlayer(player);
 		saveTimer(timer);
 		saveCheckSum();
+		std::cout << "MAP SAIVED" << std::cout;
 		_file.close();
    		return (true);
   	}
@@ -189,7 +189,6 @@ bool	Saving::getPlayerFromFile()
 		s.assign(getData("<player>", "</player>"));
 		if (s.size() > 0)
 		{
-			std::cout << "X = " << getDataFromString(s, "<x>", "</x>");
 			id = getDataFromString(s, "<id>", "</id>");
 			std::pair<float, float>	pair;
 			pair = std::make_pair<float, float>(getDataFromString(s, "<posx>", "</posx>"), getDataFromString(s, "<posy>", "</posy>"));
@@ -260,7 +259,6 @@ void	Saving::getSavedGame()
 
 Map 	*Saving::getMap() const
 {
-	std::cout << "MAPS SIZE = " << _map->getSize() << std::endl;
 	return (_map);
 }
 
