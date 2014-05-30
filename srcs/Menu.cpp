@@ -568,10 +568,11 @@ void    Menu::option()
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "MUSIC", true);
   _text->addText(_step1, 1, std::make_pair(15, 380), "FX", true);
-  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 2, std::make_pair(15, 460), "CHANGE MUSIC", true);
+  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _volume.c_str(), true);
   _text->addText(_step1, 5, std::make_pair(700, 380), _fx.c_str(), true);
-  _max = 2;
+  _max = 3;
 }
 
 void    Menu::score()
@@ -775,8 +776,7 @@ void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
   : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) 
-  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) 
-  : (_stepM == OPTION) ? (_stepM = HOME) : 0;
+  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
 }
@@ -785,7 +785,8 @@ void  Menu::select3()
 {
   (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
   ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
-  : (_stepM == CLIENT) ? (_stepM = ONLINE) : 0;
+  : (_stepM == CLIENT) ? (_stepM = ONLINE) 
+  : (_stepM == OPTION) ? (_stepM = HOME) : 0;
 }
 
 void  Menu::select4()

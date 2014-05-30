@@ -217,7 +217,7 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 Map 	*Preview::getMap() const
 {
-	return ((_maps.size() == 0) ? NULL : _map );
+	return ((_maps.size() == 0) ? NULL : _map);
 }
 
 std::map<int, Player*>	&Preview::getPlayer() const
