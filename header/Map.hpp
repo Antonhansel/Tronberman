@@ -36,7 +36,7 @@ public:
   AObject **getMap() const;
   void    setSpawn(std::vector<std::pair<int, int> > &);
   void    genereteName();
-
+  std::pair<int, int> getSpawnPoint();
 private:
   ParticleEngine  *_engine;
   std::vector<std::string> _paths;

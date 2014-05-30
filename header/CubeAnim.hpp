@@ -20,7 +20,8 @@
 # include "BasicShader.hh"
 # include <glm/glm.hpp>
 # include <SdlContext.hh> 
-
+# include <sys/types.h>
+# include <dirent.h>
 
 #define MAX 32 
 #define TAILLE_SPECTRE  2048
@@ -31,6 +32,7 @@
 #define LEFT 3
 #define RIGHT 4
 #define PI 3.14159
+#define MUSIC_PATH "./ressources/musics/"
 
 class CubeAnim
 {
@@ -48,6 +50,11 @@ public:
 	void 	stopIntro(bool);
 	bool 	initIntro();
 	bool 	initFmod();
+	void 	changeMusic(int);
+	bool 	loadSound(std::string path);
+	void 	getPaths(const char *path);
+	bool    checkName(const char *str1);
+	std::string   makePath(const char *str1, const char *p);
 private:
 	float			_angle;
   	float			_posy;
@@ -67,7 +74,9 @@ private:
   	FMOD_SOUND 	*musique;
   	FMOD_CHANNEL *canal;
   	FMOD_RESULT resultat;
-  	float		spectre[TAILLE_SPECTRE]; 
+  	std::vector<std::string>::iterator 	_itp;
+  	std::vector<std::string>  _paths;
+  	float		spectre[TAILLE_SPECTRE];
 };
 
 #endif /*_CUBEANIM_HPP_*/

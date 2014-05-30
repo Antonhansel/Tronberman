@@ -190,7 +190,7 @@ bool    Core::drawBot(int nb)
       y = _obj.begin()->second;
       if (makeBot(x, y, i + 2) == false)
         return (false);
-      if (i < nb)
+//      if (i < nb)
         _obj.erase(_obj.begin());
     }
   }
