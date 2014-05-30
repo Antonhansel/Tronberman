@@ -18,6 +18,8 @@ public:
   Mybot();
   ~Mybot();
   void    setObj(gdl::Clock const &);
+  void    setSeeRange(int);
+  void    setRec(int);
 
 private:
   bool    lineSafe(int, int, int, int) const;
@@ -30,7 +32,8 @@ private:
 
   int     _x_obj;
   int     _y_obj;
-  int     _lastrand;
+  int     _rec;
+  int     _seerange;
 };
 
 #endif /* MYBOT_HPP */

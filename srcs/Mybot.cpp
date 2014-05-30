@@ -4,6 +4,8 @@ Mybot::Mybot()
 {
   _x_obj = 0;
   _y_obj = 0;
+  _seerange = 5;
+  _rec = 3;
 }
 
 Mybot::~Mybot()
@@ -13,7 +15,7 @@ bool      Mybot::lineSafe(int x, int y, int m_x, int m_y) const
 {
   AObject *tmp;
 
-  for (int i = 1; i <= 5; i++)
+  for (int i = 1; i <= _seerange; i++)
   {
       tmp = _map->getCase(x + (i * m_x), y + (i * m_y));
       if (tmp)
@@ -57,7 +59,6 @@ bool     Mybot::setObjDef(int x, int y, int rec, dir last)
 
  srand(time(NULL));
   inc = (rand() + _id) % 4;
-//  inc = 0;
   if (isSafe(x, y))
     return true;
   if (rec > 3)
@@ -157,4 +158,14 @@ void    Mybot::setObj(gdl::Clock const &clock)
         rotation.y = (_y_obj - y + 1) * 90 + 180;
       rotate(rotation);
   }
+}
+
+void    Mybot::setSeeRange(int seerange)
+{
+  _seerange = seerange;
+}
+
+void    Mybot::setRec(int rec)
+{
+  _rec = rec;
 }
