@@ -35,6 +35,7 @@ public:
 	void 					changeMapSave(int);
 	Map 					*getMap() const;
 	std::map<int, Player*>	&getPlayer() const;
+	Saving 					*getInstance();
 
 private:
 	double 											_time;

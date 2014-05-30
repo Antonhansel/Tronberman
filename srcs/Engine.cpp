@@ -53,7 +53,9 @@ bool		Engine::start()
             if (_menu->launch() == true)
             {
               if (_menu->isSave())
-                _core->setSave(_menu->getMap(), _menu->getPlayer());
+              {
+                _core->setSave(_menu->getMap(), _menu->getPlayer(), _menu->getSaving());                 
+              }
               else
                 _core->setValues(_menu->getMap());
               if (_core->initialize())

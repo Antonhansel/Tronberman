@@ -23,7 +23,7 @@ public:
 	bool										saveGame(const Map *);
 	Map 										*getMap() const;
 	static std::vector<Map *>					getMapList(std::vector<Saving *> &);
-	std::map<int, Player*>						getPlayer() const;
+	std::map<int, Player*>						getPlayer();
 	static std::vector<std::map<int, Player*> > getPlayerList(std::vector<Saving *> &);
 
 private:

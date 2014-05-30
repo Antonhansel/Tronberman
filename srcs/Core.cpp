@@ -64,7 +64,7 @@ void  Core::setValues(Map *map)
   _endgame = false;
 }
 
-void  Core::setSave(Map *map, std::map<int, Player *> &player)
+void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
 {
   std::vector<std::pair<int, int> >    obj;
 
@@ -72,7 +72,14 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
   _player = player;
   _players = (player.find(2) != player.end()) ? 2 : 1;
   _nb_bot = _player.size() - _players;
-  _map = map;
+  for (std::map<int, Player *>::const_iterator it = _player.begin(); it != _player.end() ; ++it)
+  {
+    //(*it).second->setPlayerTab(&_player);
+    //(*it).second->setMap(_map);
+    (*it).second->setBombs(&_bombs);
+    (*it).second->setSound(_sound);
+  }
+  _map = saving->getMap();
   _width = _menu->getMapSize();
   _height = _width;
   _time = 0;

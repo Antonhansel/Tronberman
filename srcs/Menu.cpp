@@ -744,6 +744,7 @@ void  Menu::convToString(std::string &s, int i) const
 
 Map   *Menu::getMap() const
 {
+  std::cout << "MAPS SIZE 2222: " << _map->getSize() << " && ADDR : " << _map << std::endl;
   return (_map);
 }
 
@@ -829,4 +830,9 @@ std::map<int, Player*>  &Menu::getPlayer() const
 bool  Menu::getFx() const
 {
   return (_isFx);
+}
+
+Saving  *Menu::getSaving() const
+{
+  return (_preview->getInstance());
 }
