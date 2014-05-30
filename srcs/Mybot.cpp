@@ -134,7 +134,8 @@ void     Mybot::setObjOff(int x, int y)
 void    Mybot::setObj(gdl::Clock const &clock)
 {
    float trans = static_cast<float>(clock.getElapsed()) * _speed / 2;
-//  float trans = 1;
+   glm::vec3                               rotation = glm::vec3(0);
+  //float trans = 1;
   int     x;
   int     y;
 
@@ -152,5 +153,8 @@ void    Mybot::setObj(gdl::Clock const &clock)
     translate(glm::vec3(trans * (_x_obj - x), 0, trans * (_y_obj - y)));
     _pos.first += trans * (_x_obj - x);
     _pos.second +=  trans * (_y_obj - y);
+      if ((rotation.y = (_x_obj - x) * 90) == 0)
+        rotation.y = (_y_obj - y + 1) * 90 + 180;
+      rotate(rotation);
   }
 }
