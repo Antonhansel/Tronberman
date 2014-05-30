@@ -43,6 +43,27 @@ void 		CubeAnim::stopIntro(bool status)
  _stopintro = status;
 }
 
+void  CubeAnim::changeMusic(int i)
+{
+  if (i == 1)
+  {
+    _itp++;
+    if (_itp == _paths.end())
+      _itp = _paths.begin();
+  }
+  else if (i == -1)
+  {
+    if (_itp == _paths.begin())
+    {
+      _itp = _paths.end();
+      _itp--;
+    }
+    else
+      _itp--;
+  }
+
+}
+
 bool 		CubeAnim::getStatus() const
 {
  return (_stopintro);
@@ -84,16 +105,65 @@ void 	CubeAnim::update()
       _objects[i]->translate(vec3(0, getEquation(i), 0));
 }
 
+bool    CubeAnim::checkName(const char *str1)
+{
+  std::string pp = "..";
+  std::string p = ".";
+  std::string tocheck = str1;
+
+  if (pp == str1 || p == str1)
+    return (false);
+  return (true);
+}
+
+std::string   CubeAnim::makePath(const char *str1, const char *p)
+{
+  std::string path = p;
+
+  path += str1;
+  return (path);
+}
+
+void    CubeAnim::getPaths(const char * path)
+{
+  DIR             *mydir;
+  struct dirent   *currentdir;
+
+  mydir = opendir(path);
+  _paths.clear();
+  if (mydir != NULL) 
+    while ((currentdir = readdir(mydir)) != NULL)
+    {
+      if (checkName(currentdir->d_name) && 
+        checkName(currentdir->d_name))
+      _paths.push_back(makePath(currentdir->d_name, path));
+    }
+}
+
+bool  CubeAnim::loadSound(std::string path)
+{
+  resultat = FMOD_System_CreateSound(system, path.c_str(), FMOD_SOFTWARE | FMOD_2D | FMOD_CREATESTREAM | FMOD_LOOP_NORMAL, 0, &musique);
+  if (resultat != FMOD_OK)
+    {
+      std::cout << "Impossible to open the audio file" << std::endl;
+      return (false);
+    }
+  return (true);
+}
+
 bool	CubeAnim::initFmod()
 {
   FMOD_System_Create(&system);
   FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);
-  resultat = FMOD_System_CreateSound(system, "./ressources/sounds/intro.mp3", FMOD_SOFTWARE | FMOD_2D | FMOD_CREATESTREAM | FMOD_LOOP_NORMAL, 0, &musique);
-  if (resultat != FMOD_OK)
-    {
-      std::cout << "Impossible to open the audio .mp3" << std::endl;
+  getPaths(MUSIC_PATH);
+  if (_paths.size() == 0)
+    std::cout << "Error on loading" << std::endl;
+  else
+  {
+    _itp = _paths.begin();
+    if (loadSound(*_itp) == false)
       return (false);
-    }
+  }
   FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, musique, 0, NULL); 
   FMOD_System_GetChannel(system, 0, &canal);
   return (true);
@@ -103,7 +173,7 @@ bool 		CubeAnim::initIntro()
 {
 if (!genSpiral())
     return (false);
-  if (initFmod() == false)
+  if (!initFmod())
     return (false);
 	return (true);
 }

@@ -11,7 +11,6 @@
 #ifndef _PREVIEW_HPP_
 # define _PREVIEW_HPP_
 
-//# include "Saving.hpp"
 # include "Camera.hpp"
 # include "Loader.hpp"
 # include "Map.hpp"
