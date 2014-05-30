@@ -25,10 +25,12 @@ class ParticleEngine
 public:
 	ParticleEngine(Loader *loader);
 	~ParticleEngine();
-	void 	draw(gdl::AShader &shader, gdl::Clock const &clock);
+	void 	draw(gdl::AShader &shader, gdl::Clock const &clock, AObject *);
 	void 	update(gdl::Clock const &clock, gdl::Input &input);
 	void 	spawnParticles(glm::vec3 &vec);
 	void 	cleanParticles();
+	bool 	canDraw(std::pair<float, float>, std::pair<float, float>);
+
 	std::vector<Particles *> 	_exploList;
 private:
 	Loader				*_loader;

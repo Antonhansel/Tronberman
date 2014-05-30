@@ -304,6 +304,38 @@ bool	Core::update()
   return (true);
 }
 
+bool  Core::playerDraw(std::pair<float, float> playerpos, std::pair<float, float> botpos)
+{
+  std::pair<float, float> pos;
+  if (playerpos.first > botpos.first)
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((playerpos.first - botpos.first > 30) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((playerpos.first - botpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  else
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((botpos.first - playerpos.first > 30 ) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((botpos.first - playerpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  return (true);
+}
+
 void  Core::drawAll(AObject *cur_char)
 {
   std::pair<int, int> pos;
@@ -335,9 +367,10 @@ void  Core::drawAll(AObject *cur_char)
   {
     if (i == 2 && _players == 1)
       nb_p = 1;
-    _player[i + nb_p]->draw(_shader, _clock);
+    if (playerDraw(_player[i + nb_p]->getPos(), cur_char->getPos()))
+      _player[i + nb_p]->draw(_shader, _clock);
   }
-  _particles->draw(_shader, _clock);
+  _particles->draw(_shader, _clock, cur_char);
 }
 
 void  Core::checkAlive()

@@ -20,13 +20,47 @@ ParticleEngine::ParticleEngine(Loader *loader)
 ParticleEngine::~ParticleEngine()
 {}
 
-void 	ParticleEngine::draw(gdl::AShader &shader, gdl::Clock const &clock)
+bool  ParticleEngine::canDraw(std::pair<float, float> playerpos, std::pair<float, float> botpos)
+{
+  std::pair<float, float> pos;
+
+  if (playerpos.first > botpos.first)
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((playerpos.first - botpos.first > 30) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((playerpos.first - botpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  else
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((botpos.first - playerpos.first > 30 ) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((botpos.first - playerpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  return (true);
+}
+
+void 	ParticleEngine::draw(gdl::AShader &shader, gdl::Clock const &clock, AObject *player)
 {
   std::vector<Particles*>::iterator it;
   _loader->bindTexture(BLOCKD);
   for (it = _exploList.begin(); it != _exploList.end(); ++it)
   {
-    (*it)->draw(shader);
+    if (canDraw(player->getPos(), (*it)->getPos()))
+      (*it)->draw(shader);
   }
 }
 

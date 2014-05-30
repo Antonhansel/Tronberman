@@ -40,6 +40,8 @@ Particles::Particles(Loader *loader, glm::vec3 &vec)
       newSpeed(_debris[i].orientationSpeed);
     }
 	_fuel = FUEL;
+  _pos.first = vec.x;
+  _pos.second = vec.z;
 }
 
 Particles::~Particles()
@@ -112,4 +114,9 @@ void 	Particles::newSpeed (float dest[3])
   dest[0] = x;
   dest[1] = abs(y);
   dest[2] = z;
+}
+
+std::pair<float, float> Particles::getPos() const
+{
+  return (_pos);
 }

@@ -52,6 +52,7 @@ public:
   void      reset();
   void      setSave(Map *, std::map<int, Player*> &, Saving *);
   gdl::Clock *getClock();
+  bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
 private:
   std::vector<std::pair<int, int> >    _obj;
   bool      _isSave;
