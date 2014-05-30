@@ -65,7 +65,6 @@ void  CubeAnim::changeMusic(int i)
     std::cout << "Error on loading" << std::endl;
   else
   {
-    _itp = _paths.begin();
     if (loadSound(*_itp) == false)
       return;
   }
@@ -155,6 +154,8 @@ bool  CubeAnim::loadSound(std::string path)
       std::cout << "Impossible to open the audio file" << std::endl;
       return (false);
     }
+  FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, musique, 0, NULL); 
+  FMOD_System_GetChannel(system, 0, &canal);
   return (true);
 }
 
@@ -171,8 +172,6 @@ bool	CubeAnim::initFmod()
     if (loadSound(*_itp) == false)
       return (false);
   }
-  FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, musique, 0, NULL); 
-  FMOD_System_GetChannel(system, 0, &canal);
   return (true);
 }
 
