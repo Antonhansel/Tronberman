@@ -50,6 +50,7 @@ private:
 	glm::mat4			_transdeb;
 	particleData 	_particles[NUM_PARTICLES];
 	debrisData       _debris[NUM_DEBRIS];
+	std::pair<float, float> _pos;
 public:
 	Particles(Loader *loader, glm::vec3 &);
 	~Particles();
@@ -57,6 +58,7 @@ public:
 	void 	update();
 	int 	getFuel() const;
 	void 	newSpeed(float dest[3]);
+	std::pair<float, float> getPos() const;
 };
 
 #endif /*!PARTICLES_HPP_*/

@@ -394,7 +394,7 @@ void    Menu::chooseStep()
     (this->*_step[_isSelect])();
   else
     play = false;
-  if (play == true)
+  if (play == true && _isLaunch != true)
   {
     (this->*_func[_stepM])();
     _oldStep = _stepM;
@@ -776,10 +776,12 @@ void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM) ? (_previewMode = false ,_stepM = LOADG) 
-  : (_stepM == LOADPREVIOUS && _preview->getMap() != NULL && _preview->getMap()->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) 
+  : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) 
   : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
-  if (_stepM == LOADG || (_isLaunch && _isSave))
+  if (_stepM == LOADG)
+  {
     _map = _preview->getMap();
+  }
 }
 
 void  Menu::select1()
@@ -829,4 +831,9 @@ std::map<int, Player*>  &Menu::getPlayer() const
 bool  Menu::getFx() const
 {
   return (_isFx);
+}
+
+Saving  *Menu::getSaving() const
+{
+  return (_preview->getInstance());
 }

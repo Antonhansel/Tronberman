@@ -50,8 +50,9 @@ public:
   std::map<int, Player*>  getPlayer();
   void      setValues(Map *);
   void      reset();
-  void      setSave(Map *, std::map<int, Player*> &);
+  void      setSave(Map *, std::map<int, Player*> &, Saving *);
   gdl::Clock *getClock();
+  bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
 private:
   bool      _isSave;
   bool      _displayFPS;

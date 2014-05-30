@@ -3,7 +3,6 @@
 Saving::Saving(const std::string &fileName) :
 	_fileName(fileName)
 {
-	std::cout << "Saving..." << std::endl;
 	_map = NULL;
 }
 
@@ -27,9 +26,9 @@ bool	Saving::saveMap(const Map *m)
 	{
 		_file << "<map>" << std::endl;
 		_file << "<size>" << m->getSize() << "</size>" << std::endl;
-		for (int y = 0; y < size; y++)
+		for (int y = 1; y < size - 1; y++)
 		{
-			for (int x = 0; x < size; x++)
+			for (int x = 1; x < size - 1; x++)
 			{
 				ao = m->getCase(x, y);
 				if (ao != NULL)
@@ -95,6 +94,7 @@ bool	Saving::saveGame(const Map *map, const std::map<int, Player *> &player, dou
 		saveAllPlayer(player);
 		saveTimer(timer);
 		saveCheckSum();
+		std::cout << "MAP SAIVED" << std::cout;
 		_file.close();
    		return (true);
   	}
@@ -136,7 +136,7 @@ std::string	Saving::getData(const std::string& s, const std::string &s1)
 		if ((pos1 = _fileRead.find(s1.c_str(), pos)) != std::string::npos)
 		{
 			ss.assign(_fileRead.substr(pos + s.length(), (pos1 - s.length()) - pos));
-			_fileRead.replace(pos, pos1, "");
+			_fileRead.replace(pos, (pos1 - pos + s1.length() + 1), "");
 		}
 	}
 	return (ss);
@@ -163,7 +163,7 @@ bool	Saving::getMapFromFile()
 
 	size = convToDouble(getData("<size>", "</size>"));
 	std::string s;
-	_map = new Map(size, false);
+	_map = new Map(size, true);
 	_map->setName(_fileName);
 	while (resume)
 	{
@@ -189,11 +189,17 @@ bool	Saving::getPlayerFromFile()
 		s.assign(getData("<player>", "</player>"));
 		if (s.size() > 0)
 		{
-			std::cout << "X = " << getDataFromString(s, "<x>", "</x>");
 			id = getDataFromString(s, "<id>", "</id>");
 			std::pair<float, float>	pair;
 			pair = std::make_pair<float, float>(getDataFromString(s, "<posx>", "</posx>"), getDataFromString(s, "<posy>", "</posy>"));
-			_player[id] = new Player();
+			if (id <= 2)
+				_player[id] = new Player();
+			else
+				_player[id] = new Mybot();
+			if (id == 1 || id == 2)
+				_player[id]->setPlayer(id);
+			_player[id]->initialize();
+			_player[id]->setId(id);
 			_player[id]->setShield(getDataFromString(s, "<shield>", "</shield>"));
 			_player[id]->setLife(getDataFromString(s, "<life>", "</life>"));
 			_player[id]->setRange(getDataFromString(s, "<range>", "</range>"));
@@ -218,7 +224,6 @@ void	Saving::getSavedMap()
 		_fileRead.assign(out.str());
 		std::string s = getData("<checksum>", "</checksum>");
 		std::string s1 = calcCheckSum(_fileRead);
-		//std::cout << "Checksum ==> " << s << " && " << s1 << std::endl;
 		if (s.compare(s1) == 0)
 			getMapFromFile();
 		else
@@ -271,8 +276,13 @@ std::vector<Map*> 	Saving::getMapList(std::vector<Saving *> &s)
 	return (v);
 }
 
-std::map<int, Player *>	Saving::getPlayer() const
+std::map<int, Player *>	Saving::getPlayer()
 {
+	for (std::map<int, Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+	{
+		it->second->setPlayerTab(&_player);
+		it->second->setMap(_map);
+	}
 	return (_player);
 }
 

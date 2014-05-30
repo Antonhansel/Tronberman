@@ -1,8 +1,0 @@
-bomberman
-*.d
-*.o
-gmon.out
-score
-
-out.png
-.score

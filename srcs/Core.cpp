@@ -56,7 +56,7 @@ void  Core::setValues(Map *map)
   _endgame = false;
 }
 
-void  Core::setSave(Map *map, std::map<int, Player *> &player)
+void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
 {
   std::vector<std::pair<int, int> >    obj;
 
@@ -64,7 +64,14 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player)
   _player = player;
   _players = (player.find(2) != player.end()) ? 2 : 1;
   _nb_bot = _player.size() - _players;
-  _map = map;
+  for (std::map<int, Player *>::const_iterator it = _player.begin(); it != _player.end() ; ++it)
+  {
+    //(*it).second->setPlayerTab(&_player);
+    //(*it).second->setMap(_map);
+    (*it).second->setBombs(&_bombs);
+    (*it).second->setSound(_sound);
+  }
+  _map = saving->getMap();
   _width = _menu->getMapSize();
   _height = _width;
   _time = 0;
@@ -277,6 +284,38 @@ bool	Core::update()
   return (true);
 }
 
+bool  Core::playerDraw(std::pair<float, float> playerpos, std::pair<float, float> botpos)
+{
+  std::pair<float, float> pos;
+  if (playerpos.first > botpos.first)
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((playerpos.first - botpos.first > 30) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((playerpos.first - botpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  else
+  {
+    if (playerpos.second > botpos.second)
+    {
+      if ((botpos.first - playerpos.first > 30 ) && (playerpos.second - botpos.second > 30))
+        return (false);
+    }
+    else
+    {
+      if ((botpos.first - playerpos.first > 30) && (botpos.second - playerpos.second > 30))
+        return (false);
+    }
+  }
+  return (true);
+}
+
 void  Core::drawAll(AObject *cur_char)
 {
   std::pair<int, int> pos;
@@ -308,9 +347,10 @@ void  Core::drawAll(AObject *cur_char)
   {
     if (i == 2 && _players == 1)
       nb_p = 1;
-    _player[i + nb_p]->draw(_shader, _clock);
+    if (playerDraw(_player[i + nb_p]->getPos(), cur_char->getPos()))
+      _player[i + nb_p]->draw(_shader, _clock);
   }
-  _particles->draw(_shader, _clock);
+  _particles->draw(_shader, _clock, cur_char);
 }
 
 void  Core::checkAlive()
