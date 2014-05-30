@@ -18,6 +18,7 @@ class Map
 public:
   Map(int);
   Map(int, std::string &);
+  Map(int, bool);
   ~Map();
   Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;

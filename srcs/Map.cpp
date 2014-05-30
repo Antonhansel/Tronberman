@@ -10,9 +10,8 @@
 
 #include "Map.hpp"
 
-Map::Map(int size) : _name(SAVE)
+Map::Map(int size)
 {
-    genereteName();
     _size_x = size;
     _size_y = size;
     _map = new AObject *[_size_x * _size_y];
@@ -25,13 +24,22 @@ Map::Map(int size) : _name(SAVE)
 Map::Map(int size, ParticleEngine *engine)
 {
     _engine = engine;
-    genereteName();
     _size_x = size;
     _size_y = size;
     _map = new AObject *[_size_x * _size_y];
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();
     _outline();
+}
+
+Map::Map(int size, bool m)
+{
+    _size_x = size;
+    _size_y = size;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
+    if (m == true)
+        _outline();
 }
 
 Map::Map(int size, std::string &name) : _name(name)

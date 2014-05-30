@@ -242,8 +242,22 @@ bool	Core::update()
       case ESCAPE:
        return (false);
       case PSAVE:
-       Saving(_map->getName(), this);
-       break;
+      {
+        std::string name("");
+        if ((name = _map->getName()).size() == 0)
+        {
+          name.assign("./ressources/save/");
+          for (int i = 0 ; i < 10 ; i++)
+            name += (rand()%26)+97;
+          name += ".xml";
+          _map->setName(name);
+        }
+        std::string t(name);
+        Saving  *s = new Saving(t);
+        s->saveGame(_map, _player, 0);
+        delete(s);
+        break;
+      }
       default:
         break;
     }

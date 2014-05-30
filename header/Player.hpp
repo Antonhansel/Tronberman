@@ -67,6 +67,7 @@ public:
   void    setScore(int);
   int     getScore() const;
   virtual void setObj(gdl::Clock const &);
+  float   getSpeed() const;
 
 public:
   Player();
@@ -90,6 +91,7 @@ public:
   float   getShield() const;
   void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
   void    setPlayerTab(std::map<int, Player*> *playermap);
+  void    setShield(float);
 private:
   std::pair<float, float> up(float &);
   std::pair<float, float> right(float &);

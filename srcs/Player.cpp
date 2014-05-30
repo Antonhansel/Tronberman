@@ -320,6 +320,11 @@ float    Player::getShield() const
     return (_shield);
 }
 
+void    Player::setShield(float s)
+{
+    _shield = s;
+}
+
 bool    Player::isAlive() const
 {
   return (_isAlive);
@@ -353,3 +358,7 @@ void    Player::setSound(Sound *sound)
 void    Player::setObj(gdl::Clock const &clock)
 {}
 
+float   Player::getSpeed() const
+{
+    return (_speed);
+}

@@ -22,6 +22,7 @@
 # include "Sound.hpp"
 # include "Hud.hpp"
 # include "AInput.hpp"
+# include "Saving.hpp"
 
 class Menu;
 class Player;

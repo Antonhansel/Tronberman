@@ -17,9 +17,8 @@ Generator::Generator(Camera *camera, Loader *loader, int size)
 	_camera = camera;
 	_loader = loader;
 	_time = 0;
-  _map = new AObject *[_size * _size];
+  _map = new Map(_size, true);
   _ainput = new AInput(_camera->getInput(), GENERATOR);
-  memset(_map, 0, (_size * _size) * sizeof(AObject *));
 }
 
 Generator::~Generator()
@@ -29,7 +28,9 @@ Generator::~Generator()
   for (int i = 0 ; i < 10 ; i++)
     name += (rand()%26)+97;
   name += ".xml";
-  Saving(name, _map, _size); 
+  Saving *s = new Saving(name);
+  s->saveGame(_map);
+  delete s;
 }
 
 bool 	Generator::drawBackground()
@@ -51,7 +52,7 @@ void 	Generator::draw()
   {
     for (int y = 0; y <= _size; ++y)
     {
-      tmp = getCase(x, y);
+      tmp = _map->getCase(x, y);
       if (!tmp)
         continue;
       if (tmp->getType() != LastType)
@@ -75,21 +76,14 @@ bool Generator::cleanObjects(int i)
 		std::cout << _size + i << std::endl; 
 		_size += i;
 	}
-  for (int j = 0; j < _size - i * _size - i ; ++j)
+  for (int i = 0; i < _size * _size; ++i)
   {
-      if (_map[j])
-         delete _map[j];
+      if (_map->getCase(i / _size, i % _size))
+         _map->deleteCube(i / _size, i % _size);
   }
 	if (initialize() == false)
 		return (false);
 	return (true);
-}
-
-AObject     *Generator::getCase(int x, int y) const
-{
-    if (x < 0 || x >= _size || y < 0 || y >= _size)
-        return NULL;
-    return _map[x * _size + y];
 }
 
 bool Generator::initCursor(int x, int z)
@@ -130,7 +124,7 @@ void 	Generator::placeCube(key &k)
   	if ((pos.first > 0 && pos.first < _size) && 
   		pos.second > 0 && pos.second < _size)
   	{
-  		  	addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
+  		  	_map->addCube(_cube->getPos().first, _cube->getPos().second, _cube->getType());
   		  	_camera->tiltMode();
   	}
   }
@@ -172,7 +166,7 @@ bool Generator::update()
         if ((*it) == ESCAPE)
           return (false);
         if ((*it) == MBACKSPACE)
-          deleteCube(_cube->getPos().first, _cube->getPos().second);
+          _map->deleteCube(_cube->getPos().first, _cube->getPos().second);
         moveCursor((*it));
         changeType((*it));
         placeCube((*it));
@@ -182,48 +176,12 @@ bool Generator::update()
     return (true);
 }
 
-void Generator::deleteCube(int x, int y)
-{
-    if (x < 0 || x >= _size || y < 0 || y >= _size)
-        return;
-    delete _map[x * _size + y];
-    _map[x * _size + y] = NULL;
-}
-
-void Generator::addCube(int x, int y, type blockType)
-{
-    std::pair<float, float>     pos;
-    AObject     *tmp;
-
-    if (x < 0 || x >= _size || y < 0 || y >= _size)
-        return;
-    if (_map[x * _size + y])
-        deleteCube(x, y);
-    tmp = create<Cube>();
-    pos = std::make_pair(x, y);
-    tmp->setType(blockType);
-    tmp->setPos(pos);
-    tmp->initialize();
-    _map[x * _size + y] = tmp;
-}
-
 bool 	Generator::initialize()
 {
-  _map = new AObject *[_size * _size];
-   memset(_map, 0, (_size * _size) * sizeof(AObject *));
+  _map = new Map(_size, true);
 	if (initCursor(round(_size/2), round(_size/2)) == false)
 		return (false);
 	if (drawBackground() == false)
 		return (false);
-	for (int y = 0; y < _size; y++)
-    {
-        addCube(0, y, BORDER);
-        addCube(_size - 1, y, BORDER);
-    }
-    for (int x = 0; x < _size; x++)
-    {
-        addCube(x, 0, BORDER);
-        addCube(x, _size - 1, BORDER);
-    }
-    return (true);
+  return (true);
 }
