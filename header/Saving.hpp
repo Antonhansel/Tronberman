@@ -7,12 +7,13 @@
 class Saving
 {
 private:
-	std::string		_fileName;
-	std::ofstream	_file;
-	std::ifstream	_fileIn;
-	Map 			*_map;
-	std::string		_fileRead;
+	std::string				_fileName;
+	std::ofstream			_file;
+	std::ifstream			_fileIn;
+	Map 					*_map;
+	std::string				_fileRead;
 	std::map<int, Player *>	_player;
+	bool					_extension;
 
 public:
 	Saving(const std::string &);

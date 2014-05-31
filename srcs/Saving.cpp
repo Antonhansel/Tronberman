@@ -3,6 +3,10 @@
 Saving::Saving(const std::string &fileName) :
 	_fileName(fileName)
 {
+	if ((_fileName.substr(_fileName.size() - 4, 4)).compare(".xml") == 0)
+		_extension = true;
+	else
+		_extension = false;
 	_map = NULL;
 }
 
@@ -217,44 +221,49 @@ void	Saving::getSavedMap()
 {
 	std::ostringstream out;
 
-	_fileIn.open(_fileName.c_str(), std::ifstream::in);
-	if (_fileIn.is_open())
+	if (_extension == true)
 	{
-		out << _fileIn.rdbuf();
-		_fileRead.assign(out.str());
-		std::string s = getData("<checksum>", "</checksum>");
-		std::string s1 = calcCheckSum(_fileRead);
-		if (s.compare(s1) == 0)
-			getMapFromFile();
+		_fileIn.open(_fileName.c_str(), std::ifstream::in);
+		if (_fileIn.is_open())
+		{
+			out << _fileIn.rdbuf();
+			_fileRead.assign(out.str());
+			std::string s = getData("<checksum>", "</checksum>");
+			std::string s1 = calcCheckSum(_fileRead);
+			if (s.size() > 0 && s.compare(s1) == 0)
+				getMapFromFile();
+			else
+				std::cout << "BAD CHECKSUM" << std::endl;
+		}
 		else
-			std::cout << "BAD CHECKSUM" << std::endl;
+			std::cout << "FILE IS CLOSE" << std::endl;
 	}
-	else
-		std::cout << "FILE IS CLOSE" << std::endl;
 }
 
 void	Saving::getSavedGame()
 {
 	std::ostringstream out;
 
-	_fileIn.open(_fileName.c_str(), std::ifstream::in);
-	if (_fileIn.is_open())
+	if (_extension == true)
 	{
-		out << _fileIn.rdbuf();
-		_fileRead.assign(out.str());
-		std::string s = getData("<checksum>", "</checksum>");
-		std::string s1 = calcCheckSum(_fileRead);
-		if (s.compare(s1) == 0)
+		_fileIn.open(_fileName.c_str(), std::ifstream::in);
+		if (_fileIn.is_open())
 		{
-			getMapFromFile();
-			getPlayerFromFile();
+			out << _fileIn.rdbuf();
+			_fileRead.assign(out.str());
+			std::string s = getData("<checksum>", "</checksum>");
+			std::string s1 = calcCheckSum(_fileRead);
+			if (s.size() > 0 && s.compare(s1) == 0)
+			{
+				getMapFromFile();
+				getPlayerFromFile();
+			}
+			else
+				std::cout << "BAD CHECKSUM" << std::endl;
 		}
 		else
-			std::cout << "BAD CHECKSUM" << std::endl;
-
+			std::cout << "FILE IS CLOSE" << std::endl;
 	}
-	else
-		std::cout << "FILE IS CLOSE" << std::endl;
 }
 
 Map 	*Saving::getMap() const
