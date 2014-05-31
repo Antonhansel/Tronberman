@@ -25,6 +25,7 @@
 # include "Preview.hpp"
 # include "Networking.hh"
 # include "BomberException.hpp"
+# include "Core.hpp"
 
 # define DELAY  0.15
 
@@ -88,7 +89,8 @@ public:
   bool      isSave() const;
   bool      getFx() const;
   Saving    *getSaving() const;
-  //int  operator=(const std::string &);
+  void      setCore(Core *);
+
   private:
     int   convToInt(const std::string &) const;
     void  convToString(std::string &, int) const;
@@ -133,7 +135,7 @@ private:
   bool          _exit;
   int           _vol;
   bool          _isFx;
-  const char          *_err;
+  const char    *_err;
 private:
   Map               *_map;
   Text              *_text;
@@ -145,6 +147,7 @@ private:
   Preview           *_preview;
   ParticleEngine    *_engine;
   Networking        *_network;
+  Core              *_core;
 private:
   std::string       _fx;
   std::string       _volume;

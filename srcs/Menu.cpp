@@ -616,10 +616,11 @@ void  Menu::waitClient()
 
 void   Menu::waitServer()
 {
-    _isSelect = 1;
+    _isSelect = 0;
     _text->deleteAllText(_step1);
     _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
-    _max = 0;
+    _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+    _max = 1;
 }
 
 void    Menu::score()
@@ -819,19 +820,23 @@ void  Menu::select1()
   {
     try
     {
-      std::cout << "BEFORE THE NULL" << std::endl;
       if (_network != NULL)
         delete _network;
-      std::cout << "BEFORE THE NEW" << std::endl;
       _network = new Networking(_nbPort);
       _stepM = WAITSERVER;
-      std::cout << "Launching the SERVER" << std::cout;
     }
     catch (BomberException *tmp)
     {
       _err = tmp->what();
-      std::cout << tmp->what() << std::endl;
     }
+  }
+  else if (_stepM == WAITSERVER && _network != NULL)
+  {
+    _map = new Map(30, _engine);
+    _isLaunch = true; 
+    _isSave = false;
+    _core->setValues(_map);
+    _network->startGame(_core);
   }
 }
 
@@ -848,15 +853,22 @@ void  Menu::select2()
       delete _network;
     try
     {
-      std::cout << "BEFORE THE NEW"<< std::endl;
       _network = new Networking(_nbPort, _ipAddr);
       _stepM = WAITCLIENT;
-      std::cout << "Launching the CLIENT" << std::cout;
     }
     catch (BomberException *tmp)
     {
       _err = tmp->what();
-      std::cout << tmp->what() << std::endl;
+    }
+  }
+  if (_stepM == WAITCLIENT && _network != NULL)
+  {
+    if ((_isLaunch = _network->isGameStarted()))
+    {
+      _map = new Map(10, _engine);
+      _isSave = false;
+      _core->setValues(_map);
+      _network->startGame(_core);
     }
   }
 }
@@ -887,4 +899,9 @@ bool  Menu::getFx() const
 Saving  *Menu::getSaving() const
 {
   return (_preview->getInstance());
+}
+
+void    Menu::setCore(Core *core)
+{
+  _core = core;
 }
