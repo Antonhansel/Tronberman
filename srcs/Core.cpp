@@ -61,7 +61,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
 
   _sound->setEffect(_menu->getFx());
   _player = saving->getPlayer();
-  _players = (player.find(2) != player.end()) ? 2 : 1;
+  _players = saving->getPlayerNb();
   _nb_bot = _player.size() - _players;
   for (std::map<int, Player *>::const_iterator it = _player.begin(); it != _player.end() ; ++it)
   {

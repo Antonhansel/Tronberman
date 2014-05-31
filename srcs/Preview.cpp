@@ -67,8 +67,8 @@ bool		Preview::initialize()
 	for (std::vector<std::string>::const_iterator it = _paths.begin(); it != _paths.end(); ++it)
 	{
 		Saving *s = new Saving((*it));
-		s->getSavedGame();
-		_save.push_back(s);
+		if (s->getSavedGame())
+			_save.push_back(s);
 	}
 	_maps = Saving::getMapList(_save);
 	if (_maps.size() == 0)
@@ -86,8 +86,8 @@ bool		Preview::initializeSave()
 	for (std::vector<std::string>::const_iterator it = _paths.begin(); it != _paths.end(); ++it)
 	{
 		Saving *s = new Saving((*it));
-		s->getSavedGame();
-		_save.push_back(s);
+		if (s->getSavedGame())
+			_save.push_back(s);
 	}
 	_maps = Saving::getMapList(_save);
 	_players = Saving::getPlayerList(_save);
@@ -227,7 +227,6 @@ std::map<int, Player*>	&Preview::getPlayer() const
 
 Saving	*Preview::getInstance()
 {
-	std::cout << "SAVE === " << &_save << " && size = " << _save.size() << std::endl;
 	if (_save.size() > 0)
 	{
 		for (std::vector<Saving *>::iterator it = _save.begin(); it != _save.end(); ++it)

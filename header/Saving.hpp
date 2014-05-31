@@ -15,12 +15,13 @@ private:
 	std::map<int, Player *>	_player;
 	bool					_extension;
 	double 					_timer;
+	int 					_playerNb;
 
 public:
 	Saving(const std::string &);
 	~Saving();
-	void										getSavedMap();
-	void										getSavedGame();
+	bool										getSavedMap();
+	bool										getSavedGame();
 	bool										saveGame(const Map *, const std::map<int, Player *> &, double);
 	bool										saveGame(const Map *);
 	Map 										*getMap() const;
@@ -28,6 +29,7 @@ public:
 	std::map<int, Player*>						getPlayer();
 	static std::vector<std::map<int, Player*> > getPlayerList(std::vector<Saving *> &);
 	double 										getTimer() const;
+	int 										getPlayerNb() const;
 
 private:
 	bool		saveMap(const Map *);

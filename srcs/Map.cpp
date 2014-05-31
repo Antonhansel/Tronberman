@@ -238,12 +238,12 @@ void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
 
 AObject **Map::getMap() const
 {
-    return _map;
+    return (_map);
 }
 
 std::string     Map::getName() const
 {
-     return _name;
+    return (_name);
 }
 
 void            Map::setName(std::string &name)
