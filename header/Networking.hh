@@ -80,12 +80,14 @@ class Networking {
         const std::list<Client *>       getPlayers() const;
         // Get the list of clients
         void                            refreshGame();
+        bool                            isGameStarted();
     private:
         bool                    _initialized;
         bool                    _isServer;
         Core                    *_core;
         bool                    _closed;
         int                     _sockfd;
+        Message                 _initMessage;
         std::list<Client *>     _players;
         void    _receiveFromClient(Client *);
         void    _sendToClient(Client *);
