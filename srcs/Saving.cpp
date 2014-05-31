@@ -9,6 +9,7 @@ Saving::Saving(const std::string &fileName) :
 		_extension = false;
 	_map = NULL;
 	_timer = 0;
+	_playerNb = 1;
 }
 
 Saving::~Saving()
@@ -92,6 +93,8 @@ bool	Saving::saveCheckSum()
 
 bool	Saving::saveGame(const Map *map, const std::map<int, Player *> &player, double timer)
 {
+	if (_fileName.compare(0, 18, "./ressources/maps/") == 0)
+		_fileName = "./ressources/save/" + _fileName.substr(19, _fileName.length());
 	_file.open(_fileName.c_str(), std::ofstream::out);
 	if (_file.is_open())
 	{
@@ -202,7 +205,10 @@ bool	Saving::getPlayerFromFile()
 			else
 				_player[id] = new Mybot();
 			if (id == 1 || id == 2)
+			{
 				_player[id]->setPlayer(id);
+				_playerNb = id;
+			}
 			_player[id]->setId(id);
 			_player[id]->initialize();
 			_player[id]->setShield(getDataFromString(s, "<shield>", "</shield>"));
@@ -231,7 +237,7 @@ bool	Saving::getTimerFromFile()
 	return (false);
 }
 
-void	Saving::getSavedMap()
+bool	Saving::getSavedMap()
 {
 	std::ostringstream out;
 
@@ -245,16 +251,23 @@ void	Saving::getSavedMap()
 			std::string s = getData("<checksum>", "</checksum>");
 			std::string s1 = calcCheckSum(_fileRead);
 			if (s.size() > 0 && s.compare(s1) == 0)
+			{
 				getMapFromFile();
+				return (true);				
+			}
 			else
+			{
 				std::cout << "BAD CHECKSUM" << std::endl;
+				return (false);				
+			}
 		}
 		else
 			std::cout << "FILE IS CLOSE" << std::endl;
 	}
+	return (false);
 }
 
-void	Saving::getSavedGame()
+bool	Saving::getSavedGame()
 {
 	std::ostringstream out;
 
@@ -272,13 +285,21 @@ void	Saving::getSavedGame()
 				getMapFromFile();
 				getPlayerFromFile();
 				getTimerFromFile();
+				return (true);
 			}
 			else
+			{
 				std::cout << "BAD CHECKSUM" << std::endl;
+				return (false);
+			}
 		}
 		else
+		{
 			std::cout << "FILE IS CLOSE" << std::endl;
+			return (false);
+		}
 	}
+	return (false);
 }
 
 Map 	*Saving::getMap() const
@@ -324,4 +345,9 @@ std::vector<std::map<int, Player *> >	Saving::getPlayerList(std::vector<Saving *
 double 		Saving::getTimer() const
 {
 	return (_timer);
+}
+
+int 		Saving::getPlayerNb() const
+{
+	return (_playerNb);
 }
