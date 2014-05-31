@@ -39,6 +39,8 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
+  _ainput = NULL;
+  _isSave = false;
 }
 
 void  Core::setValues(Map *map)
@@ -148,7 +150,7 @@ bool   Core::makeBot(std::pair<float, float> pos, int id)
   chara->setMap(_map);
   chara->setBombs(&_bombs);
   chara->setPlayerTab(&_player);
-  chara->setSound(_sound),
+  chara->setSound(_sound);
   _player.push_back(chara);
   return (true);
 }
@@ -365,7 +367,6 @@ void  Core::checkAlive()
   }
   if (num == 1)
   {
-    std::cout << "not alive" << std::endl;
     _endgame = true;
   }
 }
@@ -423,5 +424,15 @@ int       Core::getNbrPlayer() const
 gdl::Clock *Core::getClock()
 {
   return &_clock;
+}
+
+std::map<std::pair<float, float>, Bombs *> &Core::getBombs()
+{
+  return (_bombs);
+}
+
+Sound   *Core::getSound()
+{
+  return (_sound);
 }
 

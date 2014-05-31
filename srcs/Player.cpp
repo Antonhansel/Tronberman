@@ -142,7 +142,6 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         if ((*i)->getType() == HUMAN)
             ++numHumans;
     }
-    std::cout << "human : " << numHumans << std::endl;
     if (_input == NULL && _id == 1)
     {
         _input = new AInput(input, KEY1);

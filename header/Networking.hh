@@ -25,6 +25,7 @@ enum    MSG_TYPE {
     OWN_BOMB = 2,
     MAP_UPDATE = 3,
     PLAYER_UPDATE = 4,
+    INFOS = 5,
 };
 
 struct          Message {
@@ -39,6 +40,13 @@ struct          Message {
             int start[2]; // x and y of start of map chunk
             enum type data[MAP_SEND_SIZE * MAP_SEND_SIZE];
         } map;
+        struct {
+            unsigned int mapSize;
+            unsigned int playersNb;
+            unsigned int yourIndex;
+            float startX;
+            float startY;
+        } infos;
     } data;
 };
 
@@ -53,7 +61,7 @@ struct                      Client {
     Player                  *player;
 };
 
-class NetworkPlayer : Player {
+class NetworkPlayer : public Player {
 public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
@@ -62,7 +70,7 @@ public:
 
 class Networking {
     public:
-        Networking(int port); // if server
+        Networking(std::string &port); // if server
         Networking(std::string &port, std::string &addr); // if client
         ~Networking();
         bool                            newPlayers();
@@ -73,6 +81,7 @@ class Networking {
         // Get the list of clients
         void                            refreshGame();
     private:
+        bool                    _initialized;
         bool                    _isServer;
         Core                    *_core;
         bool                    _closed;

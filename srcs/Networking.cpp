@@ -21,7 +21,7 @@
 #include "BomberException.hpp"
 #include "Networking.hh"
 
-Networking::Networking(int port)
+Networking::Networking(std::string &port)
 {
     struct protoent *pe;
     int         tmp;
@@ -34,7 +34,7 @@ Networking::Networking(int port)
     setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
     localaddr.sin_family = AF_INET;
     localaddr.sin_addr.s_addr = INADDR_ANY;
-    localaddr.sin_port = htons(port);
+    localaddr.sin_port = htons(atoi(port.c_str()));
     if (bind(_sockfd, (struct sockaddr *)&localaddr, sizeof(localaddr)) == -1)
         throw new BomberException(strerror(errno));
     if (listen(_sockfd, 10) == -1)
@@ -52,6 +52,7 @@ Networking::Networking(std::string &port, std::string &addr)
 
     _isServer = false;
     _closed = false;
+    _initialized = false;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -90,15 +91,41 @@ void Networking::startGame(Core *core)
 
 void    Networking::_startGameServer()
 {
+    NetworkPlayer *player;
+    std::pair<float, float> tmpPos;
+    Message                 *msg;
+    unsigned int            playerNb;
+
+    playerNb = _core->getPlayer().size() + _players.size();
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
     {
-
+        player = new NetworkPlayer();
+        tmpPos = _core->getMap()->getSpawn();
+        player->initialize();
+        // player->setId(_core->getPlayer().size() + 2);
+        player->setPos(tmpPos);
+        player->setMap(_core->getMap());
+        player->setBombs(&_core->getBombs());
+        player->setPlayerTab(&_core->getPlayer());
+        player->setSound(_core->getSound());
+        _core->getPlayer().push_back(player);
+        (*i)->player = player;
+        msg = new Message;
+        msg->type = INFOS;
+        msg->data.infos.mapSize = _core->getMap()->getSize();
+        msg->data.infos.startX = player->getPos().first;
+        msg->data.infos.startY = player->getPos().second;
+        msg->data.infos.playersNb = playerNb;
+        msg->data.infos.yourIndex = _core->getPlayer().size() - 1;
+        (*i)->toSend.push_back(std::make_pair<int, Message *>(0, msg));
+        _sendMapUpdate(*i);
     }
 }
 
 void    Networking::_startGameClient()
 {
-
+    while (!_initialized)
+        _tryPurgeBuffer();
 }
 
 bool     Networking::newPlayers()
@@ -195,7 +222,14 @@ void    Networking::_treatMessage(Client *client, Message *message)
             }
         }
     }
-
+    if (message->type == INFOS)
+    {
+        std::pair<float, float> tmpPos(message->data.infos.startX, message->data.infos.startY);
+        _core->getMap()->setSize(message->data.infos.mapSize);
+        _core->getPlayer()[0]->setPos(tmpPos);
+        _core->getPlayer().resize(message->data.infos.playersNb, NULL);
+        _initialized = true;
+    }
 }
 
 void    Networking::_sendToClient(Client *client)
@@ -224,9 +258,9 @@ void    Networking::_sendToClient(Client *client)
 
 void    Networking::refreshGame()
 {
+    _tryPurgeBuffer();
     if (_isServer)
     {
-        _tryPurgeBuffer();
         for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
         {
             if (!(*i)->toSend.empty())

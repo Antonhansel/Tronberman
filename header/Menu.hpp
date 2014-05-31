@@ -23,6 +23,7 @@
 # include "Map.hpp"
 # include "Player.hpp"
 # include "Preview.hpp"
+# include "Networking.hh"
 
 # define DELAY  0.15
 
@@ -137,6 +138,7 @@ private:
   Camera            *_camera;
   Preview           *_preview;
   ParticleEngine    *_engine;
+  Networking        *_network;
 private:
   std::string       _fx;
   std::string       _volume;
