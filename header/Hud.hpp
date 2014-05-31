@@ -33,6 +33,9 @@ public:
 	void 	setScreen(int);
 	bool	setClock(gdl::Clock &);
 	void	resetClock();
+	float	getTimer() const;
+	void 	setTimer(float);
+
 private:
 	std::string convertToString(int, const std::string);
 	std::string convertToStringN(int, const std::string);

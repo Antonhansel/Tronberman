@@ -273,3 +273,13 @@ void	Hud::resetClock()
 {
 	_timer = 120;
 }
+
+float 	Hud::getTimer() const
+{
+	return (_timer);
+}
+
+void	Hud::setTimer(float timer)
+{
+	_timer = timer;
+}

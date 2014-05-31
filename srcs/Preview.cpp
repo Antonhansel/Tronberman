@@ -227,10 +227,14 @@ std::map<int, Player*>	&Preview::getPlayer() const
 
 Saving	*Preview::getInstance()
 {
-	for (std::vector<Saving *>::iterator it = _save.begin(); it != _save.end(); ++it)
+	std::cout << "SAVE === " << &_save << " && size = " << _save.size() << std::endl;
+	if (_save.size() > 0)
 	{
-		if ((*it)->getMap()->getName().compare(_map->getName()) == 0)
-			return (*it);
+		for (std::vector<Saving *>::iterator it = _save.begin(); it != _save.end(); ++it)
+		{
+			if ((*it)->getMap()->getName().compare(_map->getName()) == 0)
+				return (*it);
+		}
 	}
 	return (NULL);
 }

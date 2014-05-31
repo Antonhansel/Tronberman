@@ -8,6 +8,7 @@ Saving::Saving(const std::string &fileName) :
 	else
 		_extension = false;
 	_map = NULL;
+	_timer = 0;
 }
 
 Saving::~Saving()
@@ -202,8 +203,8 @@ bool	Saving::getPlayerFromFile()
 				_player[id] = new Mybot();
 			if (id == 1 || id == 2)
 				_player[id]->setPlayer(id);
-			_player[id]->initialize();
 			_player[id]->setId(id);
+			_player[id]->initialize();
 			_player[id]->setShield(getDataFromString(s, "<shield>", "</shield>"));
 			_player[id]->setLife(getDataFromString(s, "<life>", "</life>"));
 			_player[id]->setRange(getDataFromString(s, "<range>", "</range>"));
@@ -215,6 +216,19 @@ bool	Saving::getPlayerFromFile()
 			resume = false;
 	}
 	return (true);
+}
+
+bool	Saving::getTimerFromFile()
+{
+	std::string s;
+
+	s.assign(getData("<timer>", "</timer>"));
+	if (s.size() > 0)
+	{
+		_timer = convToDouble(s);
+		return (true);		
+	}
+	return (false);
 }
 
 void	Saving::getSavedMap()
@@ -257,6 +271,7 @@ void	Saving::getSavedGame()
 			{
 				getMapFromFile();
 				getPlayerFromFile();
+				getTimerFromFile();
 			}
 			else
 				std::cout << "BAD CHECKSUM" << std::endl;
@@ -304,4 +319,9 @@ std::vector<std::map<int, Player *> >	Saving::getPlayerList(std::vector<Saving *
 		v.push_back((*it)->getPlayer());
 	}
 	return (v);
+}
+
+double 		Saving::getTimer() const
+{
+	return (_timer);
 }

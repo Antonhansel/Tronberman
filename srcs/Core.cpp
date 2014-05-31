@@ -61,7 +61,7 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
   std::vector<std::pair<int, int> >    obj;
 
   _sound->setEffect(_menu->getFx());
-  _player = player;
+  _player = saving->getPlayer();
   _players = (player.find(2) != player.end()) ? 2 : 1;
   _nb_bot = _player.size() - _players;
   for (std::map<int, Player *>::const_iterator it = _player.begin(); it != _player.end() ; ++it)
@@ -71,6 +71,8 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
     (*it).second->setBombs(&_bombs);
     (*it).second->setSound(_sound);
   }
+  _hud->setTimer(saving->getTimer());
+  std::cout << "TIMER = " << _hud->getTimer() << std::endl;
   _map = saving->getMap();
   _width = _menu->getMapSize();
   _height = _width;
@@ -241,7 +243,7 @@ bool	Core::update()
         }
         std::string t(name);
         Saving  *s = new Saving(t);
-        s->saveGame(_map, _player, 0);
+        s->saveGame(_map, _player, _hud->getTimer());
         delete(s);
         break;
       }

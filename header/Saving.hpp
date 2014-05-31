@@ -14,6 +14,7 @@ private:
 	std::string				_fileRead;
 	std::map<int, Player *>	_player;
 	bool					_extension;
+	double 					_timer;
 
 public:
 	Saving(const std::string &);
@@ -26,6 +27,7 @@ public:
 	static std::vector<Map *>					getMapList(std::vector<Saving *> &);
 	std::map<int, Player*>						getPlayer();
 	static std::vector<std::map<int, Player*> > getPlayerList(std::vector<Saving *> &);
+	double 										getTimer() const;
 
 private:
 	bool		saveMap(const Map *);
@@ -34,6 +36,7 @@ private:
 	bool		saveTimer(double);
 	bool		getMapFromFile();
 	bool		getPlayerFromFile();
+	bool		getTimerFromFile();
 	std::string getData(const std::string &, const std::string &);
 	double		getDataFromString(const std::string &, const std::string &, const std::string &);
 	double		convToDouble(const std::string &) const;
