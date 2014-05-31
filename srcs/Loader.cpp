@@ -19,18 +19,6 @@ Loader::~Loader()
 {
 }
 
-std::string Loader::getModel()
-{
-  _modelCount++;
-  // if (_modelCount >= 0)
-    return ("./ressources/assets/bomberman_white_run.FBX");
-}
-
-void    Loader::reset()
-{
-  _modelCount = 0;
-}
-
 bool 	Loader::loadTextures()
 {
   glm::vec3 vec = glm::vec3(0.0, 0.0, 1.0);
@@ -60,27 +48,27 @@ bool 	Loader::loadTextures()
   _textures[SELECTED] = new gdl::Texture();
   if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
     return (false);
-  if (_model.load( "./ressources/assets/anim/bomberman_white_run.FBX") == false)
+  _models.resize(5, NULL);
+  _models[1] = new gdl::Model();
+  if (_models[1]->load( "./ressources/assets/anim/bomberman_white_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);
     }
-  if (_model.load("./ressources/assets/anim/bomberman_black_run.FBX") == false)
+  _models[2] = new gdl::Model();
+  if (_models[2]->load("./ressources/assets/anim/bomberman_black_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);
     }
-  if (_model.load("./ressources/assets/anim/bomberman_blue_run.FBX") == false)
+  _models[3] = new gdl::Model();
+  if (_models[3]->load("./ressources/assets/anim/bomberman_blue_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);
     }
-  if (_model.load("./ressources/assets/anim/bomberman_gold_run.FBX") == false)
-    {
-        std::cout << "Error on loading model" << std::endl;
-        return (false);
-    }
-  if (_model.load("./ressources/assets/anim/bomberman_white_run.FBX") == false)
+  _models[4] = new gdl::Model();
+  if (_models[4]->load("./ressources/assets/anim/bomberman_gold_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);

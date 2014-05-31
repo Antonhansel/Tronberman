@@ -39,7 +39,6 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
-  _loader->reset();
 }
 
 void  Core::setValues(Map *map)
@@ -72,7 +71,6 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
     (*it).second->setSound(_sound);
   }
   _hud->setTimer(saving->getTimer());
-  std::cout << "TIMER = " << _hud->getTimer() << std::endl;
   _map = saving->getMap();
   _width = _menu->getMapSize();
   _height = _width;
@@ -128,12 +126,12 @@ bool   Core::makeChar(std::pair<float, float> pos, int screen)
 {
   Player *chara = create<Player>();
 
+  chara->setId(screen);
   if (chara->initialize() == false)
     return (false);
   chara->setPos(pos);
   chara->setPlayer(screen);
   chara->setMap(_map);
-  chara->setId(screen);
   chara->setBombs(&_bombs);
   chara->setSound(_sound);
   chara->setPlayerTab(&_player);
@@ -145,11 +143,11 @@ bool   Core::makeBot(std::pair<float, float> pos, int id)
 {
   Player *chara = create<Mybot>();
 
+  chara->setId(id);
   if (chara->initialize() == false)
     return (false);
   chara->setPos(pos);
   chara->setMap(_map);
-  chara->setId(id);
   chara->setBombs(&_bombs);
   chara->setPlayerTab(&_player);
   chara->setSound(_sound),

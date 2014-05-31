@@ -270,13 +270,13 @@ void  Player::setStock(int stock)
 
 void  Player::setId(int id)
 {
-    if (_id == 1)
+    _id = id;
+    if (_id == 1 || _id == 0)
         _modelpath = "./ressources/assets/anim/bomberman_black_run.FBX";
     else if (_id == 2)
         _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
     else
         _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
-    _id = id;
 }
 
 int   Player::getId() const
