@@ -54,10 +54,7 @@ public:
   void	explosion(std::pair<float, float>);
   void	newBomb(std::pair<float, float>&);
   void	setObjects(Map *, Sound *, std::map<std::pair<float, float>, Bombs *>  *);
-  void  explosePosY(float, std::pair<float, float>);
-  void  exploseNegY(float, std::pair<float, float>);
-  void  explosePosX(float, std::pair<float, float>);
-  void  exploseNegX(float, std::pair<float, float>);
+  void  exploseAll(int, std::pair<float, float>, int, int);
   bool  isExplosed() const;
   void  setExplose();
   void  setPlayerTab(std::vector<Player*> *);

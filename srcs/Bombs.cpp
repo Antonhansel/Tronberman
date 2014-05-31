@@ -164,74 +164,25 @@ void    Bombs::newBomb(std::pair<float, float> &check)
 
 void  Bombs::explosion(std::pair<float, float> pos)
 {
-  std::pair<float, float> check;
   int             range;
 
   range = _player->getRange();
-  check.first = pos.first;
-  check.second = pos.second;
-  exploseNegY(pos.second - range, check);
-  exploseNegX(pos.first - range, check);
-  explosePosY(pos.second + range, check);
-  explosePosX(pos.first + range, check);
+  exploseAll(range, pos, 1, 0);
+  exploseAll(range, pos, -1, 0);
+  exploseAll(range, pos, 0, 1);
+  exploseAll(range, pos, 0, -1);
 }
 
-void  Bombs::explosePosY(float y, std::pair<float, float> check)
-{
-  AObject *tmp;
-  bool  resume;
-  std::pair<float, float> pos;
-
-  resume = true;
-  while (check.second - 1 < y && resume == true)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    resume = checkBlock(tmp, check, resume);
-    check.second++;
-  }
-}
-
-void  Bombs::exploseNegY(float y, std::pair<float, float> check)
-{
-  AObject *tmp;
-  bool  resume;
-  std::pair<float, float> pos;
-
-  resume = true;
-  while (check.second + 1 > y && resume == true)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    resume = checkBlock(tmp, check, resume);
-    check.second--;
-  }
-}
-
-void  Bombs::explosePosX(float y, std::pair<float, float> check)
-{
-  AObject *tmp;
-  bool  resume;
-  std::pair<float, float> pos;
-
-  resume = true;
-  while (check.first - 1 < y && resume == true)
-  {
-    tmp = _map->getCase(check.first, check.second);
-    resume = checkBlock(tmp, check, resume);
-    check.first++;
-  }
-}
-
-void  Bombs::exploseNegX(float y, std::pair<float, float> check)
+void  Bombs::exploseAll(int range, std::pair<float, float> check, int x, int y)
 {
   AObject *tmp;
   bool  resume;
 
   resume = true;
-  while (check.first + 1 > y && resume == true)
+  for (int r = 0; r <= range && resume; r++)
   {
-    tmp = _map->getCase(check.first, check.second);
-    resume = checkBlock(tmp, check, resume);
-    check.first--;
+    tmp = _map->getCase(check.first + (x * r), check.second + (y * r));
+    resume = checkBlock(tmp, std::make_pair(check.first + (x * r), check.second + (y * r)), resume);
   }
 }
 
