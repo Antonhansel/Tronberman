@@ -38,7 +38,10 @@ bool	Saving::saveMap(const Map *m)
 			{
 				ao = m->getCase(x, y);
 				if (ao != NULL)
-					_file << "<case><x>" << x << "</x><y>" << y << "</y><type>" <<  ao->getType() << "</type></case>" << std::endl;
+				{
+					if (ao->getType() != BOMB && ao->getType() != BONUS && ao->getType() != LASER)
+						_file << "<case><x>" << x << "</x><y>" << y << "</y><type>" <<  ao->getType() << "</type></case>" << std::endl;
+				}
 			}
 		}
 		_file << "</map>" << std::endl;
@@ -102,7 +105,6 @@ bool	Saving::saveGame(const Map *map, const std::vector<Player *> &player, doubl
 		saveAllPlayer(player);
 		saveTimer(timer);
 		saveCheckSum();
-		std::cout << "MAP SAIVED" << std::cout;
 		_file.close();
    		return (true);
   	}
