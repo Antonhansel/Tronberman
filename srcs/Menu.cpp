@@ -44,6 +44,8 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _func[SERVER] = &Menu::server;
   _func[CLIENT] = &Menu::client;
   _func[OPTION] = &Menu::option;
+  _func[WAITSERVER] = &Menu::waitServer;
+  _func[WAITCLIENT] = &Menu::waitClient;
   _step[0] = &Menu::select0;
   _step[1] = &Menu::select1;
   _step[2] = &Menu::select2;
@@ -54,13 +56,14 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _exit = false;
   _isSave = false;
   _isFx = true;
-  _ipAddr.assign("192.168.0.1");
+  _ipAddr.assign("127.0.0.1");
   _engine = engine;
   _vol = 100;
   _nbPort.assign("6666");
   _volume.assign("100");
   _fx.assign("ON");
   _network = NULL;
+  _err = "";
   home();
 }
 
@@ -562,6 +565,7 @@ void    Menu::server()
   _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
   _max = 2;
 }
 
@@ -572,8 +576,9 @@ void    Menu::client()
   _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
   _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
-  _text->addText(_step1, 5, std::make_pair(700, 300), _ipAddr.c_str(), false);
+  _text->addText(_step1, 4, std::make_pair(700, 300), _ipAddr.c_str(), false);
   _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
   _max = 3;
 }
 
@@ -599,6 +604,22 @@ void    Menu::option()
   _text->addText(_step1, 4, std::make_pair(700, 300), _volume.c_str(), true);
   _text->addText(_step1, 5, std::make_pair(700, 380), _fx.c_str(), true);
   _max = 3;
+}
+
+void  Menu::waitClient()
+{
+    _isSelect = 1;
+    _text->deleteAllText(_step1);
+    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE SERVER...", true);
+    _max = 0;
+}
+
+void   Menu::waitServer()
+{
+    _isSelect = 1;
+    _text->deleteAllText(_step1);
+    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
+    _max = 0;
 }
 
 void    Menu::score()
@@ -796,10 +817,21 @@ void  Menu::select1()
    startGenerator();
  if (_stepM == SERVER)
   {
-    if (_network != NULL)
-      delete _network;
-    _network = new Networking(_nbPort, _ipAddr);
-    std::cout << "Launching the SERVER" << std::cout;
+    try
+    {
+      std::cout << "BEFORE THE NULL" << std::endl;
+      if (_network != NULL)
+        delete _network;
+      std::cout << "BEFORE THE NEW" << std::endl;
+      _network = new Networking(_nbPort);
+      _stepM = WAITSERVER;
+      std::cout << "Launching the SERVER" << std::cout;
+    }
+    catch (BomberException *tmp)
+    {
+      _err = tmp->what();
+      std::cout << tmp->what() << std::endl;
+    }
   }
 }
 
@@ -814,8 +846,18 @@ void  Menu::select2()
   {
     if (_network != NULL)
       delete _network;
-    _network = new Networking(_nbPort);
-    std::cout << "Launching the CLIENT" << std::cout;
+    try
+    {
+      std::cout << "BEFORE THE NEW"<< std::endl;
+      _network = new Networking(_nbPort, _ipAddr);
+      _stepM = WAITCLIENT;
+      std::cout << "Launching the CLIENT" << std::cout;
+    }
+    catch (BomberException *tmp)
+    {
+      _err = tmp->what();
+      std::cout << tmp->what() << std::endl;
+    }
   }
 }
 

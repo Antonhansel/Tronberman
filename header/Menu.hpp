@@ -24,6 +24,7 @@
 # include "Player.hpp"
 # include "Preview.hpp"
 # include "Networking.hh"
+# include "BomberException.hpp"
 
 # define DELAY  0.15
 
@@ -46,7 +47,9 @@ enum stepM
     ONLINE,
     SERVER,
     CLIENT,
-    OPTION
+    OPTION, 
+    WAITSERVER,
+    WAITCLIENT
   };
 
 class Menu : public Game
@@ -106,6 +109,8 @@ public:
     void  changeOption();
     void  getFxState();
     void  changeMusic();
+    void  waitClient();
+    void  waitServer();
 
 private:
   bool          _isSave;
@@ -128,6 +133,7 @@ private:
   bool          _exit;
   int           _vol;
   bool          _isFx;
+  const char          *_err;
 private:
   Map               *_map;
   Text              *_text;
