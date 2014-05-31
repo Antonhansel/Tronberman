@@ -28,6 +28,7 @@ Player::Player()
     _isAlive = true;
     _score = 0;
     _dir = NORTH;
+    _modelpath = "./ressources/assets/anim/bomberman_gold_run.FBX";
 }
 
 Player::~Player()
@@ -36,7 +37,7 @@ Player::~Player()
 bool    Player::initialize()
 {
     _speed = 7;
-    if (_model.load( "./ressources/assets/bomberman_white_run.FBX") == false)
+    if (_model.load(_modelpath) == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);
@@ -64,10 +65,8 @@ void  Player::spawnBomb()
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
-    //glPushMatrix();
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-    //glPopMatrix();
 }
 
 void    Player::setMap(Map *map)
@@ -271,6 +270,12 @@ void  Player::setStock(int stock)
 
 void  Player::setId(int id)
 {
+    if (_id == 1)
+        _modelpath = "./ressources/assets/anim/bomberman_black_run.FBX";
+    else if (_id == 2)
+        _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
+    else
+        _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
     _id = id;
 }
 
