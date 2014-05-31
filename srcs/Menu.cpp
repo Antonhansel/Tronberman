@@ -861,7 +861,7 @@ void  Menu::select2()
       _err = tmp->what();
     }
   }
-  if (_stepM == WAITCLIENT && _network != NULL)
+  else if (_stepM == WAITCLIENT && _network != NULL)
   {
     if ((_isLaunch = _network->isGameStarted()))
     {
