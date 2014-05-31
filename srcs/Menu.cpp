@@ -60,12 +60,15 @@ Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(cam
   _nbPort.assign("6666");
   _volume.assign("100");
   _fx.assign("ON");
+  _network = NULL;
   home();
 }
 
 Menu::~Menu()
 {
   _text->deleteAllText(_step1);
+  if (_network != NULL)
+    delete _network;
   delete _text;
   delete _background;
   delete _cubeanim;
@@ -791,6 +794,13 @@ void  Menu::select1()
   : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
+ if (_stepM == SERVER)
+  {
+    if (_network != NULL)
+      delete _network;
+    _network = new Networking(_nbPort, _ipAddr);
+    std::cout << "Launching the SERVER" << std::cout;
+  }
 }
 
 void  Menu::select2()
@@ -800,6 +810,13 @@ void  Menu::select2()
   : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
+  if (_stepM == CLIENT)
+  {
+    if (_network != NULL)
+      delete _network;
+    _network = new Networking(_nbPort);
+    std::cout << "Launching the CLIENT" << std::cout;
+  }
 }
 
 void  Menu::select3()
