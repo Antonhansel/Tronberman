@@ -60,7 +60,27 @@ bool 	Loader::loadTextures()
   _textures[SELECTED] = new gdl::Texture();
   if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
     return (false);
-  if (_model.load( "./ressources/assets/bomberman_white_run.FBX") == false)
+  if (_model.load( "./ressources/assets/anim/bomberman_white_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
+  if (_model.load("./ressources/assets/anim/bomberman_black_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
+  if (_model.load("./ressources/assets/anim/bomberman_blue_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
+  if (_model.load("./ressources/assets/anim/bomberman_gold_run.FBX") == false)
+    {
+        std::cout << "Error on loading model" << std::endl;
+        return (false);
+    }
+  if (_model.load("./ressources/assets/anim/bomberman_white_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);

@@ -99,6 +99,7 @@ private:
   std::pair<float, float> down(float &);
   std::map<std::pair<float, float>, Bombs *>  *_bombs;
   Sound         *_sound;
+  std::string   _modelpath;
 };
 
 #endif /* !_PLAYER_HPP_ */
