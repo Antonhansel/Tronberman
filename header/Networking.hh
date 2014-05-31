@@ -70,7 +70,7 @@ public:
 
 class Networking {
     public:
-        Networking(int port); // if server
+        Networking(std::string &port); // if server
         Networking(std::string &port, std::string &addr); // if client
         ~Networking();
         bool                            newPlayers();

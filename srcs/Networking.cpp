@@ -21,7 +21,7 @@
 #include "BomberException.hpp"
 #include "Networking.hh"
 
-Networking::Networking(int port)
+Networking::Networking(std::string &port)
 {
     struct protoent *pe;
     int         tmp;
@@ -34,7 +34,7 @@ Networking::Networking(int port)
     setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &tmp, sizeof(tmp));
     localaddr.sin_family = AF_INET;
     localaddr.sin_addr.s_addr = INADDR_ANY;
-    localaddr.sin_port = htons(port);
+    localaddr.sin_port = htons(atoi(port.c_str()));
     if (bind(_sockfd, (struct sockaddr *)&localaddr, sizeof(localaddr)) == -1)
         throw new BomberException(strerror(errno));
     if (listen(_sockfd, 10) == -1)
