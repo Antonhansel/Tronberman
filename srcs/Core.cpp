@@ -39,6 +39,8 @@ void  Core::reset()
   _other.clear();
   _hud->resetClock();
   _displayFPS = false;
+  _ainput = NULL;
+  _isSave = false;
 }
 
 void  Core::setValues(Map *map)
@@ -365,7 +367,6 @@ void  Core::checkAlive()
   }
   if (num == 1)
   {
-    std::cout << "not alive" << std::endl;
     _endgame = true;
   }
 }

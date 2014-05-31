@@ -191,6 +191,7 @@ bool	Saving::getPlayerFromFile()
 	bool	resume = true;
 	int 	id;
 	std::string s;
+	Player *player;
 
 	while (resume)
 	{
@@ -201,22 +202,23 @@ bool	Saving::getPlayerFromFile()
 			std::pair<float, float>	pair;
 			pair = std::make_pair<float, float>(getDataFromString(s, "<posx>", "</posx>"), getDataFromString(s, "<posy>", "</posy>"));
 			if (id <= 2)
-				_player[id] = new Player();
+				player = new Player();
 			else
-				_player[id] = new Mybot();
+				player = new Mybot();
+			_player.push_back(player);
 			if (id == 1 || id == 2)
 			{
-				_player[id]->setPlayer(id);
+				player->setPlayer(id);
 				_playerNb = id;
 			}
-			_player[id]->setId(id);
-			_player[id]->initialize();
-			_player[id]->setShield(getDataFromString(s, "<shield>", "</shield>"));
-			_player[id]->setLife(getDataFromString(s, "<life>", "</life>"));
-			_player[id]->setRange(getDataFromString(s, "<range>", "</range>"));
-			_player[id]->setStock(getDataFromString(s, "<stock>", "</stock>"));
-			_player[id]->setScore(getDataFromString(s, "<score>", "</score>"));
-			_player[id]->setPos(pair);
+			player->setId(id);
+			player->initialize();
+			player->setShield(getDataFromString(s, "<shield>", "</shield>"));
+			player->setLife(getDataFromString(s, "<life>", "</life>"));
+			player->setRange(getDataFromString(s, "<range>", "</range>"));
+			player->setStock(getDataFromString(s, "<stock>", "</stock>"));
+			player->setScore(getDataFromString(s, "<score>", "</score>"));
+			player->setPos(pair);
 		}
 		else
 			resume = false;
