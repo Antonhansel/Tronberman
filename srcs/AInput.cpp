@@ -44,7 +44,7 @@ void	AInput::createPlayer1Key()
 	if (_mode2 == false)
 		_key[SDLK_SPACE] = PBOMB;
 	else
-		_key[SDLK_KP_0] = PBOMB; 
+		_key[SDLK_KP_0] = PBOMB;
 }
 
 void	AInput::createPlayer2Key()

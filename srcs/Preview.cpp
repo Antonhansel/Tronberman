@@ -51,10 +51,10 @@ void 		Preview::getPaths(const char * path)
 	struct dirent 	*currentdir;
 	mydir = opendir(path);
 	_paths.clear();
-	if (mydir != NULL) 
+	if (mydir != NULL)
 		while ((currentdir = readdir(mydir)) != NULL)
 		{
-			if (checkName(currentdir->d_name) && 
+			if (checkName(currentdir->d_name) &&
 				checkName(currentdir->d_name))
 			_paths.push_back(makePath(currentdir->d_name, path));
 		}
@@ -71,9 +71,9 @@ bool		Preview::initialize()
 			_save.push_back(s);
 	}
 	_maps = Saving::getMapList(_save);
-	if (_maps.size() == 0)
+	if (_maps->size() == 0)
 		return (false);
-	_it = _maps.begin();
+	_it = _maps->begin();
 	_map = (*_it);
     _xend = _map->getSize() / 2;
 	return (true);
@@ -91,11 +91,11 @@ bool		Preview::initializeSave()
 	}
 	_maps = Saving::getMapList(_save);
 	_players = Saving::getPlayerList(_save);
-	if (_maps.size() == 0)
+	if (_maps->size() == 0)
 		return (false);
-	_it = _maps.begin();
+	_it = _maps->begin();
 	_map = (*_it);
-	_itPlayer = _players.begin();
+	_itPlayer = _players->begin();
     _xend = _map->getSize() / 2;
 	return (true);
 }
@@ -105,14 +105,14 @@ void 		Preview::changeMap(int i)
 	if (i == 1)
 	{
 		_it++;
-		if (_it == _maps.end())
-			_it = _maps.begin();
+		if (_it == _maps->end())
+			_it = _maps->begin();
 	}
 	else if (i == -1)
 	{
-		if (_it == _maps.begin())
+		if (_it == _maps->begin())
 		{
-			_it = _maps.end();
+			_it = _maps->end();
 			_it--;
 		}
 		else
@@ -128,19 +128,19 @@ void 		Preview::changeMapSave(int i)
 	{
 		_it++;
 		_itPlayer++;
-		if (_it == _maps.end())
+		if (_it == _maps->end())
 		{
-			_it = _maps.begin();
-			_itPlayer = _players.begin();
+			_it = _maps->begin();
+			_itPlayer = _players->begin();
 		}
 	}
 	else if (i == -1)
 	{
-		if (_it == _maps.begin())
+		if (_it == _maps->begin())
 		{
-			_it = _maps.end();
+			_it = _maps->end();
 			_it--;
-			_itPlayer = _players.begin();
+			_itPlayer = _players->begin();
 			_itPlayer--;
 		}
 		else
@@ -217,12 +217,7 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 Map 	*Preview::getMap() const
 {
-	return ((_maps.size() == 0) ? NULL : _map);
-}
-
-std::map<int, Player*>	&Preview::getPlayer() const
-{
-	return ((*_itPlayer));
+	return ((_maps->size() == 0) ? NULL : _map);
 }
 
 Saving	*Preview::getInstance()

@@ -34,19 +34,18 @@ public:
 	void 					changeMap(int);
 	void 					changeMapSave(int);
 	Map 					*getMap() const;
-	std::map<int, Player*>	&getPlayer() const;
 	Saving 					*getInstance();
 
 private:
 	double 											_time;
 	std::vector<Map*>::iterator 					_it;
-	std::vector<std::map<int, Player *> >::iterator	_itPlayer;
+	std::vector<std::vector<Player *> >::iterator	_itPlayer;
 	Map 											*_map;
 	std::vector<std::string> 						_paths;
 	Camera 											*_camera;
 	Loader 											*_loader;
-	std::vector<Map*> 								_maps;
-	std::vector< std::map<int, Player *> > 			_players;
+	std::vector<Map*> 								*_maps;
+	std::vector< std::vector<Player *> > 			*_players;
 	float											_angle;
   	float											_posy;
   	float											_posz;

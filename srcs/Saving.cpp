@@ -59,11 +59,11 @@ bool	Saving::savePlayer(const Player *p)
 	return (false);
 }
 
-bool	Saving::saveAllPlayer(const std::map<int, Player *> &p)
+bool	Saving::saveAllPlayer(const std::vector<Player *> &p)
 {
-	for (std::map<int, Player *>::const_iterator it = p.begin(); it != p.end(); ++it)
+	for (std::vector<Player *>::const_iterator it = p.begin(); it != p.end(); ++it)
 	{
-		if (!savePlayer((*it).second))
+		if (!savePlayer(*it))
 			return (false);
 	}
 	return (true);
@@ -91,7 +91,7 @@ bool	Saving::saveCheckSum()
 	return (false);
 }
 
-bool	Saving::saveGame(const Map *map, const std::map<int, Player *> &player, double timer)
+bool	Saving::saveGame(const Map *map, const std::vector<Player *> &player, double timer)
 {
 	if (_fileName.compare(0, 18, "./ressources/maps/") == 0)
 		_fileName = "./ressources/save/" + _fileName.substr(19, _fileName.length());
@@ -161,7 +161,7 @@ double	Saving::getDataFromString(const std::string &s, const std::string &begin,
 		if ((pos1 = s.find(end.c_str())) != std::string::npos)
 			ss.assign(s.substr(pos + begin.length(), pos1));
 	}
-	return (convToDouble(ss));	
+	return (convToDouble(ss));
 }
 
 bool	Saving::getMapFromFile()
@@ -232,7 +232,7 @@ bool	Saving::getTimerFromFile()
 	if (s.size() > 0)
 	{
 		_timer = convToDouble(s);
-		return (true);		
+		return (true);
 	}
 	return (false);
 }
@@ -253,12 +253,12 @@ bool	Saving::getSavedMap()
 			if (s.size() > 0 && s.compare(s1) == 0)
 			{
 				getMapFromFile();
-				return (true);				
+				return (true);
 			}
 			else
 			{
 				std::cout << "BAD CHECKSUM" << std::endl;
-				return (false);				
+				return (false);
 			}
 		}
 		else
@@ -307,37 +307,37 @@ Map 	*Saving::getMap() const
 	return (_map);
 }
 
-std::vector<Map*> 	Saving::getMapList(std::vector<Saving *> &s)
+std::vector<Map*> 	*Saving::getMapList(std::vector<Saving *> &s)
 {
-	std::vector<Map *>	v;
+	std::vector<Map *>	*v = new std::vector<Map *>;
 	Map 				*m;
 
 	for (std::vector<Saving *>::const_iterator it = s.begin(); it != s.end(); ++it)
 	{
 		m = (*it)->getMap();
 		if (m != NULL)
-			v.push_back(m);
+			v->push_back(m);
 	}
 	return (v);
 }
 
-std::map<int, Player *>	Saving::getPlayer()
+std::vector<Player *>	&Saving::getPlayer()
 {
-	for (std::map<int, Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+	for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
 	{
-		it->second->setPlayerTab(&_player);
-		it->second->setMap(_map);
+		(*it)->setPlayerTab(&_player);
+		(*it)->setMap(_map);
 	}
 	return (_player);
 }
 
-std::vector<std::map<int, Player *> >	Saving::getPlayerList(std::vector<Saving *> &s)
+std::vector<std::vector<Player *> >	*Saving::getPlayerList(std::vector<Saving *> &s)
 {
-	std::vector<std::map<int, Player *> > v;
+	std::vector<std::vector<Player *> > *v = new std::vector<std::vector<Player *> >;
 
 	for (std::vector<Saving *>::const_iterator it = s.begin(); it != s.end(); ++it)
 	{
-		v.push_back((*it)->getPlayer());
+		v->push_back((*it)->getPlayer());
 	}
 	return (v);
 }

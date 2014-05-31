@@ -6,10 +6,16 @@ Mybot::Mybot()
   _y_obj = 0;
   _seerange = 5;
   _rec = 3;
+  _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
 }
 
 Mybot::~Mybot()
 {}
+
+PlayerType Mybot::getType() const
+{
+    return (IA);
+}
 
 bool      Mybot::lineSafe(int x, int y, int m_x, int m_y) const
 {
@@ -129,13 +135,13 @@ void     Mybot::setObjOff(int x, int y)
       if (_checkMove2(x, y) && rand() % (10+_id) < _id)
           spawnBomb();
     inc++;
-  } 
+  }
 }
 
-void    Mybot::setObj(gdl::Clock const &clock)
+void    Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-   float trans = static_cast<float>(clock.getElapsed()) * _speed / 2;
-   glm::vec3                               rotation = glm::vec3(0);
+  float trans = static_cast<float>(clock.getElapsed()) * _speed / 2;
+  glm::vec3                               rotation = glm::vec3(0);
   //float trans = 1;
   int     x;
   int     y;

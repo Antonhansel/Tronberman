@@ -16,6 +16,7 @@
 #include <list>
 
 #include "Core.hpp"
+#include "Player.hpp"
 
 #define     MAP_SEND_SIZE   50
 
@@ -52,6 +53,12 @@ struct                      Client {
     Player                  *player;
 };
 
+class NetworkPlayer : Player {
+public:
+    NetworkPlayer();
+    void    update(gdl::Clock const &clock, gdl::Input &input) {};
+    PlayerType getType() const;
+};
 
 class Networking {
     public:

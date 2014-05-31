@@ -94,7 +94,7 @@ void  Bombs::removeExplosion()
       for (std::map<std::pair<float, float>, Bonus *>::iterator it = _bonusM.begin(); it != _bonusM.end(); ++it)
       {
         (*it).second->throwBonus();
-      }  
+      }
       _doBonus = true;
     }
 }
@@ -113,7 +113,7 @@ void  Bombs::bombExplode()
       pos = (*it2)->getPos();
       _map->deleteCube(pos.first, pos.second);
       it2 = _bombs.erase(it2);
-      explosion(pos, _player->getId());
+      explosion(pos);
       _sound->playSound(BOMB_S, 100);
     }
     else
@@ -130,30 +130,30 @@ void    Bombs::newBomb(std::pair<float, float> &check)
   bomb->setType(LASER);
   bomb->initialize();
   _map->addCube(check.first, check.second, bomb);
-  for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); ++it)
+  for (std::vector<Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); ++it)
     {
-      if ((*it).second->getShield() > 1.0)
+      if ((*it)->getShield() > 1.0)
       {
-        pos = (*it).second->getPos();
+        pos = (*it)->getPos();
         pos.first = ((int)(pos.first));
         pos.second = ((int)(pos.second));
         if (pos.first == check.first && pos.second == check.second)
         {
-          if ((*it).second->getLife() == 0 && (*it).second->isAlive() == true)
+          if ((*it)->getLife() == 0 && (*it)->isAlive() == true)
           {
             std::cout << "DEAD\n";
             _sound->playSound(DEATH_S, 80);
-            if ((*it).second->getId() != _player->getId())
+            if ((*it)->getId() != _player->getId())
               _player->setScore(_player->getScore() + 1000);
-            (*it).second->setScore((*it).second->getScore() - 100);
-            std::cout << "Score: " << (*it).second->getScore() << std::endl;
-            (*it).second->setIsAlive();
+            (*it)->setScore((*it)->getScore() - 100);
+            std::cout << "Score: " << (*it)->getScore() << std::endl;
+            (*it)->setIsAlive();
           }
-          else if ((*it).second->isAlive() == true)
+          else if ((*it)->isAlive() == true)
           {
             _sound->playSound(HIT_S, 10);
-            (*it).second->setLife((*it).second->getLife() - 1);
-            (*it).second->setScore((*it).second->getScore() - 50);
+            (*it)->setLife((*it)->getLife() - 1);
+            (*it)->setScore((*it)->getScore() - 50);
             _player->setScore(_player->getScore() + 100);
           }
         }
@@ -162,7 +162,7 @@ void    Bombs::newBomb(std::pair<float, float> &check)
   _explosion.push_back(std::make_pair(_time, bomb));
 }
 
-void  Bombs::explosion(std::pair<float, float> pos, int playerId)
+void  Bombs::explosion(std::pair<float, float> pos)
 {
   std::pair<float, float> check;
   int             range;
@@ -264,7 +264,7 @@ void  Bombs::setExplose()
     _explosed = true;
 }
 
-void  Bombs::setPlayerTab(std::map<int, Player*> *playerTab)
+void  Bombs::setPlayerTab(std::vector<Player*> *playerTab)
 {
   _playerTab = playerTab;
 }

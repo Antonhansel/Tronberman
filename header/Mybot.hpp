@@ -17,9 +17,10 @@ class Mybot : public Player
 public:
   Mybot();
   ~Mybot();
-  void    setObj(gdl::Clock const &);
+  void    update(gdl::Clock const &clock, gdl::Input &input);
   void    setSeeRange(int);
   void    setRec(int);
+  PlayerType getType() const;
 
 private:
   bool    lineSafe(int, int, int, int) const;

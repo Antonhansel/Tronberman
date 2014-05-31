@@ -47,10 +47,10 @@ public:
   void      spawnBomb(Player *);
   int       getNbrPlayer() const;
   Map       *getMap();
-  std::map<int, Player*>  getPlayer();
+  std::vector<Player*>  &getPlayer();
   void      setValues(Map *);
   void      reset();
-  void      setSave(Map *, std::map<int, Player*> &, Saving *);
+  void      setSave(Saving *);
   gdl::Clock *getClock();
   bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
 private:
@@ -73,7 +73,7 @@ private:
   double        _frames;
   double        _lasttime;
   gdl::BasicShader	_shader;
-  std::map<int, Player*>	_player;
+  std::vector<Player*>	_player;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
   bool        _endgame;

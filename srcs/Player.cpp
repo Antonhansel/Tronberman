@@ -34,6 +34,12 @@ Player::Player()
 Player::~Player()
 {}
 
+PlayerType Player::getType() const
+{
+    return (HUMAN);
+}
+
+
 bool    Player::initialize()
 {
     _speed = 7;
@@ -128,20 +134,25 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
     std::pair<float, float> i;
     glm::vec3                               rotation = glm::vec3(0);
     AObject                                 *tmp;
+    int                                     numHumans = 0;
 
     _shield += clock.getElapsed();
-    if (_input == NULL && _player == 1)
+    for (std::vector<Player *>::iterator i = _playermap->begin(); i != _playermap->end(); ++i)
+    {
+        if ((*i)->getType() == HUMAN)
+            ++numHumans;
+    }
+    std::cout << "human : " << numHumans << std::endl;
+    if (_input == NULL && _id == 1)
     {
         _input = new AInput(input, KEY1);
-        if (_playermap->find(1) != _playermap->end() && _playermap->find(2) != _playermap->end())
+        if (numHumans >= 2)
             _input->setMode(true);
     }
-    else if (_input == NULL && _player == 2)
+    else if (_input == NULL && _id == 2)
         _input = new AInput(input, KEY2);
-    else if (_id < 3)
-        _input->setInput(input);
-    if (_player == 2 || _player == 1)
-        k = _input->getInput();
+    _input->setInput(input);
+    k = _input->getInput();
     for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
     {
         if (_input && !AInput::getKey(k, NONE) && !AInput::getKey(k, PBOMB))
@@ -167,7 +178,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
             rotate(rotation);
         }
         else if (_input && AInput::getKey(k, PBOMB))
-            this->spawnBomb(); 
+            this->spawnBomb();
         if (_onBomb() ||
                     (_checkMove(
                         i.first + 0.2,
@@ -187,7 +198,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
                 _pos.second += i.second;
                 translate(glm::vec3(i.first, 0, i.second));
             }
-    
+
     tmp = _map->getCase(_pos.first, _pos.second);
     if (tmp && tmp->getType() == BONUS)
     {
@@ -275,8 +286,6 @@ void  Player::setId(int id)
         _modelpath = "./ressources/assets/anim/bomberman_black_run.FBX";
     else if (_id == 2)
         _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
-    else
-        _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
 }
 
 int   Player::getId() const
@@ -350,7 +359,7 @@ int     Player::getScore() const
     return (_score);
 }
 
-void    Player::setPlayerTab(std::map<int, Player*> *playermap)
+void    Player::setPlayerTab(std::vector<Player*> *playermap)
 {
     _playermap = playermap;
 }
@@ -359,9 +368,6 @@ void    Player::setSound(Sound *sound)
 {
     _sound = sound;
 }
-
-void    Player::setObj(gdl::Clock const &clock)
-{}
 
 float   Player::getSpeed() const
 {

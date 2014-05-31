@@ -34,7 +34,7 @@ private:
     std::map<std::pair<float, float>, Bombs *>  *_bombsM;
     bool        _isExplosed;
     bool        _explosed;
-    std::map<int, Player*>  *_playerTab;
+    std::vector<Player*>  *_playerTab;
     std::map<type, int (Bombs::*)(int, std::pair<float, float> &)>  _ptrFunct;
     std::map<std::pair<float, float>, Bonus *>  _bonusM;
     bool      _doBonus;
@@ -51,7 +51,7 @@ public:
 	bool  makeBomb(Player *);
   void	bombExplode();
   void	removeExplosion();
-  void	explosion(std::pair<float, float>, int);
+  void	explosion(std::pair<float, float>);
   void	newBomb(std::pair<float, float>&);
   void	setObjects(Map *, Sound *, std::map<std::pair<float, float>, Bombs *>  *);
   void  explosePosY(float, std::pair<float, float>);
@@ -60,7 +60,7 @@ public:
   void  exploseNegX(float, std::pair<float, float>);
   bool  isExplosed() const;
   void  setExplose();
-  void  setPlayerTab(std::map<int, Player*> *);
+  void  setPlayerTab(std::vector<Player*> *);
 
 private:
   int   checkBlock(AObject *tmp, std::pair<float, float>, int);

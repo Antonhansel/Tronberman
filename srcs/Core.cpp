@@ -31,8 +31,8 @@ void  Core::reset()
   std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
 
   _bombs.clear();
-  for (it = _player.begin(); it != _player.end(); ++it)
-    delete (*it).second;
+  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+    delete (*it);
   _player.clear();
   for (size_t i(0); i != _other.size(); i++)
     delete _other[i];
@@ -55,7 +55,7 @@ void  Core::setValues(Map *map)
   _endgame = false;
 }
 
-void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
+void  Core::setSave(Saving *saving)
 {
   std::vector<std::pair<int, int> >    obj;
 
@@ -63,12 +63,10 @@ void  Core::setSave(Map *map, std::map<int, Player *> &player, Saving *saving)
   _player = saving->getPlayer();
   _players = saving->getPlayerNb();
   _nb_bot = _player.size() - _players;
-  for (std::map<int, Player *>::const_iterator it = _player.begin(); it != _player.end() ; ++it)
+  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
   {
-    //(*it).second->setPlayerTab(&_player);
-    //(*it).second->setMap(_map);
-    (*it).second->setBombs(&_bombs);
-    (*it).second->setSound(_sound);
+    (*it)->setBombs(&_bombs);
+    (*it)->setSound(_sound);
   }
   _hud->setTimer(saving->getTimer());
   _map = saving->getMap();
@@ -135,7 +133,7 @@ bool   Core::makeChar(std::pair<float, float> pos, int screen)
   chara->setBombs(&_bombs);
   chara->setSound(_sound);
   chara->setPlayerTab(&_player);
-  _player[screen] = chara;
+  _player.push_back(chara);
   return (true);
 }
 
@@ -151,7 +149,7 @@ bool   Core::makeBot(std::pair<float, float> pos, int id)
   chara->setBombs(&_bombs);
   chara->setPlayerTab(&_player);
   chara->setSound(_sound),
-  _player[id] = chara;
+  _player.push_back(chara);
   return (true);
 }
 
@@ -204,7 +202,6 @@ bool	Core::update()
   checkAlive();
   if (_endgame == true)
     return (false);
-  std::map< int, Player *>::iterator it;
   std::map< double, AObject*>::iterator it2;
   std::vector<AObject*>::iterator it1;;
 
@@ -251,10 +248,10 @@ bool	Core::update()
   }
   FPS();
   _time += _clock.getElapsed();
-  for (it = _player.begin(); it != _player.end(); ++it)
+  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
   {
-    if ((*it).second->isAlive() == true)
-    (*it).second->update(_clock, _input);
+    if ((*it)->isAlive() == true)
+      (*it)->update(_clock, _input);
   }
   for (it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
@@ -272,14 +269,12 @@ bool	Core::update()
   _hud->setClock(_clock);
   if (_players == 2)
   {
-    _hud->update(_player[2]);
+    _hud->update(_player[1]);
     _hud->setScreen(_screen + 1);
   }
   else
     _hud->setScreen(2);
-  _hud->update(_player[1]);
-  for (int i = 3; i <= _nb_bot + 2; i++)
-    _player[i]->setObj(_clock);
+  _hud->update(_player[0]);
   _particles->update(_clock, _input);
   return (true);
 }
@@ -321,9 +316,7 @@ void  Core::drawAll(AObject *cur_char)
   std::pair<int, int> pos;
   type LastType = BLOCKD;
   AObject     *tmp;
-  int         nb_p;
 
-  nb_p = 0;
   pos = cur_char->getPos();
   _loader->bindTexture(LastType);
   for (int x = pos.first - (30); x < pos.first + (30); ++x)
@@ -343,67 +336,69 @@ void  Core::drawAll(AObject *cur_char)
   }
   for (std::vector<AObject*>::iterator i = _other.begin(); i != _other.end(); ++i)
     (*i)->draw(_shader, _clock);
-  for (size_t i = 1; i <= _player.size(); i++)
+  for (std::vector<Player *>::iterator player = _player.begin(); player != _player.end(); ++player)
   {
-    if (i == 2 && _players == 1)
-      nb_p = 1;
-    if (playerDraw(_player[i + nb_p]->getPos(), cur_char->getPos()))
-      _player[i + nb_p]->draw(_shader, _clock);
+    if (playerDraw((*player)->getPos(), cur_char->getPos()))
+      (*player)->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock, cur_char);
 }
 
 void  Core::checkAlive()
 {
-  std::map< int, Player *>::iterator it;
   int num;
 
   num = 0;
   if (_players == 2)
   {
-    if (!_player[1]->isAlive() && !_player[2]->isAlive())
+    if (!_player[0]->isAlive() && !_player[1]->isAlive())
       _endgame = true;
   }
-  else if (!_player[1]->isAlive())
-    _endgame = true;
-  for (it = _player.begin(); it != _player.end(); ++it)
+  else if (!_player[0]->isAlive())
   {
-    if ((*it).second->isAlive() == true)
+    _endgame = true;
+  }
+  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+  {
+    if ((*it)->isAlive() == true)
       num++;
   }
   if (num == 1)
+  {
+    std::cout << "not alive" << std::endl;
     _endgame = true;
+  }
 }
 
 void	Core::draw()
 {
   std::pair<float, float> pos;
   if (_players == 2)
-    _screen = _cam->genSplit(_player[1], _player[2]);
+    _screen = _cam->genSplit(_player[0], _player[1]);
   if (_screen == 0)
   {
-    if (_player[1]->isAlive() == false && _players == 2)
-      _cam->changeFocus(_player[2], 1);
-    else
+    if (_player[0]->isAlive() == false && _players == 2)
       _cam->changeFocus(_player[1], 1);
+    else
+      _cam->changeFocus(_player[0], 1);
   }
   else
   {
-    pos = _cam->genPos(_player[1], _player[2]);
+    pos = _cam->genPos(_player[0], _player[1]);
     _cam->moveCamera(glm::vec3(pos.first, 15, -10 + pos.second),
      glm::vec3(pos.first, 0, pos.second), glm::vec3(0, 1, 0), 1);
   }
-  if (_player[1]->isAlive() == true)
+  if (_player[0]->isAlive() == true)
   {
-    drawAll(_player[1]);
-    _hud->draw(_player[1]);
+    drawAll(_player[0]);
+    _hud->draw(_player[0]);
   }
-  if (_players == 2 && _player[2]->isAlive() == true)
+  if (_players == 2 && _player[1]->isAlive() == true)
   {
     if (_screen == 0)
-      _cam->changeFocus(_player[2], 2);
-    drawAll(_player[2]);
-    _hud->draw(_player[2]);
+      _cam->changeFocus(_player[1], 2);
+    drawAll(_player[1]);
+    _hud->draw(_player[1]);
   }
   if (_displayFPS)
     _hud->drawFPS();
@@ -415,7 +410,7 @@ Map       *Core::getMap()
   return (_map);
 }
 
-std::map<int, Player*>  Core::getPlayer()
+std::vector<Player*>  &Core::getPlayer()
 {
   return (_player);
 }

@@ -166,7 +166,7 @@ void    Menu::manageEventInput()
           getInputNb(_nbBots, 2, _map->getSize() / 10, 0);
         break;
     }
-  }  
+  }
   if ((_stepM == SERVER && _isSelect == 0) || (_stepM == CLIENT && _isSelect == 1))
     getInputNb(_nbPort, 5, 65000, 1);
   if (_stepM == CLIENT && _isSelect == 0)
@@ -254,7 +254,7 @@ void    Menu::getFxState()
   std::vector<key>  ret;
 
   ret = _event->getInput();
-  if (_stepM == OPTION && _isSelect == 1 
+  if (_stepM == OPTION && _isSelect == 1
     && (AInput::getKey(ret, MRIGHT) || AInput::getKey(ret, MLEFT)))
   {
     _timer = 0;
@@ -454,7 +454,7 @@ void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<g
   }
 }
 
-void    Menu::reset(const std::map<int, Player*> &p)
+void    Menu::reset(const std::vector<Player*> &p)
 {
   int   max;
   int   i = 0;
@@ -464,13 +464,14 @@ void    Menu::reset(const std::map<int, Player*> &p)
   max = 0;
   _pos = 0;
   _scoreToAdd.assign("");
-  (p.find(1)->second->getScore() > max) ? (max = p.find(1)->second->getScore()) : 0;
-  (p.find(2) != p.end() && p.find(2)->second->getScore() > max) ? (max = p.find(2)->second->getScore()) : 0;
+  (p[1]->getScore() > max) ? (max = p[1]->getScore()) : 0;
+  (2 < p.size() && p[2] != NULL && p[2]->getScore() > max) ? (max = p[2]->getScore()) : 0;
   _addScore = true;
-  for (std::map<int, Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
-    if (((*it).second->getScore() > max && (*it).second->getId() != 1 && (*it).second->getId() != 2))
+  for (std::vector<Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
+    if (((*it)->getScore() > max && (*it)->getId() != 1 && (*it)->getId() != 2))
       i++;
-  (i > 4) ? (_addScore = false) : 0;
+  if (i > 4)
+    _addScore = false;
   getScore();
   _stepM = SCORE;
   _newScore = max;
@@ -566,7 +567,7 @@ void    Menu::client()
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "ADDRESS", true);
   _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
-  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);  
+  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 5, std::make_pair(700, 300), _ipAddr.c_str(), false);
   _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
@@ -775,8 +776,8 @@ void  Menu::getScore()
 void  Menu::select0()
 {
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
-  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM && (_map = _preview->getMap()) != NULL) ? (_previewMode = false ,_stepM = LOADG) 
-  : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true) 
+  : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM && (_map = _preview->getMap()) != NULL) ? (_previewMode = false ,_stepM = LOADG)
+  : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true)
   : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
 }
 
@@ -785,8 +786,8 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1) 
-  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false) 
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false)
   : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
@@ -795,7 +796,7 @@ void  Menu::select1()
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true) 
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true)
   : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
@@ -804,8 +805,8 @@ void  Menu::select2()
 void  Menu::select3()
 {
   (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM) 
-  : (_stepM == CLIENT) ? (_stepM = ONLINE) 
+  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
+  : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
 }
 
@@ -817,11 +818,6 @@ void  Menu::select4()
 bool  Menu::isSave() const
 {
   return (_isSave);
-}
-
-std::map<int, Player*>  &Menu::getPlayer() const
-{
-  return (_preview->getPlayer());
 }
 
 bool  Menu::getFx() const

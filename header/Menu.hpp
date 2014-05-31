@@ -55,7 +55,7 @@ public:
   ~Menu();
   bool			initialize();
   bool			update();
-  void			reset(const std::map<int, Player *> &);
+  void			reset(const std::vector<Player *> &);
   void			draw();
   bool			launch() const;
   bool      drawBackground();
@@ -82,7 +82,6 @@ public:
   void      startGenerator();
   void      startPreview();
   bool      isSave() const;
-  std::map<int, Player *> &getPlayer() const;
   bool      getFx() const;
   Saving    *getSaving() const;
   //int  operator=(const std::string &);

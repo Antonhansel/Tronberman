@@ -263,3 +263,13 @@ void    Networking::_sendPlayersUpdate(Client *client)
 {
 
 }
+
+NetworkPlayer::NetworkPlayer()
+{
+  _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
+}
+
+PlayerType NetworkPlayer::getType() const
+{
+    return (NETWORK);
+}
