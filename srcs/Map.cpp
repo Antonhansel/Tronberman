@@ -81,6 +81,7 @@ void Map::addCube(int x, int y, AObject *obj)
         deleteCube(x, y);
     pos = std::make_pair(x, y);
     obj->setPos(pos);
+    obj->setParticle(NULL);
     _map[x * _size_x + y] = obj;
 }
 
@@ -106,6 +107,7 @@ void Map::addCube(int x, int y, type blockType)
     tmp->setType(blockType);
     tmp->setPos(pos);
     tmp->initialize();
+    tmp->setParticle(NULL);
     _map[x * _size_x + y] = tmp;
 }
 
