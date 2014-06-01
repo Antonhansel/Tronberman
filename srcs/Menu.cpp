@@ -835,8 +835,6 @@ void  Menu::select1()
     _map = new Map(30, _engine);
     _isLaunch = true; 
     _isSave = false;
-    _core->setValues(_map);
-    _network->startGame(_core);
   }
 }
 
@@ -867,8 +865,6 @@ void  Menu::select2()
     {
       _map = new Map(10, _engine);
       _isSave = false;
-      _core->setValues(_map);
-      _network->startGame(_core);
     }
   }
 }
@@ -904,4 +900,9 @@ Saving  *Menu::getSaving() const
 void    Menu::setCore(Core *core)
 {
   _core = core;
+}
+
+Networking *Menu::getNetwork() const
+{
+  return (_network);
 }

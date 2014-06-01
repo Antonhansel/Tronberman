@@ -90,6 +90,7 @@ public:
   bool      getFx() const;
   Saving    *getSaving() const;
   void      setCore(Core *);
+  Networking *getNetwork() const;
 
   private:
     int   convToInt(const std::string &) const;
