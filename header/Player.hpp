@@ -16,6 +16,7 @@
 # include "AInput.hpp"
 # include "Sound.hpp"
 
+#define MARGE 0.3
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
 enum dirr
@@ -49,7 +50,7 @@ protected:
   float         _speed;
   Map           *_map;
   int           _player;
-  bool          _checkMove(float y, float x);
+  AObject          *_checkMove(float y, float x);
   bool          _checkMove2(float y, float x);
   bool          _onBomb();
   float         _x;
