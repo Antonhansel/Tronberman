@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <poll.h>
 #include <netdb.h>
 #include <error.h>
@@ -27,6 +28,7 @@ Networking::Networking(std::string &port)
     int         tmp;
     struct sockaddr_in  localaddr;
 
+    std::cout << "in" << std::endl;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
     if ((_sockfd = socket(AF_INET, SOCK_STREAM, pe->p_proto)) == -1)
@@ -41,6 +43,7 @@ Networking::Networking(std::string &port)
         throw new BomberException(strerror(errno));
     _closed = false;
     _isServer = true;
+    std::cout << "out" << std::endl;
 }
 
 Networking::Networking(std::string &port, std::string &addr)
@@ -86,7 +89,12 @@ void Networking::startGame(Core *core)
     if (_isServer)
         _startGameServer();
     else
-        _startGameClient();
+    {
+        std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
+        _core->getMap()->setSize(_initMessage.data.infos.mapSize);
+        _core->getPlayer()[0]->setPos(tmpPos);
+        _core->getPlayer().resize(_initMessage.data.infos.playersNb, NULL);
+    }
 }
 
 void    Networking::_startGameServer()
@@ -122,17 +130,20 @@ void    Networking::_startGameServer()
     }
 }
 
-void    Networking::_startGameClient()
+bool    Networking::isGameStarted()
 {
-    while (!_initialized)
-        _tryPurgeBuffer();
+    _tryPurgeBuffer();
+    return (_initialized);
 }
 
 bool     Networking::newPlayers()
 {
-    struct pollfd   fds;
-    Client          *client;
-    bool            rtr;
+    struct pollfd       fds;
+    Client              *client;
+    bool                rtr;
+    char                ipv4addr[100];
+    struct sockaddr_in  saddr;
+    socklen_t           len = sizeof(saddr);
 
     fds.fd = _sockfd;
     fds.events = POLLIN;
@@ -140,9 +151,10 @@ bool     Networking::newPlayers()
     while (poll(&fds, 1, 0) > 0)
     {
         client = new Client;
-        if (accept(client->sockfd, NULL, 0) == -1)
+        if (accept(client->sockfd, reinterpret_cast<struct sockaddr*>(&saddr), &len) == -1)
             throw new BomberException(strerror(errno));
-        client->name = "Test";
+        inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
+        client->name = ipv4addr;
         client->lastTick = 0;
         _players.push_back(client);
         rtr = true;
@@ -224,10 +236,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
     }
     if (message->type == INFOS)
     {
-        std::pair<float, float> tmpPos(message->data.infos.startX, message->data.infos.startY);
-        _core->getMap()->setSize(message->data.infos.mapSize);
-        _core->getPlayer()[0]->setPos(tmpPos);
-        _core->getPlayer().resize(message->data.infos.playersNb, NULL);
+        memcpy(&_initMessage, message, sizeof(*message));
         _initialized = true;
     }
 }

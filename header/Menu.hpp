@@ -24,6 +24,8 @@
 # include "Player.hpp"
 # include "Preview.hpp"
 # include "Networking.hh"
+# include "BomberException.hpp"
+# include "Core.hpp"
 
 # define DELAY  0.15
 
@@ -46,7 +48,9 @@ enum stepM
     ONLINE,
     SERVER,
     CLIENT,
-    OPTION
+    OPTION, 
+    WAITSERVER,
+    WAITCLIENT
   };
 
 class Menu : public Game
@@ -85,7 +89,9 @@ public:
   bool      isSave() const;
   bool      getFx() const;
   Saving    *getSaving() const;
-  //int  operator=(const std::string &);
+  void      setCore(Core *);
+  Networking *getNetwork() const;
+
   private:
     int   convToInt(const std::string &) const;
     void  convToString(std::string &, int) const;
@@ -106,6 +112,8 @@ public:
     void  changeOption();
     void  getFxState();
     void  changeMusic();
+    void  waitClient();
+    void  waitServer();
 
 private:
   bool          _isSave;
@@ -128,6 +136,7 @@ private:
   bool          _exit;
   int           _vol;
   bool          _isFx;
+  const char    *_err;
 private:
   Map               *_map;
   Text              *_text;
@@ -139,6 +148,7 @@ private:
   Preview           *_preview;
   ParticleEngine    *_engine;
   Networking        *_network;
+  Core              *_core;
 private:
   std::string       _fx;
   std::string       _volume;

@@ -1,0 +1,7 @@
+*.d
+ressources/maps/*
+.score
+score
+out.png
+bomberman
+gmon.out
