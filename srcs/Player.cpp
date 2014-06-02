@@ -118,8 +118,8 @@ pos = realPos(getPos());
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
-   /* _model.setCurrentAnim(_anim);
-    _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());*/
+    _model.setCurrentAnim(_anim);
+    _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
     _geometry.draw(shader, getTransformation(), GL_QUADS);
 }
 
@@ -140,11 +140,15 @@ void    Player::setSpeed(float speed)
 
 bool    Player::_checkMove2(float x, float y)
 {
-    AObject *cas = _map->getCase(x, y);
-    if (!cas || cas->getType() == BONUS)
-        return (true);
-    else
-        return (false);
+  std::pair<float, float>   pos;
+  AObject *tmp;
+  AObject *cur = _map->getCase(_pos.first, _pos.second);
+  if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
+  {
+    if ((tmp = _checkMove(x, y)) == NULL || (tmp && tmp->getType() == BONUS) || (tmp && tmp->getType() == BOMB))
+      return (true);
+  }
+  return (false);
 }
 
 bool    Player::_onBomb()
@@ -170,10 +174,9 @@ AObject    *Player::_checkMove(float x, float y)
       tmp = _map->getCase(pos.first, pos.second);
       if (!tmp)
       {
-
-      pos.first = floor(_pos.first + x);
-      pos.second = floor(_pos.second + y - MARGE);
-      tmp = _map->getCase(pos.first, pos.second);
+        pos.first = floor(_pos.first + x);
+        pos.second = floor(_pos.second + y - MARGE);
+        tmp = _map->getCase(pos.first, pos.second);
       }
     }
     else if (y != 0)
@@ -248,20 +251,21 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
             }
             rotate(rotation);
         tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && tmp->getType() == BONUS))
+        if (!tmp || (tmp && tmp->getType() == BONUS) || _checkMove2(i.first, i.second))
             {
                 if (tmp && tmp->getType() == BONUS)
                 {
+                  std::cout << "BONUS\n";
                      static_cast<Bonus*>(tmp)->addToPlayer(this);
                     _sound->playSound(BONUS_S, 30);
                     _map->deleteCube(_pos.first, _pos.second);
                 }
-                else
-                {
+                /*else
+                {*/
                     _pos.first += i.first;
                     _pos.second += i.second;
                     translate(glm::vec3(i.first, 0, i.second));                    
-                }
+                //}
             }
         }
         else if (_input && AInput::getKey(k, PBOMB))
