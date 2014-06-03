@@ -255,10 +255,10 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
             {
                 if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
                 {
-                  std::cout << "BONUS\n";
+                  //std::cout << "BONUS\n";
                      static_cast<Bonus*>(tmp)->addToPlayer(this);
                     _sound->playSound(BONUS_S, 30);
-                    _map->deleteCube(_pos.first, _pos.second);
+                    _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
                 }
                 /*else
                 {*/
