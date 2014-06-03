@@ -37,10 +37,12 @@ enum type
     LASER = 4,
     BLOCK = 5,
     BLOCKD = 6,
-    BONUS = 7,
-    UNSELECTED = 8,
-    SELECTED = 9,
-    NOTHING = 10
+    UNSELECTED = 7,
+    SELECTED = 8,
+    BONUSV = 9,
+    BONUSB = 10,
+    BONUSR = 11,
+    NOTHING = 12
   };
 
 enum key

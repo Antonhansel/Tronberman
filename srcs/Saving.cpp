@@ -39,7 +39,7 @@ bool	Saving::saveMap(const Map *m)
 				ao = m->getCase(x, y);
 				if (ao != NULL)
 				{
-					if (ao->getType() != BOMB && ao->getType() != BONUS && ao->getType() != LASER)
+					if (ao->getType() != BOMB && (ao->getType() < 10 && ao->getType() > 12) && ao->getType() != LASER)
 						_file << "<case><x>" << x << "</x><y>" << y << "</y><type>" <<  ao->getType() << "</type></case>" << std::endl;
 				}
 			}

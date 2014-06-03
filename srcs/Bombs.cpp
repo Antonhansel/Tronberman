@@ -19,7 +19,9 @@ Bombs::Bombs()
   initialize();
   _ptrFunct[BLOCKD] = &Bombs::checkBlockD;
   _ptrFunct[BLOCK] = &Bombs::checkBlockS;
-  _ptrFunct[BONUS] = &Bombs::checkBonus;
+  _ptrFunct[BONUSV] = &Bombs::checkBonus;
+  _ptrFunct[BONUSB] = &Bombs::checkBonus;
+  _ptrFunct[BONUSR] = &Bombs::checkBonus;
   _ptrFunct[BOMB] = &Bombs::checkBomb;
   _ptrFunct[BORDER] = &Bombs::checkBlockS;
   _ptrFunct[LASER] = &Bombs::checkLaser;
@@ -233,7 +235,7 @@ int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
     if (_bonusM.find(check) == _bonusM.end())
     {
         Bonus *b = create<Bonus>();
-        b->setObject(BONUS, check, _map);
+        b->setObject(check, _map);
         _bonusM[check] = b;
     }
   }

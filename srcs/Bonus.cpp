@@ -40,7 +40,7 @@ bool	Bonus::initialize()
 void	Bonus::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_time += clock.getElapsed();
-	std::cout << "test" << std::endl;
+	//std::cout << "test" << std::endl;
 }
 
 void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -48,9 +48,9 @@ void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
   (void)clock;
 }
 
-void	Bonus::setObject(type type, std::pair<float, float> &pos, Map *map)
+void	Bonus::setObject(std::pair<float, float> &pos, Map *map)
 {
-	_type = type;
+	(_bonus == BONUS1) ? _type = BONUSV : (_bonus == BONUS2) ? _type = BONUSB : _type = BONUSR;
 	_pos = pos;
 	_map = map;
 	setType(_type);
@@ -73,10 +73,10 @@ void	Bonus::giveBonus1(Player *player)
 
 void	Bonus::giveBonus2(Player *player)
 {
-	player->setRange(player->getRange() + 1);
+	player->setStock(player->getStock() + 1);
 }
 
 void	Bonus::giveBonus3(Player *player)
 {
-	player->setStock(player->getStock() + 1);
+	player->setRange(player->getRange() + 1);
 }
