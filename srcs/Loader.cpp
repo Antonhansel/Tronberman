@@ -23,7 +23,7 @@ bool 	Loader::loadTextures()
 {
   glm::vec3 vec = glm::vec3(0.0, 0.0, 1.0);
 
-  _textures.resize(10, NULL);
+  _textures.resize(20, NULL);
 	_textures[BLOCKD] = new gdl::Texture();
 	if (_textures[BLOCKD]->load("./ressources/assets/BLOCKD.tga") == false)
 		return (false);
@@ -39,14 +39,20 @@ bool 	Loader::loadTextures()
   _textures[LASER] = new gdl::Texture();
   if (_textures[LASER]->load("./ressources/assets/LASER.tga") == false)
     return (false);
-  _textures[BONUS] = new gdl::Texture();
-  if (_textures[BONUS]->load("./ressources/assets/BONUS3.tga") == false)
-    return (false);
   _textures[UNSELECTED] = new gdl::Texture();
   if (_textures[UNSELECTED]->load("./ressources/fonts/blue.tga") == false)
     return (false);
   _textures[SELECTED] = new gdl::Texture();
   if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
+    return (false);
+   _textures[BONUSV] = new gdl::Texture();
+  if (_textures[BONUSV]->load("./ressources/assets/BONUS1.tga") == false)
+    return (false);
+  _textures[BONUSB] = new gdl::Texture();
+  if (_textures[BONUSB]->load("./ressources/assets/BONUS2.tga") == false)
+    return (false);
+  _textures[BONUSR] = new gdl::Texture();
+  if (_textures[BONUSR]->load("./ressources/assets/BONUS3.tga") == false)
     return (false);
   _models.resize(5, NULL);
   _models[1] = new gdl::Model();
@@ -165,5 +171,6 @@ void Loader::drawGeometry(gdl::AShader &shader, glm::mat4 trans)
 
 void 	Loader::bindTexture(type texttype)
 {
-	_textures[texttype]->bind();
+  if (texttype < NOTHING && texttype >= BORDER)
+  	_textures[texttype]->bind();
 }

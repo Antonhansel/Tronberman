@@ -145,7 +145,7 @@ bool    Player::_checkMove2(float x, float y)
   AObject *cur = _map->getCase(_pos.first, _pos.second);
   if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
   {
-    if ((tmp = _checkMove(x, y)) == NULL || (tmp && tmp->getType() == BONUS) || (tmp && tmp->getType() == BOMB))
+    if ((tmp = _checkMove(x, y)) == NULL || (tmp && (tmp->getType() >= 9 && tmp->getType() < 12)) || (tmp && tmp->getType() == BOMB))
       return (true);
   }
   return (false);
@@ -251,9 +251,9 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
             }
             rotate(rotation);
         tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && tmp->getType() == BONUS) || _checkMove2(i.first, i.second))
+        if (!tmp || (tmp && (tmp->getType() < 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
             {
-                if (tmp && tmp->getType() == BONUS)
+                if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
                 {
                   std::cout << "BONUS\n";
                      static_cast<Bonus*>(tmp)->addToPlayer(this);
