@@ -204,15 +204,11 @@ bool	Core::update()
   checkAlive();
   if (_endgame == true)
     return (false);
-  std::map< double, AObject*>::iterator it2;
-  std::vector<AObject*>::iterator it1;;
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
   if (_ainput == NULL)
-  {
     _ainput = new AInput(_input, GAME);
-  }
   _ainput->setInput(_input);
   k = _ainput->getInput();
   for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
@@ -255,7 +251,7 @@ bool	Core::update()
     if ((*it)->isAlive() == true)
       (*it)->update(_clock, _input);
   }
-  for (it1 = _other.begin(); it1 != _other.end(); ++it1)
+  for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
     (*it1)->update(_clock, _input);
   for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
   {
@@ -357,18 +353,14 @@ void  Core::checkAlive()
       _endgame = true;
   }
   else if (!_player[0]->isAlive())
-  {
     _endgame = true;
-  }
   for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
   {
     if ((*it)->isAlive() == true)
       num++;
   }
   if (num == 1)
-  {
     _endgame = true;
-  }
 }
 
 void	Core::draw()
