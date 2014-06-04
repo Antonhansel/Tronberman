@@ -285,6 +285,12 @@ bool	Core::update()
     _hud->setScreen(2);
   _hud->update(_player[0]);
   _particles->update(_clock, _input);
+  if (_hud->getTimer() <= 0 && _networking == NULL)
+  {
+    if (_mapFiller == NULL)
+      _mapFiller = new MapFiller(_map);
+    _mapFiller->fillMap(_clock);
+  }
   return (true);
 }
 

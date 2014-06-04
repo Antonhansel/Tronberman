@@ -232,70 +232,70 @@ bool CubeAnim::genSpiral()
   int initial_direction = UP , n = MAX , p = 1 ;
   int r ,c;
   int row_right  = 0 , column_down = n-1 , row_left = n-1 , column_up = 0 ;
+
   for(r = 0 ; r < MAX ; r++)
     {
       for(c = 0 ; c < MAX ; c++)
-	a[r][c] = 0 ;
+	     a[r][c] = 0 ;
     }
   while(p != n*n+1)
     { 
-      if(initial_direction == UP)
-	{
-	  r = row_right++ ;
-	  for(c = 0 ; c < n ; c++)
+    if(initial_direction == UP)
+  	{
+  	  r = row_right++ ;
+  	  for(c = 0 ; c < n ; c++)
+        {
+  	      if(a[r][c] == 0)
             {
-	      if(a[r][c] == 0)
-                {
-		  a[r][c] = p++;
-		  if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
-		    return (false);
-                }
+  		      a[r][c] = p++;
+  		      if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
+  		        return (false);
             }
-	  initial_direction = RIGHT;
-	}
-      else if(initial_direction == RIGHT)
-	{
-	  c = column_down-- ; 
-	  for(r = 0 ; r < n ; r++)
+        }
+  	  initial_direction = RIGHT;
+  	}
+    else if(initial_direction == RIGHT)
+  	{
+  	  c = column_down-- ; 
+  	  for(r = 0 ; r < n ; r++)
+        {
+          if(a[r][c] == 0)
+  		    {
+  		    a[r][c] = p++;
+  		    if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
+  		      return (false);
+          }
+        }
+  	  initial_direction = DOWN ;
+  	}
+    else if(initial_direction == DOWN)
+  	{
+  	  r = row_left-- ;
+  	  for(c = n-1 ; c >= 0 ; c--)
+        {
+  	      if(a[r][c] == 0)
             {
-              if(a[r][c] == 0)
-		{
-		  a[r][c] = p++;
-		  if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
-		    return (false);
-            	}
+  		        a[r][c] = p++;
+              if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
+  		          return (false);
             }
-	  initial_direction = DOWN ;
-	}
-      else if(initial_direction == DOWN)
-	{
-	  r = row_left-- ;
-	  for(c = n-1 ; c >= 0 ; c--)
-            {
-	      if(a[r][c] == 0)
-                {
-		  a[r][c] = p++;
-                  if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
-		    return (false);
-                }
-            }
-	  initial_direction = LEFT ;
-	}
-      else if(initial_direction == LEFT)
-	{
-	  c = column_up++;
-	  for(r = n-1 ; r >= 0 ; r--)
-            {
- 
-	      if(a[r][c] == 0)
-                {
-                  a[r][c] = p++;
-		  if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
-		    return (false);
-              	}
-            }
-	  initial_direction = UP ;
-	}
-     }
-    return (true);
+        }
+  	  initial_direction = LEFT ;
+  	}
+    else if(initial_direction == LEFT)
+  	{
+  	  c = column_up++;
+  	  for(r = n-1 ; r >= 0 ; r--)
+        {
+  	      if(a[r][c] == 0)
+          {
+            a[r][c] = p++;
+            if (makeCube(r-(MAX/2), 0, c-(MAX/2)) == false)
+  		        return (false);
+          }
+        }
+  	  initial_direction = UP ;
+  	}
+  }
+  return (true);
 }
