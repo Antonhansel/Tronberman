@@ -94,7 +94,8 @@ public:
   void 			rotate(glm::vec3 const& rotation);
   void 			scale(glm::vec3 const& scale);
   void      setPos(std::pair<float, float>&);
-  void			setAbsPos(std::pair<float, float>&);
+  void      setAbsPos(std::pair<float, float>&);
+  void			setAbsPos(float, float);
   void			setType(type);
   glm::mat4 		getTransformation();
   type			getType() const;

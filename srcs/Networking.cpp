@@ -28,7 +28,7 @@ Networking::Networking(std::string &port)
     int         tmp;
     struct sockaddr_in  localaddr;
 
-    std::cout << "in" << std::endl;
+    std::cout << "Server start" << std::endl;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
     if ((_sockfd = socket(AF_INET, SOCK_STREAM, pe->p_proto)) == -1)
@@ -43,7 +43,6 @@ Networking::Networking(std::string &port)
         throw new BomberException(strerror(errno));
     _closed = false;
     _isServer = true;
-    std::cout << "out" << std::endl;
 }
 
 Networking::Networking(std::string &port, std::string &addr)
@@ -53,6 +52,7 @@ Networking::Networking(std::string &port, std::string &addr)
     struct protoent     *pe;
     int                 s;
 
+    std::cout << "Client start" << std::endl;
     _isServer = false;
     _closed = false;
     _initialized = false;
@@ -84,6 +84,9 @@ Networking::~Networking()
 
 void Networking::startGame(Core *core)
 {
+    NetworkPlayer *player;
+    std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
+
     _core = core;
     if (_isServer)
     {
@@ -93,12 +96,22 @@ void Networking::startGame(Core *core)
     }
     else
     {
-        std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
         // _core->getMap()->setSize(_initMessage.data.infos.mapSize);
         std::cout << "map size : " << _initMessage.data.infos.mapSize << std::endl;
         _core->getPlayer()[0]->setAbsPos(tmpPos);
         std::cout << "pos : " << tmpPos.first << " - " << tmpPos.second << std::endl;
-        _core->getPlayer().resize(_initMessage.data.infos.playersNb, NULL);
+        for(unsigned i = 0; i < _initMessage.data.infos.playersNb - 1; ++i) {
+            player = new NetworkPlayer();
+            player->initialize();
+            tmpPos.first = -1;
+            tmpPos.second = -1;
+            player->setAbsPos(tmpPos);
+            player->setMap(_core->getMap());
+            player->setBombs(&_core->getBombs());
+            player->setPlayerTab(&_core->getPlayer());
+            player->setSound(_core->getSound());
+            _core->getPlayer().push_back(player);
+        }
         std::cout << "max player : " << _initMessage.data.infos.playersNb << std::endl;
     }
 }
@@ -253,8 +266,8 @@ void    Networking::_treatMessage(Client *client, Message *message)
     if (message->type == OWN_MOVE)
     {
         std::cout << "OWN MOVE" << std::endl;
-        printf("OWN MOVE : %fx%f\n", message->data.player.x, message->data.player.y);
-        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player.x, message->data.player.y);
+        printf("OWN MOVE : %fx%f\n", message->data.player[0].x, message->data.player[0].y);
+        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player[0].x, message->data.player[0].y);
         client->player->setAbsPos(pos);
     }
     if (message->type == OWN_BOMB)
@@ -268,14 +281,24 @@ void    Networking::_treatMessage(Client *client, Message *message)
         std::cout << "from : " << message->data.map.start[0] << "x" << message->data.map.start[1] << std::endl;
         for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
             for(unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
-                _core->getMap()->deleteCube(x + message->data.map.start[0],
-                    y + message->data.map.start[1]);
-                if (message->data.map.data[x * MAP_SEND_SIZE + y] != NOTHING)
+                // printf("Change at %dx%d\n", x, y);
+                if (message->data.map.data[x * MAP_SEND_SIZE + y] == NOTHING)
+                    _core->getMap()->deleteCube(x + message->data.map.start[0], y + message->data.map.start[1]);
+                else if (!_core->getMap()->getCase(x, y) || _core->getMap()->getCase(x, y)->getType() != message->data.map.data[x * MAP_SEND_SIZE + y])
                     _core->getMap()->addCube(x + message->data.map.start[0],
                         y + message->data.map.start[1], message->data.map.data[x * MAP_SEND_SIZE + y]);
             }
         }
     }
+    // if (message->type == PLAYER_UPDATE)
+    // {
+    //     for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
+    //         if (message->data.player[i].playerId == -1)
+    //             break;
+    //         printf("Setting player : %d at %fx%f\n", message->data.player[i].playerId, message->data.player[i].x, message->data.player[i].y);
+    //         _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
+    //     }
+    // }
     if (message->type == INFOS)
     {
         std::cout << "INFOS" << std::endl;
@@ -295,10 +318,10 @@ void    Networking::_sendToClient(Client *client)
             &toSend->second[toSend->first],
             sizeof(*toSend->second) - toSend->first,
             MSG_NOSIGNAL | MSG_DONTWAIT);
-        if (sizeSent < 0)
+        if (sizeSent < 0 || sizeSent == 0)
         {
-            // if (client && (errno == EPIPE || errno == ECONNRESET || errno == EINTR))
-            //     client->player->setIsAlive();
+            if (client && (sizeSent == 0 || errno == EPIPE || errno == ECONNRESET || errno == EINTR))
+                client->player->setIsAlive();
             return;
         }
         std::cout << "sent : " << sizeSent << std::endl;
@@ -338,8 +361,8 @@ void    Networking::_sendOwnInfos()
     Message                 *msg = new Message;
 
     msg->type = OWN_MOVE;
-    msg->data.player.x = _core->getPlayer()[0]->getPos().first;
-    msg->data.player.y = _core->getPlayer()[0]->getPos().second;
+    msg->data.player[0].x = _core->getPlayer()[0]->getPos().first;
+    msg->data.player[0].y = _core->getPlayer()[0]->getPos().second;
     _toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
 }
 
@@ -354,7 +377,7 @@ void    Networking::_sendMapUpdate(Client *client)
     msg->data.map.start[1] = static_cast<int>(pos.second) - (MAP_SEND_SIZE / 2);
     for (unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
         for (unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
-            tmp = _core->getMap()->getCase(x, y);
+            tmp = _core->getMap()->getCase(x + msg->data.map.start[0], y + msg->data.map.start[1]);
             if (tmp)
                 msg->data.map.data[x * MAP_SEND_SIZE + y] = tmp->getType();
             else
@@ -368,7 +391,24 @@ void    Networking::_sendMapUpdate(Client *client)
 
 void    Networking::_sendPlayersUpdate(Client *client)
 {
+    int id = 0;
+    int messagePos = 0;
+    Message *msg = new Message;
 
+    msg->type = PLAYER_UPDATE;
+    for (std::vector<Player *>::iterator i = _core->getPlayer().begin(); i != _core->getPlayer().end(); ++i)
+    {
+        if (*i && *i != client->player)
+        {
+            msg->data.player[messagePos].playerId = id;
+            msg->data.player[messagePos].x = (*i)->getPos().first;
+            msg->data.player[messagePos].y = (*i)->getPos().second;
+            ++messagePos;
+        }
+        ++id;
+    }
+    msg->data.player[messagePos].playerId = -1;
+    client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
 }
 
 NetworkPlayer::NetworkPlayer()

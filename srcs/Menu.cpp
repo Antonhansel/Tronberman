@@ -114,12 +114,12 @@ bool    Menu::update()
   _cubeanim->changeVolum((float)_vol / 100.0);
   if (_network != NULL)
     _network->newPlayers();
-  
+
   if (_stepM == WAITCLIENT && _network != NULL)
   {
     if ((_isLaunch = _network->isGameStarted()))
     {
-      _map = new Map(30, static_cast<ParticleEngine *>(NULL));
+      _map = new Map(30, _engine);
       _isSave = false;
     }
   }

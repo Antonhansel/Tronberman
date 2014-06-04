@@ -18,7 +18,8 @@
 #include "Core.hpp"
 #include "Player.hpp"
 
-#define     MAP_SEND_SIZE   50
+#define     MAP_SEND_SIZE       50
+#define     MAX_SEND_PLAYERS    10
 
 enum    MSG_TYPE {
     OWN_MOVE = 1,
@@ -32,10 +33,10 @@ struct          Message {
     MSG_TYPE    type;
     union       {
         struct {
-            unsigned int playerId;
+            int playerId;
             float x;
             float y;
-        } player;
+        } player[MAX_SEND_PLAYERS];
         struct {
             int start[2]; // x and y of start of map chunk
             enum type data[(MAP_SEND_SIZE + 1) * MAP_SEND_SIZE];
