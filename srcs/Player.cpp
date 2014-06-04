@@ -119,11 +119,11 @@ pos = realPos(getPos());
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
     if (_dir == WEST)
-      translate(glm::vec3(0.25, 0, 0));
+      translate(glm::vec3(0.25, 0, 0.25));
     else if (_dir == EAST)
-      translate(glm::vec3(-0.25, 0, 0));
+      translate(glm::vec3(-0.25, 0, -0.25));
     else if (_dir == SOUTH)
-      translate(glm::vec3(0.25, 0, 0));
+      translate(glm::vec3(0.25, 0, -0.25));
     else
     {
       translate(glm::vec3(-0.25, 0, 0.25));
@@ -131,18 +131,13 @@ void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
     if (_dir == WEST)
-      translate(glm::vec3(-0.25, 0, 0));
+      translate(glm::vec3(-0.25, 0, -0.25));
     else if (_dir == EAST)
-      translate(glm::vec3(0.25, 0, 0));
+      translate(glm::vec3(0.25, 0, 0.25));
     else if (_dir == SOUTH)
-      translate(glm::vec3(-0.25, 0, 0));
+      translate(glm::vec3(-0.25, 0, 0.25));
     else
       translate(glm::vec3(0.25, 0, -0.25));
-    glm::vec3   vec(0.5, 1, 0.5);
-    scale(vec);
-    _geometry.draw(shader, getTransformation(), GL_QUADS);
-    glm::vec3   vec1(2, 1, 2);
-    scale(vec1);
 }
 
 void    Player::setMap(Map *map)
@@ -287,8 +282,8 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         {
             i = (this->*_key[(*it)])(trans);
             _anim = 2;
-           /* rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
-            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);*/
+            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
             switch ((int)(rotation.y))
             {
                 case 0:
