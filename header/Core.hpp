@@ -24,6 +24,7 @@
 # include "AInput.hpp"
 # include "Saving.hpp"
 
+class Networking;
 class Menu;
 class Player;
 
@@ -81,6 +82,7 @@ private:
   bool        _endgame;
   AInput      *_ainput;
   ParticleEngine   *_particles;
+  Networking  *_networking;
 };
 
 #endif /*!_CORE_HPP_*/

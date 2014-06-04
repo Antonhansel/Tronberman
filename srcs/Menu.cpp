@@ -112,6 +112,16 @@ bool    Menu::update()
   else if (_previewMode == false)
     _cubeanim->update();
   _cubeanim->changeVolum((float)_vol / 100.0);
+  if (_network)
+    _network->newPlayers();
+  if (_stepM == WAITCLIENT && _network != NULL)
+  {
+    if ((_isLaunch = _network->isGameStarted()))
+    {
+      _map = new Map(10, _engine);
+      _isSave = false;
+    }
+  }
   return (true);
 }
 
@@ -833,7 +843,7 @@ void  Menu::select1()
   else if (_stepM == WAITSERVER && _network != NULL)
   {
     _map = new Map(30, _engine);
-    _isLaunch = true; 
+    _isLaunch = true;
     _isSave = false;
   }
 }
@@ -857,14 +867,6 @@ void  Menu::select2()
     catch (BomberException *tmp)
     {
       _err = tmp->what();
-    }
-  }
-  else if (_stepM == WAITCLIENT && _network != NULL)
-  {
-    if ((_isLaunch = _network->isGameStarted()))
-    {
-      _map = new Map(10, _engine);
-      _isSave = false;
     }
   }
 }

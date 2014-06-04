@@ -51,7 +51,7 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _map->setSpawn(_players + _nb_bot);
+  _map->setSpawn(_players + _nb_bot + 10);
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -103,6 +103,9 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
+  _networking = _menu->getNetwork();
+  if (_networking)
+    _networking->startGame(this);
   return (true);
 }
 
@@ -201,12 +204,15 @@ void  Core::FPS()
 bool	Core::update()
 {
   std::vector<key>  k;
+
   checkAlive();
   if (_endgame == true)
     return (false);
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
+  if (_networking)
+    _networking->refreshGame();
   if (_ainput == NULL)
     _ainput = new AInput(_input, GAME);
   _ainput->setInput(_input);
@@ -241,14 +247,14 @@ bool	Core::update()
         break;
       }
       default:
-        break;
+        continue;
     }
   }
   FPS();
   _time += _clock.getElapsed();
   for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
   {
-    if ((*it)->isAlive() == true)
+    if (*it && (*it)->isAlive() == true)
       (*it)->update(_clock, _input);
   }
   for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
@@ -336,7 +342,7 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (std::vector<Player *>::iterator player = _player.begin(); player != _player.end(); ++player)
   {
-    if (playerDraw((*player)->getPos(), cur_char->getPos()))
+    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()))
       (*player)->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock, cur_char);
@@ -347,12 +353,14 @@ void  Core::checkAlive()
   int num;
 
   num = 0;
+  if (_networking)
+    return;
   if (_players == 2)
   {
     if (!_player[0]->isAlive() && !_player[1]->isAlive())
       _endgame = true;
   }
-  else if (!_player[0]->isAlive())
+  else if (_player[0] && !_player[0]->isAlive())
     _endgame = true;
   for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
   {

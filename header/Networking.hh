@@ -97,4 +97,7 @@ class Networking {
         void    _startGameServer();
         void    _startGameClient();
         void    _tryPurgeBuffer();
+        void    _sendOwnInfos();
+        std::list<std::pair<unsigned int, Message *> >       _toSend;
+        std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   _inputBuffer;
 };
