@@ -105,7 +105,12 @@ bool	Core::initialize()
   std::cout << "Load done!" << std::endl;
   _networking = _menu->getNetwork();
   if (_networking)
+      {
+      _players =1;
+    _screen = 0;
+    _cam->setPlayer(_players);
     _networking->startGame(this);
+}
   return (true);
 }
 
