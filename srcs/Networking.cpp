@@ -234,6 +234,7 @@ void    Networking::_receiveFromClient(Client *client)
             MSG_DONTWAIT);
         if (sizeRecv < 0)
             return;
+        std::cout << "Size of list : " << _players.size() << std::endl;
         std::cout << "received : " << sizeRecv << std::endl;
         tmp->first += sizeRecv;
         if (tmp->first >= sizeof(Message))
@@ -379,4 +380,9 @@ NetworkPlayer::NetworkPlayer()
 PlayerType NetworkPlayer::getType() const
 {
     return (NETWORK);
+}
+
+size_t     Networking::getListSize() const
+{
+    return (_players.size());
 }

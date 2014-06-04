@@ -81,6 +81,8 @@ class Networking {
         // Get the list of clients
         void                            refreshGame();
         bool                            isGameStarted();
+        size_t                          getListSize() const;
+        
     private:
         bool                    _initialized;
         bool                    _isServer;
