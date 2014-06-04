@@ -118,7 +118,7 @@ bool    Menu::update()
   {
     if ((_isLaunch = _network->isGameStarted()))
     {
-      _map = new Map(10, _engine);
+      _map = new Map(30, static_cast<ParticleEngine *>(NULL));
       _isSave = false;
     }
   }
