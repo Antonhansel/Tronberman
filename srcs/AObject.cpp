@@ -23,11 +23,19 @@ AObject::~AObject()
 {
 }
 
-void		AObject::setPos(std::pair<float, float> &pos)
+void    AObject::setPos(std::pair<float, float> &pos)
 {
   _position += glm::vec3(pos.first, 0, pos.second);
   _pos.first += pos.first;
   _pos.second += pos.second;
+  _transformationDirty = true;
+}
+
+void    AObject::setAbsPos(std::pair<float, float> &pos)
+{
+  _position = glm::vec3(pos.first, 0, pos.second);
+  _pos.first = pos.first;
+  _pos.second = pos.second;
   _transformationDirty = true;
 }
 

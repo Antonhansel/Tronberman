@@ -36,6 +36,7 @@ Map::Map(int size, bool m)
 {
     _size_x = size;
     _size_y = size;
+    _engine = NULL;
     _map = new AObject *[_size_x * _size_y];
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     if (m == true)
@@ -89,6 +90,8 @@ void Map::deleteCube(int x, int y)
 {
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
+    if (!_map[x * _size_x + y])
+        return;
     delete _map[x * _size_x + y];
     _map[x * _size_x + y] = NULL;
 }
@@ -100,8 +103,7 @@ void Map::addCube(int x, int y, type blockType)
 
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
-    if (_map[x * _size_x + y])
-        deleteCube(x, y);
+    deleteCube(x, y);
     tmp = create<Cube>();
     pos = std::make_pair(x, y);
     tmp->setType(blockType);
@@ -237,11 +239,6 @@ void    Map::setSpawn(std::vector<std::pair<int, int> > &spawns)
         if (_map[i])
          _map[i]->setParticle(_engine);
     }
-}
-
-AObject **Map::getMap() const
-{
-    return (_map);
 }
 
 std::string     Map::getName() const

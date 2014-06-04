@@ -38,7 +38,7 @@ struct          Message {
         } player;
         struct {
             int start[2]; // x and y of start of map chunk
-            enum type data[MAP_SEND_SIZE * MAP_SEND_SIZE];
+            enum type data[(MAP_SEND_SIZE + 1) * MAP_SEND_SIZE];
         } map;
         struct {
             unsigned int mapSize;

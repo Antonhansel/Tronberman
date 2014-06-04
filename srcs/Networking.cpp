@@ -94,9 +94,9 @@ void Networking::startGame(Core *core)
     else
     {
         std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
-        _core->getMap()->setSize(_initMessage.data.infos.mapSize);
+        // _core->getMap()->setSize(_initMessage.data.infos.mapSize);
         std::cout << "map size : " << _initMessage.data.infos.mapSize << std::endl;
-        _core->getPlayer()[0]->setPos(tmpPos);
+        _core->getPlayer()[0]->setAbsPos(tmpPos);
         std::cout << "pos : " << tmpPos.first << " - " << tmpPos.second << std::endl;
         _core->getPlayer().resize(_initMessage.data.infos.playersNb, NULL);
         std::cout << "max player : " << _initMessage.data.infos.playersNb << std::endl;
@@ -118,7 +118,7 @@ void    Networking::_startGameServer()
         tmpPos = _core->getMap()->getSpawn();
         player->initialize();
         // player->setId(_core->getPlayer().size() + 2);
-        player->setPos(tmpPos);
+        player->setAbsPos(tmpPos);
         player->setMap(_core->getMap());
         player->setBombs(&_core->getBombs());
         player->setPlayerTab(&_core->getPlayer());
@@ -162,7 +162,10 @@ bool     Networking::newPlayers()
     {
         client = new Client;
         if ((client->sockfd = accept(_sockfd, reinterpret_cast<struct sockaddr*>(&saddr), &len)) == -1)
+        {
+            std::cout << "here" << std::endl;
             throw new BomberException(strerror(errno));
+        }
         inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
         client->name = ipv4addr;
         client->lastTick = 0;
@@ -184,7 +187,6 @@ void    Networking::_tryPurgeBuffer()
     int         max = 0;
     struct timeval timeout;
 
-    std::cout << "in _tryPurgeBuffer" << std::endl;
     FD_ZERO(&sets[0]);
     FD_ZERO(&sets[1]);
     FD_ZERO(&sets[2]);
@@ -195,15 +197,13 @@ void    Networking::_tryPurgeBuffer()
         FD_SET(_sockfd, &sets[0]);
         if (!_toSend.empty())
             FD_SET(_sockfd, &sets[1]);
+        max = _sockfd + 1;
     }
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
     {
         FD_SET((*i)->sockfd, &sets[0]);
         if (!(*i)->toSend.empty())
-        {
-            std::cout << "to send" << std::endl;
             FD_SET((*i)->sockfd, &sets[1]);
-        }
         max = ((*i)->sockfd > max) ? (*i)->sockfd + 1 : max;
     }
     if (select(max, &sets[0], &sets[1], &sets[2], &timeout) < 0)
@@ -219,7 +219,6 @@ void    Networking::_tryPurgeBuffer()
         _receiveFromClient(NULL);
     if (FD_ISSET(_sockfd, &sets[1]))
         _sendToClient(NULL);
-    std::cout << "out _tryPurgeBuffer" << std::endl;
 }
 
 void    Networking::_receiveFromClient(Client *client)
@@ -250,12 +249,13 @@ void    Networking::_receiveFromClient(Client *client)
 
 void    Networking::_treatMessage(Client *client, Message *message)
 {
-    std::cout << "treated message" << std::endl;
+    std::cout << "Treating message" << std::endl;
     if (message->type == OWN_MOVE)
     {
         std::cout << "OWN MOVE" << std::endl;
+        printf("OWN MOVE : %fx%f\n", message->data.player.x, message->data.player.y);
         std::pair<float, float> pos = std::make_pair<float, float>(message->data.player.x, message->data.player.y);
-        client->player->setPos(pos);
+        client->player->setAbsPos(pos);
     }
     if (message->type == OWN_BOMB)
     {
@@ -265,6 +265,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
     if (message->type == MAP_UPDATE)
     {
         std::cout << "MAP UPDATE" << std::endl;
+        std::cout << "from : " << message->data.map.start[0] << "x" << message->data.map.start[1] << std::endl;
         for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
             for(unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
                 _core->getMap()->deleteCube(x + message->data.map.start[0],
@@ -294,14 +295,14 @@ void    Networking::_sendToClient(Client *client)
             &toSend->second[toSend->first],
             sizeof(*toSend->second) - toSend->first,
             MSG_NOSIGNAL | MSG_DONTWAIT);
-        std::cout << "sent : " << sizeSent << std::endl;
         if (sizeSent < 0)
         {
-            if (client && (errno == EPIPE || errno == ECONNRESET || errno == EINTR))
-                client->player->setIsAlive();
-            std::cout << strerror(errno) << std::endl;
+            // if (client && (errno == EPIPE || errno == ECONNRESET || errno == EINTR))
+            //     client->player->setIsAlive();
             return;
         }
+        std::cout << "sent : " << sizeSent << std::endl;
+        printf("From %d of type %d -> %p\n", toSend->first, toSend->second->type, toSend->second);
         toSend->first += sizeSent;
         if (toSend->first >= sizeof(*toSend->second))
         {
@@ -349,8 +350,8 @@ void    Networking::_sendMapUpdate(Client *client)
     AObject                 *tmp;
 
     msg->type = MAP_UPDATE;
-    msg->data.map.start[0] = pos.first - (MAP_SEND_SIZE / 2);
-    msg->data.map.start[0] = pos.second - (MAP_SEND_SIZE / 2);
+    msg->data.map.start[0] = static_cast<int>(pos.first) - (MAP_SEND_SIZE / 2);
+    msg->data.map.start[1] = static_cast<int>(pos.second) - (MAP_SEND_SIZE / 2);
     for (unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
         for (unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
             tmp = _core->getMap()->getCase(x, y);
@@ -360,6 +361,8 @@ void    Networking::_sendMapUpdate(Client *client)
                 msg->data.map.data[x * MAP_SEND_SIZE + y] = NOTHING;
         }
     }
+    printf("Sending map update from : %dx%d -> %p\n", msg->data.map.start[0], msg->data.map.start[1], msg);
+    printf("Client is at : %fx%f\n", pos.first, pos.second);
     client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
 }
 

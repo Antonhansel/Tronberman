@@ -33,7 +33,6 @@ public:
   int     getSize() const;
   void    setSize(int);
   void    setMap(AObject **);
-  AObject **getMap() const;
   void    setSpawn(std::vector<std::pair<int, int> > &);
   void    genereteName();
   std::pair<int, int> getSpawnPoint();
