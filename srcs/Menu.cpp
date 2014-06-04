@@ -112,8 +112,9 @@ bool    Menu::update()
   else if (_previewMode == false)
     _cubeanim->update();
   _cubeanim->changeVolum((float)_vol / 100.0);
-  if (_network)
+  if (_network != NULL)
     _network->newPlayers();
+  
   if (_stepM == WAITCLIENT && _network != NULL)
   {
     if ((_isLaunch = _network->isGameStarted()))
@@ -475,6 +476,11 @@ void    Menu::reset(const std::vector<Player*> &p)
   int   max;
   int   i = 0;
 
+  if (_network != NULL)
+  {
+    delete _network;
+    _network = NULL;
+  }
   _isLaunch = false;
   _isSelect = 0;
   max = 0;
