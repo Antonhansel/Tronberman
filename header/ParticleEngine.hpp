@@ -8,7 +8,7 @@
 ** Last update Mon May  26 19:36:33 2014 Antonin Ribeaud
 */
 
-#ifndef _PARTICLENGINE_HPP_
+#ifndef _PARTICLEENGINE_HPP_
 # define _PARTICLEENGINE_HPP_
 
 # include <Clock.hh>
