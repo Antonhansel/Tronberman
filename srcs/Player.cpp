@@ -52,51 +52,6 @@ bool    Player::initialize()
     }
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
-   _geometry.setColor(glm::vec4(1, 1, 1, 1));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, -0.5.-0.5, 0.5.-0.5);
-  //face
-  _geometry.setColor(glm::vec4(0.5, 0.5, -0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, -0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(0.5, -0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-/*  pushTexture(&_geometry);
-*/
-  //vec = glm::vec3(0.5.-0.5, -0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(-0.5, 0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, 0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(0.5, 0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
- /* _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));*/
-  //pushTexture(&_geometry);
-  _geometry.build();
     return (true);
 }
 
