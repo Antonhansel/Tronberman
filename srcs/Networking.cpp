@@ -279,6 +279,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
         printf("OWN MOVE : %fx%f\n", message->data.player[0].x, message->data.player[0].y);
         std::pair<float, float> pos = std::make_pair<float, float>(message->data.player[0].x, message->data.player[0].y);
         client->player->setAbsPos(pos);
+        client->player->dir(message->data.player[0].dir);
     }
     if (message->type == OWN_BOMB)
     {
@@ -307,6 +308,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
                 break;
             printf("Setting player : %d at %fx%f\n", message->data.player[i].playerId, message->data.player[i].x, message->data.player[i].y);
             _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
+            _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
         }
     }
 }
@@ -367,6 +369,7 @@ void    Networking::_sendOwnInfos()
     msg->type = OWN_MOVE;
     msg->data.player[0].x = _core->getPlayer()[0]->getPos().first;
     msg->data.player[0].y = _core->getPlayer()[0]->getPos().second;
+    msg->data.player[0].dir = _core->getPlayer()[0]->dir();
     _toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
 }
 
@@ -407,6 +410,7 @@ void    Networking::_sendPlayersUpdate(Client *client)
             msg->data.player[messagePos].playerId = id;
             msg->data.player[messagePos].x = (*i)->getPos().first;
             msg->data.player[messagePos].y = (*i)->getPos().second;
+            msg->data.player[messagePos].dir = (*i)->dir();
             ++messagePos;
         }
         ++id;

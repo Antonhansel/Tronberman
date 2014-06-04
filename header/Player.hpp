@@ -99,6 +99,8 @@ public:
   void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
   void    setPlayerTab(std::vector<Player*> *playermap);
   void    setShield(float);
+  void    dir(dirr);
+  dirr    dir();
 private:
   std::pair<float, float> up(float &);
   std::pair<float, float> right(float &);

@@ -36,6 +36,7 @@ struct          Message {
             int playerId;
             float x;
             float y;
+            dirr dir;
         } player[MAX_SEND_PLAYERS];
         struct {
             int start[2]; // x and y of start of map chunk
