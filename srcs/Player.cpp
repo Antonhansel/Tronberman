@@ -51,7 +51,11 @@ bool    Player::initialize()
     }
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
+<<<<<<< HEAD
   return (true);
+=======
+    return (true);
+>>>>>>> 76ab659d4407da48d6d52b15a6fe9c1cbbd75e09
 }
 
 void  Player::spawnBomb()
