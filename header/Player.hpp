@@ -16,7 +16,7 @@
 # include "AInput.hpp"
 # include "Sound.hpp"
 
-#define MARGE 0.3
+#define MARGE 0.4
 # define SIGN(x)  (((x) < 0) ? (-1) : (1))
 
 enum dirr
