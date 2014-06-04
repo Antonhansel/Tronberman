@@ -59,7 +59,7 @@ void      Mybot::moveTo(int x, int y, int move_x, int move_y)
   }
 }
 
-bool     Mybot::setObjDef(int x, int y, int rec, dir last)
+bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
 {
   int     inc;
 

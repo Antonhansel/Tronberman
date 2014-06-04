@@ -148,7 +148,7 @@ AObject    *Player::_checkMove(float x, float y)
       else
       {
         pos.first = floor(_pos.first + x - 0.2);
-        pos.second = floor(_pos.second + y + 0.2); 
+        pos.second = floor(_pos.second + y + 0.2);
       }
       tmp = _map->getCase(pos.first, pos.second);
       if (!tmp)
@@ -176,7 +176,7 @@ AObject    *Player::_checkMove(float x, float y)
       else
       {
         pos.first = floor(_pos.first + x + 0.2);
-        pos.second = floor(_pos.second + y - 0.2); 
+        pos.second = floor(_pos.second + y - 0.2);
       }
       tmp = _map->getCase(pos.first, pos.second);
       if (!tmp)
@@ -260,7 +260,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
                 }
                 _pos.first += i.first;
                 _pos.second += i.second;
-                translate(glm::vec3(i.first, 0, i.second));                    
+                translate(glm::vec3(i.first, 0, i.second));
             }
         }
         else if (_input && AInput::getKey(k, PBOMB))
@@ -425,3 +425,30 @@ float   Player::getSpeed() const
 {
     return (_speed);
 }
+
+void    Player::dir(dirr dir)
+{
+  glm::vec3                               rotation = glm::vec3(0);
+  switch (dir)
+  {
+    case NORTH:
+      rotation.y = 0;
+      break;
+    case SOUTH:
+      rotation.y = 180;
+      break;
+    case WEST:
+      rotation.y = 90;
+      break;
+    case EAST:
+      rotation.y = 270;
+      break;
+  }
+  rotate(rotation);
+  _dir = dir;
+}
+dirr    Player::dir()
+{
+  return _dir;
+}
+
