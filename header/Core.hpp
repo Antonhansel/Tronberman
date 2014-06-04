@@ -57,11 +57,8 @@ public:
   std::map<std::pair<float, float>, Bombs *> &getBombs();
   Sound   *getSound();
   bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
-<<<<<<< HEAD
   void      fillmap();
-=======
   Networking    *getNetworking();
->>>>>>> 2d2454a1300dc0bfad31b50be778f72f1ec46d1d
 private:
   MapFiller *_mapFiller;
   bool      _isSave;
