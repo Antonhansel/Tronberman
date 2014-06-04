@@ -134,7 +134,7 @@ void    Bombs::newBomb(std::pair<float, float> &check)
   _map->addCube(check.first, check.second, bomb);
   for (std::vector<Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); ++it)
     {
-      if ((*it)->getShield() > 1.0)
+      if ((*it) && (*it)->getShield() > 1.0)
       {
         pos = (*it)->getPos();
         pos.first = ((int)(pos.first));

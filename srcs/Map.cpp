@@ -32,11 +32,11 @@ Map::Map(int size, ParticleEngine *engine)
     _outline();
 }
 
-Map::Map(int size, bool m)
+Map::Map(int size, bool m, ParticleEngine *engine)
 {
     _size_x = size;
     _size_y = size;
-    _engine = NULL;
+    _engine = engine;
     _map = new AObject *[_size_x * _size_y];
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     if (m == true)
@@ -63,6 +63,13 @@ AObject     *Map::getCase(int x, int y) const
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return NULL;
     return _map[x * _size_x + y];
+}
+
+AObject     *Map::getCase(std::pair<int, int> *coor) const
+{
+    if (coor->first < 0 || coor->first >= _size_x || coor->second < 0 || coor->second >= _size_y)
+        return NULL;
+    return _map[coor->first * _size_x + coor->second];
 }
 
 void    Map::genereteName()

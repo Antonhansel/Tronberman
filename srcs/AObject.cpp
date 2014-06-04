@@ -39,6 +39,14 @@ void    AObject::setAbsPos(std::pair<float, float> &pos)
   _transformationDirty = true;
 }
 
+void    AObject::setAbsPos(float x, float y)
+{
+  _position = glm::vec3(x, 0, y);
+  _pos.first = x;
+  _pos.second = y;
+  _transformationDirty = true;
+}
+
 std::pair<float, float>	AObject::getPos() const
 {
   return (std::make_pair<float, float>(_position.x, _position.z));

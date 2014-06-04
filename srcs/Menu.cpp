@@ -114,12 +114,12 @@ bool    Menu::update()
   _cubeanim->changeVolum((float)_vol / 100.0);
   if (_network != NULL)
     _network->newPlayers();
-  
+
   if (_stepM == WAITCLIENT && _network != NULL)
   {
     if ((_isLaunch = _network->isGameStarted()))
     {
-      _map = new Map(30, static_cast<ParticleEngine *>(NULL));
+      _map = new Map(30, false, _engine);
       _isSave = false;
     }
   }
@@ -575,13 +575,12 @@ void    Menu::online()
 
 void    Menu::server()
 {
-  _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "PORT", true);
   _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
   _max = 2;
 }
 
@@ -594,7 +593,7 @@ void    Menu::client()
   _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _ipAddr.c_str(), false);
   _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
   _max = 3;
 }
 
@@ -623,19 +622,20 @@ void    Menu::option()
 }
 
 void  Menu::waitClient()
-{
-    _isSelect = 1;
+{ 
+    _isSelect = 0;
     _text->deleteAllText(_step1);
-    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE SERVER...", true);
+    _text->addText(_step1, 1, std::make_pair(15, 300), "WAITING THE SERVER...", true);
+    _text->addText(_step1, 0, std::make_pair(15, 620), "BACK", true);
     _max = 0;
 }
 
 void   Menu::waitServer()
 {
-    _isSelect = 0;
     _text->deleteAllText(_step1);
-    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
-    _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+    _text->addText(_step1, 3, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
+    _text->addText(_step1, 0, std::make_pair(15, 540), "GO", true);
+    _text->addText(_step1, 1, std::make_pair(15, 620), "BACK", true);
     _max = 1;
 }
 
@@ -789,11 +789,6 @@ Map   *Menu::getMap() const
   return (_map);
 }
 
-void  Menu::setIsSelect()
-{
-  _isSelect = 0;
-}
-
 void  Menu::getScore()
 {
   std::ifstream file(".score", std::ios::in);
@@ -820,6 +815,19 @@ void  Menu::select0()
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM && (_map = _preview->getMap()) != NULL) ? (_previewMode = false ,_stepM = LOADG)
   : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true)
   : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
+  if (_network != NULL && _network->getListSize() >= 1 && _stepM == WAITSERVER)
+  {
+    _map = new Map(30, _engine);
+    _isLaunch = true;
+    _isSave = false;
+  }
+  else if (_stepM == WAITCLIENT)
+  {
+    _stepM = CLIENT;
+    delete _network;
+    _network = NULL;
+    _isSelect = 0;
+  }
 }
 
 void  Menu::select1()
@@ -829,7 +837,8 @@ void  Menu::select1()
   k = STEP1;
   (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
   : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false)
-  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
+  : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) 
+  : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
  if (_stepM == SERVER)
@@ -840,17 +849,19 @@ void  Menu::select1()
         delete _network;
       _network = new Networking(_nbPort);
       _stepM = WAITSERVER;
+      _isSelect = 0;
     }
     catch (BomberException *tmp)
     {
       _err = tmp->what();
     }
   }
-  else if (_stepM == WAITSERVER && _network != NULL)
+  else if (_stepM == WAITSERVER)
   {
-    _map = new Map(30, _engine);
-    _isLaunch = true;
-    _isSave = false;
+      _stepM = SERVER;
+      delete _network;
+      _network = NULL;
+      _isSelect = 0;
   }
 }
 
@@ -858,22 +869,32 @@ void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
   : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true)
-  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
-  if (_stepM == SCORE)
-     getScore();
-  if (_stepM == CLIENT)
+  : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE, _isSelect = 0) : 0;
+  switch (_stepM)
   {
-    if (_network != NULL)
-      delete _network;
-    try
-    {
-      _network = new Networking(_nbPort, _ipAddr);
-      _stepM = WAITCLIENT;
-    }
-    catch (BomberException *tmp)
-    {
-      _err = tmp->what();
-    }
+    case SCORE:
+     getScore();
+     break;
+    case CLIENT:
+      {
+        if (_network != NULL)
+          delete _network;
+        try
+        {
+          _network = new Networking(_nbPort, _ipAddr);
+          _stepM = WAITCLIENT;
+          _isSelect = 0; 
+        }
+        catch (BomberException *tmp)
+        {
+          _err = tmp->what();
+        }
+      }
+      break;
+    case ONLINE:
+      _err = "";
+    default:
+      break;
   }
 }
 
@@ -883,6 +904,8 @@ void  Menu::select3()
   ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
   : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
+  if (_stepM == ONLINE)
+    _err = "";
 }
 
 void  Menu::select4()

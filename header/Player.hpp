@@ -36,6 +36,7 @@ enum PlayerType {
 class Bonus;
 class AInput;
 class Bombs;
+class Core;
 
 class Player : public AObject
 {
@@ -53,6 +54,7 @@ protected:
   AObject          *_checkMove(float y, float x);
   bool          _checkMove2(float y, float x);
   bool          _onBomb();
+  virtual void          _consumeBonus(AObject *);
   float         _x;
   int           _life;
   bool          _begin;
@@ -65,9 +67,12 @@ protected:
   dirr          _dir;
   std::vector<Player*>  *_playermap;
   std::string   _modelpath;
+  Core          *_core;
+  Sound         *_sound;
 
 public:
   void    setPlayer(int);
+  void    setCore(Core *);
   void    setSpeed(float);
   void    setMap(Map *);
   bool    isAlive() const;
@@ -92,20 +97,21 @@ public:
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
-  void    spawnBomb();
+  virtual void    spawnBomb();
   void    setSound(Sound *sound);
   std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;
   void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
   void    setPlayerTab(std::vector<Player*> *playermap);
   void    setShield(float);
+  void    dir(dirr);
+  dirr    dir();
 private:
   std::pair<float, float> up(float &);
   std::pair<float, float> right(float &);
   std::pair<float, float> left(float &);
   std::pair<float, float> down(float &);
   std::map<std::pair<float, float>, Bombs *>  *_bombs;
-  Sound         *_sound;
 };
 
 #endif /* !_PLAYER_HPP_ */

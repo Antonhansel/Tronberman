@@ -18,7 +18,8 @@
 #include "Core.hpp"
 #include "Player.hpp"
 
-#define     MAP_SEND_SIZE   50
+#define     MAP_SEND_SIZE       50
+#define     MAX_SEND_PLAYERS    10
 
 enum    MSG_TYPE {
     OWN_MOVE = 1,
@@ -26,16 +27,18 @@ enum    MSG_TYPE {
     MAP_UPDATE = 3,
     PLAYER_UPDATE = 4,
     INFOS = 5,
+    CONSUME_BONUS = 6,
 };
 
 struct          Message {
     MSG_TYPE    type;
     union       {
         struct {
-            unsigned int playerId;
+            int playerId;
             float x;
             float y;
-        } player;
+            dirr dir;
+        } player[MAX_SEND_PLAYERS];
         struct {
             int start[2]; // x and y of start of map chunk
             enum type data[(MAP_SEND_SIZE + 1) * MAP_SEND_SIZE];
@@ -68,6 +71,13 @@ public:
     PlayerType getType() const;
 };
 
+class NetworkOwnPlayer : public Player {
+public:
+    void    spawnBomb();
+protected:
+    void    _consumeBonus(AObject *);
+};
+
 class Networking {
     public:
         Networking(std::string &port); // if server
@@ -81,6 +91,10 @@ class Networking {
         // Get the list of clients
         void                            refreshGame();
         bool                            isGameStarted();
+        size_t                          getListSize() const;
+        bool                            isServer();
+        void                            spawnBomb();
+        void                            consumeBonus();
     private:
         bool                    _initialized;
         bool                    _isServer;

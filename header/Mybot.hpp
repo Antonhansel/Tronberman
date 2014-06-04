@@ -25,7 +25,7 @@ public:
 private:
   bool    lineSafe(int, int, int, int) const;
   bool    isSafe(int, int) const;
-  bool    setObjDef(int, int, int, dir);
+  bool    setObjDef(int, int, int, enum dir);
   void    setObjDef(int, int);
   void    setObjOff(int, int);
   void    moveTo(int, int, int, int);
