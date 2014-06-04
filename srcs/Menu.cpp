@@ -480,11 +480,11 @@ void    Menu::reset(const std::vector<Player*> &p)
   max = 0;
   _pos = 0;
   _scoreToAdd.assign("");
-  (p[1]->getScore() > max) ? (max = p[1]->getScore()) : 0;
-  (2 < p.size() && p[2] != NULL && p[2]->getScore() > max) ? (max = p[2]->getScore()) : 0;
+  (p[0]->getScore() > max) ? (max = p[0]->getScore()) : 0;
+  (2 < p.size() && p[1] != NULL && p[1]->getScore() > max) ? (max = p[1]->getScore()) : 0;
   _addScore = true;
   for (std::vector<Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
-    if (((*it)->getScore() > max && (*it)->getId() != 1 && (*it)->getId() != 2))
+    if ((*it) && ((*it)->getScore() > max && (*it)->getId() != 1 && (*it)->getId() != 2))
       i++;
   if (i > 4)
     _addScore = false;
