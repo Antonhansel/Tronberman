@@ -219,6 +219,9 @@ void     Map::setSize(int sizeX)
 {
     _size_x = sizeX;
     _size_y = sizeX;
+    delete _map;
+    _map = new AObject *[_size_x * _size_y];
+    memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
 }
 
 void    Map::setMap(AObject **map)

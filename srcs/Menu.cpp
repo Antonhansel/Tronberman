@@ -112,6 +112,16 @@ bool    Menu::update()
   else if (_previewMode == false)
     _cubeanim->update();
   _cubeanim->changeVolum((float)_vol / 100.0);
+  if (_network)
+    _network->newPlayers();
+  if (_stepM == WAITCLIENT && _network != NULL)
+  {
+    if ((_isLaunch = _network->isGameStarted()))
+    {
+      _map = new Map(10, _engine);
+      _isSave = false;
+    }
+  }
   return (true);
 }
 
@@ -470,11 +480,11 @@ void    Menu::reset(const std::vector<Player*> &p)
   max = 0;
   _pos = 0;
   _scoreToAdd.assign("");
-  (p[1]->getScore() > max) ? (max = p[1]->getScore()) : 0;
-  (2 < p.size() && p[2] != NULL && p[2]->getScore() > max) ? (max = p[2]->getScore()) : 0;
+  (p[0]->getScore() > max) ? (max = p[0]->getScore()) : 0;
+  (2 < p.size() && p[1] != NULL && p[1]->getScore() > max) ? (max = p[1]->getScore()) : 0;
   _addScore = true;
   for (std::vector<Player*>::const_iterator it = p.begin(); it != p.end(); ++it)
-    if (((*it)->getScore() > max && (*it)->getId() != 1 && (*it)->getId() != 2))
+    if ((*it) && ((*it)->getScore() > max && (*it)->getId() != 1 && (*it)->getId() != 2))
       i++;
   if (i > 4)
     _addScore = false;
@@ -833,7 +843,7 @@ void  Menu::select1()
   else if (_stepM == WAITSERVER && _network != NULL)
   {
     _map = new Map(30, _engine);
-    _isLaunch = true; 
+    _isLaunch = true;
     _isSave = false;
   }
 }
@@ -857,14 +867,6 @@ void  Menu::select2()
     catch (BomberException *tmp)
     {
       _err = tmp->what();
-    }
-  }
-  else if (_stepM == WAITCLIENT && _network != NULL)
-  {
-    if ((_isLaunch = _network->isGameStarted()))
-    {
-      _map = new Map(10, _engine);
-      _isSave = false;
     }
   }
 }
