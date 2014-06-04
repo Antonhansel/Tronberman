@@ -254,6 +254,8 @@ void    Networking::_receiveFromClient(Client *client)
 
 void    Networking::_treatMessage(Client *client, Message *message)
 {
+    Bonus *tmp;
+
     if (message->type == INFOS)
     {
         memcpy(&_initMessage, message, sizeof(*message));
@@ -289,6 +291,19 @@ void    Networking::_treatMessage(Client *client, Message *message)
             _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
             _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
         }
+    }
+    if (message->type == CONSUME_BONUS)
+    {
+        try {
+            tmp = dynamic_cast<Bonus *>(_core->getMap()->getCase(client->player->getPos().first, client->player->getPos().second));
+        }
+        catch (...) {
+            return;
+        }
+        if (!tmp)
+            return;
+        tmp->addToPlayer(client->player);
+        _core->getMap()->deleteCube(tmp->getPos().first, tmp->getPos().second);
     }
 }
 
@@ -344,6 +359,14 @@ void    Networking::spawnBomb()
     Message                 *msg = new Message;
 
     msg->type = OWN_BOMB;
+    _toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+}
+
+void    Networking::consumeBonus()
+{
+    Message                 *msg = new Message;
+
+    msg->type = CONSUME_BONUS;
     _toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
 }
 
@@ -425,4 +448,10 @@ size_t     Networking::getListSize() const
 void    NetworkOwnPlayer::spawnBomb()
 {
     _core->getNetworking()->spawnBomb();
+}
+
+void    NetworkOwnPlayer::_consumeBonus(AObject *tmp)
+{
+    _core->getNetworking()->consumeBonus();
+    _sound->playSound(BONUS_S, 30);
 }

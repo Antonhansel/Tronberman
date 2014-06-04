@@ -27,6 +27,7 @@ enum    MSG_TYPE {
     MAP_UPDATE = 3,
     PLAYER_UPDATE = 4,
     INFOS = 5,
+    CONSUME_BONUS = 6,
 };
 
 struct          Message {
@@ -72,7 +73,9 @@ public:
 
 class NetworkOwnPlayer : public Player {
 public:
-  void    spawnBomb();
+    void    spawnBomb();
+protected:
+    void    _consumeBonus(AObject *);
 };
 
 class Networking {
@@ -91,6 +94,7 @@ class Networking {
         size_t                          getListSize() const;
         bool                            isServer();
         void                            spawnBomb();
+        void                            consumeBonus();
     private:
         bool                    _initialized;
         bool                    _isServer;
