@@ -77,14 +77,14 @@ glm::mat4 	AObject::getTransformation()
   {
     _transformation = glm::translate(glm::mat4(), _position);
     _transformation = glm::scale(_transformation, _scale);
-    _transformation = glm::translate(_transformation, glm::vec3(0.3, 0, -0.3));
+   // _transformation = glm::translate(_transformation, glm::vec3(0.3, 0, -0.3));
     if (_rotation.x)
       _transformation = glm::rotate(_transformation, _rotation.x, glm::vec3(1, 0, 0));
     if (_rotation.y)
       _transformation = glm::rotate(_transformation, _rotation.y, glm::vec3(0, 1, 0));
     if (_rotation.z)
       _transformation = glm::rotate(_transformation, _rotation.z, glm::vec3(0, 0, 1));
-    _transformation = glm::translate(_transformation, glm::vec3(-0.3, 0, 0.3));
+    //_transformation = glm::translate(_transformation, glm::vec3(-0.3, 0, 0.3));
     _transformationDirty = false;
   }
   return (_transformation);

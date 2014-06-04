@@ -43,7 +43,6 @@ PlayerType Player::getType() const
 bool    Player::initialize()
 {
     _speed = 7;
-//    pos.first += 
     _pos.second += 0.3;
     if (_model.load(_modelpath) == false)
     {
@@ -52,52 +51,11 @@ bool    Player::initialize()
     }
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
-   _geometry.setColor(glm::vec4(1, 1, 1, 1));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, -0.5.-0.5, 0.5.-0.5);
-  //face
-  _geometry.setColor(glm::vec4(0.5, 0.5, -0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, -0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(0.5, -0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-/*  pushTexture(&_geometry);
-*/
-  //vec = glm::vec3(0.5.-0.5, -0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(-0.5, 0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  //pushTexture(&_geometry);
-
-  //vec = glm::vec3(-0.5.-0.5, 0.5.-0.5, -0.5.-0.5);
-  _geometry.setColor(glm::vec4(0.5, 0.5, 0.5, 0.5));
-  /*_geometry.pushNormal(vec);*/
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  //pushTexture(&_geometry);
-  _geometry.build();
+<<<<<<< HEAD
+  return (true);
+=======
     return (true);
+>>>>>>> 76ab659d4407da48d6d52b15a6fe9c1cbbd75e09
 }
 
 void  Player::spawnBomb()
@@ -118,9 +76,26 @@ pos = realPos(getPos());
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
+    if (_dir == WEST)
+      translate(glm::vec3(0.25, 0, 0.25));
+    else if (_dir == EAST)
+      translate(glm::vec3(-0.25, 0, -0.25));
+    else if (_dir == SOUTH)
+      translate(glm::vec3(0.25, 0, -0.25));
+    else
+    {
+      translate(glm::vec3(-0.25, 0, 0.25));
+    }
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
-    _geometry.draw(shader, getTransformation(), GL_QUADS);
+    if (_dir == WEST)
+      translate(glm::vec3(-0.25, 0, -0.25));
+    else if (_dir == EAST)
+      translate(glm::vec3(0.25, 0, 0.25));
+    else if (_dir == SOUTH)
+      translate(glm::vec3(-0.25, 0, 0.25));
+    else
+      translate(glm::vec3(0.25, 0, -0.25));
 }
 
 void    Player::setMap(Map *map)
@@ -169,25 +144,57 @@ AObject    *Player::_checkMove(float x, float y)
     std::pair<float, float> pos;
     if (x != 0)
     {
-      pos.first = floor(_pos.first + x);
-      pos.second = floor(_pos.second + y + MARGE);
+      if (x > 0)
+      {
+        pos.first = floor(_pos.first + x + 0.2);
+        pos.second = floor(_pos.second + y + 0.2);
+      }
+      else
+      {
+        pos.first = floor(_pos.first + x - 0.2);
+        pos.second = floor(_pos.second + y + 0.2); 
+      }
       tmp = _map->getCase(pos.first, pos.second);
       if (!tmp)
       {
-        pos.first = floor(_pos.first + x);
-        pos.second = floor(_pos.second + y - MARGE);
+        if (x > 0)
+        {
+          pos.first = floor(_pos.first + x + 0.2);
+          pos.second = floor(_pos.second + y - 0.2);
+        }
+        else
+        {
+          pos.first = floor(_pos.first + x - 0.2);
+          pos.second = floor(_pos.second + y - 0.2);
+        }
         tmp = _map->getCase(pos.first, pos.second);
       }
     }
     else if (y != 0)
     {
-      pos.first = floor(_pos.first + x + MARGE);
-      pos.second = floor(_pos.second + y);
+     if (y > 0)
+      {
+        pos.first = floor(_pos.first + x + 0.2);
+        pos.second = floor(_pos.second + y + 0.2);
+      }
+      else
+      {
+        pos.first = floor(_pos.first + x + 0.2);
+        pos.second = floor(_pos.second + y - 0.2); 
+      }
       tmp = _map->getCase(pos.first, pos.second);
       if (!tmp)
       {
-        pos.first = floor(_pos.first + x - MARGE);
-        pos.second = floor(_pos.second + y);
+        if (y > 0)
+        {
+          pos.first = floor(_pos.first + x - 0.2);
+          pos.second = floor(_pos.second + y + 0.2);
+        }
+        else
+        {
+          pos.first = floor(_pos.first + x - 0.2);
+          pos.second = floor(_pos.second + y - 0.2);
+        }
         tmp = _map->getCase(pos.first, pos.second);
       }
     }
@@ -205,10 +212,6 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
     std::pair<float, float> i;
     glm::vec3                               rotation = glm::vec3(0);
     AObject                                 *tmp;
-    //AObject                                 *tmp1;
-    /*AObject                                 *tmp2;
-    AObject                                 *tmp3;
-*/
     int                                     numHumans = 0;
 
     _shield += clock.getElapsed();
@@ -233,8 +236,8 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         {
             i = (this->*_key[(*it)])(trans);
             _anim = 2;
-            /*rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
-            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);*/
+            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
             switch ((int)(rotation.y))
             {
                 case 0:
@@ -255,17 +258,13 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
             {
                 if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
                 {
-                  //std::cout << "BONUS\n";
                      static_cast<Bonus*>(tmp)->addToPlayer(this);
                     _sound->playSound(BONUS_S, 30);
                     _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
                 }
-                /*else
-                {*/
-                    _pos.first += i.first;
-                    _pos.second += i.second;
-                    translate(glm::vec3(i.first, 0, i.second));                    
-                //}
+                _pos.first += i.first;
+                _pos.second += i.second;
+                translate(glm::vec3(i.first, 0, i.second));                    
             }
         }
         else if (_input && AInput::getKey(k, PBOMB))
@@ -309,15 +308,6 @@ std::pair<float, float>    Player::left(float &trans)
 
 std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
 {
- /*   if (_dir == WEST)
-        return (std::make_pair(floor(pos.first + 0.4), floor(pos.second)));
-    else if (_dir == NORTH)
-        return (std::make_pair(floor(pos.first + 0.6), floor(pos.second)));
-    else if (_dir == EAST)
-        return (std::make_pair(floor(pos.first + 0.6), floor(pos.second)));
-    else
-        return (std::make_pair(ceil(pos.first), ceil(pos.second)));
- */ 
  float temp1;
   float temp2;
   temp1 = floor(pos.first);
@@ -333,7 +323,6 @@ std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
   else
     pos.second = temp2;
   return (pos);
-//    return (std::make_pair<float, float>(floor(pos.first + 0.5), floor(pos.second + 0.5)));
 }
 
 int     Player::getStock() const
