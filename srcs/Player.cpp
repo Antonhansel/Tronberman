@@ -426,6 +426,11 @@ float   Player::getSpeed() const
     return (_speed);
 }
 
+void  Player::setCore(Core *core)
+{
+  _core = core;
+}
+
 void    Player::dir(dirr dir)
 {
   glm::vec3                               rotation = glm::vec3(0);

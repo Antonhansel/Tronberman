@@ -36,6 +36,7 @@ enum PlayerType {
 class Bonus;
 class AInput;
 class Bombs;
+class Core;
 
 class Player : public AObject
 {
@@ -65,9 +66,11 @@ protected:
   dirr          _dir;
   std::vector<Player*>  *_playermap;
   std::string   _modelpath;
+  Core          *_core;
 
 public:
   void    setPlayer(int);
+  void    setCore(Core *);
   void    setSpeed(float);
   void    setMap(Map *);
   bool    isAlive() const;
@@ -92,7 +95,7 @@ public:
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
-  void    spawnBomb();
+  virtual void    spawnBomb();
   void    setSound(Sound *sound);
   std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;

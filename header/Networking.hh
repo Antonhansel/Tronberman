@@ -70,6 +70,11 @@ public:
     PlayerType getType() const;
 };
 
+class NetworkOwnPlayer : public Player {
+public:
+  void    spawnBomb();
+};
+
 class Networking {
     public:
         Networking(std::string &port); // if server
@@ -84,7 +89,8 @@ class Networking {
         void                            refreshGame();
         bool                            isGameStarted();
         size_t                          getListSize() const;
-        
+        bool                            isServer();
+        void                            spawnBomb();
     private:
         bool                    _initialized;
         bool                    _isServer;

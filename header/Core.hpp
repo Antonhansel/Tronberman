@@ -56,6 +56,7 @@ public:
   std::map<std::pair<float, float>, Bombs *> &getBombs();
   Sound   *getSound();
   bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
+  Networking    *getNetworking();
 private:
   bool      _isSave;
   bool      _displayFPS;
