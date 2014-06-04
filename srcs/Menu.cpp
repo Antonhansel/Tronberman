@@ -119,7 +119,7 @@ bool    Menu::update()
   {
     if ((_isLaunch = _network->isGameStarted()))
     {
-      _map = new Map(30, _engine);
+      _map = new Map(30, false, _engine);
       _isSave = false;
     }
   }

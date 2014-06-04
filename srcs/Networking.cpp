@@ -43,6 +43,7 @@ Networking::Networking(std::string &port)
         throw new BomberException(strerror(errno));
     _closed = false;
     _isServer = true;
+    _core = NULL;
 }
 
 Networking::Networking(std::string &port, std::string &addr)
@@ -56,6 +57,7 @@ Networking::Networking(std::string &port, std::string &addr)
     _isServer = false;
     _closed = false;
     _initialized = false;
+    _core = NULL;
     _inputBuffer.first = 0;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
@@ -88,6 +90,7 @@ void Networking::startGame(Core *core)
     std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
 
     _core = core;
+    std::cout << "here" << std::endl;
     if (_isServer)
     {
         close(_sockfd);
@@ -96,7 +99,6 @@ void Networking::startGame(Core *core)
     }
     else
     {
-        // _core->getMap()->setSize(_initMessage.data.infos.mapSize);
         std::cout << "map size : " << _initMessage.data.infos.mapSize << std::endl;
         _core->getPlayer()[0]->setAbsPos(tmpPos);
         std::cout << "pos : " << tmpPos.first << " - " << tmpPos.second << std::endl;
@@ -111,6 +113,7 @@ void Networking::startGame(Core *core)
             player->setPlayerTab(&_core->getPlayer());
             player->setSound(_core->getSound());
             _core->getPlayer().push_back(player);
+            printf("Created client at index : %lu\n", _core->getPlayer().size());
         }
         std::cout << "max player : " << _initMessage.data.infos.playersNb << std::endl;
     }
@@ -130,7 +133,6 @@ void    Networking::_startGameServer()
         player = new NetworkPlayer();
         tmpPos = _core->getMap()->getSpawn();
         player->initialize();
-        // player->setId(_core->getPlayer().size() + 2);
         player->setAbsPos(tmpPos);
         player->setMap(_core->getMap());
         player->setBombs(&_core->getBombs());
@@ -263,6 +265,14 @@ void    Networking::_receiveFromClient(Client *client)
 void    Networking::_treatMessage(Client *client, Message *message)
 {
     std::cout << "Treating message" << std::endl;
+    if (message->type == INFOS)
+    {
+        std::cout << "INFOS" << std::endl;
+        memcpy(&_initMessage, message, sizeof(*message));
+        _initialized = true;
+    }
+    if (!_core)
+        return;
     if (message->type == OWN_MOVE)
     {
         std::cout << "OWN MOVE" << std::endl;
@@ -290,20 +300,14 @@ void    Networking::_treatMessage(Client *client, Message *message)
             }
         }
     }
-    // if (message->type == PLAYER_UPDATE)
-    // {
-    //     for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
-    //         if (message->data.player[i].playerId == -1)
-    //             break;
-    //         printf("Setting player : %d at %fx%f\n", message->data.player[i].playerId, message->data.player[i].x, message->data.player[i].y);
-    //         _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
-    //     }
-    // }
-    if (message->type == INFOS)
+    if (message->type == PLAYER_UPDATE)
     {
-        std::cout << "INFOS" << std::endl;
-        memcpy(&_initMessage, message, sizeof(*message));
-        _initialized = true;
+        for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
+            if (message->data.player[i].playerId == -1)
+                break;
+            printf("Setting player : %d at %fx%f\n", message->data.player[i].playerId, message->data.player[i].x, message->data.player[i].y);
+            _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
+        }
     }
 }
 
