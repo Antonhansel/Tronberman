@@ -225,8 +225,13 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  if (_networking)
-    _networking->refreshGame();
+  try {
+    if (_networking)
+      _networking->refreshGame();
+  }
+  catch (...) {
+    return false;
+  }
   if (_ainput == NULL)
     _ainput = new AInput(_input, GAME);
   _ainput->setInput(_input);

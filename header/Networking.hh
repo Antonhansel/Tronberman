@@ -62,6 +62,7 @@ struct                      Client {
     std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   inputBuffer;
     // first is the actual position in the buffer, second is the buffer
     Player                  *player;
+    bool                    isConnected;
 };
 
 class NetworkPlayer : public Player {

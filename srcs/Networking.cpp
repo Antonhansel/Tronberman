@@ -175,6 +175,7 @@ bool     Networking::newPlayers()
         inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
         client->name = ipv4addr;
         client->lastTick = 0;
+        client->isConnected = true;
         _players.push_back(client);
         std::cout << "new player " << client->name << std::endl;
         rtr = true;
@@ -207,6 +208,8 @@ void    Networking::_tryPurgeBuffer()
     }
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
     {
+        if ((*i)->isConnected == false)
+            continue;
         FD_SET((*i)->sockfd, &sets[0]);
         if (!(*i)->toSend.empty())
             FD_SET((*i)->sockfd, &sets[1]);
@@ -238,8 +241,22 @@ void    Networking::_receiveFromClient(Client *client)
             &tmp->second[tmp->first],
             sizeof(Message),
             MSG_DONTWAIT);
-        if (sizeRecv < 0)
+        if (sizeRecv <= 0)
+        {
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                return;
+            std::cerr << "Error recv : " << strerror(errno) << std::endl;
+            if (client)
+            {
+                client->player->setLife(0);
+                client->player->setIsAlive();
+                client->isConnected = false;
+                std::cerr << "Disconnected" << std::endl;
+            }
+            else
+                throw new BomberException("Server Disconnected");
             return;
+        }
         tmp->first += sizeRecv;
         if (tmp->first >= sizeof(Message))
         {
@@ -313,15 +330,27 @@ void    Networking::_sendToClient(Client *client)
     std::pair<unsigned int, Message *>     *toSend;
 
     do {
+        if (((client) ? (client->toSend) : (_toSend)).size() == 0)
+            return;
         toSend = (client) ? (&*(client->toSend.begin())) : (&*_toSend.begin());
         sizeSent = send((client) ? (client->sockfd) : (_sockfd),
             &toSend->second[toSend->first],
             sizeof(*toSend->second) - toSend->first,
             MSG_NOSIGNAL | MSG_DONTWAIT);
-        if (sizeSent < 0 || sizeSent == 0)
+        if (sizeSent <= 0)
         {
-            if (client && (sizeSent == 0 || errno == EPIPE || errno == ECONNRESET || errno == EINTR))
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                return;
+            std::cerr << "Error send : " << strerror(errno) << std::endl;
+            if (client)
+            {
+                client->player->setLife(0);
                 client->player->setIsAlive();
+                client->isConnected = false;
+                std::cerr << "Disconnected" << std::endl;
+            }
+            else
+                throw new BomberException("Server Disconnected");
             return;
         }
         toSend->first += sizeSent;
