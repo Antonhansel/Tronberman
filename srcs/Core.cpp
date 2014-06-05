@@ -23,6 +23,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
   _ainput = NULL;
   _particles = particles;
   _isSave = false;
+  _mapFiller = NULL;
 }
 
 void  Core::reset()
@@ -41,6 +42,7 @@ void  Core::reset()
   _displayFPS = false;
   _ainput = NULL;
   _isSave = false;
+  _mapFiller = NULL;
 }
 
 void  Core::setValues(Map *map)
@@ -297,7 +299,7 @@ bool	Core::update()
   if (_hud->getTimer() <= 0 && _networking == NULL)
   {
     if (_mapFiller == NULL)
-      _mapFiller = new MapFiller(_map);
+      _mapFiller = new MapFiller(_map, _loader, &_player);
     _mapFiller->fillMap(_clock);
   }
   return (true);
@@ -423,6 +425,8 @@ void	Core::draw()
   }
   if (_displayFPS)
     _hud->drawFPS();
+  if (_mapFiller != NULL)
+    _mapFiller->draw(_shader);
   _cam->flushContext();
 }
 

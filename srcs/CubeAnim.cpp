@@ -231,7 +231,7 @@ bool CubeAnim::genSpiral()
 {
   int initial_direction = UP , n = MAX , p = 1 ;
   int r ,c;
-  int row_right  = 0 , column_down = n-1 , row_left = n-1 , column_up = 0 ;
+  int row_right  = 0 , column_down = n-1 , row_left = n-1 , column_up = 0;
 
   for(r = 0 ; r < MAX ; r++)
     {
