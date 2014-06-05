@@ -288,7 +288,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
     }
     if (!_core || !_allInitialized)
         return;
-    if (message->type == MAP_UPDATE)
+    if (!_isServer && message->type == MAP_UPDATE)
     {
         for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
             for(unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
@@ -300,7 +300,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
             }
         }
     }
-    if (message->type == PLAYER_UPDATE)
+    if (!_isServer && message->type == PLAYER_UPDATE)
     {
         for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
             if (message->data.player[i].playerId == -1)
@@ -312,7 +312,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
             }
         }
     }
-    if (message->type == OWN_PLAYER_INFO)
+    if (!_isServer && message->type == OWN_PLAYER_INFO)
     {
         _core->getPlayer()[0]->setLife(message->data.ownPlayerInfo.life);
         _core->getPlayer()[0]->setRange(message->data.ownPlayerInfo.range);
