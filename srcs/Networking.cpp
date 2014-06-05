@@ -44,6 +44,7 @@ Networking::Networking(std::string &port)
     _closed = false;
     _isServer = true;
     _core = NULL;
+    _allInitialized = true;
 }
 
 Networking::Networking(std::string &port, std::string &addr)
@@ -57,6 +58,7 @@ Networking::Networking(std::string &port, std::string &addr)
     _isServer = false;
     _closed = false;
     _initialized = false;
+    _allInitialized = false;
     _core = NULL;
     _inputBuffer.first = 0;
     if ((pe = getprotobyname("TCP")) == NULL)
@@ -111,6 +113,7 @@ void Networking::startGame(Core *core)
             player->setSound(_core->getSound());
             _core->getPlayer().push_back(player);
         }
+        _allInitialized = true;
     }
 }
 
@@ -278,7 +281,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
         memcpy(&_initMessage, message, sizeof(*message));
         _initialized = true;
     }
-    if (!_core)
+    if (!_core || !_allInitialized)
         return;
     if (message->type == MAP_UPDATE)
     {
@@ -297,8 +300,11 @@ void    Networking::_treatMessage(Client *client, Message *message)
         for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
             if (message->data.player[i].playerId == -1)
                 break;
-            _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
-            _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
+            if (message->data.player[i].playerId + 1 < _core->getPlayer().size())
+            {
+                _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
+                _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
+            }
         }
     }
     if (message->type == OWN_PLAYER_INFO)

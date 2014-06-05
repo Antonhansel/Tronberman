@@ -108,6 +108,7 @@ class Networking {
         void                            updatePlayer(Player *);
     private:
         bool                    _initialized;
+        bool                    _allInitialized;
         bool                    _isServer;
         Core                    *_core;
         bool                    _closed;
