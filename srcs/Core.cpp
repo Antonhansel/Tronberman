@@ -51,7 +51,7 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _map->setSpawn(_players + _nb_bot + 10);
+  _map->setSpawn(_players + _nb_bot);
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -460,4 +460,3 @@ Sound   *Core::getSound()
 {
   return (_sound);
 }
-
