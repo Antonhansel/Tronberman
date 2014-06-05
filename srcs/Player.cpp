@@ -51,47 +51,48 @@ bool    Player::initialize()
     }
     scale(glm::vec3(1,2,1));
     translate(glm::vec3(-0.5, 0, 0));
-  return (true);
+    return (true);
 }
 
 void  Player::spawnBomb()
 {
-  std::pair<float, float> pos;
+    std::cout << "spawn" << std::endl;
+    std::pair<float, float> pos;
 
-pos = realPos(getPos());
- if (_bombs->find(pos) == _bombs->end())
-  {
-    _sound->playSound(PBOMB_S, 30);
-    Bombs *b = new Bombs();
-    b->setObjects(_map, _sound, _bombs);
-    b->setPlayerTab(_playermap);
-    b->makeBomb((Player*)this);
-    (*_bombs)[pos] = b;
-   }
+    pos = realPos(getPos());
+    if (_bombs->find(pos) == _bombs->end())
+    {
+        _sound->playSound(PBOMB_S, 30);
+        Bombs *b = new Bombs();
+        b->setObjects(_map, _sound, _bombs);
+        b->setPlayerTab(_playermap);
+        b->makeBomb((Player*)this);
+        (*_bombs)[pos] = b;
+    }
 }
 
 void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
 {
     if (_dir == WEST)
-      translate(glm::vec3(0.25, 0, 0.25));
+        translate(glm::vec3(0.25, 0, 0.25));
     else if (_dir == EAST)
-      translate(glm::vec3(-0.25, 0, -0.25));
+        translate(glm::vec3(-0.25, 0, -0.25));
     else if (_dir == SOUTH)
-      translate(glm::vec3(0.25, 0, -0.25));
+        translate(glm::vec3(0.25, 0, -0.25));
     else
     {
-      translate(glm::vec3(-0.25, 0, 0.25));
+        translate(glm::vec3(-0.25, 0, 0.25));
     }
     _model.setCurrentAnim(_anim);
     _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
     if (_dir == WEST)
-      translate(glm::vec3(-0.25, 0, -0.25));
+        translate(glm::vec3(-0.25, 0, -0.25));
     else if (_dir == EAST)
-      translate(glm::vec3(0.25, 0, 0.25));
+        translate(glm::vec3(0.25, 0, 0.25));
     else if (_dir == SOUTH)
-      translate(glm::vec3(-0.25, 0, 0.25));
+        translate(glm::vec3(-0.25, 0, 0.25));
     else
-      translate(glm::vec3(0.25, 0, -0.25));
+        translate(glm::vec3(0.25, 0, -0.25));
 }
 
 void    Player::setMap(Map *map)
@@ -111,15 +112,15 @@ void    Player::setSpeed(float speed)
 
 bool    Player::_checkMove2(float x, float y)
 {
-  std::pair<float, float>   pos;
-  AObject *tmp;
-  AObject *cur = _map->getCase(_pos.first, _pos.second);
-  if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
-  {
-    if ((tmp = _checkMove(x, y)) == NULL || (tmp && (tmp->getType() >= 9 && tmp->getType() < 12)) || (tmp && tmp->getType() == BOMB))
-      return (true);
-  }
-  return (false);
+    std::pair<float, float>   pos;
+    AObject *tmp;
+    AObject *cur = _map->getCase(_pos.first, _pos.second);
+    if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
+    {
+        if ((tmp = _checkMove(x, y)) == NULL || (tmp && (tmp->getType() >= 9 && tmp->getType() < 12)) || (tmp && tmp->getType() == BOMB))
+            return (true);
+    }
+    return (false);
 }
 
 bool    Player::_onBomb()
@@ -128,7 +129,7 @@ bool    Player::_onBomb()
 
     return (((tmp = _map->getCase(floor(_pos.first), floor(_pos.second)))
         && tmp->getType() == BOMB)
-        || ((tmp = _map->getCase(floor(_pos.first + 0.4), floor(_pos.second + 0.4)))
+    || ((tmp = _map->getCase(floor(_pos.first + 0.4), floor(_pos.second + 0.4)))
         && tmp->getType() == BOMB));
 }
 
@@ -140,59 +141,59 @@ AObject    *Player::_checkMove(float x, float y)
     std::pair<float, float> pos;
     if (x != 0)
     {
-      if (x > 0)
-      {
-        pos.first = floor(_pos.first + x + 0.2);
-        pos.second = floor(_pos.second + y + 0.2);
-      }
-      else
-      {
-        pos.first = floor(_pos.first + x - 0.2);
-        pos.second = floor(_pos.second + y + 0.2);
-      }
-      tmp = _map->getCase(pos.first, pos.second);
-      if (!tmp)
-      {
         if (x > 0)
         {
-          pos.first = floor(_pos.first + x + 0.2);
-          pos.second = floor(_pos.second + y - 0.2);
+            pos.first = floor(_pos.first + x + 0.2);
+            pos.second = floor(_pos.second + y + 0.2);
         }
         else
         {
-          pos.first = floor(_pos.first + x - 0.2);
-          pos.second = floor(_pos.second + y - 0.2);
+            pos.first = floor(_pos.first + x - 0.2);
+            pos.second = floor(_pos.second + y + 0.2);
         }
         tmp = _map->getCase(pos.first, pos.second);
-      }
+        if (!tmp)
+        {
+            if (x > 0)
+            {
+                pos.first = floor(_pos.first + x + 0.2);
+                pos.second = floor(_pos.second + y - 0.2);
+            }
+            else
+            {
+                pos.first = floor(_pos.first + x - 0.2);
+                pos.second = floor(_pos.second + y - 0.2);
+            }
+            tmp = _map->getCase(pos.first, pos.second);
+        }
     }
     else if (y != 0)
     {
-     if (y > 0)
-      {
-        pos.first = floor(_pos.first + x + 0.2);
-        pos.second = floor(_pos.second + y + 0.2);
-      }
-      else
-      {
-        pos.first = floor(_pos.first + x + 0.2);
-        pos.second = floor(_pos.second + y - 0.2);
-      }
-      tmp = _map->getCase(pos.first, pos.second);
-      if (!tmp)
-      {
         if (y > 0)
         {
-          pos.first = floor(_pos.first + x - 0.2);
-          pos.second = floor(_pos.second + y + 0.2);
+            pos.first = floor(_pos.first + x + 0.2);
+            pos.second = floor(_pos.second + y + 0.2);
         }
         else
         {
-          pos.first = floor(_pos.first + x - 0.2);
-          pos.second = floor(_pos.second + y - 0.2);
+            pos.first = floor(_pos.first + x + 0.2);
+            pos.second = floor(_pos.second + y - 0.2);
         }
         tmp = _map->getCase(pos.first, pos.second);
-      }
+        if (!tmp)
+        {
+            if (y > 0)
+            {
+                pos.first = floor(_pos.first + x - 0.2);
+                pos.second = floor(_pos.second + y + 0.2);
+            }
+            else
+            {
+                pos.first = floor(_pos.first + x - 0.2);
+                pos.second = floor(_pos.second + y - 0.2);
+            }
+            tmp = _map->getCase(pos.first, pos.second);
+        }
     }
     return (tmp);
 }
@@ -203,77 +204,81 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 
     if (_isAlive == true)
     {
-    float trans = static_cast<float>(clock.getElapsed()) *  _speed;
-    std::map<int, std::pair<float, float> >                 keymap;
-    std::pair<float, float> i;
-    glm::vec3                               rotation = glm::vec3(0);
-    AObject                                 *tmp;
-    int                                     numHumans = 0;
+        float trans = static_cast<float>(clock.getElapsed()) *  _speed;
+        std::map<int, std::pair<float, float> >                 keymap;
+        std::pair<float, float> i;
+        glm::vec3                               rotation = glm::vec3(0);
+        AObject                                 *tmp;
+        int                                     numHumans = 0;
+        std::pair<float,float> (Player::*moveFct)(float &);
 
-    _shield += clock.getElapsed();
-    for (std::vector<Player *>::iterator i = _playermap->begin(); i != _playermap->end(); ++i)
-    {
-        if ((*i)->getType() == HUMAN)
-            ++numHumans;
-    }
-    if (_input == NULL && _id == 1)
-    {
-        _input = new AInput(input, KEY1);
-        if (numHumans >= 2)
-            _input->setMode(true);
-    }
-    else if (_input == NULL && _id == 2)
-        _input = new AInput(input, KEY2);
-    _input->setInput(input);
-    k = _input->getInput();
-    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
-    {
-        if (_input && !AInput::getKey(k, NONE) && !AInput::getKey(k, PBOMB))
+        _shield += clock.getElapsed();
+        for (std::vector<Player *>::iterator i = _playermap->begin(); i != _playermap->end(); ++i)
         {
-            i = (this->*_key[(*it)])(trans);
-            _anim = 2;
-            rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
-            rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
-            switch ((int)(rotation.y))
+            if ((*i)->getType() == HUMAN)
+                ++numHumans;
+        }
+        if (_input == NULL && _id == 1)
+        {
+            _input = new AInput(input, KEY1);
+            if (numHumans >= 2)
+                _input->setMode(true);
+        }
+        else if (_input == NULL && _id == 2)
+            _input = new AInput(input, KEY2);
+        _input->setInput(input);
+        k = _input->getInput();
+        for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
+        {
+            if (_input && !AInput::getKey(k, NONE))
             {
-                case 0:
+                if (_input && AInput::getKey(k, PBOMB))
+                    this->spawnBomb();
+                moveFct = this->_key[(*it)];
+                if (!moveFct)
+                    continue;
+                i = (this->*_key[(*it)])(trans);
+                _anim = 2;
+                rotation.y += (i.second) ? (SIGN(i.second) * 90 - 90) : (0);
+                rotation.y += (i.first) ? (SIGN(i.first) * -90 + 180) : (0);
+                switch ((int)(rotation.y))
+                {
+                    case 0:
                     _dir = NORTH;
                     break;
-                case -180:
+                    case -180:
                     _dir = SOUTH;
                     break;
-                case 270:
+                    case 270:
                     _dir = EAST;
                     break;
-                case 90:
+                    case 90:
                     _dir = WEST;
-            }
-            rotate(rotation);
-        tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && (tmp->getType() < 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
-            {
-                if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
-                  _consumeBonus(tmp);
-                _pos.first += i.first;
-                _pos.second += i.second;
-                translate(glm::vec3(i.first, 0, i.second));
+                }
+                rotate(rotation);
+                tmp = _checkMove(i.first, i.second);
+                if (!tmp || (tmp && (tmp->getType() < 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
+                {
+                    if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
+                        _consumeBonus(tmp);
+                    _pos.first += i.first;
+                    _pos.second += i.second;
+                    translate(glm::vec3(i.first, 0, i.second));
+                }
             }
         }
-        else if (_input && AInput::getKey(k, PBOMB))
-            this->spawnBomb();
+        if (_anim == 2)
+            _anim = 1;
+        else
+            _anim = 0;
     }
-    if (_anim == 2)
-        _anim = 1;
-    else
-        _anim = 0;
-  }
 }
 
 void Player::_consumeBonus(AObject *tmp)
 {
-   static_cast<Bonus*>(tmp)->addToPlayer(this);
-  _sound->playSound(BONUS_S, 30);
-  _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
+    static_cast<Bonus*>(tmp)->addToPlayer(this);
+    _sound->playSound(BONUS_S, 30);
+    _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
 }
 
 std::pair<float, float>    Player::up(float &trans)
@@ -306,21 +311,21 @@ std::pair<float, float>    Player::left(float &trans)
 
 std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
 {
- float temp1;
-  float temp2;
-  temp1 = floor(pos.first);
-  temp2 = ceil(pos.first);
-  if (temp1 - pos.first > pos.first - temp2)
-    pos.first = temp1;
-  else
-    pos.first = temp2;
-  temp1 = floor(pos.second);
-  temp2 = ceil(pos.second);
-  if (temp1 - pos.second > pos.second - temp2)
-    pos.second = temp1;
-  else
-    pos.second = temp2;
-  return (pos);
+    float temp1;
+    float temp2;
+    temp1 = floor(pos.first);
+    temp2 = ceil(pos.first);
+    if (temp1 - pos.first > pos.first - temp2)
+        pos.first = temp1;
+    else
+        pos.first = temp2;
+    temp1 = floor(pos.second);
+    temp2 = ceil(pos.second);
+    if (temp1 - pos.second > pos.second - temp2)
+        pos.second = temp1;
+    else
+        pos.second = temp2;
+    return (pos);
 }
 
 int     Player::getStock() const
@@ -395,7 +400,7 @@ void    Player::setShield(float s)
 
 bool    Player::isAlive() const
 {
-  return (_isAlive);
+    return (_isAlive);
 }
 
 void    Player::setIsAlive()
@@ -430,32 +435,32 @@ float   Player::getSpeed() const
 
 void  Player::setCore(Core *core)
 {
-  _core = core;
+    _core = core;
 }
 
 void    Player::dir(dirr dir)
 {
-  glm::vec3                               rotation = glm::vec3(0);
-  switch (dir)
-  {
-    case NORTH:
-      rotation.y = 0;
-      break;
-    case SOUTH:
-      rotation.y = 180;
-      break;
-    case WEST:
-      rotation.y = 90;
-      break;
-    case EAST:
-      rotation.y = 270;
-      break;
-  }
-  rotate(rotation);
-  _dir = dir;
+    glm::vec3                               rotation = glm::vec3(0);
+    switch (dir)
+    {
+        case NORTH:
+        rotation.y = 0;
+        break;
+        case SOUTH:
+        rotation.y = 180;
+        break;
+        case WEST:
+        rotation.y = 90;
+        break;
+        case EAST:
+        rotation.y = 270;
+        break;
+    }
+    rotate(rotation);
+    _dir = dir;
 }
 dirr    Player::dir()
 {
-  return _dir;
+    return _dir;
 }
 
