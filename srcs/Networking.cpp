@@ -411,6 +411,8 @@ void    Networking::_sendPlayersUpdate(Client *client)
     msg->type = PLAYER_UPDATE;
     for (std::vector<Player *>::iterator i = _core->getPlayer().begin(); i != _core->getPlayer().end(); ++i)
     {
+        if (messagePos > MAX_SEND_PLAYERS - 2)
+            break;
         if (*i && *i != client->player)
         {
             msg->data.player[messagePos].playerId = id;
