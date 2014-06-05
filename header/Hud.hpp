@@ -35,7 +35,6 @@ public:
 	void	resetClock();
 	float	getTimer() const;
 	void 	setTimer(float);
-	void	displaySaving(bool);
 
 private:
 	std::string convertToString(int, const std::string);
@@ -47,7 +46,6 @@ private:
 	void		updatePlayer2(Player *);
 	void		updateRep();
 	void		drawTimer();
-	void 		drawSaving();
 
 private:
 	int 	_screen;
@@ -66,10 +64,8 @@ private:
 	glm::mat4 _transformation;
 	std::map<int, void(Hud::*)(Player *) > _updatePlayer;
 	std::map<int, void(Hud::*)() > _drawPlayer;
-	std::map<Display, std::vector<gdl::Geometry *> >	_player1;
-	std::map<Display, std::vector<gdl::Geometry *> >	_player2;
-	std::vector<gdl::Geometry *> 					 	_save;
+	std::map<Display, std::vector<gdl::Geometry *> > _player1;
+	std::map<Display, std::vector<gdl::Geometry *> > _player2;
 	std::vector<gdl::Geometry *>	_time;
 	std::vector<gdl::Geometry *> _affFPS;
-	bool	_saving;
 };

@@ -23,7 +23,6 @@
 # include "Hud.hpp"
 # include "AInput.hpp"
 # include "Saving.hpp"
-# include "MapFiller.hpp"
 
 class Networking;
 class Menu;
@@ -57,10 +56,7 @@ public:
   std::map<std::pair<float, float>, Bombs *> &getBombs();
   Sound   *getSound();
   bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
-  void      fillmap();
-  Networking    *getNetworking();
 private:
-  MapFiller *_mapFiller;
   bool      _isSave;
   bool      _displayFPS;
   int       _screen;
@@ -83,10 +79,10 @@ private:
   std::vector<Player*>	_player;
   std::vector<AObject*>	_other;
   std::map<std::pair<float, float>, Bombs *>  _bombs;
-  bool             _endgame;
-  AInput           *_ainput;
+  bool        _endgame;
+  AInput      *_ainput;
   ParticleEngine   *_particles;
-  Networking       *_networking;
+  Networking  *_networking;
 };
 
 #endif /*!_CORE_HPP_*/

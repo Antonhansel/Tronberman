@@ -3,6 +3,7 @@
 
 # include "Player.hpp"
 # include "Map.hpp"
+# include "Bonus.hpp"
 
 enum dir
 {
@@ -26,8 +27,8 @@ private:
   bool    lineSafe(int, int, int, int) const;
   bool    isSafe(int, int) const;
   bool    setObjDef(int, int, int, enum dir);
-  void    setObjDef(int, int);
-  void    setObjOff(int, int);
+  int     setObjDef(int, int);
+  int     setObjOff(int, int);
   void    moveTo(int, int, int, int);
   int     my_rand();
 
@@ -35,6 +36,8 @@ private:
   int     _y_obj;
   int     _rec;
   int     _seerange;
+  float   _dep;
+  int     _move;
 };
 
 #endif /* MYBOT_HPP */

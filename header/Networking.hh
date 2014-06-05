@@ -27,8 +27,6 @@ enum    MSG_TYPE {
     MAP_UPDATE = 3,
     PLAYER_UPDATE = 4,
     INFOS = 5,
-    CONSUME_BONUS = 6,
-    OWN_PLAYER_INFO = 7,
 };
 
 struct          Message {
@@ -51,11 +49,6 @@ struct          Message {
             float startX;
             float startY;
         } infos;
-        struct {
-            int life;
-            int range;
-            int stock;
-        } ownPlayerInfo;
     } data;
 };
 
@@ -68,7 +61,6 @@ struct                      Client {
     std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   inputBuffer;
     // first is the actual position in the buffer, second is the buffer
     Player                  *player;
-    bool                    isConnected;
 };
 
 class NetworkPlayer : public Player {
@@ -76,16 +68,6 @@ public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
     PlayerType getType() const;
-    void    setLife(int);
-    void    setRange(int);
-    void    setStock(int);
-};
-
-class NetworkOwnPlayer : public Player {
-public:
-    void    spawnBomb();
-protected:
-    void    _consumeBonus(AObject *);
 };
 
 class Networking {
@@ -101,14 +83,8 @@ class Networking {
         // Get the list of clients
         void                            refreshGame();
         bool                            isGameStarted();
-        size_t                          getListSize() const;
-        bool                            isServer();
-        void                            spawnBomb();
-        void                            consumeBonus();
-        void                            updatePlayer(Player *);
     private:
         bool                    _initialized;
-        bool                    _allInitialized;
         bool                    _isServer;
         Core                    *_core;
         bool                    _closed;
