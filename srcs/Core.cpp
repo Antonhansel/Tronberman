@@ -51,7 +51,7 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _map->setSpawn(_players + _nb_bot);
+  _map->setSpawn(_players + _nb_bot + 10);
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -225,8 +225,13 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  if (_networking)
-    _networking->refreshGame();
+  try {
+    if (_networking)
+      _networking->refreshGame();
+  }
+  catch (...) {
+    return false;
+  }
   if (_ainput == NULL)
     _ainput = new AInput(_input, GAME);
   _ainput->setInput(_input);
@@ -464,3 +469,4 @@ Sound   *Core::getSound()
 {
   return (_sound);
 }
+
