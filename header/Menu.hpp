@@ -26,6 +26,7 @@
 # include "Networking.hh"
 # include "BomberException.hpp"
 # include "Core.hpp"
+# include "Thread.hpp"
 
 # define DELAY  0.15
 
@@ -136,6 +137,8 @@ private:
   bool          _exit;
   int           _vol;
   bool          _isFx;
+  Thread        *_th;
+
 private:
   Map               *_map;
   Text              *_text;
@@ -166,5 +169,8 @@ private:
   std::map<stepM, void (Menu::*)()>    _func;
   std::map<int, void (Menu::*)()>      _step;
 };
+
+void  *getGame(void *);
+void  *getMapp(void *);
 
 #endif /* !MENU_HPP_ */

@@ -15,6 +15,7 @@
 
 Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(camera)
 {
+  _th = NULL;
   _camera->setPlayer(1);
   _loader = loader;
   _shader = _camera->getShader();
@@ -398,11 +399,6 @@ void    Menu::startGenerator()
     }
 }
 
-void    Menu::startPreview()
-{
-  (_preview->initialize()) ? (_previewMode = true) : std::cout << "Failed to initialize preview mode" << std::endl;
-}
-
 void    Menu::chooseStep()
 {
   bool  play = true;
@@ -705,9 +701,26 @@ void    Menu::load()
 {
   _isSelect = 0;
   _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
+  if (_th == NULL)
+  {
+    PtrFonct pf = &getMapp;
+    _th = new Thread();
+    _th->createThread(pf, ((void*)(_preview)));
+    while (_preview->getState())
+    {
+      update();
+      draw();
+    }
+    _th->joinThread();
+    delete _th;
+    _th = NULL;
+  }
+  _preview->setState(true);
+  _previewMode = true;
+  _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
   _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
-  startPreview();
   _max = 1;
 }
 
@@ -715,10 +728,39 @@ void    Menu::loadPrevious()
 {
   _isSelect = 0;
   _text->deleteAllText(_step1);
+  _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
+  if (_th == NULL)
+  {
+    PtrFonct pf = &getGame;
+    _th = new Thread();
+    _th->createThread(pf, ((void*)(_preview)));
+    while (_preview->getState())
+    {
+     update();
+     draw();
+    }
+    _th->joinThread();
+    delete _th;
+    _th = NULL;
+  }
+  _preview->setState(true);
+  _previewMode = true;
+  _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
   _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
-  _previewMode = _preview->initializeSave();
   _max = 1;
+}
+
+void  *getGame(void *arg)
+{
+  reinterpret_cast<Preview *>(arg)->initializeSave();
+  return (NULL);
+}
+
+void  *getMapp(void *arg)
+{
+  reinterpret_cast<Preview *>(arg)->initialize();
+  return (NULL);
 }
 
 bool    Menu::initLogo()

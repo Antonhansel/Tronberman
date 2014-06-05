@@ -81,6 +81,8 @@ enum key
   SPACE
 };
 
+typedef void *(*PtrFonct)(void *);
+
 class AObject
 {
 public:

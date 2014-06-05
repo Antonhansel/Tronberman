@@ -21,6 +21,7 @@ Preview::Preview(Camera *camera, Loader *loader)
 	_posx = 0;
 	_posz = -30;
 	_time = 1;
+	_state = true;
 }
 
 Preview::~Preview()
@@ -72,10 +73,14 @@ bool		Preview::initialize()
 	}
 	_maps = Saving::getMapList(_save);
 	if (_maps->size() == 0)
-		return (false);
+	{
+		_state = false;
+		return (false);		
+	}
 	_it = _maps->begin();
 	_map = (*_it);
     _xend = _map->getSize() / 2;
+    _state = false;
 	return (true);
 }
 
@@ -92,11 +97,15 @@ bool		Preview::initializeSave()
 	_maps = Saving::getMapList(_save);
 	_players = Saving::getPlayerList(_save);
 	if (_maps->size() == 0)
-		return (false);
+	{
+		_state = false;
+		return (false);		
+	}
 	_it = _maps->begin();
 	_map = (*_it);
 	_itPlayer = _players->begin();
     _xend = _map->getSize() / 2;
+    _state = false;
 	return (true);
 }
 
@@ -231,4 +240,14 @@ Saving	*Preview::getInstance()
 		}
 	}
 	return (NULL);
+}
+
+bool	Preview::getState() const
+{
+	return (_state);
+}
+
+void 	Preview::setState(bool b)
+{
+	_state = b;
 }
