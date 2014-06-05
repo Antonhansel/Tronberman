@@ -280,14 +280,6 @@ void    Networking::_treatMessage(Client *client, Message *message)
     }
     if (!_core)
         return;
-    if (message->type == OWN_MOVE)
-    {
-        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player[0].x, message->data.player[0].y);
-        client->player->setAbsPos(pos);
-        client->player->dir(message->data.player[0].dir);
-    }
-    if (message->type == OWN_BOMB)
-        client->player->spawnBomb();
     if (message->type == MAP_UPDATE)
     {
         for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
@@ -309,6 +301,14 @@ void    Networking::_treatMessage(Client *client, Message *message)
             _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
         }
     }
+    if (message->type == OWN_PLAYER_INFO)
+    {
+        _core->getPlayer()[0]->setLife(message->data.ownPlayerInfo.life);
+        _core->getPlayer()[0]->setRange(message->data.ownPlayerInfo.range);
+        _core->getPlayer()[0]->setStock(message->data.ownPlayerInfo.stock);
+    }
+    if (!client)
+        return;
     if (message->type == CONSUME_BONUS)
     {
         try {
@@ -322,12 +322,14 @@ void    Networking::_treatMessage(Client *client, Message *message)
         tmp->addToPlayer(client->player);
         _core->getMap()->deleteCube(tmp->getPos().first, tmp->getPos().second);
     }
-    if (message->type == OWN_PLAYER_INFO)
+    if (message->type == OWN_MOVE)
     {
-        _core->getPlayer()[0]->setLife(message->data.ownPlayerInfo.life);
-        _core->getPlayer()[0]->setRange(message->data.ownPlayerInfo.range);
-        _core->getPlayer()[0]->setStock(message->data.ownPlayerInfo.stock);
+        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player[0].x, message->data.player[0].y);
+        client->player->setAbsPos(pos);
+        client->player->dir(message->data.player[0].dir);
     }
+    if (message->type == OWN_BOMB)
+        client->player->spawnBomb();
 }
 
 void    Networking::_sendToClient(Client *client)
@@ -340,7 +342,7 @@ void    Networking::_sendToClient(Client *client)
             return;
         toSend = (client) ? (&*(client->toSend.begin())) : (&*_toSend.begin());
         sizeSent = send((client) ? (client->sockfd) : (_sockfd),
-            &toSend->second[toSend->first],
+            &((char*)toSend->second)[toSend->first],
             sizeof(*toSend->second) - toSend->first,
             MSG_NOSIGNAL | MSG_DONTWAIT);
         if (sizeSent <= 0)
