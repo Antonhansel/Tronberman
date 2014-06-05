@@ -250,19 +250,26 @@ bool	Core::update()
        return (false);
       case PSAVE:
       {
-        std::string name("");
-        if ((name = _map->getName()).size() == 0)
+        if (!_networking && _map->getSize() <= 500)
         {
-          name.assign("./ressources/save/");
-          for (int i = 0 ; i < 10 ; i++)
+          std::string name("");
+          if ((name = _map->getName()).size() == 0)
+          {
+            name.assign("./ressources/save/");
+            for (int i = 0 ; i < 10 ; i++)
             name += (rand()%26)+97;
-          name += ".xml";
-          _map->setName(name);
+            name += ".xml";
+            _map->setName(name);
+          }
+          std::string t(name);
+          Saving  *s = new Saving(t);
+          _hud->displaySaving(true);
+          draw();
+          s->saveGame(_map, _player, _hud->getTimer());
+          _clock = _cam->getClock();
+          _hud->displaySaving(false);
+          delete s;
         }
-        std::string t(name);
-        Saving  *s = new Saving(t);
-        s->saveGame(_map, _player, _hud->getTimer());
-        delete(s);
         break;
       }
       default:
