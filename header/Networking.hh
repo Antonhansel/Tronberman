@@ -28,6 +28,7 @@ enum    MSG_TYPE {
     PLAYER_UPDATE = 4,
     INFOS = 5,
     CONSUME_BONUS = 6,
+    OWN_PLAYER_INFO = 7,
 };
 
 struct          Message {
@@ -50,6 +51,11 @@ struct          Message {
             float startX;
             float startY;
         } infos;
+        struct {
+            int life;
+            int range;
+            int stock;
+        } ownPlayerInfo;
     } data;
 };
 
@@ -70,6 +76,9 @@ public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
     PlayerType getType() const;
+    void    setLife(int);
+    void    setRange(int);
+    void    setStock(int);
 };
 
 class NetworkOwnPlayer : public Player {
@@ -96,6 +105,7 @@ class Networking {
         bool                            isServer();
         void                            spawnBomb();
         void                            consumeBonus();
+        void                            updatePlayer(Player *);
     private:
         bool                    _initialized;
         bool                    _isServer;

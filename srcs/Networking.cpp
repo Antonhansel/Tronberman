@@ -322,6 +322,12 @@ void    Networking::_treatMessage(Client *client, Message *message)
         tmp->addToPlayer(client->player);
         _core->getMap()->deleteCube(tmp->getPos().first, tmp->getPos().second);
     }
+    if (message->type == OWN_PLAYER_INFO)
+    {
+        _core->getPlayer()[0]->setLife(message->data.ownPlayerInfo.life);
+        _core->getPlayer()[0]->setRange(message->data.ownPlayerInfo.range);
+        _core->getPlayer()[0]->setStock(message->data.ownPlayerInfo.stock);
+    }
 }
 
 void    Networking::_sendToClient(Client *client)
@@ -461,6 +467,31 @@ bool    Networking::isServer()
     return _isServer;
 }
 
+size_t     Networking::getListSize() const
+{
+    return (_players.size());
+}
+
+void    Networking::updatePlayer(Player *player)
+{
+    Client      *client = NULL;
+    Message     *msg = new Message();
+
+    for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+    {
+        if ((*i)->player == player)
+        {
+            client = *i;
+            break;
+        }
+    }
+    msg->type = OWN_PLAYER_INFO;
+    msg->data.ownPlayerInfo.life = client->player->getLife();
+    msg->data.ownPlayerInfo.range = client->player->getRange();
+    msg->data.ownPlayerInfo.stock = client->player->getStock();
+    client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+}
+
 NetworkPlayer::NetworkPlayer()
 {
   _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
@@ -471,9 +502,23 @@ PlayerType NetworkPlayer::getType() const
     return (NETWORK);
 }
 
-size_t     Networking::getListSize() const
+void    NetworkPlayer::setLife(int newLife)
 {
-    return (_players.size());
+    _life = newLife;
+    _shield = 0;
+    _core->getNetworking()->updatePlayer(this);
+}
+
+void  NetworkPlayer::setRange(int range)
+{
+    _range = range;
+    _core->getNetworking()->updatePlayer(this);
+}
+
+void  NetworkPlayer::setStock(int stock)
+{
+    _stock = stock;
+    _core->getNetworking()->updatePlayer(this);
 }
 
 void    NetworkOwnPlayer::spawnBomb()
