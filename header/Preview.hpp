@@ -37,6 +37,7 @@ public:
 	Saving 					*getInstance();
 	bool					getState() const;
 	void					setState(bool);
+	bool					getResult() const;
 
 private:
 	double 											_time;
@@ -55,6 +56,7 @@ private:
   	float											_xend;
   	std::vector<Saving *>							_save;
   	bool											_state;
+  	bool											_result;
 };
 
 #endif /*!_PREVIEW_HPP_*/

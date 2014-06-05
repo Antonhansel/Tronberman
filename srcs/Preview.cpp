@@ -75,12 +75,14 @@ bool		Preview::initialize()
 	if (_maps->size() == 0)
 	{
 		_state = false;
+		_result = false;
 		return (false);		
 	}
 	_it = _maps->begin();
 	_map = (*_it);
     _xend = _map->getSize() / 2;
     _state = false;
+    _result = true;
 	return (true);
 }
 
@@ -99,12 +101,14 @@ bool		Preview::initializeSave()
 	if (_maps->size() == 0)
 	{
 		_state = false;
-		return (false);		
+		_result = false;
+		return (false);
 	}
 	_it = _maps->begin();
 	_map = (*_it);
 	_itPlayer = _players->begin();
     _xend = _map->getSize() / 2;
+    _result = true;
     _state = false;
 	return (true);
 }
@@ -250,4 +254,9 @@ bool	Preview::getState() const
 void 	Preview::setState(bool b)
 {
 	_state = b;
+}
+
+bool	Preview::getResult() const
+{
+	return (_result);
 }

@@ -717,7 +717,7 @@ void    Menu::load()
     _th = NULL;
   }
   _preview->setState(true);
-  _previewMode = true;
+  _previewMode = _preview->getResult();
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
   _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
@@ -744,7 +744,7 @@ void    Menu::loadPrevious()
     _th = NULL;
   }
   _preview->setState(true);
-  _previewMode = true;
+  _previewMode = _preview->getResult();
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
   _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
