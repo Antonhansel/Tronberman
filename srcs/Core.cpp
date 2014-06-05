@@ -90,7 +90,6 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
-  _networking = _menu->getNetwork();
   if (!drawFloor() || !drawChar() || !drawBot(_nb_bot))
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
@@ -104,6 +103,7 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
+  _networking = _menu->getNetwork();
   if (_networking)
   {
     _players = 1;
@@ -132,17 +132,8 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(std::pair<float, float> pos, int screen)
 {
-  Player *chara;
+  Player *chara = create<Player>();
 
-  printf("Networking : %p\n", _networking);
-  if (!_networking || _networking->isServer())
-    chara = create<Player>();
-  else
-  {
-    printf("network player\n");
-    chara = create<NetworkOwnPlayer>();
-  }
-  chara->setCore(this);
   chara->setId(screen);
   if (chara->initialize() == false)
     return (false);
@@ -225,13 +216,8 @@ bool	Core::update()
 
   _clock = _cam->getClock();
   _input = _cam->getInput();
-  try {
-    if (_networking)
-      _networking->refreshGame();
-  }
-  catch (...) {
-    return false;
-  }
+  if (_networking)
+    _networking->refreshGame();
   if (_ainput == NULL)
     _ainput = new AInput(_input, GAME);
   _ainput->setInput(_input);
@@ -250,26 +236,19 @@ bool	Core::update()
        return (false);
       case PSAVE:
       {
-        if (!_networking && _map->getSize() <= 500)
+        std::string name("");
+        if ((name = _map->getName()).size() == 0)
         {
-          std::string name("");
-          if ((name = _map->getName()).size() == 0)
-          {
-            name.assign("./ressources/save/");
-            for (int i = 0 ; i < 10 ; i++)
+          name.assign("./ressources/save/");
+          for (int i = 0 ; i < 10 ; i++)
             name += (rand()%26)+97;
-            name += ".xml";
-            _map->setName(name);
-          }
-          std::string t(name);
-          Saving  *s = new Saving(t);
-          _hud->displaySaving(true);
-          draw();
-          s->saveGame(_map, _player, _hud->getTimer());
-          _clock = _cam->getClock();
-          _hud->displaySaving(false);
-          delete s;
+          name += ".xml";
+          _map->setName(name);
         }
+        std::string t(name);
+        Saving  *s = new Saving(t);
+        s->saveGame(_map, _player, _hud->getTimer());
+        delete(s);
         break;
       }
       default:
@@ -306,12 +285,6 @@ bool	Core::update()
     _hud->setScreen(2);
   _hud->update(_player[0]);
   _particles->update(_clock, _input);
-  if (_hud->getTimer() <= 0 && _networking == NULL)
-  {
-    if (_mapFiller == NULL)
-      _mapFiller = new MapFiller(_map);
-    _mapFiller->fillMap(_clock);
-  }
   return (true);
 }
 
@@ -456,11 +429,6 @@ int       Core::getNbrPlayer() const
 gdl::Clock *Core::getClock()
 {
   return &_clock;
-}
-
-Networking *Core::getNetworking()
-{
-  return _networking;
 }
 
 std::map<std::pair<float, float>, Bombs *> &Core::getBombs()

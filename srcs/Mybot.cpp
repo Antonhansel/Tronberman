@@ -7,6 +7,7 @@ Mybot::Mybot()
   _seerange = 5;
   _rec = 3;
   _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
+  _dep = 1;
 }
 
 Mybot::~Mybot()
@@ -63,7 +64,7 @@ bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
 {
   int     inc;
 
- srand(time(NULL));
+  srand(time(NULL));
   inc = (rand() + _id) % 4;
   if (isSafe(x, y))
     return true;
@@ -96,73 +97,131 @@ bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
   return false;
 }
 
-void     Mybot::setObjDef(int x, int y)
+int     Mybot::setObjDef(int x, int y)
 {
   int     inc;
+  int     ret;
 
+  ret = 4;
   srand(time(NULL));
   inc = (rand() + _id) % 4;
   for (int i = 0; i < 4; i++)
   {
-    if (setObjDef(x + 1, y, 0, RIGHT) && inc % 4 == 0)
+    if (setObjDef(x + 1, y, 0, RIGHT) && inc % 4 == 0 && _checkMove2(x + 1, y))
+    {
       moveTo(x, y, 1, 0);
-    else if (setObjDef(x - 1, y, 0, LEFT) && inc % 4 == 1)
+      ret = LEFT;
+    }
+    else if (setObjDef(x - 1, y, 0, LEFT) && inc % 4 == 1 && _checkMove2(x - 1, y))
+    {
       moveTo(x, y, -1, 0);
-    else if (setObjDef(x, y + 1, 0, DOWN) && inc % 4 == 2)
+      ret = RIGHT;
+    }
+    else if (setObjDef(x, y + 1, 0, DOWN) && inc % 4 == 2 && _checkMove2(x, y + 1))
+    {
       moveTo(x, y, 0, 1);
-    else if (setObjDef(x, y - 1, 0, UP) && inc % 4 == 3)
+      ret = UP;
+    }
+    else if (setObjDef(x, y - 1, 0, UP) && inc % 4 == 3 && _checkMove2(x, y - 1))
+    {
       moveTo(x, y, 0, -1);
+      ret = DOWN;
+    }
     inc++;
   }
+  return ret;
 }
 
-void     Mybot::setObjOff(int x, int y)
+int     Mybot::setObjOff(int x, int y)
 {
   int     inc;
+  int     ret;
 
+  ret = 4;
   srand(time(NULL));
   inc = rand() % 4;
   for (int i = 0; i < 4; i++)
   {
+     if (_checkMove2(x, y) && rand() % (10+_id) < _id)
+       spawnBomb();
     if (isSafe(x + 1, y) && _checkMove2(x + 1, y) && inc % 4 == 0)
+    {
       moveTo(x, y, 1, 0);
+      ret = LEFT;
+    }
     else if (isSafe(x - 1, y) && _checkMove2(x - 1, y) && inc % 4 == 1)
+    {
       moveTo(x, y, -1, 0);
+      ret = RIGHT;
+    }
     else if (isSafe(x, y + 1) && _checkMove2(x, y + 1) && inc % 4 == 2)
+    {
       moveTo(x, y, 0, 1);
+      ret = UP;
+    }
     else if (isSafe(x, y - 1) && _checkMove2(x, y - 1) && inc % 4 == 3)
+    {
       moveTo(x, y, 0, -1);
-      if (_checkMove2(x, y) && rand() % (10+_id) < _id)
-          spawnBomb();
+      ret = DOWN;
+    }
     inc++;
   }
+  return (ret);
+
 }
 
 void    Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-  float trans = static_cast<float>(clock.getElapsed()) * _speed / 2;
-  glm::vec3                               rotation = glm::vec3(0);
-  //float trans = 1;
+  float trans = static_cast<float>(clock.getElapsed()) * _speed / 4;
+  AObject                                 *tmp;
   int     x;
   int     y;
 
-   x = realPos(getPos()).first;
-   y = realPos(getPos()).second;
-  if ((x == _x_obj && y == _y_obj) || (_x_obj == 0 && _y_obj == 0))
+  x = realPos(getPos()).first;
+  y = realPos(getPos()).second;
+  _shield += clock.getElapsed();
+  if ((_dep >= 0.9 && (_x_obj - x == 0 && _y_obj - y == 0)) || (_x_obj == 0 && _y_obj == 0))
   {
-      if (isSafe(x, y))
-       setObjOff(x, y);
-      else
-        setObjDef(x, y);
+    if (isSafe(x, y))
+      _move = setObjOff(x, y);
+    else
+      _move =setObjDef(x, y);
+    if (_move < 4)
+      _dep = 0;
   }
-  else
+  else if (_isAlive)
   {
-    translate(glm::vec3(trans * (_x_obj - x), 0, trans * (_y_obj - y)));
-    _pos.first += trans * (_x_obj - x);
-    _pos.second +=  trans * (_y_obj - y);
-      if ((rotation.y = (_x_obj - x) * 90) == 0)
-        rotation.y = (_y_obj - y + 1) * 90 + 180;
-      rotate(rotation);
+    if (_move == LEFT)
+    {
+      translate(glm::vec3(trans, 0, 0));
+      _pos.first += trans;
+      _dep += trans;
+    }
+    else if (_move == RIGHT)
+    {
+      translate(glm::vec3(-trans, 0, 0));
+      _pos.first -= trans;
+      _dep += trans;
+    }
+    else if (_move == UP)
+    {
+      translate(glm::vec3(0, 0, trans));
+      _pos.second +=  trans;
+      _dep += trans;
+    }
+    else if (_move == DOWN)
+    {
+      translate(glm::vec3(0, 0, -trans));
+      _pos.second -=  trans;
+      _dep += trans;
+    }
+    tmp = _map->getCase(_pos.first, _pos.second);
+    if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
+    {
+      static_cast<Bonus*>(tmp)->addToPlayer(this);
+      _sound->playSound(BONUS_S, 30);
+      _map->deleteCube(_pos.first, _pos.second);
+    }
   }
 }
 

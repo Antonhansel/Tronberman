@@ -110,7 +110,6 @@ void  Bombs::bombExplode()
   {
     if (_time - _create > 2.0 || _explosed == true)
     {
-      pos = (*it2)->getPos();
       _player->setStock(_player->getStock() + 1);
       pos = (*it2)->getPos();
       _map->deleteCube(pos.first, pos.second);
@@ -134,11 +133,11 @@ void    Bombs::newBomb(std::pair<float, float> &check)
   _map->addCube(check.first, check.second, bomb);
   for (std::vector<Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); ++it)
     {
-      if ((*it) && (*it)->getShield() > 1.0)
+      if ((*it) && (*it)->getShield() > 1)
       {
         pos = (*it)->getPos();
-        pos.first = ((int)(pos.first));
-        pos.second = ((int)(pos.second));
+        pos.first = ((int)(pos.first + 0.5));
+        pos.second = ((int)(pos.second + 0.5));
         if (pos.first == check.first && pos.second == check.second)
         {
           if ((*it)->getLife() == 0 && (*it)->isAlive() == true)

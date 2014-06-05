@@ -12,7 +12,6 @@ NAME		=	bomberman
 SOURCES		=	srcs/main.cpp \
 				srcs/Loader.cpp \
 				srcs/Particles.cpp \
-				srcs/MapFiller.cpp \
 				srcs/Menu.cpp \
 				srcs/CubeAnim.cpp \
 				srcs/Core.cpp \

@@ -22,7 +22,6 @@ public:
   ~Map();
   Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;
-  AObject     *getCase(std::pair<int, int> *) const;
   void        setSpawn(int nb);
   std::pair<int, int>   getSpawn();
   std::string     getName() const;
