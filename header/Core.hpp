@@ -23,6 +23,7 @@
 # include "Hud.hpp"
 # include "AInput.hpp"
 # include "Saving.hpp"
+# include "MapFiller.hpp"
 
 class Networking;
 class Menu;
@@ -83,6 +84,7 @@ private:
   AInput      *_ainput;
   ParticleEngine   *_particles;
   Networking  *_networking;
+  MapFiller   *_mapFiller;
 };
 
 #endif /*!_CORE_HPP_*/

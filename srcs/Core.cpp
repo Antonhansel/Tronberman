@@ -23,6 +23,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
   _ainput = NULL;
   _particles = particles;
   _isSave = false;
+  _mapFiller = NULL;
 }
 
 void  Core::reset()
@@ -41,6 +42,7 @@ void  Core::reset()
   _displayFPS = false;
   _ainput = NULL;
   _isSave = false;
+  _mapFiller = NULL;
 }
 
 void  Core::setValues(Map *map)
@@ -285,6 +287,12 @@ bool	Core::update()
     _hud->setScreen(2);
   _hud->update(_player[0]);
   _particles->update(_clock, _input);
+  if (_hud->getTimer() <= 0 && _networking == NULL)
+  {
+    if (_mapFiller == NULL)
+      _mapFiller = new MapFiller(_map, _loader, &_player);
+    _mapFiller->fillMap(_clock);
+  }
   return (true);
 }
 
@@ -347,7 +355,7 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (std::vector<Player *>::iterator player = _player.begin(); player != _player.end(); ++player)
   {
-    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()))
+    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()) && (*player)->isAlive())
       (*player)->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock, cur_char);
@@ -408,6 +416,8 @@ void	Core::draw()
   }
   if (_displayFPS)
     _hud->drawFPS();
+  if (_mapFiller != NULL)
+    _mapFiller->draw(_shader);
   _cam->flushContext();
 }
 

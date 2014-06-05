@@ -20,6 +20,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Cube.cpp \
 				srcs/Engine.cpp \
 				srcs/Map.cpp \
+				srcs/MapFiller.cpp \
 				srcs/Player.cpp \
 				srcs/Mybot.cpp \
 				srcs/Floor.cpp \
