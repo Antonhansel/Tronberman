@@ -53,7 +53,7 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _map->setSpawn(_players + _nb_bot);
+  _map->setSpawn(_players + _nb_bot + 10);
   _time = 0;
   _frames = 0;
   _endgame = false;
@@ -92,7 +92,6 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
-  _networking = _menu->getNetwork();
   if (!drawFloor() || !drawChar() || !drawBot(_nb_bot))
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
@@ -106,6 +105,7 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
+  _networking = _menu->getNetwork();
   if (_networking)
   {
     _players = 1;
@@ -134,17 +134,8 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(std::pair<float, float> pos, int screen)
 {
-  Player *chara;
+  Player *chara = create<Player>();
 
-  printf("Networking : %p\n", _networking);
-  if (!_networking || _networking->isServer())
-    chara = create<Player>();
-  else
-  {
-    printf("network player\n");
-    chara = create<NetworkOwnPlayer>();
-  }
-  chara->setCore(this);
   chara->setId(screen);
   if (chara->initialize() == false)
     return (false);
@@ -364,7 +355,7 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (std::vector<Player *>::iterator player = _player.begin(); player != _player.end(); ++player)
   {
-    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()))
+    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()) && (*player)->isAlive())
       (*player)->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock, cur_char);
@@ -450,11 +441,6 @@ gdl::Clock *Core::getClock()
   return &_clock;
 }
 
-Networking *Core::getNetworking()
-{
-  return _networking;
-}
-
 std::map<std::pair<float, float>, Bombs *> &Core::getBombs()
 {
   return (_bombs);
@@ -464,3 +450,4 @@ Sound   *Core::getSound()
 {
   return (_sound);
 }
+

@@ -12,7 +12,6 @@ NAME		=	bomberman
 SOURCES		=	srcs/main.cpp \
 				srcs/Loader.cpp \
 				srcs/Particles.cpp \
-				srcs/MapFiller.cpp \
 				srcs/Menu.cpp \
 				srcs/CubeAnim.cpp \
 				srcs/Core.cpp \
@@ -21,6 +20,7 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Cube.cpp \
 				srcs/Engine.cpp \
 				srcs/Map.cpp \
+				srcs/MapFiller.cpp \
 				srcs/Player.cpp \
 				srcs/Mybot.cpp \
 				srcs/Floor.cpp \
@@ -36,7 +36,9 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Preview.cpp \
 				srcs/AInput.cpp \
 				srcs/Hud.cpp \
-				srcs/Md5.cpp
+				srcs/Md5.cpp \
+				srcs/ScopedLock.cpp \
+				srcs/Thread.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

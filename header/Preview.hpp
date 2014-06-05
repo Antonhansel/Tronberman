@@ -35,6 +35,8 @@ public:
 	void 					changeMapSave(int);
 	Map 					*getMap() const;
 	Saving 					*getInstance();
+	bool					getState() const;
+	void					setState(bool);
 
 private:
 	double 											_time;
@@ -52,6 +54,7 @@ private:
   	float											_posx;
   	float											_xend;
   	std::vector<Saving *>							_save;
+  	bool											_state;
 };
 
 #endif /*!_PREVIEW_HPP_*/
