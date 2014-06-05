@@ -84,6 +84,11 @@ Networking::~Networking()
 {
     if (!_closed)
         close(_sockfd);
+    if (_isServer)
+    {
+        for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+            close((*i)->sockfd);
+    }
 }
 
 void Networking::startGame(Core *core)
