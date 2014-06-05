@@ -256,8 +256,12 @@ bool	Core::update()
         }
         std::string t(name);
         Saving  *s = new Saving(t);
+        _hud->displaySaving(true);
+        draw();
         s->saveGame(_map, _player, _hud->getTimer());
-        delete(s);
+        _clock = _cam->getClock();
+        _hud->displaySaving(false);
+        delete s;
         break;
       }
       default:

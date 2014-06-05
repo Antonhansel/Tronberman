@@ -13,6 +13,7 @@
 Hud::Hud(Camera *cam, Loader *loader) :
 	Text(cam, loader)
 {
+	_save = this->putstr("SAVING...", 50, false);
 	_drawPlayer[1] = &Hud::drawPlayer1;
 	_drawPlayer[2] = &Hud::drawPlayer2;
 	_updatePlayer[1] = &Hud::updatePlayer1;
@@ -142,6 +143,8 @@ void	Hud::draw(Player *cur)
   	(this->*_drawPlayer[cur->getId()])();
   	if (_timerDouble == false && _timer > 0)
   		drawTimer();
+  	if (_saving)
+  		drawSaving();
   	_camera->setMode();
 }
 
@@ -282,4 +285,22 @@ float 	Hud::getTimer() const
 void	Hud::setTimer(float timer)
 {
 	_timer = timer;
+}
+
+void	Hud::drawSaving()
+{
+	int	col;
+
+	col = 800;
+	for (std::vector<Geometry *>::iterator it = _save.begin(); it != _save.end(); ++it)
+	{
+		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
+		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
+		col += 40;
+	}
+}
+
+void	Hud::displaySaving(bool b)
+{
+	_saving = b;
 }
