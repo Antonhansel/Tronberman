@@ -300,7 +300,7 @@ void    Networking::_treatMessage(Client *client, Message *message)
         for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
             if (message->data.player[i].playerId == -1)
                 break;
-            if (message->data.player[i].playerId + 1 < _core->getPlayer().size())
+            if ((unsigned int)(message->data.player[i].playerId + 1) < _core->getPlayer().size())
             {
                 _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
                 _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
