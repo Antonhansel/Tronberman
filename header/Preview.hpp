@@ -11,9 +11,9 @@
 #ifndef _PREVIEW_HPP_
 # define _PREVIEW_HPP_
 
-# include "Camera.hpp"
-# include "Loader.hpp"
-# include "Map.hpp"
+// # include "Camera.hpp"
+// # include "Loader.hpp"
+//# include "Map.hpp"
 # include "Saving.hpp"
 # include "Text.hpp"
 
@@ -41,7 +41,7 @@ public:
 	bool					getResult() const;
 
 private:
-	//Text											_text;
+	std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _big;
 	double 											_time;
 	std::vector<Map*>::iterator 					_it;
 	std::vector<std::vector<Player *> >::iterator	_itPlayer;
@@ -59,6 +59,7 @@ private:
   	std::vector<Saving *>							_save;
   	bool											_state;
   	bool											_result;
+  	Text 											*_text;
 };
 
 #endif /*!_PREVIEW_HPP_*/

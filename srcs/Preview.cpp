@@ -14,9 +14,11 @@
 
 Preview::Preview(Camera *camera, Loader *loader)
 {
+
 	_camera = camera;
 	_loader = loader;
-	//_text = new Text(_camera, _loader);
+	_text = new Text(_camera, _loader);
+	_text->addText(_big, 0, std::make_pair(100, 300), "Map is too big for the preview", true);
 	_angle = 0;
 	_posy = 20;
 	_posx = 0;
@@ -26,7 +28,12 @@ Preview::Preview(Camera *camera, Loader *loader)
 }
 
 Preview::~Preview()
-{}
+{
+	_text->deleteAllText(_big);
+	for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
+		delete *it;
+	delete _text;
+}
 
 bool 		Preview::checkName(const char *str1)
 {
@@ -208,25 +215,30 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
   	type LastType = static_cast<type>(-1);
   	AObject     *tmp;
 
-  	_camera->previewMode(true);
-	setCameraAngle();
-	for (int x = 0; x < _map->getSize(); ++x)
+  	if (_map->getSize() <= 50)
   	{
-	    for (int y = 0; y < _map->getSize(); ++y)
-	    {
-		  tmp = _map->getCase(x, y);
-		 	if (tmp)
-		 	{
-		  	if (tmp->getType() != LastType)
-		      {
-		        LastType = tmp->getType();
-		        _loader->bindTexture(LastType);
-		      }
-		   	_loader->drawGeometry(shader, tmp->getTransformation());
+	  	_camera->previewMode(true);
+		setCameraAngle();
+		for (int x = 0; x < _map->getSize(); ++x)
+	  	{
+		    for (int y = 0; y < _map->getSize(); ++y)
+		    {
+			  tmp = _map->getCase(x, y);
+			 	if (tmp)
+			 	{
+			  	if (tmp->getType() != LastType)
+			      {
+			        LastType = tmp->getType();
+			        _loader->bindTexture(LastType);
+			      }
+			   	_loader->drawGeometry(shader, tmp->getTransformation());
+				}
 			}
 		}
+	 	_camera->previewMode(false);
 	}
-  _camera->previewMode(false);
+	else
+	_text->draw(_big, 1);
 }
 
 Map 	*Preview::getMap() const

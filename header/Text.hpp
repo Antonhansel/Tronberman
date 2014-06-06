@@ -11,12 +11,12 @@
 #ifndef _TEXT_HPP_
 # define _TEXT_HPP_
 
-#include "Loader.hpp"
-#include "Camera.hpp"
-#include "AInput.hpp"
 #include <vector>
 #include <unistd.h>
 #include <map>
+#include "Loader.hpp"
+#include "Camera.hpp"
+#include "AInput.hpp"
 
 class Text
 {
@@ -37,7 +37,6 @@ public:
   ~Text();
   void putchar(char, int, std::vector<gdl::Geometry *> &, bool);
   std::vector<gdl::Geometry *> putstr(const char *, int, bool);
-  // void update(gdl::Clock const &clock, gdl::Input &input);
   void draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int);
   void  modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const std::vector<std::pair<bool, std::string> > &);
   void  addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, int, const std::string &);
