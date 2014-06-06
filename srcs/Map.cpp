@@ -65,6 +65,13 @@ AObject     *Map::getCase(int x, int y) const
     return _map[x * _size_x + y];
 }
 
+AObject     *Map::getCase(std::pair<int, int> *coor) const
+{
+    if (coor->first < 0 || coor->first >= _size_x || coor->second < 0 || coor->second >= _size_y)
+        return NULL;
+    return _map[coor->first * _size_x + coor->second];
+}
+
 void    Map::genereteName()
 {
   for (int i = 0 ; i < 10 ; i++)

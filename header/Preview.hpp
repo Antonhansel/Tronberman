@@ -15,6 +15,7 @@
 # include "Loader.hpp"
 # include "Map.hpp"
 # include "Saving.hpp"
+# include "Text.hpp"
 
 #define PI 3.14159
 
@@ -40,6 +41,7 @@ public:
 	bool					getResult() const;
 
 private:
+	//Text											_text;
 	double 											_time;
 	std::vector<Map*>::iterator 					_it;
 	std::vector<std::vector<Player *> >::iterator	_itPlayer;

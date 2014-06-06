@@ -16,6 +16,7 @@ Preview::Preview(Camera *camera, Loader *loader)
 {
 	_camera = camera;
 	_loader = loader;
+	//_text = new Text(_camera, _loader);
 	_angle = 0;
 	_posy = 20;
 	_posx = 0;

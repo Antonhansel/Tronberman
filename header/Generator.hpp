@@ -41,7 +41,7 @@ private:
 	Camera 			*_camera;
 	Loader 			*_loader;
 	int 			_size;
-	AObject 		**_map;
+	Map				*_map;
 	Clock			_clock;
   	Input			_input;
   	BasicShader		_shader;
