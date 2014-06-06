@@ -571,13 +571,12 @@ void    Menu::online()
 
 void    Menu::server()
 {
-  _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "PORT", true);
   _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
   _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
   _max = 2;
 }
 
@@ -590,7 +589,7 @@ void    Menu::client()
   _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _ipAddr.c_str(), false);
   _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err, false);
+  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
   _max = 3;
 }
 
@@ -861,7 +860,7 @@ void  Menu::select0()
   (_stepM == HOME) ? (_stepM = STEP1) : (_stepM == STEP1) ? (_isSelect = 0, _stepM = STEP11)
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM && (_map = _preview->getMap()) != NULL) ? (_previewMode = false ,_stepM = LOADG)
   : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true)
-  : (_stepM == ONLINE) ? (_stepM = SERVER) : 0;
+  : (_stepM == ONLINE) ? (_stepM = SERVER, _isSelect = 0) : 0;
 }
 
 void  Menu::select1()
@@ -917,6 +916,8 @@ void  Menu::select2()
       _err = tmp->what();
     }
   }
+  if (_stepM == ONLINE)
+    _err = "";
 }
 
 void  Menu::select3()
@@ -925,6 +926,8 @@ void  Menu::select3()
   ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
   : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
+  if (_stepM == ONLINE)
+    _err = "";
 }
 
 void  Menu::select4()

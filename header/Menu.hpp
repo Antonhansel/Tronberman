@@ -138,7 +138,6 @@ private:
   int           _vol;
   bool          _isFx;
   Thread        *_th;
-  const char    *_err;
 private:
   Map               *_map;
   Text              *_text;
@@ -151,7 +150,9 @@ private:
   ParticleEngine    *_engine;
   Networking        *_network;
   Core              *_core;
+
 private:
+  std::string       _err;
   std::string       _fx;
   std::string       _volume;
   std::string       _sizeMap;
