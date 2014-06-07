@@ -30,9 +30,9 @@ Preview::Preview(Camera *camera, Loader *loader)
 Preview::~Preview()
 {
 	_text->deleteAllText(_big);
-	for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
-		if (*it != NULL)
-			delete *it;
+	// for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
+	// 	if (*it != NULL)
+	// 		delete *it;
 	if (_text != NULL)
 		delete _text;
 }

@@ -29,6 +29,7 @@ Player::Player()
     _score = 0;
     _dir = NORTH;
     _modelpath = "./ressources/assets/anim/bomberman_gold_run.FBX";
+    std::cout << "BUILD" << std::endl;
 }
 
 Player::~Player()
@@ -111,15 +112,6 @@ void    Player::setSpeed(float speed)
 
 bool    Player::_checkMove2(float x, float y)
 {
-  // std::pair<float, float>   pos;
-  // AObject *tmp;
-  // AObject *cur = _map->getCase(_pos.first, _pos.second);
-  // if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
-  // {
-  //   if ((tmp = _checkMove(x, y)) == NULL || (tmp && (tmp->getType() >= 9 && tmp->getType() < 12)) || (tmp && tmp->getType() == BOMB))
-  //     return (true);
-  // }
-  // return (false);
   AObject *cas = _map->getCase(x, y);
     if (!cas || cas->getType() == BONUSV || cas->getType() == BONUSB || cas->getType() == BONUSR)
         return (true);
@@ -309,7 +301,7 @@ std::pair<float, float>    Player::left(float &trans)
 
 std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
 {
- float temp1;
+  float temp1;
   float temp2;
   temp1 = floor(pos.first);
   temp2 = ceil(pos.first);
