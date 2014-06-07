@@ -20,8 +20,7 @@ AObject::AObject() :
 }
 
 AObject::~AObject()
-{
-}
+{}
 
 void    AObject::setPos(std::pair<float, float> &pos)
 {
