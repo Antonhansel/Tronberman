@@ -23,6 +23,7 @@ Map::Map(int size)
 
 Map::Map(int size, ParticleEngine *engine)
 {
+    _state = false;
     _engine = engine;
     _size_x = size;
     _size_y = size;
@@ -30,6 +31,7 @@ Map::Map(int size, ParticleEngine *engine)
     memset(_map, 0, (_size_x * _size_y) * sizeof(AObject *));
     _drawWall();
     _outline();
+    _state = true;
 }
 
 Map::Map(int size, bool m, ParticleEngine *engine)
@@ -256,4 +258,9 @@ std::string     Map::getName() const
 void            Map::setName(std::string &name)
 {
     _name = name;
+}
+
+bool            Map::getState() const
+{
+    return (_state);
 }
