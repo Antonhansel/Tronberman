@@ -19,13 +19,15 @@ public:
 	Loader();
 	~Loader();
 	bool 		loadTextures();
+	bool 		loadModels();
+	bool 		loadRessources();
+	bool 		initVertex();
 	void 		bindTexture(type);
 	void 		drawGeometry(gdl::AShader &, glm::mat4);
 	void 		pushTexture(gdl::Geometry *);
 	void 		loadParticules();
 	void 		drawParticules(gdl::AShader &, glm::mat4);
 private:
-	int 			_modelCount;
 	std::vector<gdl::Texture*> _textures;
 	std::vector<gdl::Model *> _models;
 	gdl::Geometry 		_geometry;

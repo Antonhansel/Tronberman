@@ -288,6 +288,7 @@ bool	Saving::getSavedGame()
 			if (s.size() > 0 && s.compare(s1) == 0)
 			{
 				getMapFromFile();
+				//Meme fonction qu'au dessus a part ces deux lignes
 				getPlayerFromFile();
 				getTimerFromFile();
 				return (true);
