@@ -707,15 +707,23 @@ void    Menu::load()
   {
     PtrFonct pf = &getMapp;
     _th = new Thread();
-    _th->createThread(pf, ((void*)(_preview)));
-    while (_preview->getState())
+    if (_th->createThread(pf, ((void*)(_preview))))
     {
-      update();
-      draw();
+      while (_preview->getState())
+      {
+        update();
+        draw();
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
     }
-    _th->joinThread();
-    delete _th;
-    _th = NULL;
+    else
+        std::cout << "ERROR ON CREATE THREAD\n";
   }
   _preview->setState(true);
   _previewMode = _preview->getResult();
@@ -734,15 +742,23 @@ void    Menu::loadPrevious()
   {
     PtrFonct pf = &getGame;
     _th = new Thread();
-    _th->createThread(pf, ((void*)(_preview)));
-    while (_preview->getState())
+    if (_th->createThread(pf, ((void*)(_preview))))
     {
-     update();
-     draw();
+      while (_preview->getState())
+      {
+        update();
+        draw();
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
     }
-    _th->joinThread();
-    delete _th;
-    _th = NULL;
+    else
+        std::cout << "ERROR ON CREATE THREAD\n";
   }
   _preview->setState(true);
   _previewMode = _preview->getResult();
@@ -943,17 +959,25 @@ void  Menu::createMap()
     _text->deleteAllText(_step1);
     _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
     _th = new Thread();
-    _th->createThread(pf, ((void*)(this)));
-    while (resume)
+    if (_th->createThread(pf, ((void*)(this))))
     {
-      update();
-      draw();
-      if (_map != NULL)
-        resume = false;
+      while (resume)
+      {
+        update();
+        draw();
+        if (_map != NULL)
+          resume = false;
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
     }
-    _th->joinThread();
-    delete _th;
-    _th = NULL;
+    else
+      std::cout << "ERROR ON CREATE THREAD\n";
   }
   _isLaunch = true;
 }
