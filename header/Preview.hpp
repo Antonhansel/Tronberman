@@ -39,9 +39,11 @@ public:
 	bool					getState() const;
 	void					setState(bool);
 	bool					getResult() const;
+	void					resetText();
 
 private:
 	std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _big;
+	std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _nb;
 	double 											_time;
 	std::vector<Map*>::iterator 					_it;
 	std::vector<std::vector<Player *> >::iterator	_itPlayer;
@@ -60,6 +62,8 @@ private:
   	bool											_state;
   	bool											_result;
   	Text 											*_text;
+  	std::string 									_nbSize;
+  	std::string 									_nbPlayer;
 };
 
 #endif /*!_PREVIEW_HPP_*/

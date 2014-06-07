@@ -19,6 +19,8 @@ Preview::Preview(Camera *camera, Loader *loader)
 	_loader = loader;
 	_text = new Text(_camera, _loader);
 	_text->addText(_big, 0, std::make_pair(100, 300), "Map is too big for the preview", true);
+	_text->addText(_big, 0, std::make_pair(100, 380), "SIZE   :", true);
+	_text->addText(_big, 0, std::make_pair(100, 460), "PLAYER :", true);
 	_angle = 0;
 	_posy = 20;
 	_posx = 0;
@@ -27,9 +29,17 @@ Preview::Preview(Camera *camera, Loader *loader)
 	_state = true;
 }
 
+void		Preview::resetText()
+{
+	_text->deleteAllText(_nb);
+	_text->addText(_nb, 0, std::make_pair(500, 380), _nbSize.c_str(), true);
+	_text->addText(_nb, 0, std::make_pair(500, 460), _nbPlayer.c_str(), true);	
+}
+
 Preview::~Preview()
 {
 	_text->deleteAllText(_big);
+	_text->deleteAllText(_nb);
 	// for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
 	// 	if (*it != NULL)
 	// 		delete *it;
@@ -163,7 +173,7 @@ void 		Preview::changeMapSave(int i)
 		{
 			_it = _maps->end();
 			_it--;
-			_itPlayer = _players->begin();
+			_itPlayer = _players->end();
 			_itPlayer--;
 		}
 		else
@@ -178,6 +188,7 @@ void 		Preview::changeMapSave(int i)
 
 bool		Preview::update(gdl::Clock const &clock, gdl::Input &input, bool isSave)
 {
+	std::stringstream ss;
 
 	_time += clock.getElapsed();
 	if (_time > 0.1)
@@ -197,6 +208,16 @@ bool		Preview::update(gdl::Clock const &clock, gdl::Input &input, bool isSave)
 			else
 				changeMapSave(1);
 		}
+	}
+	if (isSave && (*_it)->getSize() > 50)
+	{
+		ss << _map->getSize();
+	    _nbSize = ss.str();
+	    ss.str("");
+	    ss.clear();
+		ss << _itPlayer->size();
+		_nbPlayer = ss.str();
+		resetText();
 	}
 	return (true);
 }
@@ -240,7 +261,10 @@ void		Preview::draw(gdl::AShader &shader, gdl::Clock const &clock)
 	 	_camera->previewMode(false);
 	}
 	else
-	_text->draw(_big, 1);
+	{
+		_text->draw(_big, 1);
+		_text->draw(_nb, 1);
+	}
 }
 
 Map 	*Preview::getMap() const
