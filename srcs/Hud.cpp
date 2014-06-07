@@ -18,9 +18,9 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	_drawPlayer[2] = &Hud::drawPlayer2;
 	_updatePlayer[1] = &Hud::updatePlayer1;
 	_updatePlayer[2] = &Hud::updatePlayer2;
-	_death[VICTORY] = this->putstr("YOU WIN", 50, true);
-	_death[DEFEAT] = this->putstr("YOU LOSE", 50, true);
-	_death[FATALITY] = this->putstr("FATALITY", 50, true);
+	_death[VICTORY] = this->putstr("YOU WIN", 100, true);
+	_death[DEFEAT] = this->putstr("YOU LOSE", 100, true);
+	_death[FATALITY] = this->putstr("FATALITY", 100, true);
 	bombPlayer1 = 0;
 	bombPlayer2 = 0;
 	rangePlayer1 = 0;
@@ -306,14 +306,16 @@ void	Hud::drawSaving()
 void	Hud::drawDeath(Death type)
 {
 	int	col;
-
 	col = 800;
+
+	_camera->setMode();
 	for (std::vector<Geometry *>::iterator it = _death[type].begin(); it != _death[type].end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
 		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
-		col += 40;
+		col += 80;
 	}
+	_camera->setMode();
 }
 
 

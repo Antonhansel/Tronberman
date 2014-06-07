@@ -394,10 +394,26 @@ void  Core::checkAlive()
       if ((*it)->isAlive() == true)
       {
         if ((*it)->getId() == 1 || (*it)->getId() == 2)
-          std::cout << "PLAYER ALIVE " << std::endl;
+         endingGame(VICTORY);
+        else
+          endingGame(FATALITY);
       }
     }
     _endgame = true;
+  }
+}
+
+void  Core::endingGame(Death type)
+{
+  double time;
+
+  time = 0;
+  _hud->drawDeath(type);
+  while (time < 3)
+  {
+    _cam->flushContext();
+    _clock = _cam->getClock();
+    time += _clock.getElapsed();
   }
 }
 
