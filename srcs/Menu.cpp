@@ -324,6 +324,8 @@ void    Menu::manageEventInputScore(key &k)
           _addScore = false;
           saveInFile();
         }
+        else
+          getInputPseudo(65);
         break;
       }
       case MRETURN:
@@ -923,11 +925,48 @@ void  Menu::select2()
 void  Menu::select3()
 {
   (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
+  ? (createMap(), _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
   : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
   if (_stepM == ONLINE)
     _err = "";
+}
+
+void  Menu::createMap()
+{
+  bool  resume = true;
+
+  _map = NULL;
+  if (_th == NULL)
+  {
+    PtrFonct pf = &crM;
+    _text->deleteAllText(_step1);
+    _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
+    _th = new Thread();
+    _th->createThread(pf, ((void*)(this)));
+    while (resume)
+    {
+      update();
+      draw();
+      if (_map != NULL)
+        resume = false;
+    }
+    _th->joinThread();
+    delete _th;
+    _th = NULL;
+  }
+  _isLaunch = true;
+}
+
+void  *crM(void *arg)
+{
+  reinterpret_cast<Menu *>(arg)->generateMap();
+  return (NULL);
+}
+
+void  Menu::generateMap()
+{
+  _map = new Map(getMapSize(), _engine);
 }
 
 void  Menu::select4()

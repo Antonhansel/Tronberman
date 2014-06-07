@@ -37,6 +37,8 @@ public:
   void    setSpawn(std::vector<std::pair<int, int> > &);
   void    genereteName();
   std::pair<int, int> getSpawnPoint();
+  bool    getState() const;
+
 private:
   ParticleEngine  *_engine;
   std::vector<std::string> _paths;
@@ -48,6 +50,7 @@ private:
   void          _deleteSide(int x, int y);
   void		      _outline();
   void          _drawWall();
+  bool          _state;
 };
 
 #endif /* !MAP_HPP */
