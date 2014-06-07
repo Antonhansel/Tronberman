@@ -29,7 +29,6 @@ Player::Player()
   _score = 0;
   _dir = NORTH;
   _modelpath = "./ressources/assets/anim/bomberman_gold_run.FBX";
-  std::cout << "BUILD" << std::endl;
 }
 
 Player::~Player()
