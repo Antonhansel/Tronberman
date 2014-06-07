@@ -31,8 +31,10 @@ Preview::~Preview()
 {
 	_text->deleteAllText(_big);
 	for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
-		delete *it;
-	delete _text;
+		if (*it != NULL)
+			delete *it;
+	if (_text != NULL)
+		delete _text;
 }
 
 bool 		Preview::checkName(const char *str1)

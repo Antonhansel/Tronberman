@@ -208,7 +208,6 @@ bool	Saving::getPlayerFromFile()
 				player = new Player();
 			else
 				player = new Mybot();
-			_player.push_back(player);
 			if (id == 1 || id == 2)
 			{
 				player->setPlayer(id);
@@ -222,6 +221,7 @@ bool	Saving::getPlayerFromFile()
 			player->setStock(getDataFromString(s, "<stock>", "</stock>"));
 			player->setScore(getDataFromString(s, "<score>", "</score>"));
 			player->setPos(pair);
+			_player.push_back(player);
 		}
 		else
 			resume = false;

@@ -71,7 +71,6 @@ void MapFiller::fillMap(gdl::Clock &clock)
 			_move = false;
 			if (!_map->getCase(_cursor->getPos().first, _cursor->getPos().second))
 			{
-				//_map->deleteCube(_cursor->getPos().first, _cursor->getPos().second);
 				_map->addCube(_cursor->getPos().first, _cursor->getPos().second, BORDER);
 				checkPlayers();
 			}
