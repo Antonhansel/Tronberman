@@ -13,7 +13,6 @@
 
 # include "AObject.hpp"
 # include "Map.hpp"
-//# include "Player.hpp"
 
 class Player;
 
@@ -21,7 +20,8 @@ enum typeBonus
   {
     BONUS1,
     BONUS2,
-    BONUS3
+    BONUS3,
+    BONUS4
   };
 
 class Bonus: public AObject
@@ -45,6 +45,7 @@ public:
 	void	giveBonus1(Player *);
 	void	giveBonus2(Player *);
 	void	giveBonus3(Player *);
+	void	giveBonus4(Player *);
     void	throwBonus();
 };
 

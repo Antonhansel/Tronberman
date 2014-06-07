@@ -42,7 +42,8 @@ enum type
     BONUSV = 9,
     BONUSB = 10,
     BONUSR = 11,
-    NOTHING = 12
+    BONUSS = 12,
+    NOTHING = 13
   };
 
 enum key

@@ -108,6 +108,7 @@ void    Player::setPlayer(int player)
 void    Player::setSpeed(float speed)
 {
   _speed = speed;
+  _speedActiv = 10;
 }
 
 bool    Player::_checkMove2(float x, float y)
@@ -189,6 +190,12 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 
   if (_isAlive == true)
   {
+    if (_speedActiv > 0)
+    {
+      _speedActiv -= clock.getElapsed();
+      if (_speedActiv <= 0)
+        _speed = 7;
+    }
     float trans = static_cast<float>(clock.getElapsed()) *  _speed;
     std::map<int, std::pair<float, float> >                 keymap;
     std::pair<float, float> i;
@@ -242,9 +249,9 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         }
         rotate(rotation);
         tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && (tmp->getType() < 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
+        if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
         {
-          if (tmp && (tmp->getType() < 12 && tmp->getType() >= 9))
+          if (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9))
           {
             static_cast<Bonus*>(tmp)->addToPlayer(this);
             _sound->playSound(BONUS_S, 30);
