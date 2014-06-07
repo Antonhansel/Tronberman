@@ -56,6 +56,8 @@ void MapFiller::checkPlayers()
 
 void MapFiller::fillMap(gdl::Clock &clock)
 {
+	AObject *tmp;
+
 	_time += clock.getElapsed();
 	if (_time > 0.0001)
 	{ 
@@ -69,11 +71,13 @@ void MapFiller::fillMap(gdl::Clock &clock)
 		else if (_move == true)
 		{
 			_move = false;
-			if (!_map->getCase(_cursor->getPos().first, _cursor->getPos().second))
-			{
+			tmp = _map->getCase(_cursor->getPos().first, _cursor->getPos().second);
+			if (tmp && tmp->getType() != BONUSV && tmp->getType() != BONUSB
+				&& tmp->getType() != BONUSR && tmp->getType() != BONUSR)
+				tmp->setType(BORDER);
+			else
 				_map->addCube(_cursor->getPos().first, _cursor->getPos().second, BORDER);
-				checkPlayers();
-			}
+			checkPlayers();
 		}
 		_time = 0;
 	}

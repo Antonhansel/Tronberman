@@ -349,7 +349,7 @@ void  Core::drawAll(AObject *cur_char)
         continue;
       _loader->bindTexture(tmp->getType());
       _loader->drawGeometry(_shader, tmp->getTransformation());
-    }
+      }
   }
   for (std::vector<AObject*>::iterator i = _other.begin(); i != _other.end(); ++i)
     (*i)->draw(_shader, _clock);
