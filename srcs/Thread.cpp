@@ -5,18 +5,18 @@ Thread::Thread()
 	pthread_mutex_t 	mutex = PTHREAD_MUTEX_INITIALIZER;
 
 	_mutex = &mutex;
-	//_scopedLock = new ScopedLock(_mutex);
+	_scopedLock = new ScopedLock(_mutex);
 }
 
-Thread::Thread(pthread_mutex_t *mutex) :
-	_mutex(mutex)
+Thread::Thread(ScopedLock *sc) :
+	_scopedLock(sc)
 {
-	//_scopedLock = new ScopedLock(_mutex);
+	_mutex = _scopedLock->getMutex();
 }
 
 Thread::~Thread()
 {
-	//delete _scopedLock;
+	delete _scopedLock;
 }
 
 bool	Thread::createThread(void *(*start_routine)(void*), void *arg)
