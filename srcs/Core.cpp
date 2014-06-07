@@ -53,7 +53,10 @@ void  Core::setValues(Map *map)
   _width = _menu->getMapSize();
   _height = _width;
   _nb_bot = _menu->getNbBots();
-  _map->setSpawn(_players + _nb_bot + 10);
+  if (_networking == NULL)
+    _map->setSpawn(_players + _nb_bot);
+  else
+    _map->setSpawn(_players + _nb_bot + 10);
   _time = 0;
   _frames = 0;
   _endgame = false;
