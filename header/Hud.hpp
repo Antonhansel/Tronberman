@@ -46,8 +46,8 @@ public:
 	void	drawDeath(Death);
 
 private:
-	std::string convertToString(int, const std::string);
-	std::string convertToStringN(int, const std::string);
+	std::string convertToString(int, const std::string &);
+	std::string convertToStringN(int, const std::string &);
 	void 		delGeometry(std::vector<Geometry *> &);
 	void		drawPlayer1();
 	void		drawPlayer2();

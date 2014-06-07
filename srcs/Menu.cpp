@@ -697,19 +697,28 @@ void    Menu::score()
 
 void    Menu::load()
 {
+  bool  resume = true;
+
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
   if (_th == NULL)
   {
     PtrFonct pf = &getMapp;
-    _th = new Thread();
-    if (_th->createThread(pf, ((void*)(_preview))))
+    pthread_mutex_t   mutex = PTHREAD_MUTEX_INITIALIZER;
+    _sc = new ScopedLock(&mutex);
+    _th = new Thread(_sc);
+    if (_th->createThread(pf, ((void*)(this))))
     {
-      while (_preview->getState())
+      while (resume)
       {
         update();
         draw();
+        if (pthread_mutex_trylock(_sc->getMutex()) == 0)
+        {
+          resume = false;
+          pthread_mutex_unlock(_sc->getMutex());
+        }
       }
       if (_th->joinThread())
       {
@@ -732,24 +741,34 @@ void    Menu::load()
 
 void    Menu::loadPrevious()
 {
+  bool  resume = true;
+
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
   if (_th == NULL)
   {
     PtrFonct pf = &getGame;
-    _th = new Thread();
-    if (_th->createThread(pf, ((void*)(_preview))))
+    pthread_mutex_t   mutex = PTHREAD_MUTEX_INITIALIZER;
+    _sc = new ScopedLock(&mutex);
+    _th = new Thread(_sc);
+    if (_th->createThread(pf, ((void*)(this))))
     {
-      while (_preview->getState())
+      while (resume)
       {
         update();
         draw();
+        if (pthread_mutex_trylock(_sc->getMutex()) == 0)
+        {
+          resume = false;
+          pthread_mutex_unlock(_sc->getMutex());
+        }
       }
       if (_th->joinThread())
       {
         delete _th;
         _th = NULL;
+        _sc = NULL;
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
@@ -767,14 +786,26 @@ void    Menu::loadPrevious()
 
 void  *getGame(void *arg)
 {
-  reinterpret_cast<Preview *>(arg)->initializeSave();
+  reinterpret_cast<Menu *>(arg)->getGamee();
   return (NULL);
+}
+
+void  Menu::getGamee()
+{
+  _preview->initializeSave();
+  pthread_mutex_unlock(_sc->getMutex());
 }
 
 void  *getMapp(void *arg)
 {
-  reinterpret_cast<Preview *>(arg)->initialize();
+  reinterpret_cast<Menu *>(arg)->getMappp();
   return (NULL);
+}
+
+void  Menu::getMappp()
+{
+  _preview->initialize();
+  pthread_mutex_unlock(_sc->getMutex());
 }
 
 bool    Menu::initLogo()
@@ -957,6 +988,7 @@ void  Menu::createMap()
       {
         delete _th;
         _th = NULL;
+        _sc = NULL;
         _isLaunch = true;
       }
       else

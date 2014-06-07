@@ -96,6 +96,8 @@ public:
   Networking *getNetwork() const;
   void      createMap();
   void      generateMap();
+  void      getGamee();
+  void      getMappp();
 
   private:
     void  getScore();
