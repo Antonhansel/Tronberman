@@ -28,6 +28,7 @@ public:
 	void 		loadParticules();
 	void 		drawParticules(gdl::AShader &, glm::mat4);
 private:
+	type 		lastBind;
 	std::vector<gdl::Texture*> _textures;
 	std::vector<gdl::Model *> _models;
 	gdl::Geometry 		_geometry;
