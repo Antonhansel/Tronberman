@@ -20,6 +20,13 @@ enum Display
 	TIMER = 3
 };
 
+enum Death 
+{	
+	VICTORY = 1,
+	DEFEAT = 2,
+	FATALITY = 3
+};
+
 class Hud : public Text
 {
 public:
@@ -36,6 +43,7 @@ public:
 	float	getTimer() const;
 	void 	setTimer(float);
 	void	displaySaving(bool);
+	void	drawDeath(Death);
 
 private:
 	std::string convertToString(int, const std::string);
@@ -66,6 +74,7 @@ private:
 	glm::mat4 _transformation;
 	std::map<int, void(Hud::*)(Player *) > _updatePlayer;
 	std::map<int, void(Hud::*)() > _drawPlayer;
+	std::map<Death, std::vector<gdl::Geometry *> >	_death;
 	std::map<Display, std::vector<gdl::Geometry *> >	_player1;
 	std::map<Display, std::vector<gdl::Geometry *> >	_player2;
 	std::vector<gdl::Geometry *> 					 	_save;
