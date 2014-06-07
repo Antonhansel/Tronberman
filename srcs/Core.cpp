@@ -362,7 +362,7 @@ void  Core::drawAll(AObject *cur_char)
     (*i)->draw(_shader, _clock);
   for (std::vector<Player *>::iterator player = _player.begin(); player != _player.end(); ++player)
   {
-    if (*player /*&& playerDraw((*player)->getPos(), cur_char->getPos()) && (*player)->isAlive()*/)
+    if (*player && playerDraw((*player)->getPos(), cur_char->getPos()) && (*player)->isAlive())
       (*player)->draw(_shader, _clock);
   }
   _particles->draw(_shader, _clock, cur_char);
@@ -388,7 +388,17 @@ void  Core::checkAlive()
       num++;
   }
   if (num == 1)
+  {
+    for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+    {
+      if ((*it)->isAlive() == true)
+      {
+        if ((*it)->getId() == 1 || (*it)->getId() == 2)
+          std::cout << "PLAYER ALIVE " << std::endl;
+      }
+    }
     _endgame = true;
+  }
 }
 
 void	Core::draw()
