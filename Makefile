@@ -38,7 +38,8 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Hud.cpp \
 				srcs/Md5.cpp \
 				srcs/ScopedLock.cpp \
-				srcs/Thread.cpp
+				srcs/Thread.cpp \
+				srcs/Function.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
