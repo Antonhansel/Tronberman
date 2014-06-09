@@ -21,6 +21,8 @@ public:
   void    update(gdl::Clock const &clock, gdl::Input &input);
   void    setSeeRange(int);
   void    setRec(int);
+  void    setAction(int);
+  void    setFreqBombs(int);
   PlayerType getType() const;
 
 private:
@@ -34,10 +36,13 @@ private:
 
   int     _x_obj;
   int     _y_obj;
-  int     _rec;
-  int     _seerange;
   float   _dep;
   int     _move;
+
+  int     _rec;
+  int     _action;
+  int     _seerange;
+  int     _freq_bombs;
 };
 
 #endif /* MYBOT_HPP */
