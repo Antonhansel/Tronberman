@@ -215,7 +215,6 @@ bool	Core::update()
   checkAlive();
   if (_endgame == true)
     return (false);
-
   _clock = _cam->getClock();
   _input = _cam->getInput();
   if (_networking)
