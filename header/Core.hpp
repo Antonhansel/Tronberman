@@ -55,7 +55,8 @@ public:
   void      setSave(Saving *);
   gdl::Clock *getClock();
   std::map<std::pair<float, float>, Bombs *> &getBombs();
-  Sound   *getSound();
+  Sound     *getSound();
+  void      endingGame(Death);
   bool      playerDraw(std::pair<float, float>, std::pair<float, float>);
 private:
   bool      _isSave;
