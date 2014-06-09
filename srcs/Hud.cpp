@@ -19,7 +19,6 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	_updatePlayer[1] = &Hud::updatePlayer1;
 	_updatePlayer[2] = &Hud::updatePlayer2;
 	_death[VICTORY] = this->putstr("YOU WIN", 100, true);
-	_death[DEFEAT] = this->putstr("YOU LOSE", 100, true);
 	_death[FATALITY] = this->putstr("FATALITY", 100, true);
 	bombPlayer1 = 0;
 	bombPlayer2 = 0;
@@ -156,7 +155,7 @@ void	Hud::drawTimer()
 	int	col;
 
 	col = 800;
-	for (std::vector<Geometry *>::iterator it = _time.begin(); it != _time.end(); ++it)
+	for (std::vector<Geometry *>::const_iterator it = _time.begin(); it != _time.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 0, 0));
 		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
@@ -223,30 +222,17 @@ void		Hud::drawFPS() const
     _camera->setMode();
 }
 
-std::string Hud::convertToString(int value, const std::string text)
-{
-	std::stringstream ss;
-
-  	ss << value;
-  	return (text + " " + ss.str());
-}
-
-std::string Hud::convertToStringN(int value, const std::string text)
-{
-	std::stringstream ss;
-
-  	ss << value;
-  	return (ss.str() + text);
-}
-
 Hud::~Hud()
 {
 	std::map<Display, std::vector<gdl::Geometry *> >::iterator it;
+	std::map<Death, std::vector<gdl::Geometry *> >::iterator it2;
 
 	for (it = _player1.begin(); it != _player1.end(); ++it)
 		delGeometry((*it).second);
 	for (it = _player2.begin(); it != _player2.end(); ++it)
 		delGeometry((*it).second);
+	for (it2 = _death.begin(); it2 != _death.end(); ++it2)
+		delGeometry((*it2).second);
 	delGeometry(_affFPS);
 }
 
@@ -295,7 +281,7 @@ void	Hud::drawSaving()
 	int	col;
 
 	col = 800;
-	for (std::vector<Geometry *>::iterator it = _save.begin(); it != _save.end(); ++it)
+	for (std::vector<Geometry *>::const_iterator it = _save.begin(); it != _save.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
 		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
@@ -306,10 +292,10 @@ void	Hud::drawSaving()
 void	Hud::drawDeath(Death type)
 {
 	int	col;
-	col = 800;
+	col = 550;
 
 	_camera->setMode();
-	for (std::vector<Geometry *>::iterator it = _death[type].begin(); it != _death[type].end(); ++it)
+	for (std::vector<Geometry *>::const_iterator it = _death[type].begin(); it != _death[type].end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
 		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
@@ -318,6 +304,21 @@ void	Hud::drawDeath(Death type)
 	_camera->setMode();
 }
 
+std::string Hud::convertToString(int value, const std::string &text)
+{
+	std::stringstream ss;
+
+  	ss << value;
+  	return (text + " " + ss.str());
+}
+
+std::string Hud::convertToStringN(int value, const std::string &text)
+{
+	std::stringstream ss;
+
+  	ss << value;
+  	return (ss.str() + text);
+}
 
 void	Hud::displaySaving(bool b)
 {

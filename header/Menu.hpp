@@ -27,11 +27,13 @@
 # include "BomberException.hpp"
 # include "Core.hpp"
 # include "Thread.hpp"
+# include "Function.hpp"
 
 # define DELAY  0.15
 
 using namespace gdl;
 using namespace glm;
+
 
 enum stepM
   {
@@ -65,10 +67,10 @@ public:
   void			draw();
   bool			launch() const;
   bool      drawBackground();
-  void      event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &);
+  void      event();
   void      chooseStep();
   void      manageEventInput();
-  void      getInputNb(std::string &, size_t, int, int);
+  void      getInputNb(std::string &, size_t const, int const, int const);
   void      getInputAddr(std::string &, size_t);
   void      home();
   bool      initLogo();
@@ -96,10 +98,8 @@ public:
   void      generateMap();
 
   private:
-    int   convToInt(const std::string &) const;
-    void  convToString(std::string &, int) const;
     void  getScore();
-    void  manageEventInputScore(key &);
+    void  manageEventInputScore(key const &);
     void  getInputPseudo(char);
     void  saveInFile();
     bool  atLeastPlayer() const;

@@ -106,7 +106,7 @@ bool    Menu::update()
   {
     _event->setInput(_input);
     _background->update(_clock, _input);
-    event(_step1);
+    event();
   }
   if (_previewMode && !(_preview->update(_clock, _input, _isSave)))
     _previewMode = false;
@@ -115,14 +115,10 @@ bool    Menu::update()
   _cubeanim->changeVolum((float)_vol / 100.0);
   if (_network != NULL)
     _network->newPlayers();
-
-  if (_stepM == WAITCLIENT && _network != NULL)
+  if (_stepM == WAITCLIENT && _network != NULL && (_isLaunch = _network->isGameStarted()))
   {
-    if ((_isLaunch = _network->isGameStarted()))
-    {
-      _map = new Map(30, false, _engine);
-      _isSave = false;
-    }
+    _map = new Map(30, false, _engine);
+    _isSave = false;
   }
   return (true);
 }
@@ -159,7 +155,7 @@ void    Menu::manageEventInput()
     switch (_isSelect)
     {
       case 0:
-        getInputNb(_sizeMap, 4, 5000, 0);
+        getInputNb(_sizeMap, 4, 4000, 0);
         break;
       case 1:
         if (_stepM == STEP11)
@@ -167,7 +163,7 @@ void    Menu::manageEventInput()
         break;
       case 2:
         if (_stepM == STEP11)
-          getInputNb(_nbBots, 2, convToInt(_sizeMap) / 10, 0);
+          getInputNb(_nbBots, 2, Function::convToInt(_sizeMap) / 10, 0);
         break;
     }
   }
@@ -182,6 +178,8 @@ void    Menu::manageEventInput()
         break;
       case 1:
           getInputNb(_nbBots, 2, _map->getSize() / 10, 0);
+        break;
+      default:
         break;
     }
   }
@@ -201,7 +199,6 @@ void    Menu::changeMusic()
   ret = _event->getInput();
   if (_stepM == OPTION && _isSelect == 2)
   {
-    std::cout << "IN---->"  << std::endl;
     if (AInput::getKey(ret, MRIGHT))
     {
       _cubeanim->changeMusic(1);
@@ -283,7 +280,7 @@ void    Menu::getFxState()
 }
 
 
-void    Menu::manageEventInputScore(key &k)
+void    Menu::manageEventInputScore(key const &k)
 {
   if (_stepM == SCORE && _addScore)
   {
@@ -349,7 +346,7 @@ void    Menu::saveInFile()
 
   if (file.is_open())
   {
-    convToString(s, _newScore);
+    s = Function::convToString(s, _newScore);
     file << _scoreToAdd << "\t" << s << "\n";
     file.close();
   }
@@ -362,7 +359,7 @@ void    Menu::getInputPseudo(char c)
   (this->*_func[_stepM])();
 }
 
-void    Menu::getInputNb(std::string &s, size_t size, int max, int min)
+void    Menu::getInputNb(std::string &s, size_t const size, int const max, int const min)
 {
   std::vector<key>  ret;
 
@@ -374,7 +371,7 @@ void    Menu::getInputNb(std::string &s, size_t size, int max, int min)
   {
     _timer = 0;
     s += (((int)(ret[0])) - 23) + 48;
-    if (convToInt(s) > max || convToInt(s) < min)
+    if (Function::convToInt(s) > max || Function::convToInt(s) < min)
       s.assign(s.substr(0, s.length() - 1));
     (this->*_func[_stepM])();
   }
@@ -388,7 +385,7 @@ void    Menu::getInputNb(std::string &s, size_t size, int max, int min)
 
 void    Menu::startGenerator()
 {
-    Generator *gen = new Generator(_camera, _loader, convToInt(_sizeMap));
+    Generator *gen = new Generator(_camera, _loader, Function::convToInt(_sizeMap));
 
     _isSelect = 0;
     if (gen->initialize() == false)
@@ -416,7 +413,7 @@ void    Menu::chooseStep()
   }
 }
 
-void    Menu::event(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &s)
+void    Menu::event()
 {
   std::vector<key>   k;
 
@@ -506,7 +503,7 @@ bool    Menu::launch() const
 
 bool    Menu::atLeastPlayer() const
 {
-  return (((convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= convToInt(_sizeMap) / 10) ? true : false);
+  return (((Function::convToInt(_nbPlayer) + Function::convToInt(_nbBots)) >= 2 && Function::convToInt(_nbBots) <= Function::convToInt(_sizeMap) / 10) ? true : false);
 }
 
 void    Menu::home()
@@ -678,7 +675,7 @@ void    Menu::score()
   {
     if (_score.find((*rev_from)) != _score.end() || (*rev_from) == _newScore)
     {
-      convToString(s, (*rev_from));
+      s = Function::convToString(s, (*rev_from));
       _text->addText(_step1, id, std::make_pair(700, y), s, false);
       id++;
       if (_score.find((*rev_from)) != _score.end())
@@ -813,34 +810,17 @@ void  Menu::drawLogo()
 
 int   Menu::getMapSize() const
 {
-  return (convToInt(_sizeMap));
+  return (Function::convToInt(_sizeMap));
 }
 
 int   Menu::getNbPlayer() const
 {
-  return (convToInt(_nbPlayer));
+  return (Function::convToInt(_nbPlayer));
 }
 
 int   Menu::getNbBots() const
 {
-  return (convToInt(_nbBots));
-}
-
-int  Menu::convToInt(const std::string &s) const
-{
-  std::istringstream iss(s);
-  int        val = 0;
-
-  iss >> val;
-  return (val);
-}
-
-void  Menu::convToString(std::string &s, int i) const
-{
-  std::stringstream ss;
-
-  ss << i;
-  s = ss.str();
+  return (Function::convToInt(_nbBots));
 }
 
 Map   *Menu::getMap() const
@@ -866,7 +846,7 @@ void  Menu::getScore()
       std::getline(file, res, '\n');
       found = res.find('\t');
       if (found != std::string::npos)
-        _score[convToInt(res.substr(found, res.length()))] = res.substr(0, found);
+        _score[Function::convToInt(res.substr(found, res.length()))] = res.substr(0, found);
       res.clear();
     }
     file.close();
@@ -886,7 +866,7 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && Function::convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
   : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false)
   : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
@@ -916,7 +896,7 @@ void  Menu::select1()
 void  Menu::select2()
 {
   (_stepM == STEP1) ? (_stepM = LOADM, _isSave = false) : (_stepM == STEP12) ? (_stepM = STEP1, _isSelect = 0)
-  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (convToInt(_nbPlayer) + convToInt(_nbBots)) >= 2 && convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true)
+  : (_stepM == HOME) ?  (_isSelect = 0, _stepM = SCORE) : (_stepM == LOADG && _preview->getMap() != NULL && (Function::convToInt(_nbPlayer) + Function::convToInt(_nbBots)) >= 2 && Function::convToInt(_nbBots) <= _map->getSize() / 10) ? (_isLaunch = true)
   : (_stepM == ONLINE) ? (_stepM = HOME) : (_stepM == SERVER) ? (_stepM = ONLINE) : 0;
   if (_stepM == SCORE)
      getScore();
@@ -940,7 +920,7 @@ void  Menu::select2()
 
 void  Menu::select3()
 {
-  (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
+  (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (Function::convToInt(_sizeMap) >= 10 && atLeastPlayer()))
   ? (createMap(), _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
   : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
