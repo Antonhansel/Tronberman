@@ -12,134 +12,107 @@
 
 Loader::Loader()
 {
-  _modelCount = 0;
+    lastBind = NOTHING;
 }
 
 Loader::~Loader()
 {
 }
 
-bool 	Loader::loadTextures()
+bool Loader::loadModels()
 {
-  glm::vec3 vec = glm::vec3(0.0, 0.0, 1.0);
-
-  _textures.resize(20, NULL);
-	_textures[BLOCKD] = new gdl::Texture();
-	if (_textures[BLOCKD]->load("./ressources/assets/BLOCKD.tga") == false)
-		return (false);
-	_textures[BORDER] = new gdl::Texture();
-	if (_textures[BORDER]->load("./ressources/assets/BORDER.tga") == false)
-		return (false);
-	_textures[BLOCK] = new gdl::Texture();
-	if (_textures[BLOCK]->load("./ressources/assets/BLOCK.tga") == false)
-		return (false);
-  _textures[BOMB] = new gdl::Texture();
-  if (_textures[BOMB]->load("./ressources/assets/BOMB.tga") == false)
-    return (false);
-  _textures[LASER] = new gdl::Texture();
-  if (_textures[LASER]->load("./ressources/assets/LASER.tga") == false)
-    return (false);
-  _textures[UNSELECTED] = new gdl::Texture();
-  if (_textures[UNSELECTED]->load("./ressources/fonts/blue.tga") == false)
-    return (false);
-  _textures[SELECTED] = new gdl::Texture();
-  if (_textures[SELECTED]->load("./ressources/fonts/red.tga") == false)
-    return (false);
-   _textures[BONUSV] = new gdl::Texture();
-  if (_textures[BONUSV]->load("./ressources/assets/BONUS1.tga") == false)
-    return (false);
-  _textures[BONUSB] = new gdl::Texture();
-  if (_textures[BONUSB]->load("./ressources/assets/BONUS2.tga") == false)
-    return (false);
-  _textures[BONUSR] = new gdl::Texture();
-  if (_textures[BONUSR]->load("./ressources/assets/BONUS3.tga") == false)
-    return (false);
-  _textures[BONUSS] = new gdl::Texture();
-  if (_textures[BONUSS]->load("./ressources/assets/BONUS4.tga") == false)
-    return (false);
   _models.resize(5, NULL);
   _models[1] = new gdl::Model();
-  if (_models[1]->load( "./ressources/assets/anim/bomberman_white_run.FBX") == false)
-    {
-        std::cout << "Error on loading model" << std::endl;
-        return (false);
-    }
   _models[2] = new gdl::Model();
-  if (_models[2]->load("./ressources/assets/anim/bomberman_black_run.FBX") == false)
-    {
-        std::cout << "Error on loading model" << std::endl;
-        return (false);
-    }
   _models[3] = new gdl::Model();
-  if (_models[3]->load("./ressources/assets/anim/bomberman_blue_run.FBX") == false)
-    {
-        std::cout << "Error on loading model" << std::endl;
-        return (false);
-    }
   _models[4] = new gdl::Model();
-  if (_models[4]->load("./ressources/assets/anim/bomberman_gold_run.FBX") == false)
+  if (_models[1]->load( "./ressources/assets/anim/bomberman_white_run.FBX") == false
+    || _models[2]->load("./ressources/assets/anim/bomberman_black_run.FBX") == false
+    || _models[3]->load("./ressources/assets/anim/bomberman_blue_run.FBX") == false
+    || _models[4]->load("./ressources/assets/anim/bomberman_gold_run.FBX") == false)
     {
         std::cout << "Error on loading model" << std::endl;
         return (false);
     }
-  _textures[BLOCKD]->bind();
-  // GLfloat no_mat[] = { 0.0F,0.0F,0.0F,1.0F };
-  // GLfloat mat_ambient_color[] = { 0.8F,0.8F,0.2F,1.0F };
-  // GLfloat mat_diffuse[] = { 0.1F,0.5F,0.8F,1.0F };
-  // GLfloat no_shininess[] = { 0.0F };
-  // GLfloat mat_emission[] = {0.3F,0.2F,0.2F,0.0F};
-  // glMaterialfv(GL_FRONT,GL_AMBIENT,mat_ambient_color);
-  // glMaterialfv(GL_FRONT,GL_DIFFUSE,mat_diffuse);
-  // glMaterialfv(GL_FRONT,GL_SPECULAR,no_mat);
-  // glMaterialfv(GL_FRONT,GL_SHININESS,no_shininess);
-  // glMaterialfv(GL_FRONT,GL_EMISSION,mat_emission);
-	_geometry.setColor(glm::vec4(1, 1, 1, 1));
-  _geometry.pushNormal(vec);
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  pushTexture(&_geometry);
+  return (true);
+}
 
-  vec = glm::vec3(0.0, 0.0, 1.0);
-  //face
-  _geometry.setColor(glm::vec4(1, 1, 0, 1));
-  _geometry.pushNormal(vec);
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  pushTexture(&_geometry);
+bool  Loader::loadTextures()
+{
+  _textures.resize(12, NULL);
+  _textures[BLOCKD] = new gdl::Texture();
+  _textures[BONUSS] = new gdl::Texture();
+  _textures[BORDER] = new gdl::Texture();
+  _textures[BLOCK] = new gdl::Texture();
+  _textures[BOMB] = new gdl::Texture();
+  _textures[LASER] = new gdl::Texture();
+  _textures[UNSELECTED] = new gdl::Texture();
+  _textures[SELECTED] = new gdl::Texture();
+  _textures[BONUSV] = new gdl::Texture();
+  _textures[BONUSB] = new gdl::Texture();
+  _textures[BONUSR] = new gdl::Texture();
 
-  vec = glm::vec3(-1.0, 0.0, 0.0);
-  _geometry.setColor(glm::vec4(1, 0, 1, 1));
-  _geometry.pushNormal(vec);
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
-  pushTexture(&_geometry);
+  if (_textures[BLOCKD]->load("./ressources/assets/BLOCKD.tga") == false
+    || _textures[BORDER]->load("./ressources/assets/BORDER.tga") == false
+    || _textures[BLOCK]->load("./ressources/assets/BLOCK.tga") == false
+    || _textures[BOMB]->load("./ressources/assets/BOMB.tga") == false
+    || _textures[LASER]->load("./ressources/assets/LASER.tga") == false
+    || _textures[UNSELECTED]->load("./ressources/fonts/blue.tga") == false 
+    || _textures[SELECTED]->load("./ressources/fonts/red.tga") == false
+    || _textures[BONUSV]->load("./ressources/assets/BONUS1.tga") == false
+    || _textures[BONUSB]->load("./ressources/assets/BONUS2.tga") == false
+    || _textures[BONUSR]->load("./ressources/assets/BONUS3.tga") == false
+    || _textures[BONUSS]->load("./ressources/assets/BONUS4.tga") == false)
+    return (false);
+  return (true);
+}
 
-  vec = glm::vec3(1.0, 0.0, 0.0);
-  _geometry.setColor(glm::vec4(0, 1, 1, 1));
-  _geometry.pushNormal(vec);
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
-  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
-  pushTexture(&_geometry);
+bool 	Loader::loadRessources()
+{
+  if (loadTextures() == false || loadModels() == false || initVertex() == false)
+    return (false);
+  loadParticules();
+	return (true);
+}
 
-  vec = glm::vec3(0.0, 1.0, 0.0);
+bool  Loader::initVertex()
+{
   _geometry.setColor(glm::vec4(1, 1, 1, 1));
-  _geometry.pushNormal(vec);
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
+  pushTexture(&_geometry);
+
+  _geometry.setColor(glm::vec4(1, 1, 0, 1));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
+  pushTexture(&_geometry);
+
+  _geometry.setColor(glm::vec4(1, 0, 1, 1));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(0.5, -0.5, 0.5));
+  pushTexture(&_geometry);
+
+  _geometry.setColor(glm::vec4(0, 1, 1, 1));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
+  _geometry.pushVertex(glm::vec3(-0.5, -0.5, -0.5));
+  pushTexture(&_geometry);
+
+  _geometry.setColor(glm::vec4(1, 1, 1, 1));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, 0.5));
   _geometry.pushVertex(glm::vec3(0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, -0.5));
   _geometry.pushVertex(glm::vec3(-0.5, 0.5, 0.5));
   pushTexture(&_geometry);
   _geometry.build();
-  loadParticules();
-	return (true);
+  return (true);
 }
 
 void  Loader::loadParticules()
@@ -174,6 +147,6 @@ void Loader::drawGeometry(gdl::AShader &shader, glm::mat4 trans)
 
 void 	Loader::bindTexture(type texttype)
 {
-  if (texttype < NOTHING && texttype >= BORDER)
+  if (lastBind != texttype)
   	_textures[texttype]->bind();
 }
