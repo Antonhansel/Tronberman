@@ -19,7 +19,7 @@ public:
 	void 	moveMatrice();
 	void 	moveCube();
 	void 	draw(gdl::AShader &shader);
-	void 	checkPlayers();
+	void 	checkPlayers() const;
 	std::pair<float, float> 	changePos();
 private:
 	int 	initial_direction;

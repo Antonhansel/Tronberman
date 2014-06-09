@@ -40,7 +40,7 @@ bool 		Engine::init()
   return (true);
 }
 
-bool		Engine::start()
+bool		Engine::start() const
 {
     bool		quit(false);
 

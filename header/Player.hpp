@@ -50,7 +50,7 @@ protected:
   float         _speed;
   Map           *_map;
   int           _player;
-  AObject          *_checkMove(float y, float x);
+  AObject       *_checkMove(float y, float x);
   bool          _checkMove2(float y, float x);
   bool          _onBomb(float y, float x);
   float         _x;
@@ -96,7 +96,7 @@ public:
   bool    getBegin() const;
   void    spawnBomb();
   void    setSound(Sound *);
-  std::pair<float, float>   &realPos(std::pair<float, float>);
+  std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;
   void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
   void    setPlayerTab(std::vector<Player*> *);

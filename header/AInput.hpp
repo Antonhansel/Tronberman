@@ -26,27 +26,11 @@ enum inputType
 	GENERATOR
 };
 
-/*enum key
-{
-        NONE = 0,
-        P1UP = SDLK_UP,
-        P1DOWN = SDLK_DOWN,
-        P1RIGHT = SDLK_RIGHT,
-        P1LEFT = SDLK_LEFT ,
-        P1BOMB = SDLK_KP_0 ,
-        P2UP = SDLK_z,
-        P2DOWN = SDLK_s,
-        P2RIGHT = SDLK_q,
-        P2LEFT = SDLK_d,
-        P2BOMB = SDLK_SPACE
-};*/
 
 class AInput
 {
 private:
-	/*cinput _input;
 	std::ifstream joy1;
-	std::ifstream joy2;*/
 	gdl::Input 								_input;
     std::map<inputType, void (AInput::*)()>	_ptrFunct;
     std::map<int, key>						_key;

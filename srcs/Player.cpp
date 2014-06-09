@@ -313,7 +313,7 @@ std::pair<float, float>    Player::left(float &trans)
   return (i);
 }
 
-std::pair<float, float>     &Player::realPos(std::pair<float, float> pos)
+std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
 {
   float temp1;
   float temp2;

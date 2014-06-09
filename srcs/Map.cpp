@@ -166,14 +166,14 @@ void    Map::_deleteSide(int x, int y)
     }
 }
 
-bool    Map::check_pos(int x, int y)
+bool    Map::check_pos(int x, int y) const
 {
-    std::vector<std::pair<int, int> >::iterator it;
+    std::vector<std::pair<int, int> >::const_iterator it;
 
     for (it = _spawns.begin(); it < _spawns.end(); ++it)
         if (x == (*it).first && y == (*it).second)
-            return true;
-    return false;
+            return (true);
+    return (false);
 }
 
 std::pair<int, int>     Map::getSpawn()

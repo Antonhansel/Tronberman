@@ -31,11 +31,6 @@ void Cube::draw(gdl::AShader &shader, gdl::Clock const &clock)
   (void)clock;
 }
 
-// void 	Cube::setParticle(ParticleEngine *particles)
-// {
-// 	_particles = particles;
-// }
-
 bool	Cube::initialize()
 {
   return (true);

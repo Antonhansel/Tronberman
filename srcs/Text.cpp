@@ -159,7 +159,7 @@ void  Text::deleteText(std::map<std::pair<int, std::pair<int, int> >, std::vecto
 
 void  Text::deleteAllText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t)
 {
-  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
+  std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::const_iterator   it;
 
   for (it = t.begin(); it != t.end(); ++it)
     deleteText(t, (*it).first);

@@ -24,7 +24,7 @@ class Engine
 public:
   Engine();
   ~Engine();
-  bool		start();
+  bool		start() const;
   bool 		init();
 private:
   Engine(const Engine&);

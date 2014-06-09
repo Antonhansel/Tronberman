@@ -30,7 +30,7 @@ public:
   void            addCube(int, int, type);
   void            addCube(int, int, AObject *);
   void            deleteCube(int, int);
-  bool    check_pos(int x, int y);
+  bool    check_pos(int x, int y) const;
   int     getSize() const;
   void    setSize(int);
   void    setMap(AObject **);

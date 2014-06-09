@@ -27,6 +27,7 @@ MapFiller::MapFiller(Map *map, Loader *loader, std::vector<Player*> *player)
 void MapFiller::moveCube()
 {
 	std::pair<float, float> pos;
+
 	pos = std::make_pair(r, c);
 	_cursor->setAbsPos(pos);
 	_cursor->translate(glm::vec3(0, 1, 0));
@@ -41,9 +42,9 @@ void MapFiller::draw(gdl::AShader &shader)
 	_loader->drawGeometry(shader, _cursor->getTransformation());
 }
 
-void MapFiller::checkPlayers()
+void MapFiller::checkPlayers() const
 {
-	std::vector<Player*>::iterator it;
+	std::vector<Player*>::const_iterator it;
 	std::pair<float, float> pos;
 
 	pos = _cursor->getPos();
