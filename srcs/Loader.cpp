@@ -12,11 +12,15 @@
 
 Loader::Loader()
 {
-    lastBind = NOTHING;
+  lastBind = NOTHING;
 }
 
 Loader::~Loader()
 {
+  for (std::vector<gdl::Texture *>::iterator it = _textures.begin(); it != _textures.end(); ++it)
+    delete (*it);
+  for (std::vector<gdl::Model *>::iterator it = _models.begin(); it != _models.end(); ++it)
+    delete (*it);
 }
 
 bool Loader::loadModels()
@@ -127,7 +131,7 @@ void  Loader::loadParticules()
   _trigeo.build();
 }
 
-void  Loader::drawParticules(gdl::AShader &shader, glm::mat4 trans)
+void  Loader::drawParticules(gdl::AShader &shader, glm::mat4 &trans)
 {
   _trigeo.draw(shader, trans, GL_TRIANGLES);
 }

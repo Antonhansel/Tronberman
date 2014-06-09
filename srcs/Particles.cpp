@@ -116,7 +116,7 @@ void 	Particles::newSpeed (float dest[3])
   dest[2] = z;
 }
 
-std::pair<float, float> Particles::getPos() const
+const std::pair<float, float>  &Particles::getPos() const
 {
   return (_pos);
 }

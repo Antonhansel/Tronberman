@@ -135,7 +135,7 @@ bool	Core::drawFloor()
   return (floor->initialize());
 }
 
-bool   Core::makeChar(std::pair<float, float> pos, int screen)
+bool   Core::makeChar(const std::pair<float, float> &pos, const int screen)
 {
   Player *chara = create<Player>();
 
@@ -152,7 +152,7 @@ bool   Core::makeChar(std::pair<float, float> pos, int screen)
   return (true);
 }
 
-bool   Core::makeBot(std::pair<float, float> pos, int id)
+bool   Core::makeBot(const std::pair<float, float>& pos, const int id)
 {
   Player *chara = create<Mybot>();
 
@@ -183,7 +183,7 @@ bool		Core::drawChar()
   return (true);
 }
 
-bool    Core::drawBot(int nb)
+bool    Core::drawBot(const int nb)
 {
   int   i;
 
@@ -295,7 +295,7 @@ bool	Core::update()
   else
     _hud->setScreen(2);
   _hud->update(_player[0]);
-  _particles->update(_clock, _input);
+  _particles->update();
   if (_hud->getTimer() <= 0 && _networking == NULL)
   {
     if (_mapFiller == NULL)
@@ -305,7 +305,7 @@ bool	Core::update()
   return (true);
 }
 
-bool  Core::playerDraw(std::pair<float, float> playerpos, std::pair<float, float> botpos)
+bool  Core::playerDraw(const std::pair<float, float> &playerpos, const std::pair<float, float> &botpos) const
 {
   std::pair<float, float> pos;
   if (playerpos.first > botpos.first)
@@ -399,7 +399,7 @@ void  Core::checkAlive()
   }
 }
 
-void  Core::endingGame(Death type)
+void  Core::endingGame(const Death type)
 {
   double time;
 
@@ -450,7 +450,7 @@ void	Core::draw()
   _cam->flushContext();
 }
 
-Map       *Core::getMap()
+Map       *Core::getMap() const
 {
   return (_map);
 }
@@ -465,17 +465,17 @@ int       Core::getNbrPlayer() const
   return (_players);
 }
 
-gdl::Clock *Core::getClock()
+const gdl::Clock *Core::getClock() const
 {
-  return &_clock;
+  return (&_clock);
 }
 
-std::map<std::pair<float, float>, Bombs *> &Core::getBombs()
+std::map<std::pair<float, float>, Bombs *> *Core::getBombs()
 {
-  return (_bombs);
+  return (&_bombs);
 }
 
-Sound   *Core::getSound()
+Sound   *Core::getSound() const
 {
   return (_sound);
 }

@@ -96,8 +96,8 @@ public:
   void 			translate(glm::vec3 const &v);
   void 			rotate(glm::vec3 const& rotation);
   void 			scale(glm::vec3 const& scale);
-  void      setPos(std::pair<float, float>&);
-  void      setAbsPos(std::pair<float, float>&);
+  void      setPos(const std::pair<float, float>&);
+  void      setAbsPos(const std::pair<float, float>&);
   void			setAbsPos(float, float);
   void			setType(type);
   glm::mat4 		getTransformation();

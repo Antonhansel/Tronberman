@@ -109,7 +109,7 @@ void Networking::startGame(Core *core)
             tmpPos.second = -1;
             player->setAbsPos(tmpPos);
             player->setMap(_core->getMap());
-            player->setBombs(&_core->getBombs());
+            player->setBombs(_core->getBombs());
             player->setPlayerTab(&_core->getPlayer());
             player->setSound(_core->getSound());
             _core->getPlayer().push_back(player);
@@ -135,7 +135,7 @@ void    Networking::_startGameServer()
         player->initialize();
         player->setAbsPos(tmpPos);
         player->setMap(_core->getMap());
-        player->setBombs(&_core->getBombs());
+        player->setBombs(_core->getBombs());
         player->setPlayerTab(&_core->getPlayer());
         player->setSound(_core->getSound());
         _core->getPlayer().push_back(player);

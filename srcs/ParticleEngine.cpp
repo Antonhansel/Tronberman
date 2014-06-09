@@ -53,7 +53,7 @@ bool  ParticleEngine::canDraw(std::pair<float, float> playerpos, std::pair<float
   return (true);
 }
 
-void 	ParticleEngine::draw(gdl::AShader &shader, gdl::Clock const &clock, AObject *player)
+void 	ParticleEngine::draw(gdl::AShader &shader, const gdl::Clock &clock, AObject *player)
 {
   std::vector<Particles*>::iterator it;
   _loader->bindTexture(BLOCKD);
@@ -70,7 +70,7 @@ void  ParticleEngine::spawnParticles(glm::vec3 &vec)
   _exploList.push_back(part);
 }
 
-void 	ParticleEngine::update(gdl::Clock const &clock, gdl::Input &input)
+void 	ParticleEngine::update()
 {
   std::vector<Particles*>::iterator it;
   for (it = _exploList.begin(); it != _exploList.end(); ++it)
@@ -78,7 +78,6 @@ void 	ParticleEngine::update(gdl::Clock const &clock, gdl::Input &input)
     if ((*it)->getFuel() > 0)
       (*it)->update();
   }
-  //cleanParticles();
 }
 
 void  ParticleEngine::cleanParticles()

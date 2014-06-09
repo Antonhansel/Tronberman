@@ -13,15 +13,15 @@
 
 # include <math.h>
 # include <fmod.h>
+# include <glm/glm.hpp>
+# include <SdlContext.hh> 
+# include <sys/types.h>
+# include <dirent.h>
 # include "Loader.hpp"
 # include "Camera.hpp"
 # include "Factory.hpp"
 # include "AObject.hpp"
 # include "BasicShader.hh"
-# include <glm/glm.hpp>
-# include <SdlContext.hh> 
-# include <sys/types.h>
-# include <dirent.h>
 
 #define MAX 32 
 #define TAILLE_SPECTRE  2048
@@ -40,8 +40,8 @@ public:
 	CubeAnim(Camera *, Loader *);
 	~CubeAnim();
 	bool 	makeCube(int x, int y, int z);
-	float 	getEquation(int);
-	void 	changeVolum(float);
+	float 	getEquation(int) const;
+	void 	changeVolum(float) const;
 	void 	rotate();
 	bool 	genSpiral();
 	void 	update();
@@ -51,10 +51,10 @@ public:
 	bool 	initIntro();
 	bool 	initFmod();
 	void 	changeMusic(int);
-	bool 	loadSound(std::string path);
-	void 	getPaths(const char *path);
-	bool    checkName(const char *str1);
-	std::string   makePath(const char *str1, const char *p);
+	bool 	loadSound(const std::string &);
+	void 	getPaths(const char *);
+	bool    checkName(const char *) const;
+	std::string   makePath(const char *, const char *) const;
 private:
 	float			_angle;
   	float			_posy;

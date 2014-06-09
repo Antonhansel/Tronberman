@@ -81,9 +81,9 @@ public:
 public:
   Player();
   ~Player();
-  void    update(gdl::Clock const &clock, gdl::Input &input);
+  void    update(const gdl::Clock &, gdl::Input &);
   bool    initialize();
-  void    draw(gdl::AShader &shader, gdl::Clock const &clock);
+  void    draw(gdl::AShader &, const gdl::Clock &);
   int     getStock() const;
   void    setStock(int);
   int     getId() const;
@@ -95,14 +95,14 @@ public:
   void    setBegin(bool);
   bool    getBegin() const;
   void    spawnBomb();
-  void    setSound(Sound *sound);
-  std::pair<float, float>   realPos(std::pair<float, float>);
+  void    setSound(Sound *);
+  std::pair<float, float>   &realPos(std::pair<float, float>);
   float   getShield() const;
   void    setBombs(std::map<std::pair<float, float>, Bombs *> *);
-  void    setPlayerTab(std::vector<Player*> *playermap);
+  void    setPlayerTab(std::vector<Player*> *);
   void    setShield(float);
   void    dir(dirr);
-  dirr    dir();
+  dirr    dir() const;
 private:
   std::pair<float, float> up(float &);
   std::pair<float, float> right(float &);

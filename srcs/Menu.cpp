@@ -279,8 +279,7 @@ void    Menu::getFxState()
   }
 }
 
-
-void    Menu::manageEventInputScore(key const &k)
+void    Menu::manageEventInputScore(const key k)
 {
   if (_stepM == SCORE && _addScore)
   {
@@ -359,7 +358,7 @@ void    Menu::getInputPseudo(char c)
   (this->*_func[_stepM])();
 }
 
-void    Menu::getInputNb(std::string &s, size_t const size, int const max, int const min)
+void    Menu::getInputNb(std::string &s, const size_t size, const int max, const int min)
 {
   std::vector<key>  ret;
 
@@ -659,7 +658,7 @@ void    Menu::score()
     _text->addText(_step1, 1, std::make_pair(600, 380), "NOT YET SCORE", true);
     return;
   }
-  for (std::map<int, std::string>::iterator it = _score.begin(); it != _score.end(); ++it)
+  for (std::map<int, std::string>::const_iterator it = _score.begin(); it != _score.end(); ++it)
   {
     myints[i] = (*it).first;
     i++;

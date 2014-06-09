@@ -58,7 +58,7 @@ public:
 	void 	update();
 	int 	getFuel() const;
 	void 	newSpeed(float dest[3]);
-	std::pair<float, float> getPos() const;
+	const std::pair<float, float> &getPos() const;
 };
 
 #endif /*!PARTICLES_HPP_*/

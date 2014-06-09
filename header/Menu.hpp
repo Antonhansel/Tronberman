@@ -70,7 +70,7 @@ public:
   void      event();
   void      chooseStep();
   void      manageEventInput();
-  void      getInputNb(std::string &, size_t const, int const, int const);
+  void      getInputNb(std::string &, const size_t, const int, const int);
   void      getInputAddr(std::string &, size_t);
   void      home();
   bool      initLogo();
@@ -101,7 +101,7 @@ public:
 
   private:
     void  getScore();
-    void  manageEventInputScore(key const &);
+    void  manageEventInputScore(const key);
     void  getInputPseudo(char);
     void  saveInFile();
     bool  atLeastPlayer() const;

@@ -70,7 +70,7 @@ void  Player::spawnBomb()
   }
 }
 
-void    Player::draw(gdl::AShader &shader, gdl::Clock const &clock)
+void    Player::draw(gdl::AShader &shader, const gdl::Clock &clock)
 {
   if (_dir == WEST)
     translate(glm::vec3(0.25, 0, 0.25));
@@ -196,7 +196,7 @@ bool    Player::_onBomb(float x, float y)
   return (false);
 }
 
-void    Player::update(gdl::Clock const &clock, gdl::Input &input)
+void    Player::update(const gdl::Clock &clock, gdl::Input &input)
 {
   std::vector<key> k;
 
@@ -313,7 +313,7 @@ std::pair<float, float>    Player::left(float &trans)
   return (i);
 }
 
-std::pair<float, float>     Player::realPos(std::pair<float, float> pos)
+std::pair<float, float>     &Player::realPos(std::pair<float, float> pos)
 {
   float temp1;
   float temp2;
@@ -439,7 +439,7 @@ float   Player::getSpeed() const
 
 void    Player::dir(dirr dir)
 {
-  glm::vec3                               rotation = glm::vec3(0);
+  glm::vec3  rotation = glm::vec3(0);
   switch (dir)
   {
     case NORTH:
@@ -458,8 +458,8 @@ void    Player::dir(dirr dir)
   rotate(rotation);
   _dir = dir;
 }
-dirr    Player::dir()
+dirr    Player::dir() const
 {
-  return _dir;
+  return (_dir);
 }
 
