@@ -8,10 +8,10 @@ Thread::Thread()
 	_scopedLock = new ScopedLock(_mutex);
 }
 
-Thread::Thread(pthread_mutex_t *mutex) :
-	_mutex(mutex)
+Thread::Thread(ScopedLock *sc) :
+	_scopedLock(sc)
 {
-	_scopedLock = new ScopedLock(_mutex);
+	_mutex = _scopedLock->getMutex();
 }
 
 Thread::~Thread()

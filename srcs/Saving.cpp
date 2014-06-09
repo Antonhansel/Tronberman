@@ -39,7 +39,7 @@ bool	Saving::saveMap(const Map *m)
 				ao = m->getCase(x, y);
 				if (ao != NULL)
 				{
-					if (ao->getType() != BOMB && ao->getType() != BONUSV && ao->getType() != BONUSB && ao->getType() != BONUSR && ao->getType() != LASER) {
+					if (ao->getType() != BOMB && ao->getType() != BONUSV && ao->getType() != BONUSB && ao->getType() != BONUSR && ao->getType() != LASER && ao->getType() != BONUSS) {
 						_file << "<case><x>" << x << "</x><y>" << y << "</y><type>" <<  ao->getType() << "</type></case>" << std::endl;
 					}
 				}
@@ -208,7 +208,6 @@ bool	Saving::getPlayerFromFile()
 				player = new Player();
 			else
 				player = new Mybot();
-			_player.push_back(player);
 			if (id == 1 || id == 2)
 			{
 				player->setPlayer(id);
@@ -222,6 +221,7 @@ bool	Saving::getPlayerFromFile()
 			player->setStock(getDataFromString(s, "<stock>", "</stock>"));
 			player->setScore(getDataFromString(s, "<score>", "</score>"));
 			player->setPos(pair);
+			_player.push_back(player);
 		}
 		else
 			resume = false;

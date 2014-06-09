@@ -22,6 +22,7 @@ public:
   ~Map();
   Map(int, ParticleEngine *);
   AObject     *getCase(int, int) const;
+  AObject     *getCase(std::pair<int, int> *) const;
   void        setSpawn(int nb);
   std::pair<int, int>   getSpawn();
   std::string     getName() const;
@@ -36,6 +37,8 @@ public:
   void    setSpawn(std::vector<std::pair<int, int> > &);
   void    genereteName();
   std::pair<int, int> getSpawnPoint();
+  bool    getState() const;
+
 private:
   ParticleEngine  *_engine;
   std::vector<std::string> _paths;
@@ -47,6 +50,7 @@ private:
   void          _deleteSide(int x, int y);
   void		      _outline();
   void          _drawWall();
+  bool          _state;
 };
 
 #endif /* !MAP_HPP */

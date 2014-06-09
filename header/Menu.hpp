@@ -92,6 +92,8 @@ public:
   Saving    *getSaving() const;
   void      setCore(Core *);
   Networking *getNetwork() const;
+  void      createMap();
+  void      generateMap();
 
   private:
     int   convToInt(const std::string &) const;
@@ -138,6 +140,8 @@ private:
   int           _vol;
   bool          _isFx;
   Thread        *_th;
+  ScopedLock    *_sc;
+
 private:
   Map               *_map;
   Text              *_text;
@@ -172,5 +176,6 @@ private:
 
 void  *getGame(void *);
 void  *getMapp(void *);
+void  *crM(void *);
 
 #endif /* !MENU_HPP_ */

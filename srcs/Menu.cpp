@@ -324,6 +324,8 @@ void    Menu::manageEventInputScore(key &k)
           _addScore = false;
           saveInFile();
         }
+        else
+          getInputPseudo(65);
         break;
       }
       case MRETURN:
@@ -705,15 +707,23 @@ void    Menu::load()
   {
     PtrFonct pf = &getMapp;
     _th = new Thread();
-    _th->createThread(pf, ((void*)(_preview)));
-    while (_preview->getState())
+    if (_th->createThread(pf, ((void*)(_preview))))
     {
-      update();
-      draw();
+      while (_preview->getState())
+      {
+        update();
+        draw();
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
     }
-    _th->joinThread();
-    delete _th;
-    _th = NULL;
+    else
+        std::cout << "ERROR ON CREATE THREAD\n";
   }
   _preview->setState(true);
   _previewMode = _preview->getResult();
@@ -732,15 +742,23 @@ void    Menu::loadPrevious()
   {
     PtrFonct pf = &getGame;
     _th = new Thread();
-    _th->createThread(pf, ((void*)(_preview)));
-    while (_preview->getState())
+    if (_th->createThread(pf, ((void*)(_preview))))
     {
-     update();
-     draw();
+      while (_preview->getState())
+      {
+        update();
+        draw();
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
     }
-    _th->joinThread();
-    delete _th;
-    _th = NULL;
+    else
+        std::cout << "ERROR ON CREATE THREAD\n";
   }
   _preview->setState(true);
   _previewMode = _preview->getResult();
@@ -923,11 +941,62 @@ void  Menu::select2()
 void  Menu::select3()
 {
   (_stepM == HOME) ? (_stepM = OPTION, _isSelect = 0) : (_stepM == STEP1) ? (_stepM = STEP12) : (_stepM == STEP11 && (convToInt(_sizeMap) >= 10 && atLeastPlayer()))
-  ? (_map = new Map(getMapSize(), _engine), _isLaunch = true, _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
+  ? (createMap(), _isSave = false) : (_stepM == LOADG) ? (_stepM = LOADM)
   : (_stepM == CLIENT) ? (_stepM = ONLINE)
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
   if (_stepM == ONLINE)
     _err = "";
+}
+
+void  Menu::createMap()
+{
+  bool  resume = true;
+
+  _map = NULL;
+  if (_th == NULL)
+  {
+    PtrFonct pf = &crM;
+    _text->deleteAllText(_step1);
+    _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
+    pthread_mutex_t   mutex = PTHREAD_MUTEX_INITIALIZER;
+    _sc = new ScopedLock(&mutex);
+    _th = new Thread(_sc);
+    if (_th->createThread(pf, ((void*)(this))))
+    {
+      while (resume)
+      {
+        update();
+        draw();
+        if (pthread_mutex_trylock(_sc->getMutex()) == 0 && _map != NULL)
+        {
+          resume = false;
+          pthread_mutex_unlock(_sc->getMutex());
+        }
+      }
+      if (_th->joinThread())
+      {
+        delete _th;
+        _th = NULL;
+        _isLaunch = true;
+      }
+      else
+        std::cout << "ERROR ON JOIN THREAD\n";
+    }
+    else
+      std::cout << "ERROR ON CREATE THREAD\n";
+  }
+}
+
+void  *crM(void *arg)
+{
+  reinterpret_cast<Menu *>(arg)->generateMap();
+  return (NULL);
+}
+
+void  Menu::generateMap()
+{
+  _map = new Map(getMapSize(), _engine);
+  pthread_mutex_unlock(_sc->getMutex());
 }
 
 void  Menu::select4()

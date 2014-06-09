@@ -22,6 +22,7 @@ Bombs::Bombs()
   _ptrFunct[BONUSV] = &Bombs::checkBonus;
   _ptrFunct[BONUSB] = &Bombs::checkBonus;
   _ptrFunct[BONUSR] = &Bombs::checkBonus;
+  _ptrFunct[BONUSS] = &Bombs::checkBonus;
   _ptrFunct[BOMB] = &Bombs::checkBomb;
   _ptrFunct[BORDER] = &Bombs::checkBlockS;
   _ptrFunct[LASER] = &Bombs::checkLaser;

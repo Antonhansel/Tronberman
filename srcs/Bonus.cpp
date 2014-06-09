@@ -16,6 +16,7 @@ Bonus::Bonus() :
 	_ptrFunct[BONUS1] = &Bonus::giveBonus1;
 	_ptrFunct[BONUS2] = &Bonus::giveBonus2;
 	_ptrFunct[BONUS3] = &Bonus::giveBonus3;
+	_ptrFunct[BONUS4] = &Bonus::giveBonus4;
 	initialize();
 }
 
@@ -26,13 +27,24 @@ bool	Bonus::initialize()
 {
 	int res;
 
-	res = rand() % 3;
-	if (res == 0)
-		_bonus = BONUS1;
-	else if (res == 1)
-		_bonus = BONUS2;
-	else
-		_bonus = BONUS3;
+	res = rand() % 4;
+	switch (res)
+	{
+		case 0:
+			_bonus = BONUS1;
+			break;
+		case 1:
+			_bonus = BONUS2;
+			break;
+		case 2:
+			_bonus = BONUS3;
+			break;
+		case 3:
+			_bonus = BONUS4;
+			break;
+		default:
+			break;
+	}
   scale(glm::vec3(0.7, 0.7, 0.7));
   return (true);
 }
@@ -40,7 +52,6 @@ bool	Bonus::initialize()
 void	Bonus::update(gdl::Clock const &clock, gdl::Input &input)
 {
 	_time += clock.getElapsed();
-	//std::cout << "test" << std::endl;
 }
 
 void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
@@ -50,7 +61,7 @@ void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
 
 void	Bonus::setObject(std::pair<float, float> &pos, Map *map)
 {
-	(_bonus == BONUS1) ? _type = BONUSV : (_bonus == BONUS2) ? _type = BONUSB : _type = BONUSR;
+	(_bonus == BONUS1) ? _type = BONUSV : (_bonus == BONUS2) ? _type = BONUSB : (_bonus == BONUS3) ? _type = BONUSR : _type = BONUSS;
 	_pos = pos;
 	_map = map;
 	setType(_type);
@@ -79,4 +90,9 @@ void	Bonus::giveBonus2(Player *player)
 void	Bonus::giveBonus3(Player *player)
 {
 	player->setRange(player->getRange() + 1);
+}
+
+void	Bonus::giveBonus4(Player *player)
+{
+	player->setSpeed(8);
 }

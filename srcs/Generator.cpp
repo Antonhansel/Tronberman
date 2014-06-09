@@ -29,7 +29,6 @@ Generator::~Generator()
     name += (rand()%26)+97;
   name += ".xml";
   Saving *s = new Saving(name);
-  _map->setSize(_size);
   s->saveGame(_map);
   delete s;
 }

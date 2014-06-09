@@ -54,6 +54,9 @@ bool 	Loader::loadTextures()
   _textures[BONUSR] = new gdl::Texture();
   if (_textures[BONUSR]->load("./ressources/assets/BONUS3.tga") == false)
     return (false);
+  _textures[BONUSS] = new gdl::Texture();
+  if (_textures[BONUSS]->load("./ressources/assets/BONUS4.tga") == false)
+    return (false);
   _models.resize(5, NULL);
   _models[1] = new gdl::Model();
   if (_models[1]->load( "./ressources/assets/anim/bomberman_white_run.FBX") == false)

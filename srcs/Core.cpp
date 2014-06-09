@@ -215,7 +215,6 @@ bool	Core::update()
   checkAlive();
   if (_endgame == true)
     return (false);
-
   _clock = _cam->getClock();
   _input = _cam->getInput();
   if (_networking)
@@ -388,7 +387,33 @@ void  Core::checkAlive()
       num++;
   }
   if (num == 1)
+  {
+    for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+    {
+      if ((*it)->isAlive() == true)
+      {
+        if ((*it)->getId() == 1 || (*it)->getId() == 2)
+         endingGame(VICTORY);
+        else
+          endingGame(FATALITY);
+      }
+    }
     _endgame = true;
+  }
+}
+
+void  Core::endingGame(Death type)
+{
+  double time;
+
+  time = 0;
+  _hud->drawDeath(type);
+  while (time < 3)
+  {
+    _cam->flushContext();
+    _clock = _cam->getClock();
+    time += _clock.getElapsed();
+  }
 }
 
 void	Core::draw()

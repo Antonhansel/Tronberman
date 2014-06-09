@@ -77,6 +77,7 @@ public:
   int     getScore() const;
   float   getSpeed() const;
   PlayerType getType() const;
+
 public:
   Player();
   ~Player();
@@ -108,6 +109,7 @@ private:
   std::pair<float, float> left(float &);
   std::pair<float, float> down(float &);
   std::map<std::pair<float, float>, Bombs *>  *_bombs;
+  float                                        _speedActiv;
 };
 
 #endif /* !_PLAYER_HPP_ */
