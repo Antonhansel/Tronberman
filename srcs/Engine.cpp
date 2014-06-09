@@ -33,7 +33,7 @@ bool 		Engine::init()
   _engine = new ParticleEngine(_loader);
   vec = glm::vec3(1, 1, 1);
   _engine->spawnParticles(vec);
-  if (_loader->loadTextures() == false)
+  if (_loader->loadRessources() == false)
   	return (false);
   _menu = new Menu(_camera, _loader, _engine);
   _core = new Core(_camera, _loader, _menu, _engine);

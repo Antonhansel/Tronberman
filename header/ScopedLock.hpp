@@ -8,6 +8,7 @@ class ScopedLock
 public:
 	ScopedLock(pthread_mutex_t *);
 	~ScopedLock();
+	pthread_mutex_t	*getMutex() const;
 
 private:
 	ScopedLock(const ScopedLock &);

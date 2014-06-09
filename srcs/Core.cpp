@@ -337,11 +337,9 @@ bool  Core::playerDraw(std::pair<float, float> playerpos, std::pair<float, float
 void  Core::drawAll(AObject *cur_char)
 {
   std::pair<int, int> pos;
-  type LastType = BLOCKD;
   AObject     *tmp;
 
   pos = cur_char->getPos();
-  _loader->bindTexture(LastType);
   for (int x = pos.first - (30); x < pos.first + (30); ++x)
   {
     for (int y = pos.second - (30); y < pos.second + (30); ++y)
@@ -349,11 +347,7 @@ void  Core::drawAll(AObject *cur_char)
       tmp = _map->getCase(x, y);
       if (!tmp)
         continue;
-      if (tmp->getType() != LastType)
-      {
-        LastType = tmp->getType();
-        _loader->bindTexture(LastType);
-      }
+      _loader->bindTexture(tmp->getType());
       _loader->drawGeometry(_shader, tmp->getTransformation());
     }
   }

@@ -4,10 +4,12 @@ Mybot::Mybot()
 {
   _x_obj = 0;
   _y_obj = 0;
-  _seerange = 5;
-  _rec = 3;
-  _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
   _dep = 1;
+  _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
+  _seerange = 8;
+  _freq_bombs = 10;
+  _action = 4;
+  _rec = 6;
 }
 
 Mybot::~Mybot()
@@ -139,27 +141,27 @@ int     Mybot::setObjOff(int x, int y)
 
   ret = 4;
   srand(time(NULL));
-  inc = rand() % 4;
+  inc = rand() % _action;
   for (int i = 0; i < 4; i++)
   {
-     if (_checkMove2(x, y) && rand() % (10+_id) < _id)
+     if (_checkMove2(x, y) && rand() % (_freq_bombs+_id) < _id)
        spawnBomb();
-    if (isSafe(x + 1, y) && _checkMove2(x + 1, y) && inc % 4 == 0)
+    if (isSafe(x + 1, y) && _checkMove2(x + 1, y) && inc % _action == 0)
     {
       moveTo(x, y, 1, 0);
       ret = LEFT;
     }
-    else if (isSafe(x - 1, y) && _checkMove2(x - 1, y) && inc % 4 == 1)
+    else if (isSafe(x - 1, y) && _checkMove2(x - 1, y) && inc % _action == 1)
     {
       moveTo(x, y, -1, 0);
       ret = RIGHT;
     }
-    else if (isSafe(x, y + 1) && _checkMove2(x, y + 1) && inc % 4 == 2)
+    else if (isSafe(x, y + 1) && _checkMove2(x, y + 1) && inc % _action == 2)
     {
       moveTo(x, y, 0, 1);
       ret = UP;
     }
-    else if (isSafe(x, y - 1) && _checkMove2(x, y - 1) && inc % 4 == 3)
+    else if (isSafe(x, y - 1) && _checkMove2(x, y - 1) && inc % _action == 3)
     {
       moveTo(x, y, 0, -1);
       ret = DOWN;
@@ -167,12 +169,11 @@ int     Mybot::setObjOff(int x, int y)
     inc++;
   }
   return (ret);
-
 }
 
 void    Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-  float trans = static_cast<float>(clock.getElapsed()) * _speed / 4;
+  float trans = static_cast<float>(clock.getElapsed()) * _speed /4;
   AObject                                 *tmp;
   int     x;
   int     y;
@@ -233,4 +234,14 @@ void    Mybot::setSeeRange(int seerange)
 void    Mybot::setRec(int rec)
 {
   _rec = rec;
+}
+
+void    Mybot::setAction(int action)
+{
+  _action = action;
+}
+
+void    Mybot::setFreqBombs(int freq_bombs)
+{
+  _freq_bombs = freq_bombs;
 }

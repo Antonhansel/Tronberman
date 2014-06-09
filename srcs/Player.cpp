@@ -183,6 +183,19 @@ AObject    *Player::_checkMove(float x, float y)
   return (tmp);
 }
 
+bool    Player::_onBomb(float x, float y)
+{
+  std::pair<float, float>   pos;
+  AObject *tmp;
+  AObject *cur = _map->getCase(_pos.first, _pos.second);
+  if (cur != NULL && (cur->getType() == BOMB || cur->getType() == LASER))
+  {
+    if ((tmp = _checkMove(x, y)) == NULL || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || (tmp && tmp->getType() == BOMB))
+      return (true);
+  }
+  return (false);
+}
+
 void    Player::update(gdl::Clock const &clock, gdl::Input &input)
 {
   std::vector<key> k;
@@ -248,7 +261,7 @@ void    Player::update(gdl::Clock const &clock, gdl::Input &input)
         }
         rotate(rotation);
         tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _checkMove2(i.first, i.second))
+        if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _onBomb(i.first, i.second)/*|| _checkMove2(i.first, i.second)*/)
         {
           if (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9))
           {

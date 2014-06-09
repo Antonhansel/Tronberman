@@ -938,20 +938,26 @@ void  Menu::createMap()
     PtrFonct pf = &crM;
     _text->deleteAllText(_step1);
     _text->addText(_step1, 0, std::make_pair(600, 300), "LOADING....", true);
-    _th = new Thread();
+    pthread_mutex_t   mutex = PTHREAD_MUTEX_INITIALIZER;
+    _sc = new ScopedLock(&mutex);
+    _th = new Thread(_sc);
     if (_th->createThread(pf, ((void*)(this))))
     {
       while (resume)
       {
         update();
         draw();
-        if (_map != NULL)
+        if (pthread_mutex_trylock(_sc->getMutex()) == 0 && _map != NULL)
+        {
           resume = false;
+          pthread_mutex_unlock(_sc->getMutex());
+        }
       }
       if (_th->joinThread())
       {
         delete _th;
         _th = NULL;
+        _isLaunch = true;
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
@@ -959,7 +965,6 @@ void  Menu::createMap()
     else
       std::cout << "ERROR ON CREATE THREAD\n";
   }
-  _isLaunch = true;
 }
 
 void  *crM(void *arg)
@@ -971,6 +976,7 @@ void  *crM(void *arg)
 void  Menu::generateMap()
 {
   _map = new Map(getMapSize(), _engine);
+  pthread_mutex_unlock(_sc->getMutex());
 }
 
 void  Menu::select4()

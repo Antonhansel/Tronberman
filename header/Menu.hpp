@@ -140,6 +140,8 @@ private:
   int           _vol;
   bool          _isFx;
   Thread        *_th;
+  ScopedLock    *_sc;
+
 private:
   Map               *_map;
   Text              *_text;

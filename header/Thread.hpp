@@ -9,7 +9,7 @@ class Thread
 {
 public:
 	Thread();
-	Thread(pthread_mutex_t *);
+	Thread(ScopedLock *);
 	~Thread();
 	bool	createThread(void *(*start_routine)(void*), void *);
 	bool	joinThread();

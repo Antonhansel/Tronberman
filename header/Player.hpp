@@ -52,7 +52,7 @@ protected:
   int           _player;
   AObject          *_checkMove(float y, float x);
   bool          _checkMove2(float y, float x);
-  bool          _onBomb();
+  bool          _onBomb(float y, float x);
   float         _x;
   int           _life;
   bool          _begin;
