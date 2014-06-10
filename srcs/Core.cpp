@@ -268,7 +268,11 @@ bool	Core::update()
       _mapFiller->fillMap(_clock);
     }
   }
-  
+  else
+  {
+    if (!checkKey(k))
+      return (false);
+  }
   return (true);
 }
 
@@ -278,6 +282,8 @@ bool  Core::checkKey(const std::vector<key> &k)
   {
     switch ((*it))
     {
+      if (!_pause)
+      {
       case FPSON:
         _displayFPS = true;
         break;
@@ -310,6 +316,12 @@ bool  Core::checkKey(const std::vector<key> &k)
           delete s;
         }
       break;
+      }
+      }
+      case PPSAVE:
+      {
+        _pause = !_pause;
+        return (true);
       }
       default:
         continue;
