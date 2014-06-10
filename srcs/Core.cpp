@@ -300,6 +300,7 @@ bool  Core::checkKey(const std::vector<key> &k)
           draw();
           s->saveGame(_map, _player, _hud->getTimer());
           _clock = _cam->getClock();
+          _time = _clock.getElapsed();
           _hud->displaySaving(false);
           delete s;
         }
