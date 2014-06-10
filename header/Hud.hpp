@@ -43,6 +43,7 @@ public:
 	void 	setTimer(const float &);
 	void	displaySaving(const bool);
 	void	drawDeath(const Death);
+	void 		setPause(const bool);
 
 private:
 	std::string convertToString(const int, const std::string &);
@@ -55,7 +56,7 @@ private:
 	void		updateRep();
 	void		drawTimer();
 	void 		drawSaving();
-
+	void 		drawPause();
 private:
 	int 	_screen;
 	int 	bombPlayer1;
@@ -77,7 +78,9 @@ private:
 	std::map<Display, std::vector<gdl::Geometry *> >	_player1;
 	std::map<Display, std::vector<gdl::Geometry *> >	_player2;
 	std::vector<gdl::Geometry *> 					 	_save;
+	std::vector<gdl::Geometry *> 					 	_pauseText;
 	std::vector<gdl::Geometry *>	_time;
 	std::vector<gdl::Geometry *> _affFPS;
 	bool	_saving;
+	bool 	_pause;
 };

@@ -25,6 +25,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
   _isSave = false;
   _mapFiller = NULL;
   _pause = false;
+  _timer = 1;
 }
 
 void  Core::reset()
@@ -44,6 +45,8 @@ void  Core::reset()
   _ainput = NULL;
   _isSave = false;
   _mapFiller = NULL;
+  _timer = 1;
+  _pause = false;
 }
 
 void  Core::setValues(Map *map)
@@ -61,6 +64,8 @@ void  Core::setValues(Map *map)
   _time = 0;
   _frames = 0;
   _endgame = false;
+  _pause = false;
+  _timer = 1;
 }
 
 void  Core::setSave(Saving *saving)
@@ -84,6 +89,8 @@ void  Core::setSave(Saving *saving)
   _frames = 0;
   _isSave = _menu->isSave();
   _endgame = false;
+  _pause = false;
+  _timer = 1;
 }
 
 Core::~Core()
@@ -216,19 +223,21 @@ bool	Core::update()
 {
   std::vector<key>  k;
 
+  _input = _cam->getInput();
+  if (_ainput == NULL)
+    _ainput = new AInput(_input, GAME);
+  _ainput->setInput(_input);
+  k = _ainput->getInput();
+  _timer += _clock.getElapsed();
   if (!_pause)
   {
+    _hud->setPause(false);
     checkAlive();
     if (_endgame == true)
       return (false);
     _clock = _cam->getClock();
-    _input = _cam->getInput();
     if (_networking)
       _networking->refreshGame();
-    if (_ainput == NULL)
-      _ainput = new AInput(_input, GAME);
-    _ainput->setInput(_input);
-    k = _ainput->getInput();
     if (!checkKey(k))
       return (false);
     FPS();
@@ -270,6 +279,8 @@ bool	Core::update()
   }
   else
   {
+    _clock = _cam->getClock();
+    _hud->setPause(true);
     if (!checkKey(k))
       return (false);
   }
@@ -315,12 +326,18 @@ bool  Core::checkKey(const std::vector<key> &k)
           _hud->displaySaving(false);
           delete s;
         }
-      break;
+        break;
+        }
       }
-      }
-      case PPSAVE:
+      case PPAUSE:
       {
+        if (_timer > 1)
+        {
+        _timer = 0;
+        _clock = _cam->getClock();
+        _time = _clock.getElapsed();
         _pause = !_pause;
+        }
         return (true);
       }
       default:

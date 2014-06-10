@@ -81,6 +81,7 @@ private:
   double        _time;
   double        _frames;
   double        _lasttime;
+  double          _timer;
   gdl::BasicShader	_shader;
   std::vector<Player*>	_player;
   std::vector<AObject*>	_other;

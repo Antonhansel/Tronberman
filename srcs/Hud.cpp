@@ -20,6 +20,7 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	_updatePlayer[2] = &Hud::updatePlayer2;
 	_death[VICTORY] = this->putstr("YOU WIN", 100, true);
 	_death[FATALITY] = this->putstr("FATALITY", 100, true);
+	_pauseText = this->putstr("PAUSE", 50, false);
 	bombPlayer1 = 0;
 	bombPlayer2 = 0;
 	rangePlayer1 = 0;
@@ -30,6 +31,7 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	_fps = 0;
 	_timer = 120;
 	_timerDouble = false;
+	_pause = false;
 }
 
 void	Hud::setScreen(int screen)
@@ -127,6 +129,11 @@ void	Hud::updatePlayer2(const Player *cur)
 	}
 }
 
+void 	Hud::setPause(const bool status)
+{
+	_pause = status;
+}
+
 void	Hud::updateFPS(const int fps)
 {
 	if (_fps != fps)
@@ -147,6 +154,8 @@ void	Hud::draw(const Player *cur)
   		drawTimer();
   	if (_saving)
   		drawSaving();
+  	if (_pause)
+  		drawPause();
   	_camera->setMode();
 }
 
@@ -282,6 +291,19 @@ void	Hud::drawSaving()
 
 	col = 800;
 	for (std::vector<Geometry *>::const_iterator it = _save.begin(); it != _save.end(); ++it)
+	{
+		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
+		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
+		col += 40;
+	}
+}
+
+void 	Hud::drawPause()
+{
+	int	col;
+	col = 800;
+
+	for (std::vector<Geometry *>::const_iterator it = _pauseText.begin(); it != _pauseText.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
 		(*it)->draw(_camera->getShader(), _transformation, GL_QUADS);
