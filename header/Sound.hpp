@@ -31,21 +31,22 @@ class Sound
 public:
   Sound();
   ~Sound();
-  void	playSound(TypeSound, int);
-  void  setEffect(bool);
+  void	playSound(const TypeSound, const int);
+  void  setEffect(const bool);
 
 private:
-  void	bomb(int);
-  void	bonus(int);
-  void  putBombs(int);
-  void	walk(int);
-  void	death(int);
-  void  hit(int);
+  void	bomb(const int);
+  void	bonus(const int);
+  void  putBombs(const int);
+  void	walk(const int);
+  void	death(const int);
+  void  hit(const int);
+
 private:
-  bool          _fx;
-  sf::Music			*_music;
-  sf::Music			*_effect[6];
-  std::map<TypeSound, void(Sound::*)(int)> _soundEffect;
+  bool                                      _fx;
+  sf::Music			                            *_music;
+  sf::Music			                            *_effect[6];
+  std::map<TypeSound, void(Sound::*)(int)>  _soundEffect;
 };
 
 #endif

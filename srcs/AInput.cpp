@@ -16,11 +16,10 @@ AInput::~AInput()
 {
 }
 
-std::vector<key>	AInput::getInput()
+const std::vector<key>	&AInput::getInput()
 {
-	std::vector<key> in;
-
-	for (std::map<int, key>::iterator it = _key.begin(); it != _key.end(); ++it)
+	in.clear();
+	for (std::map<int, key>::const_iterator it = _key.begin(); it != _key.end(); ++it)
 	{
 		if (_input.getKey((*it).first))
 		{
@@ -103,14 +102,14 @@ void	AInput::createGeneratorKey()
 	_key[SDL_QUIT] = ESCAPE;
 }
 
-void	AInput::setMode(bool nMod)
+void	AInput::setMode(const bool nMod)
 {
 	_mode2 = nMod;
 	_key.clear();
 	(this->*_ptrFunct[_type])();
 }
 
-bool	AInput::getKey(std::vector<key> &vk, key k)
+bool	AInput::getKey(const std::vector<key> &vk, key k)
 {
 	for (std::vector<key>::const_iterator it = vk.begin(); it != vk.end(); ++it)
 	{

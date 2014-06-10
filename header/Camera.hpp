@@ -21,22 +21,22 @@ class Camera
 public:
   Camera(const int, const int);
   ~Camera();
-  void 			setPlayer(int players);
-  BasicShader		&getShader();
-  void      changeFocus(AObject *cur_char, int screen);
-    std::pair<float, float>   genPos(Player *, Player *);
-  void 			stopContext();
-  bool 			initScene();
-  void 			flushContext();
-  void 			update();
-  int       genSplit(Player *, Player *);
-  void 			moveCamera(vec3, vec3, vec3, int);
-  Clock 		&getClock();
-  Input 		&getInput();
-  void      setMode();
-  void      tiltMode();
-  void      previewMode(bool);
-  bool      isSplit() const;
+  void 			                setPlayer(const int);
+  BasicShader               &getShader();
+  void                      changeFocus(AObject *, int);
+  std::pair<float, float>   genPos(Player *, Player *) const;
+  void 			                stopContext();
+  bool 			                initScene();
+  void 			                flushContext();
+  void 			                update();
+  int                       genSplit(Player *, Player *);
+  void 			                moveCamera(const vec3, vec3, const vec3, const int);
+  Clock 		                &getClock();
+  Input 		                &getInput();
+  void                      setMode();
+  void                      tiltMode();
+  void                      previewMode(const bool);
+  bool                      isSplit() const;
 private:
   float         _tilt;
   int           _mode;

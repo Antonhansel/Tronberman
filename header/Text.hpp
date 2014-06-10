@@ -21,26 +21,26 @@
 class Text
 {
 protected:
-  int		         _firstChar;
+  int		        _firstChar;
   Camera        *_camera;
   Loader        *_loader;
   type          _lastType;
   glm::mat4     _transformation;
 
 protected:
-  int getColumn(char c);
-  int getOtherColumn(char c);
-  void textureBind(int, int);
+  int   getColumn(const char);
+  int   getOtherColumn(const char);
+  void  textureBind(const int, const int);
 
 public:
   Text(Camera *, Loader *);
   ~Text();
-  void putchar(char, int, std::vector<gdl::Geometry *> &, bool);
-  std::vector<gdl::Geometry *> putstr(const char *, int, bool);
-  void draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int);
+  void  putchar(char, const int, std::vector<gdl::Geometry *> &, const bool);
+  std::vector<gdl::Geometry *> putstr(const char *, const int, const bool);
+  void  draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, const int);
   void  modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const std::vector<std::pair<bool, std::string> > &);
   void  addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, int, const std::string &);
-  void  addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int, const std::pair<int, int> &, const std::string&, bool) ;
+  void  addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int, const std::pair<int, int> &, const std::string&, const bool);
   void  deleteText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, const std::pair<int, std::pair<int, int> > &);
   void  deleteAllText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &) ;
 };

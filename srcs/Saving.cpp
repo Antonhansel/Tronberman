@@ -73,7 +73,7 @@ bool	Saving::saveAllPlayer(const std::vector<Player *> &p)
 	return (true);
 }
 
-bool	Saving::saveTimer(double t)
+bool	Saving::saveTimer(const double &t)
 {
 	_file << "<timer>" << t << "</timer>" << std::endl;
 	return (true);
@@ -95,7 +95,7 @@ bool	Saving::saveCheckSum()
 	return (false);
 }
 
-bool	Saving::saveGame(const Map *map, const std::vector<Player *> &player, double timer)
+bool	Saving::saveGame(const Map *map, const std::vector<Player *> &player, const double &timer)
 {
 	if (_fileName.compare(0, 18, "./ressources/maps/") == 0)
 		_fileName = "./ressources/save/" + _fileName.substr(19, _fileName.length());

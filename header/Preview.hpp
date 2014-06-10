@@ -26,18 +26,18 @@ public:
 	~Preview();
 	bool					initialize();
 	bool					initializeSave();
-	bool					update(gdl::Clock const &, gdl::Input &, bool);
+	bool					update(gdl::Clock const &, gdl::Input &, const bool);
 	void					draw(gdl::AShader &, gdl::Clock const &);
 	void 					setCameraAngle();
 	void 					getPaths(const char *);
 	bool 					checkName(const char *);
 	std::string				makePath(const char *, const char *);
-	void 					changeMap(int);
-	void 					changeMapSave(int);
+	void 					changeMap(const int);
+	void 					changeMapSave(const int);
 	Map 					*getMap() const;
-	Saving 					*getInstance();
+	Saving 					*getInstance() const;
 	bool					getState() const;
-	void					setState(bool);
+	void					setState(const bool);
 	bool					getResult() const;
 	void					resetText();
 

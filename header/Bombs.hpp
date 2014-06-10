@@ -20,24 +20,24 @@
 class Bombs : public AObject
 {
 private:
-  	float		    _speed;
-  	gdl::Model 	_model;
-  	type		   _type;
-  	int			   _anim;
+  	float		               _speed;
+  	gdl::Model 	           _model;
+  	type		               _type;
+  	int			               _anim;
   	std::vector<AObject *> _bombs;
-  	Map 		   *_map;
-  	double		 _time;
-  	double		 _create;
+  	Map 		               *_map;
+  	double		             _time;
+  	double		             _create;
   	std::vector< std::pair<double, AObject*> > _explosion;
-  	Player 		  *_player;
-  	Sound			 *_sound;
+  	Player 		             *_player;
+  	Sound			             *_sound;
     std::map<std::pair<float, float>, Bombs *>  *_bombsM;
-    bool        _isExplosed;
-    bool        _explosed;
-    std::vector<Player*>  *_playerTab;
-    std::map<type, int (Bombs::*)(int, std::pair<float, float> &)>  _ptrFunct;
+    bool                    _isExplosed;
+    bool                    _explosed;
+    std::vector<Player*>    *_playerTab;
+    std::map<type, int (Bombs::*)(int, const std::pair<float, float> &)>  _ptrFunct;
     std::map<std::pair<float, float>, Bonus *>  _bonusM;
-    bool      _doBonus;
+    bool                    _doBonus;
 
 public:
 	Bombs();
@@ -51,21 +51,21 @@ public:
 	bool  makeBomb(Player *);
   void	bombExplode();
   void	removeExplosion();
-  void	explosion(std::pair<float, float>);
-  void	newBomb(std::pair<float, float>&);
+  void	explosion(const std::pair<float, float> &);
+  void	newBomb(const std::pair<float, float>&);
   void	setObjects(Map *, Sound *, std::map<std::pair<float, float>, Bombs *>  *);
-  void  exploseAll(int, std::pair<float, float>, int, int);
+  void  exploseAll(const int, const std::pair<float, float> &, const int, const int);
   bool  isExplosed() const;
   void  setExplose();
   void  setPlayerTab(std::vector<Player*> *);
 
 private:
-  int   checkBlock(AObject *tmp, std::pair<float, float>, int);
-  int   checkBlockD(int, std::pair<float, float> &);
-  int   checkBlockS(int, std::pair<float, float> &);
-  int   checkBonus(int, std::pair<float, float> &);
-  int   checkBomb(int, std::pair<float, float> &);
-  int   checkLaser(int, std::pair<float, float> &);
+  int   checkBlock(AObject *tmp, const std::pair<float, float> &, int);
+  int   checkBlockD(int, const std::pair<float, float> &);
+  int   checkBlockS(int, const std::pair<float, float> &);
+  int   checkBonus(int, const std::pair<float, float> &);
+  int   checkBomb(int, const std::pair<float, float> &);
+  int   checkLaser(int, const std::pair<float, float> &);
 };
 
 #endif

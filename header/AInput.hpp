@@ -26,7 +26,6 @@ enum inputType
 	GENERATOR
 };
 
-
 class AInput
 {
 private:
@@ -36,15 +35,16 @@ private:
     std::map<int, key>						_key;
     bool 									_mode2;
     inputType								_type;
+    std::vector<key>						in;
 
 public:
 	AInput(gdl::Input &, inputType);
 	~AInput();
-	std::vector<key> 	getInput();
+	const std::vector<key> 	&getInput();
 	void	setInput(gdl::Input &);
 	void	createMenuKey();
-	void	setMode(bool);
-	static bool	getKey(std::vector<key> &, key);
+	void	setMode(const bool);
+	static bool	getKey(const std::vector<key> &, key);
 
 private:
 	void	createPlayer1Key();

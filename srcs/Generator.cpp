@@ -11,7 +11,7 @@
 #include "Generator.hpp"
 #include "Saving.hpp"
 
-Generator::Generator(Camera *camera, Loader *loader, int size)
+Generator::Generator(Camera *camera, Loader *loader, const int size)
 {
 	_size = size;
 	_camera = camera;
@@ -69,7 +69,7 @@ void 	Generator::draw()
   _camera->flushContext();
 }
 
-bool Generator::cleanObjects(int i)
+bool Generator::cleanObjects(const int i)
 {
 	if (_size + i != 40 && _size + i != 10)
 	{
@@ -86,7 +86,7 @@ bool Generator::cleanObjects(int i)
 	return (true);
 }
 
-bool Generator::initCursor(int x, int z)
+bool Generator::initCursor(const int x, const int z)
 {
   _cube = create<Cube>();
 	std::pair<float, float> pos;
@@ -99,7 +99,7 @@ bool Generator::initCursor(int x, int z)
   return (true);
 }
 
-bool Generator::changeSize(key &k)
+bool Generator::changeSize(const key &k)
 {
   	if (k == GPLUS)
   	{
@@ -114,7 +114,7 @@ bool Generator::changeSize(key &k)
   	return (true);
 }
 
-void 	Generator::placeCube(key &k)
+void 	Generator::placeCube(const key &k)
 {
   std::pair<float, float> pos;
 
@@ -130,7 +130,7 @@ void 	Generator::placeCube(key &k)
   }
 }
 
-void 	Generator::changeType(key &k)
+void 	Generator::changeType(const key &k)
 {
 	if (k == KP1)
 	  	_cube->setType(BLOCKD);
@@ -138,7 +138,7 @@ void 	Generator::changeType(key &k)
 	    _cube->setType(BLOCK);
 }
 
-void 	Generator::moveCursor(key &k)
+void 	Generator::moveCursor(const key &k)
 {
 	if (k == PUP && _cube->getPos().second + 1 < _size - 1)
 		_cube->translate(glm::vec3(0, 0, 1));

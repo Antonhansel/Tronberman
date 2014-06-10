@@ -40,7 +40,7 @@ public:
 	bool	initialize();
 	void	draw(gdl::AShader &, gdl::Clock const &);
 	void	update(gdl::Clock const &, gdl::Input &);
-	void	setObject(std::pair<float, float> &, Map *);
+	void	setObject(const std::pair<float, float> &, Map *);
 	void	addToPlayer(Player *);
 	void	giveBonus1(Player *);
 	void	giveBonus2(Player *);

@@ -23,7 +23,7 @@ Text::Text(Camera *camera, Loader *load) : _firstChar(0)
 Text::~Text()
 {}
 
-int	Text::getColumn(char c)
+int	Text::getColumn(const char c)
 {
   int ret;
 
@@ -35,7 +35,7 @@ int	Text::getColumn(char c)
   return (ret);
 }
 
-int Text::getOtherColumn(char c)
+int Text::getOtherColumn(const char c)
 {
   int ret;
 
@@ -47,7 +47,7 @@ int Text::getOtherColumn(char c)
   return (ret);
 }
 
-void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool other)
+void	Text::putchar(char c, const int size, std::vector<gdl::Geometry *> &_text, const bool other)
 {
   gdl::Geometry *geometry = new gdl::Geometry();  
   int	div;
@@ -69,7 +69,7 @@ void	Text::putchar(char c, int size, std::vector<gdl::Geometry *> &_text, bool o
   glEnable(GL_DEPTH_TEST);
 }
 
-std::vector<gdl::Geometry *> Text::putstr(const char *str, int size, bool other)
+std::vector<gdl::Geometry *> Text::putstr(const char *str, const int size, const bool other)
 {
   std::vector<gdl::Geometry *> text;
 
@@ -80,7 +80,7 @@ std::vector<gdl::Geometry *> Text::putstr(const char *str, int size, bool other)
   return (text);
 }
 
-void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &map, int isSelect)
+void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &map, const int isSelect)
 {
   int col;
   int row;
@@ -105,7 +105,7 @@ void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector
   _camera->setMode();
 }
 
-void  Text::textureBind(int count, int isSelect)
+void  Text::textureBind(const int count, const int isSelect)
 {
   if (count == isSelect && _lastType != SELECTED)
    {
@@ -135,7 +135,7 @@ void  Text::modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vecto
   }
 }
 
-void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, int index, const std::string &input)
+void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *old, const int index, const std::string &input)
 {
   std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> >::iterator   it;
   it = old->begin();
@@ -144,7 +144,7 @@ void  Text::addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl
   (*it).second = putstr(input.c_str(), 64, false);
 }
 
-void  Text::addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t, int id, const std::pair<int, int> &p, const std::string& s, bool type)
+void  Text::addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &t, const int id, const std::pair<int, int> &p, const std::string& s, const bool type)
 {
   t[std::make_pair(id, p)] = putstr(s.c_str(), 64, type);
 }

@@ -133,7 +133,7 @@ bool		Preview::initializeSave()
 	return (true);
 }
 
-void 		Preview::changeMap(int i)
+void 		Preview::changeMap(const int i)
 {
 	if (i == 1)
 	{
@@ -155,7 +155,7 @@ void 		Preview::changeMap(int i)
     _xend = _map->getSize()/2;
 }
 
-void 		Preview::changeMapSave(int i)
+void 		Preview::changeMapSave(const int i)
 {
 	if (i == 1)
 	{
@@ -186,7 +186,7 @@ void 		Preview::changeMapSave(int i)
     _xend = _map->getSize()/2;
 }
 
-bool		Preview::update(gdl::Clock const &clock, gdl::Input &input, bool isSave)
+bool		Preview::update(gdl::Clock const &clock, gdl::Input &input, const bool isSave)
 {
 	std::stringstream ss;
 
@@ -227,7 +227,6 @@ void 		Preview::setCameraAngle()
   _angle = _angle + 0.2;
   if (_angle > 360)
     _angle = 0;
- 	//_angle = 75;
   _posx = cos((_angle/180) * PI) * 30 + _xend;
   _posz = sin((_angle/180) * PI) * 30 + _xend;
   _camera->moveCamera(vec3(_posx + _xend, _posy, _posz - _xend/8), vec3(_xend, 0,_xend), vec3(0,1,0), 3);
@@ -272,11 +271,11 @@ Map 	*Preview::getMap() const
 	return ((_maps->size() == 0) ? NULL : _map);
 }
 
-Saving	*Preview::getInstance()
+Saving	*Preview::getInstance() const
 {
 	if (_save.size() > 0)
 	{
-		for (std::vector<Saving *>::iterator it = _save.begin(); it != _save.end(); ++it)
+		for (std::vector<Saving *>::const_iterator it = _save.begin(); it != _save.end(); ++it)
 		{
 			if ((*it)->getMap()->getName().compare(_map->getName()) == 0)
 				return (*it);
@@ -290,7 +289,7 @@ bool	Preview::getState() const
 	return (_state);
 }
 
-void 	Preview::setState(bool b)
+void 	Preview::setState(const bool b)
 {
 	_state = b;
 }

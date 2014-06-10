@@ -59,7 +59,7 @@ void	Bonus::draw(gdl::AShader &shader, gdl::Clock const &clock)
   (void)clock;
 }
 
-void	Bonus::setObject(std::pair<float, float> &pos, Map *map)
+void	Bonus::setObject(const std::pair<float, float> &pos, Map *map)
 {
 	(_bonus == BONUS1) ? _type = BONUSV : (_bonus == BONUS2) ? _type = BONUSB : (_bonus == BONUS3) ? _type = BONUSR : _type = BONUSS;
 	_pos = pos;

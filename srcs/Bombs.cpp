@@ -32,14 +32,14 @@ Bombs::~Bombs()
 {
 }
 
-void Bombs::update(gdl::Clock const &clock, gdl::Input &input)
+void Bombs::update(const gdl::Clock &clock, gdl::Input &input)
 {
   _time += clock.getElapsed();
   this->bombExplode();
   this->removeExplosion();
 }
 
-void  Bombs::draw(gdl::AShader &shader, gdl::Clock const &clock)
+void  Bombs::draw(gdl::AShader &shader, const gdl::Clock &clock)
 {
   (void)clock;
 }
@@ -56,8 +56,6 @@ bool  Bombs::makeBomb(Player *player)
   std::pair<float, float> pos;
 
   pos = player->realPos(player->getPos());
-  /*pos.first = roundf(pos.first - 0.2);
-  pos.second = roundf(pos.second - 0.2);*/
   if (_map->getCase(pos.first, pos.second) == NULL)
   {
     if (player != NULL && player->getStock() >= 1)
@@ -123,7 +121,7 @@ void  Bombs::bombExplode()
   }
 }
 
-void    Bombs::newBomb(std::pair<float, float> &check)
+void    Bombs::newBomb(const std::pair<float, float> &check)
 {
   AObject *bomb;
   std::pair<float, float> pos;
@@ -164,7 +162,7 @@ void    Bombs::newBomb(std::pair<float, float> &check)
   _explosion.push_back(std::make_pair(_time, bomb));
 }
 
-void  Bombs::explosion(std::pair<float, float> pos)
+void  Bombs::explosion(const std::pair<float, float> &pos)
 {
   int             range;
 
@@ -175,7 +173,7 @@ void  Bombs::explosion(std::pair<float, float> pos)
   exploseAll(range, pos, 0, -1);
 }
 
-void  Bombs::exploseAll(int range, std::pair<float, float> check, int x, int y)
+void  Bombs::exploseAll(const int range, const std::pair<float, float> &check, const int x, const int y)
 {
   AObject *tmp;
   bool  resume;
@@ -188,7 +186,7 @@ void  Bombs::exploseAll(int range, std::pair<float, float> check, int x, int y)
   }
 }
 
-int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
+int  Bombs::checkBlock(AObject *tmp, const std::pair<float, float> &check, int resume)
 {
   if (tmp)
   {
@@ -199,7 +197,7 @@ int  Bombs::checkBlock(AObject *tmp, std::pair<float, float> check, int resume)
   return (resume);
 }
 
-void  Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float>, Bombs *> *bombsM)
+void  Bombs::setObjects(Map *map, Sound *sound, std::map<std::pair<float, float> , Bombs *> *bombsM)
 {
   _map = map;
   _sound = sound;
@@ -222,7 +220,7 @@ void  Bombs::setPlayerTab(std::vector<Player*> *playerTab)
   _playerTab = playerTab;
 }
 
-int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
+int   Bombs::checkBlockD(int resume, const std::pair<float, float> &check)
 {
   int   res;
   _map->deleteCube(check.first, check.second);
@@ -243,20 +241,20 @@ int   Bombs::checkBlockD(int resume, std::pair<float, float> &check)
   return (resume);
 }
 
-int   Bombs::checkBlockS(int resume, std::pair<float, float> &check)
+int   Bombs::checkBlockS(int resume, const std::pair<float, float> &check)
 {
   resume = false;
   return (resume);
 }
 
-int   Bombs::checkBonus(int resume, std::pair<float, float> &check)
+int   Bombs::checkBonus(int resume, const std::pair<float, float> &check)
 {
   _map->deleteCube(check.first, check.second);
   newBomb(check);
   return (resume);
 }
 
-int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
+int   Bombs::checkBomb(int resume, const std::pair<float, float> &check)
 {
   std::map<std::pair<float, float>, Bombs *>::iterator it;
 
@@ -268,7 +266,7 @@ int   Bombs::checkBomb(int resume, std::pair<float, float> &check)
   return (resume);
 }
 
-int   Bombs::checkLaser(int resume, std::pair<float, float> &check)
+int   Bombs::checkLaser(int resume, const std::pair<float, float> &check)
 {
   /*for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
     {

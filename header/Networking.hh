@@ -67,19 +67,19 @@ class NetworkPlayer : public Player {
 public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
-    PlayerType getType() const;
+    const PlayerType getType() const;
 };
 
 class Networking {
     public:
-        Networking(std::string &port); // if server
-        Networking(std::string &port, std::string &addr); // if client
+        Networking(const std::string &port); // if server
+        Networking(const std::string &port, const std::string &addr); // if client
         ~Networking();
         bool                            newPlayers();
         // Called in loop to accept new clients, return true if new connections, else false
         void                            startGame(Core *);
         // Close listening for new clients
-        const std::list<Client *>       getPlayers() const;
+        const std::list<Client *>       &getPlayers() const;
         // Get the list of clients
         void                            refreshGame();
         bool                            isGameStarted();

@@ -22,7 +22,7 @@ public:
 	~Saving();
 	bool										getSavedMap();
 	bool										getSavedGame();
-	bool										saveGame(const Map *, const std::vector<Player *> &, double);
+	bool										saveGame(const Map *, const std::vector<Player *> &, const double &);
 	bool										saveGame(const Map *);
 	Map 										*getMap() const;
 	static std::vector<Map *>					*getMapList(std::vector<Saving *> &);
@@ -35,7 +35,7 @@ private:
 	bool		saveMap(const Map *);
 	bool		saveAllPlayer(const std::vector<Player *>&);
 	bool		savePlayer(const Player *);
-	bool		saveTimer(double);
+	bool		saveTimer(const double &);
 	bool		getMapFromFile();
 	bool		getPlayerFromFile();
 	bool		getTimerFromFile();

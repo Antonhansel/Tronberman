@@ -41,43 +41,43 @@ Sound::~Sound()
   delete _music;
 }
 
-void	Sound::playSound(TypeSound type, int volume)
+void	Sound::playSound(const TypeSound type, const int volume)
 {
   if (_fx)
     (this->*_soundEffect[type])(volume);
 }
 
-void	Sound::bomb(int volume)
+void	Sound::bomb(const int volume)
 {
   _effect[BOMB_S]->setVolume(volume);
   _effect[BOMB_S]->play();
 }
 
-void	Sound::bonus(int volume)
+void	Sound::bonus(const int volume)
 {
   _effect[BONUS_S]->setVolume(volume);
   _effect[BONUS_S]->play();
 }
 
-void  Sound::putBombs(int volume)
+void  Sound::putBombs(const int volume)
 {
   _effect[PBOMB_S]->setVolume(volume);
   _effect[PBOMB_S]->play();
 }
 
-void  Sound::death(int volume)
+void  Sound::death(const int volume)
 {
   _effect[DEATH_S]->setVolume(volume);
   _effect[DEATH_S]->play();
 }
 
-void  Sound::hit(int volume)
+void  Sound::hit(const int volume)
 {
   _effect[HIT_S]->setVolume(volume);
   _effect[HIT_S]->play();
 }
 
-void  Sound::setEffect(bool effect)
+void  Sound::setEffect(const bool effect)
 {
   _fx = effect;
 }

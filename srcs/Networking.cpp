@@ -22,10 +22,10 @@
 #include "BomberException.hpp"
 #include "Networking.hh"
 
-Networking::Networking(std::string &port)
+Networking::Networking(const std::string &port)
 {
-    struct protoent *pe;
-    int         tmp;
+    struct protoent     *pe;
+    int                 tmp;
     struct sockaddr_in  localaddr;
 
     std::cout << "Server start" << std::endl;
@@ -46,7 +46,7 @@ Networking::Networking(std::string &port)
     _core = NULL;
 }
 
-Networking::Networking(std::string &port, std::string &addr)
+Networking::Networking(const std::string &port, const std::string &addr)
 {
     struct addrinfo     hints;
     struct addrinfo     *info;
@@ -191,7 +191,7 @@ bool     Networking::newPlayers()
     return rtr;
 }
 
-const std::list<Client *>   Networking::getPlayers() const
+const std::list<Client *>   &Networking::getPlayers() const
 {
     return _players;
 }
@@ -424,7 +424,7 @@ NetworkPlayer::NetworkPlayer()
   _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
 }
 
-PlayerType NetworkPlayer::getType() const
+const PlayerType NetworkPlayer::getType() const
 {
     return (NETWORK);
 }

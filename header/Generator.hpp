@@ -21,21 +21,19 @@
 class Generator
 {
 public:
-	Generator(Camera *, Loader *, int);
+	Generator(Camera *, Loader *, const int);
 	~Generator();
-	void 	addCube(int, int, type);
 	bool 	initialize();
-	bool 	initCursor(int, int);
+	bool 	initCursor(const int, const int);
 	bool 	drawBackground();
-	bool 	cleanObjects(int);
+	bool 	cleanObjects(const int);
 	bool 	update();
 	void 	draw();
-	bool 	changeSize(key &);
-	void 	changeType(key &);
-	void 	placeCube(key &);
-	void 	moveCursor(key &);
-	void 	deleteCube(int, int);
-	AObject     *getCase(int x, int y) const;
+	bool 	changeSize(const key &);
+	void 	changeType(const key &);
+	void 	placeCube(const key &);
+	void 	moveCursor(const key &);
+
 private:
 	AObject			*_cube;
 	Camera 			*_camera;
