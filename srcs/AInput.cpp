@@ -84,6 +84,7 @@ void	AInput::createGameKey()
 	_key[SDLK_ESCAPE] = ESCAPE;
 	_key[SDL_QUIT] = ESCAPE;
 	_key[SDLK_o] = PSAVE;
+	_key[SDLK_p] = PPAUSE;
 }
 
 void	AInput::createGeneratorKey()

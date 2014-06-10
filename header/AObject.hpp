@@ -79,6 +79,7 @@ enum key
   GMINUS,
   KP1,
   KP2,
+  PPAUSE,
   SPACE
 };
 
