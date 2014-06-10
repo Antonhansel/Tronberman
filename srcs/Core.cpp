@@ -226,7 +226,50 @@ bool	Core::update()
     _ainput = new AInput(_input, GAME);
   _ainput->setInput(_input);
   k = _ainput->getInput();
-  for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
+  if (!checkKey(k))
+    return (false);
+  FPS();
+  _time += _clock.getElapsed();
+  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+  {
+    if (*it && (*it)->isAlive() == true)
+      (*it)->update(_clock, _input);
+  }
+  for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
+    (*it1)->update(_clock, _input);
+  for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
+  {
+    (*it6).second->update(_clock, _input);
+    if ((*it6).second->isExplosed() == true)
+    {
+      _bombs.erase(it6);
+      it6 = _bombs.begin();
+    }
+    else
+      ++it6;
+  }
+  _hud->setClock(_clock);
+  if (_players == 2)
+  {
+    _hud->update(_player[1]);
+    _hud->setScreen(_screen + 1);
+  }
+  else
+    _hud->setScreen(2);
+  _hud->update(_player[0]);
+  _particles->update();
+  if (_hud->getTimer() <= 0 && _networking == NULL)
+  {
+    if (_mapFiller == NULL)
+      _mapFiller = new MapFiller(_map, _loader, &_player);
+    _mapFiller->fillMap(_clock);
+  }
+  return (true);
+}
+
+bool  Core::checkKey(const std::vector<key> &k)
+{
+  for (std::vector<key>::const_iterator it = k.begin(); it != k.end(); ++it)
   {
     switch ((*it))
     {
@@ -265,42 +308,6 @@ bool	Core::update()
       default:
         continue;
     }
-  }
-  FPS();
-  _time += _clock.getElapsed();
-  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
-  {
-    if (*it && (*it)->isAlive() == true)
-      (*it)->update(_clock, _input);
-  }
-  for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
-    (*it1)->update(_clock, _input);
-  for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
-  {
-    (*it6).second->update(_clock, _input);
-    if ((*it6).second->isExplosed() == true)
-    {
-      _bombs.erase(it6);
-      it6 = _bombs.begin();
-    }
-    else
-      ++it6;
-  }
-  _hud->setClock(_clock);
-  if (_players == 2)
-  {
-    _hud->update(_player[1]);
-    _hud->setScreen(_screen + 1);
-  }
-  else
-    _hud->setScreen(2);
-  _hud->update(_player[0]);
-  _particles->update();
-  if (_hud->getTimer() <= 0 && _networking == NULL)
-  {
-    if (_mapFiller == NULL)
-      _mapFiller = new MapFiller(_map, _loader, &_player);
-    _mapFiller->fillMap(_clock);
   }
   return (true);
 }
