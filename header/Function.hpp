@@ -17,7 +17,7 @@
 namespace Function
 {
 	int				convToInt(const std::string&);
-	std::string		&convToString(std::string &, int);
+	std::string		&convToString(std::string &, const int);
 };
 
 #endif /* FUNCTION_HPP_ */

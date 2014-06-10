@@ -19,7 +19,7 @@ int  Function::convToInt(const std::string &s)
   return (val);
 }
 
-std::string  &Function::convToString(std::string &s, int i)
+std::string  &Function::convToString(std::string &s, const int i)
 {
   std::stringstream ss;
 

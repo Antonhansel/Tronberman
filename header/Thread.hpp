@@ -20,7 +20,6 @@ private:
 	pthread_t		_thread;
 	pthread_mutex_t	*_mutex;
 	ScopedLock		*_scopedLock;
-	/* data */
 };
 
 #endif /* THREAD_HPP_ */

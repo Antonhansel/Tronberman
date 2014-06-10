@@ -43,12 +43,12 @@ void	Hud::setScreen(int screen)
 		_timerDouble = false;
 }
 
-void	Hud::update(Player *cur)
+void	Hud::update(const Player *cur)
 {
 	(this->*_updatePlayer[cur->getId()])(cur);
 }
 
-void	Hud::updatePlayer1(Player *cur)
+void	Hud::updatePlayer1(const Player *cur)
 {
 	int	minuts = 0;
 	int	seconds = 0;
@@ -91,7 +91,7 @@ void	Hud::updatePlayer1(Player *cur)
 	}
 }
 
-void	Hud::updatePlayer2(Player *cur)
+void	Hud::updatePlayer2(const Player *cur)
 {
 	int	minuts = 0;
 	int	seconds = 0;
@@ -127,7 +127,7 @@ void	Hud::updatePlayer2(Player *cur)
 	}
 }
 
-void	Hud::updateFPS(int fps)
+void	Hud::updateFPS(const int fps)
 {
 	if (_fps != fps)
 	{
@@ -137,7 +137,7 @@ void	Hud::updateFPS(int fps)
 	}
 }
 
-void	Hud::draw(Player *cur)
+void	Hud::draw(const Player *cur)
 {
 	updateRep();
 	_loader->bindTexture(SELECTED);
@@ -271,7 +271,7 @@ float 	Hud::getTimer() const
 	return (_timer);
 }
 
-void	Hud::setTimer(float timer)
+void	Hud::setTimer(const float &timer)
 {
 	_timer = timer;
 }
@@ -289,7 +289,7 @@ void	Hud::drawSaving()
 	}
 }
 
-void	Hud::drawDeath(Death type)
+void	Hud::drawDeath(const Death type)
 {
 	int	col;
 	col = 550;
@@ -304,7 +304,7 @@ void	Hud::drawDeath(Death type)
 	_camera->setMode();
 }
 
-std::string Hud::convertToString(int value, const std::string &text)
+std::string Hud::convertToString(const int value, const std::string &text)
 {
 	std::stringstream ss;
 
@@ -312,7 +312,7 @@ std::string Hud::convertToString(int value, const std::string &text)
   	return (text + " " + ss.str());
 }
 
-std::string Hud::convertToStringN(int value, const std::string &text)
+std::string Hud::convertToStringN(const int value, const std::string &text)
 {
 	std::stringstream ss;
 
@@ -320,7 +320,7 @@ std::string Hud::convertToStringN(int value, const std::string &text)
   	return (ss.str() + text);
 }
 
-void	Hud::displaySaving(bool b)
+void	Hud::displaySaving(const bool b)
 {
 	_saving = b;
 }

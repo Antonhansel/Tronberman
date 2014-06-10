@@ -32,27 +32,26 @@ class Hud : public Text
 public:
 	Hud(Camera *, Loader *);
 	~Hud();
-	void 	init(Player *);
-	void	update(Player *);
-	void	updateFPS(int);
-	void	draw(Player *);
+	void	update(const Player *);
+	void	updateFPS(const int);
+	void	draw(const Player *);
 	void	drawFPS() const;
 	void 	setScreen(int);
 	bool	setClock(gdl::Clock &);
 	void	resetClock();
 	float	getTimer() const;
-	void 	setTimer(float);
-	void	displaySaving(bool);
-	void	drawDeath(Death);
+	void 	setTimer(const float &);
+	void	displaySaving(const bool);
+	void	drawDeath(const Death);
 
 private:
-	std::string convertToString(int, const std::string &);
-	std::string convertToStringN(int, const std::string &);
+	std::string convertToString(const int, const std::string &);
+	std::string convertToStringN(const int, const std::string &);
 	void 		delGeometry(std::vector<Geometry *> &);
 	void		drawPlayer1();
 	void		drawPlayer2();
-	void		updatePlayer1(Player *);
-	void		updatePlayer2(Player *);
+	void		updatePlayer1(const Player *);
+	void		updatePlayer2(const Player *);
 	void		updateRep();
 	void		drawTimer();
 	void 		drawSaving();
@@ -72,7 +71,7 @@ private:
 	float	_timer;
 	bool	_timerDouble;
 	glm::mat4 _transformation;
-	std::map<int, void(Hud::*)(Player *) > _updatePlayer;
+	std::map<int, void(Hud::*)(const Player *) > _updatePlayer;
 	std::map<int, void(Hud::*)() > _drawPlayer;
 	std::map<Death, std::vector<gdl::Geometry *> >	_death;
 	std::map<Display, std::vector<gdl::Geometry *> >	_player1;
