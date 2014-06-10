@@ -90,6 +90,7 @@ private:
   ParticleEngine   *_particles;
   Networking  *_networking;
   MapFiller   *_mapFiller;
+  bool        _pause;
 };
 
 #endif /*!_CORE_HPP_*/

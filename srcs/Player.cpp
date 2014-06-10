@@ -39,7 +39,6 @@ PlayerType Player::getType() const
   return (HUMAN);
 }
 
-
 bool    Player::initialize()
 {
   _speed = 7;
@@ -79,9 +78,7 @@ void    Player::draw(gdl::AShader &shader, const gdl::Clock &clock)
   else if (_dir == SOUTH)
     translate(glm::vec3(0.25, 0, -0.25));
   else
-  {
     translate(glm::vec3(-0.25, 0, 0.25));
-  }
   _model.setCurrentAnim(_anim);
   _model.gdl::Model::draw(shader, getTransformation(), clock.getElapsed());
   if (_dir == WEST)

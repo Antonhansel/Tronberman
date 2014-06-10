@@ -24,6 +24,7 @@ Core::Core(Camera *cam, Loader *loader, Menu *menu, ParticleEngine *particles)
   _particles = particles;
   _isSave = false;
   _mapFiller = NULL;
+  _pause = false;
 }
 
 void  Core::reset()
@@ -215,55 +216,59 @@ bool	Core::update()
 {
   std::vector<key>  k;
 
-  checkAlive();
-  if (_endgame == true)
-    return (false);
-  _clock = _cam->getClock();
-  _input = _cam->getInput();
-  if (_networking)
-    _networking->refreshGame();
-  if (_ainput == NULL)
-    _ainput = new AInput(_input, GAME);
-  _ainput->setInput(_input);
-  k = _ainput->getInput();
-  if (!checkKey(k))
-    return (false);
-  FPS();
-  _time += _clock.getElapsed();
-  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
+  if (!_pause)
   {
-    if (*it && (*it)->isAlive() == true)
-      (*it)->update(_clock, _input);
-  }
-  for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
-    (*it1)->update(_clock, _input);
-  for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
-  {
-    (*it6).second->update(_clock, _input);
-    if ((*it6).second->isExplosed() == true)
+    checkAlive();
+    if (_endgame == true)
+      return (false);
+    _clock = _cam->getClock();
+    _input = _cam->getInput();
+    if (_networking)
+      _networking->refreshGame();
+    if (_ainput == NULL)
+      _ainput = new AInput(_input, GAME);
+    _ainput->setInput(_input);
+    k = _ainput->getInput();
+    if (!checkKey(k))
+      return (false);
+    FPS();
+    _time += _clock.getElapsed();
+    for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
     {
-      _bombs.erase(it6);
-      it6 = _bombs.begin();
+      if (*it && (*it)->isAlive() == true)
+        (*it)->update(_clock, _input);
+    }
+    for (std::vector<AObject*>::iterator it1 = _other.begin(); it1 != _other.end(); ++it1)
+      (*it1)->update(_clock, _input);
+    for (std::map<std::pair<float, float>, Bombs *>::iterator it6 = _bombs.begin(); it6 != _bombs.end(); )
+    {
+      (*it6).second->update(_clock, _input);
+      if ((*it6).second->isExplosed() == true)
+      {
+        _bombs.erase(it6);
+        it6 = _bombs.begin();
+      }
+      else
+        ++it6;
+    }
+    _hud->setClock(_clock);
+    if (_players == 2)
+    {
+      _hud->update(_player[1]);
+      _hud->setScreen(_screen + 1);
     }
     else
-      ++it6;
+      _hud->setScreen(2);
+    _hud->update(_player[0]);
+    _particles->update();
+    if (_hud->getTimer() <= 0 && _networking == NULL)
+    {
+      if (_mapFiller == NULL)
+        _mapFiller = new MapFiller(_map, _loader, &_player);
+      _mapFiller->fillMap(_clock);
+    }
   }
-  _hud->setClock(_clock);
-  if (_players == 2)
-  {
-    _hud->update(_player[1]);
-    _hud->setScreen(_screen + 1);
-  }
-  else
-    _hud->setScreen(2);
-  _hud->update(_player[0]);
-  _particles->update();
-  if (_hud->getTimer() <= 0 && _networking == NULL)
-  {
-    if (_mapFiller == NULL)
-      _mapFiller = new MapFiller(_map, _loader, &_player);
-    _mapFiller->fillMap(_clock);
-  }
+  
   return (true);
 }
 
@@ -303,7 +308,7 @@ bool  Core::checkKey(const std::vector<key> &k)
           _hud->displaySaving(false);
           delete s;
         }
-        break;
+      break;
       }
       default:
         continue;
