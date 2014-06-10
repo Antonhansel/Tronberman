@@ -39,19 +39,23 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Md5.cpp \
 				srcs/ScopedLock.cpp \
 				srcs/Thread.cpp \
+				srcs/NetworkProtocol.pb.cpp \
 				srcs/Function.cpp
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXX 		= g++
 
-CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
-LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -I./bomberlib/protobuf
+LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib \
+	-lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk \
+	-lsfml-audio -pthread \
+	-I./bomberlib/protobuf -L./bomberlib/protobuf -lprotobuf
 
 # Debug and profiling flags
 
-CXXFLAGS	+= -g -pg
-LDFLAGS 	+= -g -pg
+# CXXFLAGS	+= -g -pg
+# LDFLAGS 	+= -g -pg
 
 GREEN 		= 	@if [ -t 1 ]; then tput setaf 2 ; fi
 BLUE 		= 	@if [ -t 1 ]; then tput setaf 4 ; fi

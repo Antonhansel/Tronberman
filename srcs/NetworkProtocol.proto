@@ -1,0 +1,53 @@
+package Bomberman;
+
+message Message {
+
+  enum MessageType {
+    OWN_MOVE = 1;
+    OWN_BOMB = 2;
+    MAP_UPDATE = 3;
+    PLAYER_UPDATE = 4;
+    INFOS = 5;
+    CONSUME_BONUS = 6;
+    OWN_PLAYER_INFO = 7;
+  }
+  required MessageType type = 1;
+
+  message Player {
+    required int32 playerId = 1;
+    required float x = 2;
+    required float y = 3;
+    enum Dir
+    {
+      NORTH = 1;
+      SOUTH = 2;
+      EAST = 3;
+      WEST = 4;
+    }
+    required Dir dir = 4;
+  }
+  repeated Player player = 4;
+
+  message Map {
+    required int32 startX = 1;
+    required int32 startY = 2;
+    required bytes data = 3;
+  }
+  repeated Map map = 5;
+
+  message Info {
+    required int32 mapSize = 1;
+    required int32 playersNb = 2;
+    required float startX = 3;
+    required float startY = 4;
+  }
+  repeated Info info = 6;
+
+  message OwnPlayerInfo {
+    required int32 life = 1;
+    required int32 range = 2;
+    required int32 stock = 3;
+  }
+  repeated OwnPlayerInfo ownPlayerInfo = 7;
+
+}
