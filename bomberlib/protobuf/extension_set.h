@@ -44,7 +44,7 @@
 #include <string>
 
 
-#include <google/protobuf/stubs/common.h>
+#include "protobuf/stubs/common.h"
 
 namespace google {
 

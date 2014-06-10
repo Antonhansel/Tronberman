@@ -41,9 +41,9 @@
 #include <vector>
 #include <set>
 #include <utility>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/descriptor_database.h>
-#include <google/protobuf/compiler/parser.h>
+#include "protobuf/descriptor.h"
+#include "protobuf/descriptor_database.h"
+#include "protobuf/compiler/parser.h"
 
 namespace google {
 namespace protobuf {

@@ -40,11 +40,11 @@
 #define GOOGLE_PROTOBUF_WIRE_FORMAT_H__
 
 #include <string>
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/descriptor.pb.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/message.h>
-#include <google/protobuf/wire_format_lite.h>
+#include "protobuf/stubs/common.h"
+#include "protobuf/descriptor.pb.h"
+#include "protobuf/descriptor.h"
+#include "protobuf/message.h"
+#include "protobuf/wire_format_lite.h"
 
 // Do UTF-8 validation on string type in Debug build only
 #ifndef NDEBUG

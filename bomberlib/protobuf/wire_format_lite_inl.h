@@ -37,11 +37,11 @@
 #define GOOGLE_PROTOBUF_WIRE_FORMAT_LITE_INL_H__
 
 #include <string>
-#include <google/protobuf/stubs/common.h>
-#include <google/protobuf/message_lite.h>
-#include <google/protobuf/repeated_field.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/io/coded_stream.h>
+#include "protobuf/stubs/common.h"
+#include "protobuf/message_lite.h"
+#include "protobuf/repeated_field.h"
+#include "protobuf/wire_format_lite.h"
+#include "protobuf/io/coded_stream.h"
 
 
 namespace google {
@@ -284,7 +284,7 @@ inline bool WireFormatLite::ReadRepeatedFixedSizePrimitive(
   return true;
 }
 
-// Specializations of ReadRepeatedPrimitive for the fixed size types, which use 
+// Specializations of ReadRepeatedPrimitive for the fixed size types, which use
 // the optimized code path.
 #define READ_REPEATED_FIXED_SIZE_PRIMITIVE(CPPTYPE, DECLARED_TYPE)             \
 template <>                                                                    \

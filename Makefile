@@ -54,8 +54,8 @@ LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib \
 
 # Debug and profiling flags
 
-# CXXFLAGS	+= -g -pg
-# LDFLAGS 	+= -g -pg
+CXXFLAGS	+= -g -pg
+LDFLAGS 	+= -g -pg
 
 GREEN 		= 	@if [ -t 1 ]; then tput setaf 2 ; fi
 BLUE 		= 	@if [ -t 1 ]; then tput setaf 4 ; fi

@@ -37,8 +37,8 @@
 
 #include <string>
 
-#include <google/protobuf/compiler/code_generator.h>
-#include <google/protobuf/stubs/common.h>
+#include "protobuf/compiler/code_generator.h"
+#include "protobuf/stubs/common.h"
 
 namespace google {
 namespace protobuf {

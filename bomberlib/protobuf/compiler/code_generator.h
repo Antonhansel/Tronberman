@@ -38,7 +38,7 @@
 #ifndef GOOGLE_PROTOBUF_COMPILER_CODE_GENERATOR_H__
 #define GOOGLE_PROTOBUF_COMPILER_CODE_GENERATOR_H__
 
-#include <google/protobuf/stubs/common.h>
+#include "protobuf/stubs/common.h"
 #include <string>
 #include <vector>
 #include <utility>

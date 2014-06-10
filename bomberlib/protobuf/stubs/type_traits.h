@@ -60,7 +60,7 @@
 
 #include <utility>                  // For pair
 
-#include <google/protobuf/stubs/template_util.h>  // For true_type and false_type
+#include "protobuf/stubs/template_util.h"  // For true_type and false_type
 
 namespace google {
 namespace protobuf {

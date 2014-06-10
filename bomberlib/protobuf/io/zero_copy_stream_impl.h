@@ -42,9 +42,9 @@
 
 #include <string>
 #include <iosfwd>
-#include <google/protobuf/io/zero_copy_stream.h>
-#include <google/protobuf/io/zero_copy_stream_impl_lite.h>
-#include <google/protobuf/stubs/common.h>
+#include "protobuf/io/zero_copy_stream.h"
+#include "protobuf/io/zero_copy_stream_impl_lite.h"
+#include "protobuf/stubs/common.h"
 
 
 namespace google {

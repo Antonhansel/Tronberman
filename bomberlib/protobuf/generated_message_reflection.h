@@ -40,12 +40,12 @@
 
 #include <string>
 #include <vector>
-#include <google/protobuf/stubs/common.h>
+#include "protobuf/stubs/common.h"
 // TODO(jasonh): Remove this once the compiler change to directly include this
 // is released to components.
-#include <google/protobuf/generated_enum_reflection.h>
-#include <google/protobuf/message.h>
-#include <google/protobuf/unknown_field_set.h>
+#include "protobuf/generated_enum_reflection.h"
+#include "protobuf/message.h"
+#include "protobuf/unknown_field_set.h"
 
 
 namespace google {
