@@ -18,6 +18,7 @@ public:
 	void 	fillMap(gdl::Clock &);
 	void 	moveMatrice();
 	void 	moveCube();
+	bool 	checkCase();
 	void 	draw(gdl::AShader &shader);
 	void 	checkPlayers() const;
 	std::pair<float, float> 	changePos();
