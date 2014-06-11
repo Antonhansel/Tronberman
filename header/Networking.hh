@@ -72,9 +72,9 @@ class Networking {
         void    _startGameClient();
         void    _tryPurgeBuffer();
         void    _sendOwnInfos();
-        Bomberman::Message     *_buildMessage(Bomberman::Message::MessageType);
+        Bomberman::Message          *_buildMessage(Bomberman::Message::MessageType);
         std::list<std::string *>    _toSend;
-        int                      _sizeSended;
+        int                         _sizeSended;
         std::string                 _inputBuffer;
-        int                      _messageLength;
+        int                         _messageLength;
 };

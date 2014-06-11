@@ -39,8 +39,9 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Md5.cpp \
 				srcs/ScopedLock.cpp \
 				srcs/Thread.cpp \
+				srcs/Function.cpp \
 				srcs/NetworkProtocol.pb.cpp \
-				srcs/Function.cpp
+
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 

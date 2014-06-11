@@ -107,7 +107,7 @@ void 	Camera::moveCamera(const vec3 vec1, vec3 vec2, const vec3 vec3, const int 
   {
   if (_tilt != 0)
   {
-    vec2.z += _tilt/10;
+    //vec2.z += _tilt/10;
     _tilt -= 1;
   }
   if (_players == 1)
