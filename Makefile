@@ -39,14 +39,19 @@ SOURCES		=	srcs/main.cpp \
 				srcs/Md5.cpp \
 				srcs/ScopedLock.cpp \
 				srcs/Thread.cpp \
-				srcs/Function.cpp
+				srcs/Function.cpp \
+				srcs/NetworkProtocol.pb.cpp \
+
 
 OBJECTS		=	$(SOURCES:.cpp=.o)
 
 CXX 		= g++
 
-CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall
-LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib -lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk -lsfml-audio
+CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -I./bomberlib/protobuf
+LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib \
+	-lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk \
+	-lsfml-audio -pthread \
+	-I./bomberlib/protobuf -L./bomberlib/protobuf -lprotobuf
 
 # Debug and profiling flags
 

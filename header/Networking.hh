@@ -15,50 +15,22 @@
 #include <string>
 #include <list>
 
+#include "NetworkProtocol.pb.h"
 #include "Core.hpp"
 #include "Player.hpp"
 
 #define     MAP_SEND_SIZE       50
 #define     MAX_SEND_PLAYERS    10
 
-enum    MSG_TYPE {
-    OWN_MOVE = 1,
-    OWN_BOMB = 2,
-    MAP_UPDATE = 3,
-    PLAYER_UPDATE = 4,
-    INFOS = 5,
-};
-
-struct          Message {
-    MSG_TYPE    type;
-    union       {
-        struct {
-            int playerId;
-            float x;
-            float y;
-            dirr dir;
-        } player[MAX_SEND_PLAYERS];
-        struct {
-            int start[2]; // x and y of start of map chunk
-            enum type data[(MAP_SEND_SIZE + 1) * MAP_SEND_SIZE];
-        } map;
-        struct {
-            unsigned int mapSize;
-            unsigned int playersNb;
-            unsigned int yourIndex;
-            float startX;
-            float startY;
-        } infos;
-    } data;
-};
-
 struct                      Client {
     int                     sockfd;
     int                     lastTick;
     std::string             name;
-    std::list<std::pair<unsigned int, Message *> >       toSend;
+    std::list<std::string *>    toSend;
+    int                         sizeSended;
     // first is the start position to send the message, second is the messages
-    std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   inputBuffer;
+    std::string     inputBuffer;
+    int          messageLength;
     // first is the actual position in the buffer, second is the buffer
     Player                  *player;
 };
@@ -89,17 +61,20 @@ class Networking {
         Core                    *_core;
         bool                    _closed;
         int                     _sockfd;
-        Message                 _initMessage;
+        Bomberman::Message      _initMessage;
         std::list<Client *>     _players;
         void    _receiveFromClient(Client *);
         void    _sendToClient(Client *);
         void    _sendMapUpdate(Client *);
         void    _sendPlayersUpdate(Client *);
-        void    _treatMessage(Client *, Message *);
+        void    _treatMessage(Client *, Bomberman::Message *);
         void    _startGameServer();
         void    _startGameClient();
         void    _tryPurgeBuffer();
         void    _sendOwnInfos();
-        std::list<std::pair<unsigned int, Message *> >       _toSend;
-        std::pair<unsigned int, char[sizeof(Message) * 2 + 1]>   _inputBuffer;
+        Bomberman::Message          *_buildMessage(Bomberman::Message::MessageType);
+        std::list<std::string *>    _toSend;
+        int                         _sizeSended;
+        std::string                 _inputBuffer;
+        int                         _messageLength;
 };

@@ -58,7 +58,6 @@ Networking::Networking(const std::string &port, const std::string &addr)
     _closed = false;
     _initialized = false;
     _core = NULL;
-    _inputBuffer.first = 0;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -75,6 +74,7 @@ Networking::Networking(const std::string &port, const std::string &addr)
             return ;
         info = info->ai_next;
     }
+    _messageLength = -1;
     throw new BomberException(strerror(errno));
 }
 
@@ -84,13 +84,20 @@ Networking::~Networking()
         close(_sockfd);
 }
 
+Bomberman::Message  *Networking::_buildMessage(Bomberman::Message::MessageType type)
+{
+    Bomberman::Message *message = new Bomberman::Message;
+
+    message->set_type(type);
+    return message;
+}
+
 void Networking::startGame(Core *core)
 {
     NetworkPlayer *player;
-    std::pair<float, float> tmpPos(_initMessage.data.infos.startX, _initMessage.data.infos.startY);
+    std::pair<float, float> tmpPos(_initMessage.info(0).startx(), _initMessage.info(0).starty());
 
     _core = core;
-    std::cout << "here" << std::endl;
     if (_isServer)
     {
         close(_sockfd);
@@ -99,10 +106,10 @@ void Networking::startGame(Core *core)
     }
     else
     {
-        std::cout << "map size : " << _initMessage.data.infos.mapSize << std::endl;
+        std::cout << "map size : " << _initMessage.info(0).mapsize() << std::endl;
         _core->getPlayer()[0]->setAbsPos(tmpPos);
         std::cout << "pos : " << tmpPos.first << " - " << tmpPos.second << std::endl;
-        for(unsigned i = 0; i < _initMessage.data.infos.playersNb - 1; ++i) {
+        for(int i = 0; i < _initMessage.info(0).playersnb() - 1; ++i) {
             player = new NetworkPlayer();
             player->initialize();
             tmpPos.first = -1;
@@ -115,7 +122,7 @@ void Networking::startGame(Core *core)
             _core->getPlayer().push_back(player);
             printf("Created client at index : %lu\n", _core->getPlayer().size());
         }
-        std::cout << "max player : " << _initMessage.data.infos.playersNb << std::endl;
+        std::cout << "max player : " << _initMessage.info(0).playersnb() << std::endl;
     }
 }
 
@@ -123,7 +130,9 @@ void    Networking::_startGameServer()
 {
     NetworkPlayer *player;
     std::pair<float, float> tmpPos;
-    Message                 *msg;
+    Bomberman::Message                  *msg;
+    Bomberman::Message_Info             *info;
+    std::string                         *serialized;
     unsigned int            playerNb;
 
     playerNb = _core->getPlayer().size() + _players.size();
@@ -140,15 +149,17 @@ void    Networking::_startGameServer()
         player->setSound(_core->getSound());
         _core->getPlayer().push_back(player);
         (*i)->player = player;
-        msg = new Message;
-        msg->type = INFOS;
-        msg->data.infos.mapSize = _core->getMap()->getSize();
-        msg->data.infos.startX = player->getPos().first;
-        msg->data.infos.startY = player->getPos().second;
-        msg->data.infos.playersNb = playerNb;
-        msg->data.infos.yourIndex = _core->getPlayer().size() - 1;
-        (*i)->toSend.push_back(std::make_pair<int, Message *>(0, msg));
+        msg = _buildMessage(Bomberman::Message::INFOS);
+        info = msg->add_info();
+        info->set_mapsize(_core->getMap()->getSize());
+        info->set_startx(player->getPos().first);
+        info->set_startx(player->getPos().second);
+        info->set_playersnb(playerNb);
+        serialized = new std::string();
+        msg->SerializeToString(serialized);
+        (*i)->toSend.push_back(serialized);
         _sendMapUpdate(*i);
+        delete msg;
     }
     _tryPurgeBuffer();
 }
@@ -184,6 +195,7 @@ bool     Networking::newPlayers()
         inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
         client->name = ipv4addr;
         client->lastTick = 0;
+        client->messageLength = -1;
         _players.push_back(client);
         std::cout << "new player " << client->name << std::endl;
         rtr = true;
@@ -239,76 +251,83 @@ void    Networking::_tryPurgeBuffer()
 void    Networking::_receiveFromClient(Client *client)
 {
     ssize_t     sizeRecv;
-    std::pair<unsigned int, char[sizeof(Message) * 2 + 1]> *tmp;
+    char        *tmp;
+    Bomberman::Message msg;
 
-    tmp = (!client) ? &_inputBuffer : &client->inputBuffer;
+    // tmp = (!client) ? &_inputBuffer : &client->inputBuffer;
     do {
+        if (((!client) ? _messageLength : client->messageLength) == -1)
+        {
+            sizeRecv = recv(((!client) ? _sockfd : client->sockfd),
+                &((!client) ? _messageLength : client->messageLength),
+                sizeof(_messageLength), MSG_DONTWAIT);
+            if (sizeRecv < 0)
+                return;
+        }
+        tmp = new char[((!client) ? _messageLength : client->messageLength)];
         sizeRecv = recv((!client) ? _sockfd : client->sockfd,
-            &tmp->second[tmp->first],
-            sizeof(Message),
+            tmp,
+            ((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size(),
             MSG_DONTWAIT);
         if (sizeRecv < 0)
             return;
-        std::cout << "received : " << sizeRecv << std::endl;
-        tmp->first += sizeRecv;
-        if (tmp->first >= sizeof(Message))
+        ((!client) ? _inputBuffer : client->inputBuffer).append(tmp);
+        if (((!client) ? _inputBuffer : client->inputBuffer).size() >= (size_t)((!client) ? _messageLength : client->messageLength))
         {
-            _treatMessage(client, reinterpret_cast<Message *>(tmp->second));
-            memmove(tmp->second,
-                &tmp->second[tmp->first],
-                tmp->first - sizeof(Message));
-            tmp->first -= sizeof(Message);
+            if (msg.ParseFromString(((!client) ? _inputBuffer : client->inputBuffer)))
+                _treatMessage(client, &msg);
+            ((!client) ? _inputBuffer : client->inputBuffer).empty();
+            ((!client) ? _messageLength : client->messageLength) = -1;
         }
+        delete tmp;
     } while (sizeRecv > 0);
 }
 
-void    Networking::_treatMessage(Client *client, Message *message)
+void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
 {
     std::cout << "Treating message" << std::endl;
-    if (message->type == INFOS)
+    if (message->type() == Bomberman::Message::INFOS)
     {
         std::cout << "INFOS" << std::endl;
-        memcpy(&_initMessage, message, sizeof(*message));
+        _initMessage = *message;
         _initialized = true;
     }
     if (!_core)
         return;
-    if (message->type == OWN_MOVE)
+    if (message->type() == Bomberman::Message::OWN_MOVE)
     {
         std::cout << "OWN MOVE" << std::endl;
-        printf("OWN MOVE : %fx%f\n", message->data.player[0].x, message->data.player[0].y);
-        std::pair<float, float> pos = std::make_pair<float, float>(message->data.player[0].x, message->data.player[0].y);
+        printf("OWN MOVE : %fx%f\n", message->player(0).x(), message->player(0).y());
+        std::pair<float, float> pos = std::make_pair<float, float>(message->player(0).x(), message->player(0).y());
         client->player->setAbsPos(pos);
-        client->player->dir(message->data.player[0].dir);
+        client->player->dir((dirr)message->player(0).dir());
     }
-    if (message->type == OWN_BOMB)
+    if (message->type() == Bomberman::Message::OWN_BOMB)
     {
         std::cout << "OWN BOMB" << std::endl;
         client->player->spawnBomb();
     }
-    if (message->type == MAP_UPDATE)
+    if (message->type() == Bomberman::Message::MAP_UPDATE)
     {
         std::cout << "MAP UPDATE" << std::endl;
-        std::cout << "from : " << message->data.map.start[0] << "x" << message->data.map.start[1] << std::endl;
+        std::cout << "from : " << message->map(0).startx() << "x" << message->map(0).starty() << std::endl;
         for(unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
             for(unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
-                // printf("Change at %dx%d\n", x, y);
-                if (message->data.map.data[x * MAP_SEND_SIZE + y] == NOTHING)
-                    _core->getMap()->deleteCube(x + message->data.map.start[0], y + message->data.map.start[1]);
-                else if (!_core->getMap()->getCase(x, y) || _core->getMap()->getCase(x, y)->getType() != message->data.map.data[x * MAP_SEND_SIZE + y])
-                    _core->getMap()->addCube(x + message->data.map.start[0],
-                        y + message->data.map.start[1], message->data.map.data[x * MAP_SEND_SIZE + y]);
+                if (message->map(0).data()[x * MAP_SEND_SIZE + y] == NOTHING)
+                    _core->getMap()->deleteCube(x + message->map(0).startx(), y + message->map(0).starty());
+                else if (!_core->getMap()->getCase(x, y) || _core->getMap()->getCase(x, y)->getType() != message->map(0).data()[x * MAP_SEND_SIZE + y])
+                    _core->getMap()->addCube(x + message->map(0).startx(),
+                        y + message->map(0).starty(), (type)message->map(0).data()[x * MAP_SEND_SIZE + y]);
             }
         }
     }
-    if (message->type == PLAYER_UPDATE)
+    if (message->type() == Bomberman::Message::PLAYER_UPDATE)
     {
-        for(unsigned i = 0; i < MAX_SEND_PLAYERS; ++i) {
-            if (message->data.player[i].playerId == -1)
-                break;
-            printf("Setting player : %d at %fx%f\n", message->data.player[i].playerId, message->data.player[i].x, message->data.player[i].y);
-            _core->getPlayer()[message->data.player[i].playerId + 1]->setAbsPos(message->data.player[i].x, message->data.player[i].y);
-            _core->getPlayer()[message->data.player[i].playerId + 1]->dir(message->data.player[i].dir);
+        for (int i = 0; i < message->player_size(); ++i)
+        {
+            printf("Setting player : %d at %fx%f\n", message->player(i).playerid(), message->player(i).x(), message->player(i).y());
+            _core->getPlayer()[message->player(i).playerid() + 1]->setAbsPos(message->player(i).x(), message->player(i).y());
+            _core->getPlayer()[message->player(i).playerid() + 1]->dir((dirr)message->player(i).dir());
         }
     }
 }
@@ -316,30 +335,45 @@ void    Networking::_treatMessage(Client *client, Message *message)
 void    Networking::_sendToClient(Client *client)
 {
     ssize_t     sizeSent;
-    std::pair<unsigned int, Message *>     *toSend;
+    std::string     *toSend;
+    const char            *reelSend;
 
     do {
-        toSend = (client) ? (&*(client->toSend.begin())) : (&*_toSend.begin());
+        toSend = *((client) ? (&*(client->toSend.begin())) : (&*_toSend.begin()));
+        if (((!client) ? _sizeSended : client->sizeSended) == -1)
+        {
+            sizeSent = toSend->size();
+            send((client) ? (client->sockfd) : (_sockfd),
+                &sizeSent,
+                sizeof(size_t),
+                MSG_NOSIGNAL | MSG_DONTWAIT);
+            if (sizeSent <= 0)
+            {
+                if (client && (sizeSent == 0 || errno == EPIPE || errno == ECONNRESET || errno == EINTR))
+                    client->player->setIsAlive();
+                return;
+            }
+            (!client) ? _sizeSended : client->sizeSended = 0;
+        }
+        reelSend = toSend->substr((!client) ? _sizeSended : client->sizeSended).c_str();
         sizeSent = send((client) ? (client->sockfd) : (_sockfd),
-            &toSend->second[toSend->first],
-            sizeof(*toSend->second) - toSend->first,
+            reelSend,
+            toSend->size() - ((!client) ? _sizeSended : client->sizeSended),
             MSG_NOSIGNAL | MSG_DONTWAIT);
-        if (sizeSent < 0 || sizeSent == 0)
+        if (sizeSent <= 0)
         {
             if (client && (sizeSent == 0 || errno == EPIPE || errno == ECONNRESET || errno == EINTR))
                 client->player->setIsAlive();
             return;
         }
-        std::cout << "sent : " << sizeSent << std::endl;
-        printf("From %d of type %d -> %p\n", toSend->first, toSend->second->type, toSend->second);
-        toSend->first += sizeSent;
-        if (toSend->first >= sizeof(*toSend->second))
+        // std::cout << "sent : " << sizeSent << std::endl;
+        // printf("From %d of type %d -> %p\n", toSend->first, toSend->second->type, toSend->second);
+        ((!client) ? _sizeSended : client->sizeSended) += sizeSent;
+        if ((size_t)((!client) ? _sizeSended : client->sizeSended) >= toSend->size())
         {
-            delete toSend->second;
-            if (client)
-                client->toSend.pop_front();
-            else
-                _toSend.pop_front();
+            delete toSend;
+            ((client) ? (client->toSend) : (_toSend)).pop_front();
+            (!client) ? _sizeSended : client->sizeSended = -1;
         }
     } while (sizeSent > 0);
 }
@@ -364,59 +398,71 @@ void    Networking::refreshGame()
 
 void    Networking::_sendOwnInfos()
 {
-    Message                 *msg = new Message;
+    Bomberman::Message          *msg = _buildMessage(Bomberman::Message::OWN_MOVE);
+    Bomberman::Message_Player   *player;
+    std::string                 *serialized;
 
-    msg->type = OWN_MOVE;
-    msg->data.player[0].x = _core->getPlayer()[0]->getPos().first;
-    msg->data.player[0].y = _core->getPlayer()[0]->getPos().second;
-    msg->data.player[0].dir = _core->getPlayer()[0]->dir();
-    _toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+    player = msg->add_player();
+    player->set_x(_core->getPlayer()[0]->getPos().first);
+    player->set_y(_core->getPlayer()[0]->getPos().second);
+    player->set_dir((Bomberman::Message_Player_Dir)_core->getPlayer()[0]->dir());
+    serialized = new std::string();
+    msg->SerializeToString(serialized);
+    _toSend.push_back(serialized);
+    delete msg;
 }
 
 void    Networking::_sendMapUpdate(Client *client)
 {
-    Message                 *msg = new Message;
+    Bomberman::Message                 *msg = _buildMessage(Bomberman::Message::MAP_UPDATE);
+    Bomberman::Message_Map             *map;
+    char                               *mapData = new char[MAP_SEND_SIZE * MAP_SEND_SIZE];
     std::pair<float, float> pos = client->player->getPos();
     AObject                 *tmp;
+    std::string             *serialized;
 
-    msg->type = MAP_UPDATE;
-    msg->data.map.start[0] = static_cast<int>(pos.first) - (MAP_SEND_SIZE / 2);
-    msg->data.map.start[1] = static_cast<int>(pos.second) - (MAP_SEND_SIZE / 2);
+    map = msg->add_map();
+    map->set_startx(static_cast<int>(pos.first) - (MAP_SEND_SIZE / 2));
+    map->set_starty(static_cast<int>(pos.second) - (MAP_SEND_SIZE / 2));
     for (unsigned x = 0; x < MAP_SEND_SIZE; ++x) {
         for (unsigned y = 0; y < MAP_SEND_SIZE; ++y) {
-            tmp = _core->getMap()->getCase(x + msg->data.map.start[0], y + msg->data.map.start[1]);
+            tmp = _core->getMap()->getCase(x + map->startx(), y + map->starty());
             if (tmp)
-                msg->data.map.data[x * MAP_SEND_SIZE + y] = tmp->getType();
+                mapData[x * MAP_SEND_SIZE + y] = tmp->getType();
             else
-                msg->data.map.data[x * MAP_SEND_SIZE + y] = NOTHING;
+                mapData[x * MAP_SEND_SIZE + y] = NOTHING;
         }
     }
-    printf("Sending map update from : %dx%d -> %p\n", msg->data.map.start[0], msg->data.map.start[1], msg);
+    map->set_data(mapData);
+    printf("Sending map update from : %dx%d -> %p\n", map->startx(), map->starty(), msg);
     printf("Client is at : %fx%f\n", pos.first, pos.second);
-    client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+    serialized = new std::string();
+    msg->SerializeToString(serialized);
+    client->toSend.push_back(serialized);
 }
 
 void    Networking::_sendPlayersUpdate(Client *client)
 {
     int id = 0;
-    int messagePos = 0;
-    Message *msg = new Message;
+    Bomberman::Message *msg = _buildMessage(Bomberman::Message::PLAYER_UPDATE);
+    Bomberman::Message_Player   *player;
+    std::string                 *serialized;
 
-    msg->type = PLAYER_UPDATE;
     for (std::vector<Player *>::iterator i = _core->getPlayer().begin(); i != _core->getPlayer().end(); ++i)
     {
+        player = msg->add_player();
         if (*i && *i != client->player)
         {
-            msg->data.player[messagePos].playerId = id;
-            msg->data.player[messagePos].x = (*i)->getPos().first;
-            msg->data.player[messagePos].y = (*i)->getPos().second;
-            msg->data.player[messagePos].dir = (*i)->dir();
-            ++messagePos;
+            player->set_playerid(id);
+            player->set_x((*i)->getPos().first);
+            player->set_y((*i)->getPos().second);
+            player->set_dir((Bomberman::Message_Player::Dir)(*i)->dir());
         }
         ++id;
     }
-    msg->data.player[messagePos].playerId = -1;
-    client->toSend.push_back(std::make_pair<unsigned int, Message *>(0, msg));
+    serialized = new std::string();
+    msg->SerializeToString(serialized);
+    client->toSend.push_back(serialized);
 }
 
 NetworkPlayer::NetworkPlayer()

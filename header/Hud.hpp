@@ -41,7 +41,7 @@ public:
 	void	resetClock();
 	float	getTimer() const;
 	void 	setTimer(const float &);
-	void	displaySaving(const bool);
+	void	displaySaving(const bool);	
 	void	drawDeath(const Death);
 	void 		setPause(const bool);
 

@@ -84,6 +84,16 @@ void MapFiller::fillMap(gdl::Clock &clock)
 	}
 }
 
+bool 		MapFiller::checkCase()
+{
+	AObject *tmp;
+
+	tmp = _map->getCase(_cursor->getPos().first, _cursor->getPos().second);
+	if (tmp && tmp->getType() == BLOCKD)
+		return (false);
+	return (true);
+}
+
 std::pair<float, float> MapFiller::changePos()
 {
 	std::pair<float, float> pos;
@@ -91,7 +101,7 @@ std::pair<float, float> MapFiller::changePos()
 	{
 	  if (c == 0)
 	  	r = row_right++;
-	  if (c < n)
+	  if (c < n && checkCase())
          c++;
       else
       	{
@@ -103,7 +113,7 @@ std::pair<float, float> MapFiller::changePos()
 	{
 	  if (r == 0)
 	  	c = column_down--;
-	  if (r < n)
+	  if (r < n && checkCase())
         r++;
        else
        {
@@ -115,7 +125,7 @@ std::pair<float, float> MapFiller::changePos()
 	{
 	  if (c == n -1)
 	   r = row_left-- ;
-	  if (c >= 0)
+	  if (c >= 0 && checkCase())
         c--;
       else
        {
@@ -127,7 +137,7 @@ std::pair<float, float> MapFiller::changePos()
 	{
 	  if (r == n - 1)
 	  	c = column_up++;
-	  if (r >= 0)
+	  if (r >= 0 && checkCase())
         r--;
       else
        {
