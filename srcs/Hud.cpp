@@ -36,13 +36,7 @@ Hud::Hud(Camera *cam, Loader *loader) :
 
 void	Hud::setScreen(int screen)
 {
-	if (screen == 1)
-	{
-		_col1 = 1600;
-		_timerDouble = true;
-	}
-	else
-		_timerDouble = false;
+	(screen == 1) ? (_timerDouble = true) : (_timerDouble = false);
 }
 
 void	Hud::update(const Player *cur)
@@ -186,7 +180,7 @@ void	Hud::drawPlayer1()
       {
         _transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
         (*it).second[i]->draw(_camera->getShader(), _transformation, GL_QUADS);
-        col += 20;
+        col += 28;
       }
       col = _col1;
       row += 32;
@@ -207,7 +201,7 @@ void	Hud::drawPlayer2()
       {
         _transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
         (*it).second[i]->draw(_camera->getShader(), _transformation, GL_QUADS);
-        col += 20;
+        col += 28;
       }
       col = 0;
       row += 32;

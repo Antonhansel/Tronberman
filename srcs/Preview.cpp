@@ -32,8 +32,8 @@ Preview::Preview(Camera *camera, Loader *loader)
 void		Preview::resetText()
 {
 	_text->deleteAllText(_nb);
-	_text->addText(_nb, 0, std::make_pair(500, 380), _nbSize.c_str(), true);
-	_text->addText(_nb, 0, std::make_pair(500, 460), _nbPlayer.c_str(), true);	
+	_text->addText(_nb, 0, std::make_pair(550, 380), _nbSize.c_str(), true);
+	_text->addText(_nb, 0, std::make_pair(550, 460), _nbPlayer.c_str(), true);	
 }
 
 Preview::~Preview()
