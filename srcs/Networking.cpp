@@ -84,6 +84,11 @@ Networking::~Networking()
 {
     if (!_closed)
         close(_sockfd);
+    if (_isServer)
+    {
+        for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+            close((*i)->sockfd);
+    }
 }
 
 Bomberman::Message  *Networking::_buildMessage(Bomberman::Message::MessageType type)
@@ -198,7 +203,6 @@ bool     Networking::newPlayers()
         }
         inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
         client->name = ipv4addr;
-        client->lastTick = 0;
         client->messageLength = -1;
         client->sizeSended = -1;
         _players.push_back(client);
@@ -280,7 +284,21 @@ void    Networking::_receiveFromClient(Client *client)
             ((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size(),
             MSG_DONTWAIT);
         if (sizeRecv <= 0)
+        {
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                return;
+            std::cerr << "Error recv : " << strerror(errno) << std::endl;
+            if (client)
+            {
+                client->player->setLife(0);
+                client->player->setIsAlive();
+                client->isConnected = false;
+                std::cerr << "Disconnected" << std::endl;
+            }
+            else
+                throw new BomberException("Server Disconnected");
             return;
+        }
         ((!client) ? _inputBuffer : client->inputBuffer).append(tmp, sizeRecv);
         printf("Received : %lu (total : %lu / %d)\n", sizeRecv, ((!client) ? _inputBuffer : client->inputBuffer).size(), ((!client) ? _messageLength : client->messageLength));
         if ((int)((!client) ? _inputBuffer : client->inputBuffer).size() <= ((!client) ? _messageLength : client->messageLength))
@@ -346,6 +364,26 @@ void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
             _core->getPlayer()[message->player(i).playerid() + 1]->dir((dirr)message->player(i).dir());
         }
     }
+    if (message->type() == Bomberman::Message::OWN_PLAYER_INFO)
+    {
+        _core->getPlayer()[0]->setLife(message->ownplayerinfo(0).life());
+        _core->getPlayer()[0]->setRange(message->ownplayerinfo(0).range());
+        _core->getPlayer()[0]->setStock(message->ownplayerinfo(0).stock());
+    }
+    if (message->type() == Bomberman::Message::CONSUME_BONUS)
+    {
+        Bonus *tmp;
+        try {
+            tmp = dynamic_cast<Bonus *>(_core->getMap()->getCase(client->player->getPos().first, client->player->getPos().second));
+        }
+        catch (...) {
+            return;
+        }
+        if (!tmp)
+            return;
+        tmp->addToPlayer(client->player);
+        _core->getMap()->deleteCube(tmp->getPos().first, tmp->getPos().second);
+    }
 }
 
 void    Networking::_sendToClient(Client *client)
@@ -368,8 +406,18 @@ void    Networking::_sendToClient(Client *client)
                 MSG_NOSIGNAL | MSG_DONTWAIT);
             if (sizeSent <= 0)
             {
-                if (client && (sizeSent == 0 || errno == EPIPE || errno == ECONNRESET || errno == EINTR))
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                    return;
+                std::cerr << "Error send : " << strerror(errno) << std::endl;
+                if (client)
+                {
+                    client->player->setLife(0);
                     client->player->setIsAlive();
+                    client->isConnected = false;
+                    std::cerr << "Disconnected" << std::endl;
+                }
+                else
+                    throw new BomberException("Server Disconnected");
                 return;
             }
             (!client) ? _sizeSended : client->sizeSended = 0;
@@ -418,6 +466,26 @@ void    Networking::refreshGame()
         _sendOwnInfos();
         _tryPurgeBuffer();
     }
+}
+
+void    Networking::spawnBomb()
+{
+    Bomberman::Message                  *msg = _buildMessage(Bomberman::Message::OWN_BOMB);
+    std::string                         *serialized = new std::string;
+
+    msg->SerializeToString(serialized);
+    _toSend.push_back(serialized);
+    delete msg;
+}
+
+void    Networking::consumeBonus()
+{
+    Bomberman::Message                  *msg = _buildMessage(Bomberman::Message::CONSUME_BONUS);
+    std::string                         *serialized = new std::string;
+
+    msg->SerializeToString(serialized);
+    _toSend.push_back(serialized);
+    delete msg;
 }
 
 void    Networking::_sendOwnInfos()
@@ -492,12 +560,71 @@ void    Networking::_sendPlayersUpdate(Client *client)
     delete msg;
 }
 
+bool    Networking::isServer() const
+{
+    return _isServer;
+}
+
+void    Networking::updatePlayer(Player *player)
+{
+    Client      *client = NULL;
+    Bomberman::Message     *msg = _buildMessage(Bomberman::Message::OWN_PLAYER_INFO);
+    Bomberman::Message_OwnPlayerInfo *info;
+
+    for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
+    {
+        if ((*i)->player == player)
+        {
+            client = *i;
+            break;
+        }
+    }
+    info = msg->add_ownplayerinfo();
+    info->set_life(client->player->getLife());
+    info->set_range(client->player->getRange());
+    info->set_stock(client->player->getStock());
+    std::string *serialized = new std::string();
+    msg->SerializeToString(serialized);
+    client->toSend.push_back(serialized);
+    delete msg;
+}
+
 NetworkPlayer::NetworkPlayer()
 {
   _modelpath = "./ressources/assets/anim/bomberman_blue_run.FBX";
 }
 
-const PlayerType NetworkPlayer::getType() const
+PlayerType NetworkPlayer::getType() const
 {
     return (NETWORK);
+}
+
+void    NetworkPlayer::setLife(int newLife)
+{
+    _life = newLife;
+    _shield = 0;
+    _core->getNetworking()->updatePlayer(this);
+}
+
+void  NetworkPlayer::setRange(int range)
+{
+    _range = range;
+    _core->getNetworking()->updatePlayer(this);
+}
+
+void  NetworkPlayer::setStock(int stock)
+{
+    _stock = stock;
+    _core->getNetworking()->updatePlayer(this);
+}
+
+void    NetworkOwnPlayer::spawnBomb()
+{
+    _core->getNetworking()->spawnBomb();
+}
+
+void    NetworkOwnPlayer::_consumeBonus(AObject *tmp)
+{
+    _core->getNetworking()->consumeBonus();
+    _sound->playSound(BONUS_S, 30);
 }

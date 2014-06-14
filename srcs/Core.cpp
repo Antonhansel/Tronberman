@@ -103,6 +103,7 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
+  _networking = _menu->getNetwork();
   if (!drawFloor() || !drawChar() || !drawBot(_nb_bot))
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
@@ -116,7 +117,6 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
-  _networking = _menu->getNetwork();
   if (_networking)
   {
     _players = 1;
@@ -145,8 +145,13 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(const std::pair<float, float> &pos, const int screen)
 {
-  Player *chara = create<Player>();
+  Player *chara;
 
+  if (!_networking || _networking->isServer())
+    chara = create<Player>();
+  else
+    chara = create<NetworkOwnPlayer>();
+  chara->setCore(this);
   chara->setId(screen);
   if (chara->initialize() == false)
     return (false);
@@ -520,5 +525,10 @@ std::map<std::pair<float, float>, Bombs *> *Core::getBombs()
 Sound   *Core::getSound() const
 {
   return (_sound);
+}
+
+Networking  *Core::getNetworking()
+{
+  return (_networking);
 }
 

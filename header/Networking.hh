@@ -24,7 +24,6 @@
 
 struct                      Client {
     int                     sockfd;
-    int                     lastTick;
     std::string             name;
     std::list<std::string *>    toSend;
     int                         sizeSended;
@@ -33,13 +32,24 @@ struct                      Client {
     int          messageLength;
     // first is the actual position in the buffer, second is the buffer
     Player                  *player;
+    bool                    isConnected;
 };
 
 class NetworkPlayer : public Player {
 public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
-    const PlayerType getType() const;
+    PlayerType getType() const;
+    void    setLife(int);
+    void    setRange(int);
+    void    setStock(int);
+};
+
+class NetworkOwnPlayer : public Player {
+public:
+    void    spawnBomb();
+protected:
+    void    _consumeBonus(AObject *);
 };
 
 class Networking {
@@ -53,8 +63,12 @@ class Networking {
         // Close listening for new clients
         const std::list<Client *>       &getPlayers() const;
         // Get the list of clients
+        bool                            isServer() const;
         void                            refreshGame();
         bool                            isGameStarted();
+        void                            spawnBomb();
+        void                            consumeBonus();
+        void                            updatePlayer(Player *);
     private:
         bool                    _initialized;
         bool                    _isServer;

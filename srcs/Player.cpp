@@ -261,11 +261,7 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
         if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _onBomb(i.first, i.second)/*|| _checkMove2(i.first, i.second)*/)
         {
           if (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9))
-          {
-            static_cast<Bonus*>(tmp)->addToPlayer(this);
-            _sound->playSound(BONUS_S, 30);
-            _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
-          }
+            _consumeBonus(tmp);
           _pos.first += i.first;
           _pos.second += i.second;
           translate(glm::vec3(i.first, 0, i.second));
@@ -281,6 +277,12 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
   }
 }
 
+void Player::_consumeBonus(AObject *tmp)
+{
+    static_cast<Bonus*>(tmp)->addToPlayer(this);
+    _sound->playSound(BONUS_S, 30);
+    _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
+}
 
 std::pair<float, float>    Player::up(float &trans)
 {
@@ -432,6 +434,11 @@ void    Player::setSound(Sound *sound)
 float   Player::getSpeed() const
 {
   return (_speed);
+}
+
+void  Player::setCore(Core *core)
+{
+    _core = core;
 }
 
 void    Player::dir(dirr dir)
