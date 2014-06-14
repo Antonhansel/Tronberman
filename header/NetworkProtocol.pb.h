@@ -40,27 +40,6 @@ class Message_Map;
 class Message_Info;
 class Message_OwnPlayerInfo;
 
-enum Message_Player_Dir {
-  Message_Player_Dir_NORTH = 1,
-  Message_Player_Dir_SOUTH = 2,
-  Message_Player_Dir_EAST = 3,
-  Message_Player_Dir_WEST = 4
-};
-bool Message_Player_Dir_IsValid(int value);
-const Message_Player_Dir Message_Player_Dir_Dir_MIN = Message_Player_Dir_NORTH;
-const Message_Player_Dir Message_Player_Dir_Dir_MAX = Message_Player_Dir_WEST;
-const int Message_Player_Dir_Dir_ARRAYSIZE = Message_Player_Dir_Dir_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* Message_Player_Dir_descriptor();
-inline const ::std::string& Message_Player_Dir_Name(Message_Player_Dir value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    Message_Player_Dir_descriptor(), value);
-}
-inline bool Message_Player_Dir_Parse(
-    const ::std::string& name, Message_Player_Dir* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<Message_Player_Dir>(
-    Message_Player_Dir_descriptor(), name, value);
-}
 enum Message_MessageType {
   Message_MessageType_OWN_MOVE = 1,
   Message_MessageType_OWN_BOMB = 2,
@@ -139,61 +118,35 @@ class Message_Player : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef Message_Player_Dir Dir;
-  static const Dir NORTH = Message_Player_Dir_NORTH;
-  static const Dir SOUTH = Message_Player_Dir_SOUTH;
-  static const Dir EAST = Message_Player_Dir_EAST;
-  static const Dir WEST = Message_Player_Dir_WEST;
-  static inline bool Dir_IsValid(int value) {
-    return Message_Player_Dir_IsValid(value);
-  }
-  static const Dir Dir_MIN =
-    Message_Player_Dir_Dir_MIN;
-  static const Dir Dir_MAX =
-    Message_Player_Dir_Dir_MAX;
-  static const int Dir_ARRAYSIZE =
-    Message_Player_Dir_Dir_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  Dir_descriptor() {
-    return Message_Player_Dir_descriptor();
-  }
-  static inline const ::std::string& Dir_Name(Dir value) {
-    return Message_Player_Dir_Name(value);
-  }
-  static inline bool Dir_Parse(const ::std::string& name,
-      Dir* value) {
-    return Message_Player_Dir_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
 
-  // required int32 playerId = 1;
+  // optional int32 playerId = 1;
   inline bool has_playerid() const;
   inline void clear_playerid();
   static const int kPlayerIdFieldNumber = 1;
   inline ::google::protobuf::int32 playerid() const;
   inline void set_playerid(::google::protobuf::int32 value);
 
-  // required float x = 2;
+  // optional float x = 2;
   inline bool has_x() const;
   inline void clear_x();
   static const int kXFieldNumber = 2;
   inline float x() const;
   inline void set_x(float value);
 
-  // required float y = 3;
+  // optional float y = 3;
   inline bool has_y() const;
   inline void clear_y();
   static const int kYFieldNumber = 3;
   inline float y() const;
   inline void set_y(float value);
 
-  // required .Bomberman.Message.Player.Dir dir = 4;
+  // optional int32 dir = 4;
   inline bool has_dir() const;
   inline void clear_dir();
   static const int kDirFieldNumber = 4;
-  inline ::Bomberman::Message_Player_Dir dir() const;
-  inline void set_dir(::Bomberman::Message_Player_Dir value);
+  inline ::google::protobuf::int32 dir() const;
+  inline void set_dir(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:Bomberman.Message.Player)
  private:
@@ -211,7 +164,7 @@ class Message_Player : public ::google::protobuf::Message {
   ::google::protobuf::int32 playerid_;
   float x_;
   float y_;
-  int dir_;
+  ::google::protobuf::int32 dir_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -279,21 +232,21 @@ class Message_Map : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 startX = 1;
+  // optional int32 startX = 1;
   inline bool has_startx() const;
   inline void clear_startx();
   static const int kStartXFieldNumber = 1;
   inline ::google::protobuf::int32 startx() const;
   inline void set_startx(::google::protobuf::int32 value);
 
-  // required int32 startY = 2;
+  // optional int32 startY = 2;
   inline bool has_starty() const;
   inline void clear_starty();
   static const int kStartYFieldNumber = 2;
   inline ::google::protobuf::int32 starty() const;
   inline void set_starty(::google::protobuf::int32 value);
 
-  // required bytes data = 3;
+  // optional bytes data = 3;
   inline bool has_data() const;
   inline void clear_data();
   static const int kDataFieldNumber = 3;
@@ -386,28 +339,28 @@ class Message_Info : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 mapSize = 1;
+  // optional int32 mapSize = 1;
   inline bool has_mapsize() const;
   inline void clear_mapsize();
   static const int kMapSizeFieldNumber = 1;
   inline ::google::protobuf::int32 mapsize() const;
   inline void set_mapsize(::google::protobuf::int32 value);
 
-  // required int32 playersNb = 2;
+  // optional int32 playersNb = 2;
   inline bool has_playersnb() const;
   inline void clear_playersnb();
   static const int kPlayersNbFieldNumber = 2;
   inline ::google::protobuf::int32 playersnb() const;
   inline void set_playersnb(::google::protobuf::int32 value);
 
-  // required float startX = 3;
+  // optional float startX = 3;
   inline bool has_startx() const;
   inline void clear_startx();
   static const int kStartXFieldNumber = 3;
   inline float startx() const;
   inline void set_startx(float value);
 
-  // required float startY = 4;
+  // optional float startY = 4;
   inline bool has_starty() const;
   inline void clear_starty();
   static const int kStartYFieldNumber = 4;
@@ -498,21 +451,21 @@ class Message_OwnPlayerInfo : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 life = 1;
+  // optional int32 life = 1;
   inline bool has_life() const;
   inline void clear_life();
   static const int kLifeFieldNumber = 1;
   inline ::google::protobuf::int32 life() const;
   inline void set_life(::google::protobuf::int32 value);
 
-  // required int32 range = 2;
+  // optional int32 range = 2;
   inline bool has_range() const;
   inline void clear_range();
   static const int kRangeFieldNumber = 2;
   inline ::google::protobuf::int32 range() const;
   inline void set_range(::google::protobuf::int32 value);
 
-  // required int32 stock = 3;
+  // optional int32 stock = 3;
   inline bool has_stock() const;
   inline void clear_stock();
   static const int kStockFieldNumber = 3;
@@ -719,7 +672,7 @@ class Message : public ::google::protobuf::Message {
 
 // Message_Player
 
-// required int32 playerId = 1;
+// optional int32 playerId = 1;
 inline bool Message_Player::has_playerid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -741,7 +694,7 @@ inline void Message_Player::set_playerid(::google::protobuf::int32 value) {
   playerid_ = value;
 }
 
-// required float x = 2;
+// optional float x = 2;
 inline bool Message_Player::has_x() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -763,7 +716,7 @@ inline void Message_Player::set_x(float value) {
   x_ = value;
 }
 
-// required float y = 3;
+// optional float y = 3;
 inline bool Message_Player::has_y() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -785,7 +738,7 @@ inline void Message_Player::set_y(float value) {
   y_ = value;
 }
 
-// required .Bomberman.Message.Player.Dir dir = 4;
+// optional int32 dir = 4;
 inline bool Message_Player::has_dir() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -796,14 +749,13 @@ inline void Message_Player::clear_has_dir() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Message_Player::clear_dir() {
-  dir_ = 1;
+  dir_ = 0;
   clear_has_dir();
 }
-inline ::Bomberman::Message_Player_Dir Message_Player::dir() const {
-  return static_cast< ::Bomberman::Message_Player_Dir >(dir_);
+inline ::google::protobuf::int32 Message_Player::dir() const {
+  return dir_;
 }
-inline void Message_Player::set_dir(::Bomberman::Message_Player_Dir value) {
-  assert(::Bomberman::Message_Player_Dir_IsValid(value));
+inline void Message_Player::set_dir(::google::protobuf::int32 value) {
   set_has_dir();
   dir_ = value;
 }
@@ -812,7 +764,7 @@ inline void Message_Player::set_dir(::Bomberman::Message_Player_Dir value) {
 
 // Message_Map
 
-// required int32 startX = 1;
+// optional int32 startX = 1;
 inline bool Message_Map::has_startx() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -834,7 +786,7 @@ inline void Message_Map::set_startx(::google::protobuf::int32 value) {
   startx_ = value;
 }
 
-// required int32 startY = 2;
+// optional int32 startY = 2;
 inline bool Message_Map::has_starty() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -856,7 +808,7 @@ inline void Message_Map::set_starty(::google::protobuf::int32 value) {
   starty_ = value;
 }
 
-// required bytes data = 3;
+// optional bytes data = 3;
 inline bool Message_Map::has_data() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -930,7 +882,7 @@ inline void Message_Map::set_allocated_data(::std::string* data) {
 
 // Message_Info
 
-// required int32 mapSize = 1;
+// optional int32 mapSize = 1;
 inline bool Message_Info::has_mapsize() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -952,7 +904,7 @@ inline void Message_Info::set_mapsize(::google::protobuf::int32 value) {
   mapsize_ = value;
 }
 
-// required int32 playersNb = 2;
+// optional int32 playersNb = 2;
 inline bool Message_Info::has_playersnb() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -974,7 +926,7 @@ inline void Message_Info::set_playersnb(::google::protobuf::int32 value) {
   playersnb_ = value;
 }
 
-// required float startX = 3;
+// optional float startX = 3;
 inline bool Message_Info::has_startx() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -996,7 +948,7 @@ inline void Message_Info::set_startx(float value) {
   startx_ = value;
 }
 
-// required float startY = 4;
+// optional float startY = 4;
 inline bool Message_Info::has_starty() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1022,7 +974,7 @@ inline void Message_Info::set_starty(float value) {
 
 // Message_OwnPlayerInfo
 
-// required int32 life = 1;
+// optional int32 life = 1;
 inline bool Message_OwnPlayerInfo::has_life() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1044,7 +996,7 @@ inline void Message_OwnPlayerInfo::set_life(::google::protobuf::int32 value) {
   life_ = value;
 }
 
-// required int32 range = 2;
+// optional int32 range = 2;
 inline bool Message_OwnPlayerInfo::has_range() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1066,7 +1018,7 @@ inline void Message_OwnPlayerInfo::set_range(::google::protobuf::int32 value) {
   range_ = value;
 }
 
-// required int32 stock = 3;
+// optional int32 stock = 3;
 inline bool Message_OwnPlayerInfo::has_stock() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1224,10 +1176,6 @@ Message::mutable_ownplayerinfo() {
 namespace google {
 namespace protobuf {
 
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::Bomberman::Message_Player_Dir>() {
-  return ::Bomberman::Message_Player_Dir_descriptor();
-}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::Bomberman::Message_MessageType>() {
   return ::Bomberman::Message_MessageType_descriptor();

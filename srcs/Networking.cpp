@@ -41,6 +41,7 @@ Networking::Networking(const std::string &port)
         throw new BomberException(strerror(errno));
     if (listen(_sockfd, 10) == -1)
         throw new BomberException(strerror(errno));
+    _messageLength = -1;
     _closed = false;
     _isServer = true;
     _core = NULL;
@@ -55,9 +56,11 @@ Networking::Networking(const std::string &port, const std::string &addr)
 
     std::cout << "Client start" << std::endl;
     _isServer = false;
+    _sizeSended = -1;
     _closed = false;
     _initialized = false;
     _core = NULL;
+    _messageLength = -1;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -74,7 +77,6 @@ Networking::Networking(const std::string &port, const std::string &addr)
             return ;
         info = info->ai_next;
     }
-    _messageLength = -1;
     throw new BomberException(strerror(errno));
 }
 
@@ -95,7 +97,7 @@ Bomberman::Message  *Networking::_buildMessage(Bomberman::Message::MessageType t
 void Networking::startGame(Core *core)
 {
     NetworkPlayer *player;
-    std::pair<float, float> tmpPos(_initMessage.info(0).startx(), _initMessage.info(0).starty());
+    std::pair<float, float> tmpPos;
 
     _core = core;
     if (_isServer)
@@ -106,9 +108,11 @@ void Networking::startGame(Core *core)
     }
     else
     {
+        tmpPos = std::make_pair<float, float>(_initMessage.info(0).startx(), _initMessage.info(0).starty());
         std::cout << "map size : " << _initMessage.info(0).mapsize() << std::endl;
         _core->getPlayer()[0]->setAbsPos(tmpPos);
         std::cout << "pos : " << tmpPos.first << " - " << tmpPos.second << std::endl;
+        std::cout << "received pos : " << _initMessage.info(0).startx() << " - " << _initMessage.info(0).starty() << std::endl;
         for(int i = 0; i < _initMessage.info(0).playersnb() - 1; ++i) {
             player = new NetworkPlayer();
             player->initialize();
@@ -153,7 +157,7 @@ void    Networking::_startGameServer()
         info = msg->add_info();
         info->set_mapsize(_core->getMap()->getSize());
         info->set_startx(player->getPos().first);
-        info->set_startx(player->getPos().second);
+        info->set_starty(player->getPos().second);
         info->set_playersnb(playerNb);
         serialized = new std::string();
         msg->SerializeToString(serialized);
@@ -196,6 +200,7 @@ bool     Networking::newPlayers()
         client->name = ipv4addr;
         client->lastTick = 0;
         client->messageLength = -1;
+        client->sizeSended = -1;
         _players.push_back(client);
         std::cout << "new player " << client->name << std::endl;
         rtr = true;
@@ -210,20 +215,22 @@ const std::list<Client *>   &Networking::getPlayers() const
 
 void    Networking::_tryPurgeBuffer()
 {
-    fd_set      sets[3];
+    fd_set      sets[2];
     int         max = 0;
     struct timeval timeout;
 
     FD_ZERO(&sets[0]);
     FD_ZERO(&sets[1]);
-    FD_ZERO(&sets[2]);
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
     if (!_isServer)
     {
         FD_SET(_sockfd, &sets[0]);
         if (!_toSend.empty())
+        {
+            printf("Have to send...\n");
             FD_SET(_sockfd, &sets[1]);
+        }
         max = _sockfd + 1;
     }
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
@@ -233,7 +240,7 @@ void    Networking::_tryPurgeBuffer()
             FD_SET((*i)->sockfd, &sets[1]);
         max = ((*i)->sockfd > max) ? (*i)->sockfd + 1 : max;
     }
-    if (select(max, &sets[0], &sets[1], &sets[2], &timeout) < 0)
+    if (select(max, &sets[0], &sets[1], NULL, &timeout) < 0)
         std::cerr << "Error on select : " << strerror(errno) << std::endl;
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
     {
@@ -251,33 +258,39 @@ void    Networking::_tryPurgeBuffer()
 void    Networking::_receiveFromClient(Client *client)
 {
     ssize_t     sizeRecv;
+    int     sizeMsg;
     char        *tmp;
     Bomberman::Message msg;
 
-    // tmp = (!client) ? &_inputBuffer : &client->inputBuffer;
     do {
         if (((!client) ? _messageLength : client->messageLength) == -1)
         {
             sizeRecv = recv(((!client) ? _sockfd : client->sockfd),
-                &((!client) ? _messageLength : client->messageLength),
-                sizeof(_messageLength), MSG_DONTWAIT);
-            if (sizeRecv < 0)
+                &sizeMsg,
+                sizeof(sizeMsg), MSG_DONTWAIT);
+            if (sizeRecv <= 0)
                 return;
+            printf("Readed msg size : %d (total : %lu)\n", sizeMsg, sizeRecv);
+            ((!client) ? _messageLength : client->messageLength) = sizeMsg;
         }
+        printf("Allocating : %d\n", ((!client) ? _messageLength : client->messageLength));
         tmp = new char[((!client) ? _messageLength : client->messageLength)];
         sizeRecv = recv((!client) ? _sockfd : client->sockfd,
             tmp,
             ((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size(),
             MSG_DONTWAIT);
-        if (sizeRecv < 0)
+        if (sizeRecv <= 0)
             return;
-        ((!client) ? _inputBuffer : client->inputBuffer).append(tmp);
-        if (((!client) ? _inputBuffer : client->inputBuffer).size() >= (size_t)((!client) ? _messageLength : client->messageLength))
+        ((!client) ? _inputBuffer : client->inputBuffer).append(tmp, sizeRecv);
+        printf("Received : %lu (total : %lu / %d)\n", sizeRecv, ((!client) ? _inputBuffer : client->inputBuffer).size(), ((!client) ? _messageLength : client->messageLength));
+        if ((int)((!client) ? _inputBuffer : client->inputBuffer).size() <= ((!client) ? _messageLength : client->messageLength))
         {
+            printf("Got one message\n");
             if (msg.ParseFromString(((!client) ? _inputBuffer : client->inputBuffer)))
                 _treatMessage(client, &msg);
-            ((!client) ? _inputBuffer : client->inputBuffer).empty();
+            ((!client) ? _inputBuffer : client->inputBuffer).clear();
             ((!client) ? _messageLength : client->messageLength) = -1;
+            printf("Size now : %lu / %d\n", ((!client) ? _inputBuffer : client->inputBuffer).size(), ((!client) ? _messageLength : client->messageLength));
         }
         delete tmp;
     } while (sizeRecv > 0);
@@ -316,8 +329,11 @@ void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
                 if (message->map(0).data()[x * MAP_SEND_SIZE + y] == NOTHING)
                     _core->getMap()->deleteCube(x + message->map(0).startx(), y + message->map(0).starty());
                 else if (!_core->getMap()->getCase(x, y) || _core->getMap()->getCase(x, y)->getType() != message->map(0).data()[x * MAP_SEND_SIZE + y])
+                {
+                    // printf("Added cube of type : %d\n", message->map(0).data()[x * MAP_SEND_SIZE + y]);
                     _core->getMap()->addCube(x + message->map(0).startx(),
                         y + message->map(0).starty(), (type)message->map(0).data()[x * MAP_SEND_SIZE + y]);
+                }
             }
         }
     }
@@ -335,17 +351,20 @@ void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
 void    Networking::_sendToClient(Client *client)
 {
     ssize_t     sizeSent;
+    int     msgSize;
     std::string     *toSend;
     const char            *reelSend;
 
     do {
+        if (((client) ? (client->toSend) : (_toSend)).size() == 0)
+            return;
         toSend = *((client) ? (&*(client->toSend.begin())) : (&*_toSend.begin()));
         if (((!client) ? _sizeSended : client->sizeSended) == -1)
         {
-            sizeSent = toSend->size();
-            send((client) ? (client->sockfd) : (_sockfd),
-                &sizeSent,
-                sizeof(size_t),
+            msgSize = toSend->size();
+            sizeSent = send((client) ? (client->sockfd) : (_sockfd),
+                &msgSize,
+                sizeof(msgSize),
                 MSG_NOSIGNAL | MSG_DONTWAIT);
             if (sizeSent <= 0)
             {
@@ -354,8 +373,9 @@ void    Networking::_sendToClient(Client *client)
                 return;
             }
             (!client) ? _sizeSended : client->sizeSended = 0;
+            printf("Sended size : %d (total : %lu)\n", msgSize, sizeSent);
         }
-        reelSend = toSend->substr((!client) ? _sizeSended : client->sizeSended).c_str();
+        reelSend = &toSend->c_str()[(!client) ? _sizeSended : client->sizeSended];
         sizeSent = send((client) ? (client->sockfd) : (_sockfd),
             reelSend,
             toSend->size() - ((!client) ? _sizeSended : client->sizeSended),
@@ -366,14 +386,15 @@ void    Networking::_sendToClient(Client *client)
                 client->player->setIsAlive();
             return;
         }
-        // std::cout << "sent : " << sizeSent << std::endl;
-        // printf("From %d of type %d -> %p\n", toSend->first, toSend->second->type, toSend->second);
+        std::cout << "sent : " << sizeSent << std::endl;
+        printf("Send %li of %lu From %d\n", sizeSent, toSend->size(), (!client) ? _sizeSended : client->sizeSended);
         ((!client) ? _sizeSended : client->sizeSended) += sizeSent;
         if ((size_t)((!client) ? _sizeSended : client->sizeSended) >= toSend->size())
         {
             delete toSend;
             ((client) ? (client->toSend) : (_toSend)).pop_front();
             (!client) ? _sizeSended : client->sizeSended = -1;
+            return;
         }
     } while (sizeSent > 0);
 }
@@ -392,8 +413,11 @@ void    Networking::refreshGame()
         }
         _tryPurgeBuffer();
     }
-    else
+    else if (_toSend.empty())
+    {
         _sendOwnInfos();
+        _tryPurgeBuffer();
+    }
 }
 
 void    Networking::_sendOwnInfos()
@@ -405,7 +429,7 @@ void    Networking::_sendOwnInfos()
     player = msg->add_player();
     player->set_x(_core->getPlayer()[0]->getPos().first);
     player->set_y(_core->getPlayer()[0]->getPos().second);
-    player->set_dir((Bomberman::Message_Player_Dir)_core->getPlayer()[0]->dir());
+    player->set_dir(_core->getPlayer()[0]->dir());
     serialized = new std::string();
     msg->SerializeToString(serialized);
     _toSend.push_back(serialized);
@@ -433,12 +457,14 @@ void    Networking::_sendMapUpdate(Client *client)
                 mapData[x * MAP_SEND_SIZE + y] = NOTHING;
         }
     }
-    map->set_data(mapData);
+    map->set_data(mapData, MAP_SEND_SIZE * MAP_SEND_SIZE);
     printf("Sending map update from : %dx%d -> %p\n", map->startx(), map->starty(), msg);
     printf("Client is at : %fx%f\n", pos.first, pos.second);
     serialized = new std::string();
     msg->SerializeToString(serialized);
     client->toSend.push_back(serialized);
+    delete msg;
+    delete mapData;
 }
 
 void    Networking::_sendPlayersUpdate(Client *client)
@@ -450,19 +476,20 @@ void    Networking::_sendPlayersUpdate(Client *client)
 
     for (std::vector<Player *>::iterator i = _core->getPlayer().begin(); i != _core->getPlayer().end(); ++i)
     {
-        player = msg->add_player();
         if (*i && *i != client->player)
         {
+            player = msg->add_player();
             player->set_playerid(id);
             player->set_x((*i)->getPos().first);
             player->set_y((*i)->getPos().second);
-            player->set_dir((Bomberman::Message_Player::Dir)(*i)->dir());
+            player->set_dir((*i)->dir());
         }
         ++id;
     }
     serialized = new std::string();
     msg->SerializeToString(serialized);
     client->toSend.push_back(serialized);
+    delete msg;
 }
 
 NetworkPlayer::NetworkPlayer()
