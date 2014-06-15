@@ -172,6 +172,7 @@ bool   Core::makeBot(const std::pair<float, float>& pos, const int id)
   chara->setId(id);
   if (chara->initialize() == false)
     return (false);
+  chara->setCore(this);
   chara->setPos(pos);
   chara->setMap(_map);
   chara->setBombs(&_bombs);
@@ -242,7 +243,14 @@ bool	Core::update()
       return (false);
     _clock = _cam->getClock();
     if (_networking)
-      _networking->refreshGame();
+    {
+      try {
+        _networking->refreshGame();
+      }
+      catch (...) {
+        return (false);
+      }
+    }
     if (!checkKey(k))
       return (false);
     FPS();
