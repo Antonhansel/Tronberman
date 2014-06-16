@@ -119,6 +119,7 @@ void Networking::startGame(Core *core)
             player->initialize();
             tmpPos.first = -1;
             tmpPos.second = -1;
+            player->setCore(_core);
             player->setAbsPos(tmpPos);
             player->setMap(_core->getMap());
             player->setBombs(_core->getBombs());
@@ -323,6 +324,9 @@ void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
         {
             _core->getPlayer()[message->player(i).playerid() + 1]->setAbsPos(message->player(i).x(), message->player(i).y());
             _core->getPlayer()[message->player(i).playerid() + 1]->dir((dirr)message->player(i).dir());
+            _core->getPlayer()[message->player(i).playerid() + 1]->setLife(message->player(i).life());
+            if (message->player(i).life() == 0)
+                _core->getPlayer()[message->player(i).playerid() + 1]->setIsAlive();
         }
     }
     if (!_isServer && message->type() == Bomberman::Message::OWN_PLAYER_INFO)
@@ -511,6 +515,7 @@ void    Networking::_sendPlayersUpdate(Client *client)
         {
             player = msg->add_player();
             player->set_playerid(id);
+            player->set_life((*i)->getLife());
             player->set_x((*i)->getPos().first);
             player->set_y((*i)->getPos().second);
             player->set_dir((*i)->dir());
@@ -534,6 +539,8 @@ void    Networking::updatePlayer(Player *player)
     Bomberman::Message     *msg = _buildMessage(Bomberman::Message::OWN_PLAYER_INFO);
     Bomberman::Message_OwnPlayerInfo *info;
 
+    if (!_isServer)
+        return;
     for (std::list<Client *>::iterator i = _players.begin(); i != _players.end(); ++i)
     {
         if ((*i)->player == player)
@@ -542,10 +549,17 @@ void    Networking::updatePlayer(Player *player)
             break;
         }
     }
+    if (!client)
+    {
+        printf("No compatible client...\n");
+        return;
+    }
     if (client->isConnected == false)
         return;
     info = msg->add_ownplayerinfo();
     info->set_life(client->player->getLife());
+    if (client->player->getLife() == 0)
+        client->player->setIsAlive();
     info->set_range(client->player->getRange());
     info->set_stock(client->player->getStock());
     std::string *serialized = new std::string();
@@ -566,6 +580,7 @@ PlayerType NetworkPlayer::getType() const
 
 void    NetworkPlayer::setLife(int newLife)
 {
+    printf("New life : %d\n", newLife);
     _life = newLife;
     _shield = 0;
     _core->getNetworking()->updatePlayer(this);

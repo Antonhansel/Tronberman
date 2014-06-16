@@ -18,6 +18,7 @@ message Message {
     optional float x = 2;
     optional float y = 3;
     optional int32 dir = 4;
+    optional int32 life = 5;
   }
   repeated Player player = 4;
 

@@ -148,6 +148,13 @@ class Message_Player : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 dir() const;
   inline void set_dir(::google::protobuf::int32 value);
 
+  // optional int32 life = 5;
+  inline bool has_life() const;
+  inline void clear_life();
+  static const int kLifeFieldNumber = 5;
+  inline ::google::protobuf::int32 life() const;
+  inline void set_life(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:Bomberman.Message.Player)
  private:
   inline void set_has_playerid();
@@ -158,6 +165,8 @@ class Message_Player : public ::google::protobuf::Message {
   inline void clear_has_y();
   inline void set_has_dir();
   inline void clear_has_dir();
+  inline void set_has_life();
+  inline void clear_has_life();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -165,9 +174,10 @@ class Message_Player : public ::google::protobuf::Message {
   float x_;
   float y_;
   ::google::protobuf::int32 dir_;
+  ::google::protobuf::int32 life_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_NetworkProtocol_2eproto();
   friend void protobuf_AssignDesc_NetworkProtocol_2eproto();
@@ -758,6 +768,28 @@ inline ::google::protobuf::int32 Message_Player::dir() const {
 inline void Message_Player::set_dir(::google::protobuf::int32 value) {
   set_has_dir();
   dir_ = value;
+}
+
+// optional int32 life = 5;
+inline bool Message_Player::has_life() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Message_Player::set_has_life() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Message_Player::clear_has_life() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Message_Player::clear_life() {
+  life_ = 0;
+  clear_has_life();
+}
+inline ::google::protobuf::int32 Message_Player::life() const {
+  return life_;
+}
+inline void Message_Player::set_life(::google::protobuf::int32 value) {
+  set_has_life();
+  life_ = value;
 }
 
 // -------------------------------------------------------------------

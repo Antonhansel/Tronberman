@@ -66,11 +66,12 @@ void protobuf_AssignDesc_NetworkProtocol_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Message));
   Message_Player_descriptor_ = Message_descriptor_->nested_type(0);
-  static const int Message_Player_offsets_[4] = {
+  static const int Message_Player_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, y_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, dir_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, life_),
   };
   Message_Player_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -182,23 +183,23 @@ void protobuf_AddDesc_NetworkProtocol_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025NetworkProtocol.proto\022\tBomberman\"\345\004\n\007M"
+    "\n\025NetworkProtocol.proto\022\tBomberman\"\363\004\n\007M"
     "essage\022,\n\004type\030\001 \002(\0162\036.Bomberman.Message"
     ".MessageType\022)\n\006player\030\004 \003(\0132\031.Bomberman"
     ".Message.Player\022#\n\003map\030\005 \003(\0132\026.Bomberman"
     ".Message.Map\022%\n\004info\030\006 \003(\0132\027.Bomberman.M"
     "essage.Info\0227\n\rownPlayerInfo\030\007 \003(\0132 .Bom"
-    "berman.Message.OwnPlayerInfo\032=\n\006Player\022\020"
+    "berman.Message.OwnPlayerInfo\032K\n\006Player\022\020"
     "\n\010playerId\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\013"
-    "\n\003dir\030\004 \001(\005\0323\n\003Map\022\016\n\006startX\030\001 \001(\005\022\016\n\006st"
-    "artY\030\002 \001(\005\022\014\n\004data\030\003 \001(\014\032J\n\004Info\022\017\n\007mapS"
-    "ize\030\001 \001(\005\022\021\n\tplayersNb\030\002 \001(\005\022\016\n\006startX\030\003"
-    " \001(\002\022\016\n\006startY\030\004 \001(\002\032;\n\rOwnPlayerInfo\022\014\n"
-    "\004life\030\001 \001(\005\022\r\n\005range\030\002 \001(\005\022\r\n\005stock\030\003 \001("
-    "\005\"\177\n\013MessageType\022\014\n\010OWN_MOVE\020\001\022\014\n\010OWN_BO"
-    "MB\020\002\022\016\n\nMAP_UPDATE\020\003\022\021\n\rPLAYER_UPDATE\020\004\022"
-    "\t\n\005INFOS\020\005\022\021\n\rCONSUME_BONUS\020\006\022\023\n\017OWN_PLA"
-    "YER_INFO\020\007", 650);
+    "\n\003dir\030\004 \001(\005\022\014\n\004life\030\005 \001(\005\0323\n\003Map\022\016\n\006star"
+    "tX\030\001 \001(\005\022\016\n\006startY\030\002 \001(\005\022\014\n\004data\030\003 \001(\014\032J"
+    "\n\004Info\022\017\n\007mapSize\030\001 \001(\005\022\021\n\tplayersNb\030\002 \001"
+    "(\005\022\016\n\006startX\030\003 \001(\002\022\016\n\006startY\030\004 \001(\002\032;\n\rOw"
+    "nPlayerInfo\022\014\n\004life\030\001 \001(\005\022\r\n\005range\030\002 \001(\005"
+    "\022\r\n\005stock\030\003 \001(\005\"\177\n\013MessageType\022\014\n\010OWN_MO"
+    "VE\020\001\022\014\n\010OWN_BOMB\020\002\022\016\n\nMAP_UPDATE\020\003\022\021\n\rPL"
+    "AYER_UPDATE\020\004\022\t\n\005INFOS\020\005\022\021\n\rCONSUME_BONU"
+    "S\020\006\022\023\n\017OWN_PLAYER_INFO\020\007", 664);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetworkProtocol.proto", &protobuf_RegisterTypes);
   Message::default_instance_ = new Message();
@@ -259,6 +260,7 @@ const int Message_Player::kPlayerIdFieldNumber;
 const int Message_Player::kXFieldNumber;
 const int Message_Player::kYFieldNumber;
 const int Message_Player::kDirFieldNumber;
+const int Message_Player::kLifeFieldNumber;
 #endif  // !_MSC_VER
 
 Message_Player::Message_Player()
@@ -281,6 +283,7 @@ void Message_Player::SharedCtor() {
   x_ = 0;
   y_ = 0;
   dir_ = 0;
+  life_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -320,6 +323,7 @@ void Message_Player::Clear() {
     x_ = 0;
     y_ = 0;
     dir_ = 0;
+    life_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -390,6 +394,22 @@ bool Message_Player::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(40)) goto parse_life;
+        break;
+      }
+
+      // optional int32 life = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_life:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &life_)));
+          set_has_life();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -432,6 +452,11 @@ void Message_Player::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->dir(), output);
   }
 
+  // optional int32 life = 5;
+  if (has_life()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->life(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -458,6 +483,11 @@ void Message_Player::SerializeWithCachedSizes(
   // optional int32 dir = 4;
   if (has_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->dir(), target);
+  }
+
+  // optional int32 life = 5;
+  if (has_life()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->life(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -493,6 +523,13 @@ int Message_Player::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->dir());
+    }
+
+    // optional int32 life = 5;
+    if (has_life()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->life());
     }
 
   }
@@ -534,6 +571,9 @@ void Message_Player::MergeFrom(const Message_Player& from) {
     if (from.has_dir()) {
       set_dir(from.dir());
     }
+    if (from.has_life()) {
+      set_life(from.life());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -561,6 +601,7 @@ void Message_Player::Swap(Message_Player* other) {
     std::swap(x_, other->x_);
     std::swap(y_, other->y_);
     std::swap(dir_, other->dir_);
+    std::swap(life_, other->life_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
