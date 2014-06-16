@@ -283,7 +283,7 @@ bool	Core::update()
       _hud->setScreen(2);
     _hud->update(_player[0]);
     _particles->update();
-    if (_hud->getTimer() <= 0 && _networking == NULL)
+    if (_hud->getTimer() <= 0 && (_networking == NULL || _networking->isServer()))
     {
       if (_mapFiller == NULL)
         _mapFiller = new MapFiller(_map, _loader, &_player);
