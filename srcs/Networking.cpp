@@ -322,11 +322,14 @@ void    Networking::_treatMessage(Client *client, Bomberman::Message *message)
     {
         for (int i = 0; i < message->player_size(); ++i)
         {
-            _core->getPlayer()[message->player(i).playerid() + 1]->setAbsPos(message->player(i).x(), message->player(i).y());
-            _core->getPlayer()[message->player(i).playerid() + 1]->dir((dirr)message->player(i).dir());
-            _core->getPlayer()[message->player(i).playerid() + 1]->setLife(message->player(i).life());
-            if (message->player(i).life() == 0)
-                _core->getPlayer()[message->player(i).playerid() + 1]->setIsAlive();
+            if (message->player(i).playerid() + 1 < (int)_core->getPlayer().size())
+            {
+                _core->getPlayer()[message->player(i).playerid() + 1]->setAbsPos(message->player(i).x(), message->player(i).y());
+                _core->getPlayer()[message->player(i).playerid() + 1]->dir((dirr)message->player(i).dir());
+                _core->getPlayer()[message->player(i).playerid() + 1]->setLife(message->player(i).life());
+                if (message->player(i).life() == 0)
+                    _core->getPlayer()[message->player(i).playerid() + 1]->setIsAlive();
+            }
         }
     }
     if (!_isServer && message->type() == Bomberman::Message::OWN_PLAYER_INFO)
@@ -519,8 +522,8 @@ void    Networking::_sendPlayersUpdate(Client *client)
             player->set_x((*i)->getPos().first);
             player->set_y((*i)->getPos().second);
             player->set_dir((*i)->dir());
+            ++id;
         }
-        ++id;
     }
     serialized = new std::string();
     msg->SerializeToString(serialized);
@@ -580,7 +583,6 @@ PlayerType NetworkPlayer::getType() const
 
 void    NetworkPlayer::setLife(int newLife)
 {
-    printf("New life : %d\n", newLife);
     _life = newLife;
     _shield = 0;
     _core->getNetworking()->updatePlayer(this);
