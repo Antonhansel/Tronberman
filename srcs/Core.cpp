@@ -424,8 +424,6 @@ void  Core::checkAlive()
   int num;
 
   num = 0;
-  if (_networking)
-    return;
   if (_players == 2)
   {
     if (!_player[0]->isAlive() && !_player[1]->isAlive())
