@@ -477,6 +477,7 @@ void    Menu::reset(const std::vector<Player*> &p)
     delete _network;
     _network = NULL;
   }
+  _preview->clearMap();
   _isLaunch = false;
   _isSelect = 0;
   max = 0;
