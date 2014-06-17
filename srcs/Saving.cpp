@@ -14,7 +14,20 @@ Saving::Saving(const std::string &fileName) :
 
 Saving::~Saving()
 {
-
+	if (_player.size() > 0)
+	{
+		for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); )
+		{
+			if ((*it) != NULL)
+			{
+				delete (*it);
+				it = _player.erase(it);
+			}
+		}
+		_player.clear();
+	}
+	if (_map)
+		delete _map;
 }
 
 std::string 	Saving::calcCheckSum(std::string s)

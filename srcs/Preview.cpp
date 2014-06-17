@@ -40,11 +40,22 @@ Preview::~Preview()
 {
 	_text->deleteAllText(_big);
 	_text->deleteAllText(_nb);
-	// for (std::vector<Map*>::iterator it = _maps->begin(); it != _maps->end(); ++it)
-	// 	if (*it != NULL)
-	// 		delete *it;
 	if (_text != NULL)
 		delete _text;
+}
+
+bool		Preview::clearMap()
+{
+	if (_save.size() > 0)
+	{
+		for (std::vector<Saving *>::iterator it = _save.begin(); it != _save.end(); )
+		{
+			delete (*it);
+			it = _save.erase(it);
+		}
+		_save.clear();
+	}
+	return (true);
 }
 
 bool 		Preview::checkName(const char *str1)

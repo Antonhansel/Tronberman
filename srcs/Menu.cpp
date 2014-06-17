@@ -917,8 +917,8 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && Function::convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
-  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false)
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && Function::convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, _preview->clearMap(), k = LOADM,_stepM = STEP1)
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, _preview->clearMap(), k = LOADM, _previewMode = false)
   : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();

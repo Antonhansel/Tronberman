@@ -11,9 +11,6 @@
 #ifndef _PREVIEW_HPP_
 # define _PREVIEW_HPP_
 
-// # include "Camera.hpp"
-// # include "Loader.hpp"
-//# include "Map.hpp"
 # include "Saving.hpp"
 # include "Text.hpp"
 
@@ -40,6 +37,7 @@ public:
 	void					setState(const bool);
 	bool					getResult() const;
 	void					resetText();
+	bool					clearMap();
 
 private:
 	std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > _big;
