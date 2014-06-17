@@ -16,6 +16,7 @@
 Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(camera)
 {
   _th = NULL;
+  _load = false;
   _camera->setPlayer(1);
   _loader = loader;
   _shader = _camera->getShader();
@@ -99,14 +100,15 @@ bool    Menu::update()
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _timer += _clock.getElapsed();
-  if (_exit || _input.getInput(SDL_QUIT) || _isLaunch)
+  if (!_load && (_exit || _input.getInput(SDL_QUIT) || _isLaunch))
     return (false);
   (_event == NULL && _stopIntro == true) ? (_event = new AInput(_input, MENU)) : 0;
   if (_stopIntro == true)
   {
     _event->setInput(_input);
     _background->update(_clock, _input);
-    event();
+    if (!_load)
+      event();
   }
   if (_previewMode && !(_preview->update(_clock, _input, _isSave)))
     _previewMode = false;
@@ -127,7 +129,7 @@ void    Menu::draw()
 {
   type LastType = BLOCKD;
 
-  if (_input.getKey(SDLK_SPACE))
+  if (!_load && _input.getKey(SDLK_SPACE))
     {
       _cubeanim->stopIntro(true);
       _stopIntro = true;
@@ -711,6 +713,7 @@ void    Menu::load()
     _th = new Thread(_sc);
     if (_th->createThread(pf, ((void*)(this))))
     {
+      _load = true;
       while (resume)
       {
         update();
@@ -728,6 +731,7 @@ void    Menu::load()
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
+      _load = false;
     }
     else
         std::cout << "ERROR ON CREATE THREAD\n";
@@ -755,6 +759,7 @@ void    Menu::loadPrevious()
     _th = new Thread(_sc);
     if (_th->createThread(pf, ((void*)(this))))
     {
+      _load = true;
       while (resume)
       {
         update();
@@ -773,6 +778,7 @@ void    Menu::loadPrevious()
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
+      _load = false;
     }
     else
         std::cout << "ERROR ON CREATE THREAD\n";
