@@ -26,7 +26,7 @@ struct                      Client {
     int                     sockfd;
     std::string             name;
     std::list<std::string *>    toSend;
-    int                         sizeSended;
+    int                         sizeSended[2];
     // first is the start position to send the message, second is the messages
     std::string     inputBuffer;
     int          messageLength;
@@ -88,7 +88,8 @@ class Networking {
         void    _sendOwnInfos();
         Bomberman::Message          *_buildMessage(Bomberman::Message::MessageType);
         std::list<std::string *>    _toSend;
-        int                         _sizeSended;
+        int                         _sizeSended[2];
         std::string                 _inputBuffer;
         int                         _messageLength;
+        int                         _sizeMsg[2];
 };

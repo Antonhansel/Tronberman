@@ -41,6 +41,7 @@ Networking::Networking(const std::string &port)
     if (listen(_sockfd, 10) == -1)
         throw new BomberException(strerror(errno));
     _messageLength = -1;
+    _sizeMsg[1] = 0;
     _closed = false;
     _isServer = true;
     _core = NULL;
@@ -55,10 +56,12 @@ Networking::Networking(const std::string &port, const std::string &addr)
 
     std::cout << "Client start" << std::endl;
     _isServer = false;
-    _sizeSended = -1;
+    _sizeSended[0] = -1;
+    _sizeSended[1] = 0;
     _closed = false;
     _initialized = false;
     _core = NULL;
+    _sizeMsg[1] = 0;
     _messageLength = -1;
     if ((pe = getprotobyname("TCP")) == NULL)
         throw new BomberException(strerror(errno));
@@ -192,14 +195,12 @@ bool     Networking::newPlayers()
     {
         client = new Client;
         if ((client->sockfd = accept(_sockfd, reinterpret_cast<struct sockaddr*>(&saddr), &len)) == -1)
-        {
-            std::cout << "here" << std::endl;
             throw new BomberException(strerror(errno));
-        }
         inet_ntop(AF_INET, &saddr.sin_addr, ipv4addr, 100);
         client->name = ipv4addr;
         client->messageLength = -1;
-        client->sizeSended = -1;
+        client->sizeSended[0] = -1;
+        client->sizeSended[1] = 0;
         client->isConnected = true;
         _players.push_back(client);
         std::cout << "new player " << client->name << std::endl;
@@ -230,7 +231,6 @@ void    Networking::_tryPurgeBuffer()
 void    Networking::_receiveFromClient(Client *client)
 {
     ssize_t     sizeRecv;
-    int     sizeMsg;
     char        *tmp;
     Bomberman::Message msg;
 
@@ -238,28 +238,36 @@ void    Networking::_receiveFromClient(Client *client)
         if (((!client) ? _messageLength : client->messageLength) == -1)
         {
             sizeRecv = recv(((!client) ? (_sockfd) : (client->sockfd)),
-                &sizeMsg,
-                sizeof(sizeMsg), MSG_DONTWAIT);
+                &((char *)&_sizeMsg[0])[_sizeMsg[1]],
+                sizeof(_sizeMsg[0] - _sizeMsg[1]), MSG_DONTWAIT);
             if (sizeRecv <= 0)
-                {
-                    if (errno == EAGAIN || errno == EWOULDBLOCK)
-                        return;
-                    if (client)
-                    {
-                        client->isConnected = false;
-                        client->player->setLife(0);
-                        client->player->setIsAlive();
-                    }
-                    else
-                        throw new BomberException("Server Disconnected");
+            {
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
                     return;
+                if (client)
+                {
+                    client->isConnected = false;
+                    client->player->setLife(0);
+                    client->player->setIsAlive();
                 }
-            ((!client) ? _messageLength : client->messageLength) = sizeMsg;
+                else
+                    throw new BomberException("Server Disconnected");
+                return;
+            }
+            _sizeMsg[1] += sizeRecv;
+            if (_sizeMsg[1] == sizeof(_sizeMsg[0]))
+            {
+                ((!client) ? _messageLength : client->messageLength) = _sizeMsg[0];
+                _sizeMsg[1] = 0;
+            }
+            else
+                return;
         }
-        tmp = new char[((!client) ? _messageLength : client->messageLength)];
+        tmp = new char[((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size()];
+        int toRecv = ((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size();
         sizeRecv = recv((!client) ? _sockfd : client->sockfd,
             tmp,
-            ((!client) ? _messageLength : client->messageLength) - ((!client) ? _inputBuffer : client->inputBuffer).size(),
+            toRecv,
             MSG_DONTWAIT);
         if (sizeRecv <= 0)
         {
@@ -365,12 +373,12 @@ void    Networking::_sendToClient(Client *client)
         if (((client) ? (client->toSend) : (_toSend)).size() == 0)
             return;
         toSend = *((client) ? (&*(client->toSend.begin())) : (&*_toSend.begin()));
-        if (((!client) ? _sizeSended : client->sizeSended) == -1)
+        if (((!client) ? _sizeSended[0] : client->sizeSended[0]) == -1)
         {
             msgSize = toSend->size();
             sizeSent = send((!client) ? _sockfd : client->sockfd,
-                &msgSize,
-                sizeof(msgSize),
+                &((char *)&msgSize)[((!client) ? _sizeSended[1] : client->sizeSended[1])],
+                sizeof(msgSize - ((!client) ? _sizeSended[1] : client->sizeSended[1])),
                 MSG_NOSIGNAL | MSG_DONTWAIT);
             if (sizeSent <= 0)
             {
@@ -386,12 +394,19 @@ void    Networking::_sendToClient(Client *client)
                     throw new BomberException("Server Disconnected");
                 return;
             }
-            ((!client) ? _sizeSended : client->sizeSended) = 0;
+            ((!client) ? _sizeSended[1] : client->sizeSended[1]) += sizeSent;
+            if (((!client) ? _sizeSended[1] : client->sizeSended[1]) >= (int)sizeof(msgSize))
+            {
+                ((!client) ? _sizeSended[0] : client->sizeSended[0]) = 0;
+                ((!client) ? _sizeSended[1] : client->sizeSended[1]) = 0;
+            }
+            else
+                return;
         }
-        reelSend = &toSend->c_str()[(!client) ? _sizeSended : client->sizeSended];
+        reelSend = &toSend->c_str()[(!client) ? _sizeSended[0] : client->sizeSended[0]];
         sizeSent = send((!client) ? _sockfd : client->sockfd,
             reelSend,
-            toSend->size() - ((!client) ? _sizeSended : client->sizeSended),
+            toSend->size() - ((!client) ? _sizeSended[0] : client->sizeSended[0]),
             MSG_NOSIGNAL | MSG_DONTWAIT);
         if (sizeSent <= 0)
         {
@@ -407,12 +422,12 @@ void    Networking::_sendToClient(Client *client)
                 throw new BomberException("Server Disconnected");
             return;
         }
-        ((!client) ? _sizeSended : client->sizeSended) += sizeSent;
-        if (((!client) ? _sizeSended : client->sizeSended) >= (long)toSend->size())
+        ((!client) ? _sizeSended[0] : client->sizeSended[0]) += sizeSent;
+        if (((!client) ? _sizeSended[0] : client->sizeSended[0]) >= (long)toSend->size())
         {
             delete toSend;
             ((client) ? (client->toSend) : (_toSend)).pop_front();
-            ((!client) ? _sizeSended : client->sizeSended) = -1;
+            ((!client) ? _sizeSended[0] : client->sizeSended[0]) = -1;
             return;
         }
     } while (sizeSent > 0);
@@ -553,10 +568,7 @@ void    Networking::updatePlayer(Player *player)
         }
     }
     if (!client)
-    {
-        printf("No compatible client...\n");
         return;
-    }
     if (client->isConnected == false)
         return;
     info = msg->add_ownplayerinfo();
