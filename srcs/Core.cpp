@@ -34,8 +34,6 @@ void  Core::reset()
   std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
 
   _bombs.clear();
-  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
-    delete (*it);
   _player.clear();
   for (size_t i(0); i != _other.size(); i++)
     delete _other[i];
