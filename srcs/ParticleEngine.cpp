@@ -9,7 +9,7 @@
 */
 
 #include "ParticleEngine.hpp"
-#include <sstream> 
+#include <sstream>
 #include <iostream>
 
 ParticleEngine::ParticleEngine(Loader *loader)
@@ -73,10 +73,12 @@ void  ParticleEngine::spawnParticles(glm::vec3 &vec)
 void 	ParticleEngine::update()
 {
   std::vector<Particles*>::iterator it;
-  for (it = _exploList.begin(); it != _exploList.end(); ++it)
+  for (it = _exploList.begin(); it != _exploList.end();)
   {
     if ((*it)->getFuel() > 0)
-      (*it)->update();
+      (*it++)->update();
+    else
+      it = _exploList.erase(it);
   }
 }
 
@@ -90,5 +92,5 @@ void  ParticleEngine::cleanParticles()
       delete (*it);
       _exploList.erase(it);
     }
-  }  
+  }
 }
