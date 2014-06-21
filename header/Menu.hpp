@@ -34,7 +34,6 @@
 using namespace gdl;
 using namespace glm;
 
-
 enum stepM
   {
     HOME,
@@ -143,6 +142,7 @@ private:
   bool          _isFx;
   Thread        *_th;
   ScopedLock    *_sc;
+  bool          _load;
 
 private:
   Map               *_map;

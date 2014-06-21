@@ -99,7 +99,7 @@ void	Text::draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector
       {
         _transformation = glm::translate(glm::mat4(1), glm::vec3(col, row, 0));
         (*it).second[i]->draw(_camera->getShader(), _transformation, GL_QUADS);
-        col += 50; 
+        col += 55; 
       }
     }
   _camera->setMode();

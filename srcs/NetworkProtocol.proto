@@ -14,39 +14,33 @@ message Message {
   required MessageType type = 1;
 
   message Player {
-    required int32 playerId = 1;
-    required float x = 2;
-    required float y = 3;
-    enum Dir
-    {
-      NORTH = 1;
-      SOUTH = 2;
-      EAST = 3;
-      WEST = 4;
-    }
-    required Dir dir = 4;
+    optional int32 playerId = 1;
+    optional float x = 2;
+    optional float y = 3;
+    optional int32 dir = 4;
+    optional int32 life = 5;
   }
   repeated Player player = 4;
 
   message Map {
-    required int32 startX = 1;
-    required int32 startY = 2;
-    required bytes data = 3;
+    optional int32 startX = 1;
+    optional int32 startY = 2;
+    optional bytes data = 3;
   }
   repeated Map map = 5;
 
   message Info {
-    required int32 mapSize = 1;
-    required int32 playersNb = 2;
-    required float startX = 3;
-    required float startY = 4;
+    optional int32 mapSize = 1;
+    optional int32 playersNb = 2;
+    optional float startX = 3;
+    optional float startY = 4;
   }
   repeated Info info = 6;
 
   message OwnPlayerInfo {
-    required int32 life = 1;
-    required int32 range = 2;
-    required int32 stock = 3;
+    optional int32 life = 1;
+    optional int32 range = 2;
+    optional int32 stock = 3;
   }
   repeated OwnPlayerInfo ownPlayerInfo = 7;
 

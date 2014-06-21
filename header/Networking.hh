@@ -24,22 +24,32 @@
 
 struct                      Client {
     int                     sockfd;
-    int                     lastTick;
     std::string             name;
     std::list<std::string *>    toSend;
-    int                         sizeSended;
+    int                         sizeSended[2];
     // first is the start position to send the message, second is the messages
     std::string     inputBuffer;
     int          messageLength;
     // first is the actual position in the buffer, second is the buffer
     Player                  *player;
+    bool                    isConnected;
 };
 
 class NetworkPlayer : public Player {
 public:
     NetworkPlayer();
     void    update(gdl::Clock const &clock, gdl::Input &input) {};
-    const PlayerType getType() const;
+    PlayerType getType() const;
+    void    setLife(int);
+    void    setRange(int);
+    void    setStock(int);
+};
+
+class NetworkOwnPlayer : public Player {
+public:
+    void    spawnBomb();
+protected:
+    void    _consumeBonus(AObject *);
 };
 
 class Networking {
@@ -53,8 +63,12 @@ class Networking {
         // Close listening for new clients
         const std::list<Client *>       &getPlayers() const;
         // Get the list of clients
+        bool                            isServer() const;
         void                            refreshGame();
         bool                            isGameStarted();
+        void                            spawnBomb();
+        void                            consumeBonus();
+        void                            updatePlayer(Player *);
     private:
         bool                    _initialized;
         bool                    _isServer;
@@ -72,9 +86,10 @@ class Networking {
         void    _startGameClient();
         void    _tryPurgeBuffer();
         void    _sendOwnInfos();
-        Bomberman::Message     *_buildMessage(Bomberman::Message::MessageType);
+        Bomberman::Message          *_buildMessage(Bomberman::Message::MessageType);
         std::list<std::string *>    _toSend;
-        int                      _sizeSended;
+        int                         _sizeSended[2];
         std::string                 _inputBuffer;
-        int                      _messageLength;
+        int                         _messageLength;
+        int                         _sizeMsg[2];
 };

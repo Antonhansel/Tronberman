@@ -26,7 +26,6 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Message_Player_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Message_Player_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* Message_Player_Dir_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* Message_Map_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Message_Map_reflection_ = NULL;
@@ -67,11 +66,12 @@ void protobuf_AssignDesc_NetworkProtocol_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Message));
   Message_Player_descriptor_ = Message_descriptor_->nested_type(0);
-  static const int Message_Player_offsets_[4] = {
+  static const int Message_Player_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, playerid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, y_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, dir_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Player, life_),
   };
   Message_Player_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -84,7 +84,6 @@ void protobuf_AssignDesc_NetworkProtocol_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Message_Player));
-  Message_Player_Dir_descriptor_ = Message_Player_descriptor_->enum_type(0);
   Message_Map_descriptor_ = Message_descriptor_->nested_type(1);
   static const int Message_Map_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Message_Map, startx_),
@@ -184,25 +183,23 @@ void protobuf_AddDesc_NetworkProtocol_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025NetworkProtocol.proto\022\tBomberman\"\266\005\n\007M"
+    "\n\025NetworkProtocol.proto\022\tBomberman\"\363\004\n\007M"
     "essage\022,\n\004type\030\001 \002(\0162\036.Bomberman.Message"
     ".MessageType\022)\n\006player\030\004 \003(\0132\031.Bomberman"
     ".Message.Player\022#\n\003map\030\005 \003(\0132\026.Bomberman"
     ".Message.Map\022%\n\004info\030\006 \003(\0132\027.Bomberman.M"
     "essage.Info\0227\n\rownPlayerInfo\030\007 \003(\0132 .Bom"
-    "berman.Message.OwnPlayerInfo\032\215\001\n\006Player\022"
-    "\020\n\010playerId\030\001 \002(\005\022\t\n\001x\030\002 \002(\002\022\t\n\001y\030\003 \002(\002\022"
-    "*\n\003dir\030\004 \002(\0162\035.Bomberman.Message.Player."
-    "Dir\"/\n\003Dir\022\t\n\005NORTH\020\001\022\t\n\005SOUTH\020\002\022\010\n\004EAST"
-    "\020\003\022\010\n\004WEST\020\004\0323\n\003Map\022\016\n\006startX\030\001 \002(\005\022\016\n\006s"
-    "tartY\030\002 \002(\005\022\014\n\004data\030\003 \002(\014\032J\n\004Info\022\017\n\007map"
-    "Size\030\001 \002(\005\022\021\n\tplayersNb\030\002 \002(\005\022\016\n\006startX\030"
-    "\003 \002(\002\022\016\n\006startY\030\004 \002(\002\032;\n\rOwnPlayerInfo\022\014"
-    "\n\004life\030\001 \002(\005\022\r\n\005range\030\002 \002(\005\022\r\n\005stock\030\003 \002"
-    "(\005\"\177\n\013MessageType\022\014\n\010OWN_MOVE\020\001\022\014\n\010OWN_B"
-    "OMB\020\002\022\016\n\nMAP_UPDATE\020\003\022\021\n\rPLAYER_UPDATE\020\004"
-    "\022\t\n\005INFOS\020\005\022\021\n\rCONSUME_BONUS\020\006\022\023\n\017OWN_PL"
-    "AYER_INFO\020\007", 731);
+    "berman.Message.OwnPlayerInfo\032K\n\006Player\022\020"
+    "\n\010playerId\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\013"
+    "\n\003dir\030\004 \001(\005\022\014\n\004life\030\005 \001(\005\0323\n\003Map\022\016\n\006star"
+    "tX\030\001 \001(\005\022\016\n\006startY\030\002 \001(\005\022\014\n\004data\030\003 \001(\014\032J"
+    "\n\004Info\022\017\n\007mapSize\030\001 \001(\005\022\021\n\tplayersNb\030\002 \001"
+    "(\005\022\016\n\006startX\030\003 \001(\002\022\016\n\006startY\030\004 \001(\002\032;\n\rOw"
+    "nPlayerInfo\022\014\n\004life\030\001 \001(\005\022\r\n\005range\030\002 \001(\005"
+    "\022\r\n\005stock\030\003 \001(\005\"\177\n\013MessageType\022\014\n\010OWN_MO"
+    "VE\020\001\022\014\n\010OWN_BOMB\020\002\022\016\n\nMAP_UPDATE\020\003\022\021\n\rPL"
+    "AYER_UPDATE\020\004\022\t\n\005INFOS\020\005\022\021\n\rCONSUME_BONU"
+    "S\020\006\022\023\n\017OWN_PLAYER_INFO\020\007", 664);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NetworkProtocol.proto", &protobuf_RegisterTypes);
   Message::default_instance_ = new Message();
@@ -258,36 +255,12 @@ const Message_MessageType Message::MessageType_MIN;
 const Message_MessageType Message::MessageType_MAX;
 const int Message::MessageType_ARRAYSIZE;
 #endif  // _MSC_VER
-const ::google::protobuf::EnumDescriptor* Message_Player_Dir_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return Message_Player_Dir_descriptor_;
-}
-bool Message_Player_Dir_IsValid(int value) {
-  switch(value) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-      return true;
-    default:
-      return false;
-  }
-}
-
-#ifndef _MSC_VER
-const Message_Player_Dir Message_Player::NORTH;
-const Message_Player_Dir Message_Player::SOUTH;
-const Message_Player_Dir Message_Player::EAST;
-const Message_Player_Dir Message_Player::WEST;
-const Message_Player_Dir Message_Player::Dir_MIN;
-const Message_Player_Dir Message_Player::Dir_MAX;
-const int Message_Player::Dir_ARRAYSIZE;
-#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int Message_Player::kPlayerIdFieldNumber;
 const int Message_Player::kXFieldNumber;
 const int Message_Player::kYFieldNumber;
 const int Message_Player::kDirFieldNumber;
+const int Message_Player::kLifeFieldNumber;
 #endif  // !_MSC_VER
 
 Message_Player::Message_Player()
@@ -309,7 +282,8 @@ void Message_Player::SharedCtor() {
   playerid_ = 0;
   x_ = 0;
   y_ = 0;
-  dir_ = 1;
+  dir_ = 0;
+  life_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -348,7 +322,8 @@ void Message_Player::Clear() {
     playerid_ = 0;
     x_ = 0;
     y_ = 0;
-    dir_ = 1;
+    dir_ = 0;
+    life_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -360,7 +335,7 @@ bool Message_Player::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 playerId = 1;
+      // optional int32 playerId = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -375,7 +350,7 @@ bool Message_Player::MergePartialFromCodedStream(
         break;
       }
 
-      // required float x = 2;
+      // optional float x = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
@@ -391,7 +366,7 @@ bool Message_Player::MergePartialFromCodedStream(
         break;
       }
 
-      // required float y = 3;
+      // optional float y = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
@@ -407,20 +382,31 @@ bool Message_Player::MergePartialFromCodedStream(
         break;
       }
 
-      // required .Bomberman.Message.Player.Dir dir = 4;
+      // optional int32 dir = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_dir:
-          int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::Bomberman::Message_Player_Dir_IsValid(value)) {
-            set_dir(static_cast< ::Bomberman::Message_Player_Dir >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(4, value);
-          }
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &dir_)));
+          set_has_dir();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_life;
+        break;
+      }
+
+      // optional int32 life = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_life:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &life_)));
+          set_has_life();
         } else {
           goto handle_uninterpreted;
         }
@@ -446,25 +432,29 @@ bool Message_Player::MergePartialFromCodedStream(
 
 void Message_Player::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 playerId = 1;
+  // optional int32 playerId = 1;
   if (has_playerid()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->playerid(), output);
   }
 
-  // required float x = 2;
+  // optional float x = 2;
   if (has_x()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->x(), output);
   }
 
-  // required float y = 3;
+  // optional float y = 3;
   if (has_y()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->y(), output);
   }
 
-  // required .Bomberman.Message.Player.Dir dir = 4;
+  // optional int32 dir = 4;
   if (has_dir()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      4, this->dir(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->dir(), output);
+  }
+
+  // optional int32 life = 5;
+  if (has_life()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->life(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -475,25 +465,29 @@ void Message_Player::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Message_Player::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 playerId = 1;
+  // optional int32 playerId = 1;
   if (has_playerid()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->playerid(), target);
   }
 
-  // required float x = 2;
+  // optional float x = 2;
   if (has_x()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->x(), target);
   }
 
-  // required float y = 3;
+  // optional float y = 3;
   if (has_y()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->y(), target);
   }
 
-  // required .Bomberman.Message.Player.Dir dir = 4;
+  // optional int32 dir = 4;
   if (has_dir()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      4, this->dir(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->dir(), target);
+  }
+
+  // optional int32 life = 5;
+  if (has_life()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->life(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -507,27 +501,35 @@ int Message_Player::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 playerId = 1;
+    // optional int32 playerId = 1;
     if (has_playerid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->playerid());
     }
 
-    // required float x = 2;
+    // optional float x = 2;
     if (has_x()) {
       total_size += 1 + 4;
     }
 
-    // required float y = 3;
+    // optional float y = 3;
     if (has_y()) {
       total_size += 1 + 4;
     }
 
-    // required .Bomberman.Message.Player.Dir dir = 4;
+    // optional int32 dir = 4;
     if (has_dir()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->dir());
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->dir());
+    }
+
+    // optional int32 life = 5;
+    if (has_life()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->life());
     }
 
   }
@@ -569,6 +571,9 @@ void Message_Player::MergeFrom(const Message_Player& from) {
     if (from.has_dir()) {
       set_dir(from.dir());
     }
+    if (from.has_life()) {
+      set_life(from.life());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -586,7 +591,6 @@ void Message_Player::CopyFrom(const Message_Player& from) {
 }
 
 bool Message_Player::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
 
   return true;
 }
@@ -597,6 +601,7 @@ void Message_Player::Swap(Message_Player* other) {
     std::swap(x_, other->x_);
     std::swap(y_, other->y_);
     std::swap(dir_, other->dir_);
+    std::swap(life_, other->life_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -695,7 +700,7 @@ bool Message_Map::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 startX = 1;
+      // optional int32 startX = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -710,7 +715,7 @@ bool Message_Map::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 startY = 2;
+      // optional int32 startY = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -726,7 +731,7 @@ bool Message_Map::MergePartialFromCodedStream(
         break;
       }
 
-      // required bytes data = 3;
+      // optional bytes data = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -758,17 +763,17 @@ bool Message_Map::MergePartialFromCodedStream(
 
 void Message_Map::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 startX = 1;
+  // optional int32 startX = 1;
   if (has_startx()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->startx(), output);
   }
 
-  // required int32 startY = 2;
+  // optional int32 startY = 2;
   if (has_starty()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->starty(), output);
   }
 
-  // required bytes data = 3;
+  // optional bytes data = 3;
   if (has_data()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
       3, this->data(), output);
@@ -782,17 +787,17 @@ void Message_Map::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Message_Map::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 startX = 1;
+  // optional int32 startX = 1;
   if (has_startx()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->startx(), target);
   }
 
-  // required int32 startY = 2;
+  // optional int32 startY = 2;
   if (has_starty()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->starty(), target);
   }
 
-  // required bytes data = 3;
+  // optional bytes data = 3;
   if (has_data()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
@@ -810,21 +815,21 @@ int Message_Map::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 startX = 1;
+    // optional int32 startX = 1;
     if (has_startx()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->startx());
     }
 
-    // required int32 startY = 2;
+    // optional int32 startY = 2;
     if (has_starty()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->starty());
     }
 
-    // required bytes data = 3;
+    // optional bytes data = 3;
     if (has_data()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -884,7 +889,6 @@ void Message_Map::CopyFrom(const Message_Map& from) {
 }
 
 bool Message_Map::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
   return true;
 }
@@ -988,7 +992,7 @@ bool Message_Info::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 mapSize = 1;
+      // optional int32 mapSize = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1003,7 +1007,7 @@ bool Message_Info::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 playersNb = 2;
+      // optional int32 playersNb = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1019,7 +1023,7 @@ bool Message_Info::MergePartialFromCodedStream(
         break;
       }
 
-      // required float startX = 3;
+      // optional float startX = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
@@ -1035,7 +1039,7 @@ bool Message_Info::MergePartialFromCodedStream(
         break;
       }
 
-      // required float startY = 4;
+      // optional float startY = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
@@ -1069,22 +1073,22 @@ bool Message_Info::MergePartialFromCodedStream(
 
 void Message_Info::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 mapSize = 1;
+  // optional int32 mapSize = 1;
   if (has_mapsize()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->mapsize(), output);
   }
 
-  // required int32 playersNb = 2;
+  // optional int32 playersNb = 2;
   if (has_playersnb()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->playersnb(), output);
   }
 
-  // required float startX = 3;
+  // optional float startX = 3;
   if (has_startx()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->startx(), output);
   }
 
-  // required float startY = 4;
+  // optional float startY = 4;
   if (has_starty()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->starty(), output);
   }
@@ -1097,22 +1101,22 @@ void Message_Info::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Message_Info::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 mapSize = 1;
+  // optional int32 mapSize = 1;
   if (has_mapsize()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->mapsize(), target);
   }
 
-  // required int32 playersNb = 2;
+  // optional int32 playersNb = 2;
   if (has_playersnb()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->playersnb(), target);
   }
 
-  // required float startX = 3;
+  // optional float startX = 3;
   if (has_startx()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->startx(), target);
   }
 
-  // required float startY = 4;
+  // optional float startY = 4;
   if (has_starty()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->starty(), target);
   }
@@ -1128,26 +1132,26 @@ int Message_Info::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 mapSize = 1;
+    // optional int32 mapSize = 1;
     if (has_mapsize()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->mapsize());
     }
 
-    // required int32 playersNb = 2;
+    // optional int32 playersNb = 2;
     if (has_playersnb()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->playersnb());
     }
 
-    // required float startX = 3;
+    // optional float startX = 3;
     if (has_startx()) {
       total_size += 1 + 4;
     }
 
-    // required float startY = 4;
+    // optional float startY = 4;
     if (has_starty()) {
       total_size += 1 + 4;
     }
@@ -1208,7 +1212,6 @@ void Message_Info::CopyFrom(const Message_Info& from) {
 }
 
 bool Message_Info::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
 
   return true;
 }
@@ -1310,7 +1313,7 @@ bool Message_OwnPlayerInfo::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 life = 1;
+      // optional int32 life = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1325,7 +1328,7 @@ bool Message_OwnPlayerInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 range = 2;
+      // optional int32 range = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1341,7 +1344,7 @@ bool Message_OwnPlayerInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // required int32 stock = 3;
+      // optional int32 stock = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1375,17 +1378,17 @@ bool Message_OwnPlayerInfo::MergePartialFromCodedStream(
 
 void Message_OwnPlayerInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 life = 1;
+  // optional int32 life = 1;
   if (has_life()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->life(), output);
   }
 
-  // required int32 range = 2;
+  // optional int32 range = 2;
   if (has_range()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->range(), output);
   }
 
-  // required int32 stock = 3;
+  // optional int32 stock = 3;
   if (has_stock()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->stock(), output);
   }
@@ -1398,17 +1401,17 @@ void Message_OwnPlayerInfo::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Message_OwnPlayerInfo::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 life = 1;
+  // optional int32 life = 1;
   if (has_life()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->life(), target);
   }
 
-  // required int32 range = 2;
+  // optional int32 range = 2;
   if (has_range()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->range(), target);
   }
 
-  // required int32 stock = 3;
+  // optional int32 stock = 3;
   if (has_stock()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->stock(), target);
   }
@@ -1424,21 +1427,21 @@ int Message_OwnPlayerInfo::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 life = 1;
+    // optional int32 life = 1;
     if (has_life()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->life());
     }
 
-    // required int32 range = 2;
+    // optional int32 range = 2;
     if (has_range()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->range());
     }
 
-    // required int32 stock = 3;
+    // optional int32 stock = 3;
     if (has_stock()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1498,7 +1501,6 @@ void Message_OwnPlayerInfo::CopyFrom(const Message_OwnPlayerInfo& from) {
 }
 
 bool Message_OwnPlayerInfo::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
   return true;
 }
@@ -1873,18 +1875,6 @@ void Message::CopyFrom(const Message& from) {
 bool Message::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  for (int i = 0; i < player_size(); i++) {
-    if (!this->player(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < map_size(); i++) {
-    if (!this->map(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < info_size(); i++) {
-    if (!this->info(i).IsInitialized()) return false;
-  }
-  for (int i = 0; i < ownplayerinfo_size(); i++) {
-    if (!this->ownplayerinfo(i).IsInitialized()) return false;
-  }
   return true;
 }
 

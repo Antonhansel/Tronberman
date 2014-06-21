@@ -36,6 +36,7 @@ enum PlayerType {
 class Bonus;
 class AInput;
 class Bombs;
+class Core;
 
 class Player : public AObject
 {
@@ -66,7 +67,8 @@ protected:
   std::vector<Player*>  *_playermap;
   std::string   _modelpath;
   Sound         *_sound;
-
+  Core          *_core;
+  virtual void          _consumeBonus(AObject *);
 public:
   void    setPlayer(int);
   void    setSpeed(float);
@@ -76,8 +78,8 @@ public:
   void    setScore(int);
   int     getScore() const;
   float   getSpeed() const;
-  PlayerType getType() const;
-
+  virtual PlayerType getType() const;
+  void    setCore(Core *);
 public:
   Player();
   ~Player();
@@ -85,16 +87,16 @@ public:
   bool    initialize();
   void    draw(gdl::AShader &, const gdl::Clock &);
   int     getStock() const;
-  void    setStock(int);
+  virtual void    setStock(int);
   int     getId() const;
   void    setId(int);
   int     getRange() const;
-  void    setRange(int);
-  void    setLife(int);
+  virtual void    setRange(int);
+  virtual void    setLife(int);
   int     getLife() const;
   void    setBegin(bool);
   bool    getBegin() const;
-  void    spawnBomb();
+  virtual void    spawnBomb();
   void    setSound(Sound *);
   std::pair<float, float>   realPos(std::pair<float, float>);
   float   getShield() const;

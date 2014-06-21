@@ -16,6 +16,7 @@
 Menu::Menu(Camera *camera, Loader *loader, ParticleEngine *engine) : _camera(camera)
 {
   _th = NULL;
+  _load = false;
   _camera->setPlayer(1);
   _loader = loader;
   _shader = _camera->getShader();
@@ -99,14 +100,15 @@ bool    Menu::update()
   _clock = _camera->getClock();
   _input = _camera->getInput();
   _timer += _clock.getElapsed();
-  if (_exit || _input.getInput(SDL_QUIT) || _isLaunch)
+  if (!_load && (_exit || _input.getInput(SDL_QUIT) || _isLaunch))
     return (false);
   (_event == NULL && _stopIntro == true) ? (_event = new AInput(_input, MENU)) : 0;
   if (_stopIntro == true)
   {
     _event->setInput(_input);
     _background->update(_clock, _input);
-    event();
+    if (!_load)
+      event();
   }
   if (_previewMode && !(_preview->update(_clock, _input, _isSave)))
     _previewMode = false;
@@ -127,7 +129,7 @@ void    Menu::draw()
 {
   type LastType = BLOCKD;
 
-  if (_input.getKey(SDLK_SPACE))
+  if (!_load && _input.getKey(SDLK_SPACE))
     {
       _cubeanim->stopIntro(true);
       _stopIntro = true;
@@ -475,6 +477,7 @@ void    Menu::reset(const std::vector<Player*> &p)
     delete _network;
     _network = NULL;
   }
+  _preview->clearMap();
   _isLaunch = false;
   _isSelect = 0;
   max = 0;
@@ -509,10 +512,10 @@ void    Menu::home()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "LOCAL", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "ONLINE", true);
-  _text->addText(_step1, 2, std::make_pair(15, 460), "SCORE", true);
-  _text->addText(_step1, 3, std::make_pair(15, 540), "OPTION", true);
-  _text->addText(_step1, 4, std::make_pair(15, 620), "EXIT", true);
+  _text->addText(_step1, 1, std::make_pair(15, 400), "ONLINE", true);
+  _text->addText(_step1, 2, std::make_pair(15, 500), "SCORE", true);
+  _text->addText(_step1, 3, std::make_pair(15, 600), "OPTION", true);
+  _text->addText(_step1, 4, std::make_pair(15, 920), "EXIT", true);
   _isSelect = 0;
   _max = 4;
 }
@@ -525,10 +528,10 @@ void    Menu::step1()
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "NEW GAME", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "LOAD GAME", true);
-  _text->addText(_step1, 2, std::make_pair(15, 460), "LOAD CUSTOM MAP", true);
-  _text->addText(_step1, 3, std::make_pair(15, 540), "MAP BUILDER", true);
-  _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 400), "LOAD GAME", true);
+  _text->addText(_step1, 2, std::make_pair(15, 500), "LOAD CUSTOM MAP", true);
+  _text->addText(_step1, 3, std::make_pair(15, 600), "MAP BUILDER", true);
+  _text->addText(_step1, 4, std::make_pair(15, 920), "BACK", true);
   _max = 4;
 }
 
@@ -536,13 +539,13 @@ void    Menu::step11()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "MAP SIZE", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "NB PLAYER", true);
-  _text->addText(_step1, 2, std::make_pair(15, 460), "BOTS", true);
-  _text->addText(_step1, 3, std::make_pair(15, 540), "GO", true);
-  _text->addText(_step1, 4, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 400), "NB PLAYER", true);
+  _text->addText(_step1, 2, std::make_pair(15, 500), "BOTS", true);
+  _text->addText(_step1, 3, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 4, std::make_pair(15, 920), "BACK", true);
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
-  _text->addText(_step1, 6, std::make_pair(700, 380), _nbPlayer.c_str(), false);
-  _text->addText(_step1, 7, std::make_pair(700, 460), _nbBots.c_str(), false);
+  _text->addText(_step1, 6, std::make_pair(700, 400), _nbPlayer.c_str(), false);
+  _text->addText(_step1, 7, std::make_pair(700, 500), _nbBots.c_str(), false);
   _max = 4;
 }
 
@@ -551,8 +554,8 @@ void    Menu::step12()
   _isSelect = 0;
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "MAP SIZE", true);
-  _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
-  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 2, std::make_pair(15, 920), "BACK", true);
   _text->addText(_step1, 5, std::make_pair(700, 300), _sizeMap.c_str(), false);
   _max = 2;
 }
@@ -563,7 +566,7 @@ void    Menu::online()
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "CREATE", true);
   _text->addText(_step1, 1, std::make_pair(15, 380), "JOIN", true);
-  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 2, std::make_pair(15, 920), "BACK", true);
   _max = 2;
 }
 
@@ -571,10 +574,10 @@ void    Menu::server()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "PORT", true);
-  _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
-  _text->addText(_step1, 2, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 2, std::make_pair(15, 920), "BACK", true);
   _text->addText(_step1, 3, std::make_pair(700, 300), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
+  _text->addText(_step1, 4, std::make_pair(15, 800), _err.c_str(), false);
   _max = 2;
 }
 
@@ -582,24 +585,24 @@ void    Menu::client()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "ADDRESS", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "PORT", true);
-  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);
-  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 400), "PORT", true);
+  _text->addText(_step1, 2, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 3, std::make_pair(15, 920), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _ipAddr.c_str(), false);
-  _text->addText(_step1, 5, std::make_pair(700, 380), _nbPort.c_str(), false);
-  _text->addText(_step1, 4, std::make_pair(15, 700), _err.c_str(), false);
+  _text->addText(_step1, 5, std::make_pair(700, 400), _nbPort.c_str(), false);
+  _text->addText(_step1, 4, std::make_pair(15, 800), _err.c_str(), false);
   _max = 3;
 }
 
 void    Menu::loadGame()
 {
   _text->deleteAllText(_step1);
-  _text->addText(_step1, 0, std::make_pair(15, 380), "NB PLAYER", true);
-  _text->addText(_step1, 1, std::make_pair(15, 460), "BOTS", true);
-  _text->addText(_step1, 2, std::make_pair(15, 540), "GO", true);
-  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
-  _text->addText(_step1, 4, std::make_pair(700, 380), _nbPlayer.c_str(), false);
-  _text->addText(_step1, 5, std::make_pair(700, 460), _nbBots.c_str(), false);
+  _text->addText(_step1, 0, std::make_pair(15, 400), "NB PLAYER", true);
+  _text->addText(_step1, 1, std::make_pair(15, 500), "BOTS", true);
+  _text->addText(_step1, 2, std::make_pair(15, 840), "GO", true);
+  _text->addText(_step1, 3, std::make_pair(15, 920), "BACK", true);
+  _text->addText(_step1, 4, std::make_pair(700, 400), _nbPlayer.c_str(), false);
+  _text->addText(_step1, 5, std::make_pair(700, 500), _nbBots.c_str(), false);
   _max = 3;
 }
 
@@ -607,19 +610,20 @@ void    Menu::option()
 {
   _text->deleteAllText(_step1);
   _text->addText(_step1, 0, std::make_pair(15, 300), "MUSIC", true);
-  _text->addText(_step1, 1, std::make_pair(15, 380), "FX", true);
-  _text->addText(_step1, 2, std::make_pair(15, 460), "CHANGE MUSIC", true);
-  _text->addText(_step1, 3, std::make_pair(15, 620), "BACK", true);
+  _text->addText(_step1, 1, std::make_pair(15, 400), "FX", true);
+  _text->addText(_step1, 2, std::make_pair(15, 500), "CHANGE MUSIC", true);
+  _text->addText(_step1, 3, std::make_pair(15, 920), "BACK", true);
   _text->addText(_step1, 4, std::make_pair(700, 300), _volume.c_str(), true);
-  _text->addText(_step1, 5, std::make_pair(700, 380), _fx.c_str(), true);
+  _text->addText(_step1, 5, std::make_pair(700, 400), _fx.c_str(), true);
   _max = 3;
 }
 
 void  Menu::waitClient()
 {
-    _isSelect = 1;
+    _isSelect = 0;
     _text->deleteAllText(_step1);
-    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE SERVER...", true);
+    _text->addText(_step1, 1, std::make_pair(15, 300), "WAITING THE SERVER...", true);
+    _text->addText(_step1, 0, std::make_pair(15, 920), "BACK", true);
     _max = 0;
 }
 
@@ -627,8 +631,9 @@ void   Menu::waitServer()
 {
     _isSelect = 0;
     _text->deleteAllText(_step1);
-    _text->addText(_step1, 0, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
-    _text->addText(_step1, 1, std::make_pair(15, 540), "GO", true);
+    _text->addText(_step1, 3, std::make_pair(15, 300), "WAITING THE CLIENT...", true);
+    _text->addText(_step1, 0, std::make_pair(15, 840), "GO", true);
+    _text->addText(_step1, 1, std::make_pair(15, 920), "BACK", true);
     _max = 1;
 }
 
@@ -709,6 +714,7 @@ void    Menu::load()
     _th = new Thread(_sc);
     if (_th->createThread(pf, ((void*)(this))))
     {
+      _load = true;
       while (resume)
       {
         update();
@@ -726,6 +732,7 @@ void    Menu::load()
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
+      _load = false;
     }
     else
         std::cout << "ERROR ON CREATE THREAD\n";
@@ -753,6 +760,7 @@ void    Menu::loadPrevious()
     _th = new Thread(_sc);
     if (_th->createThread(pf, ((void*)(this))))
     {
+      _load = true;
       while (resume)
       {
         update();
@@ -771,6 +779,7 @@ void    Menu::loadPrevious()
       }
       else
         std::cout << "ERROR ON JOIN THREAD\n";
+      _load = false;
     }
     else
         std::cout << "ERROR ON CREATE THREAD\n";
@@ -889,6 +898,19 @@ void  Menu::select0()
   : (_stepM == SCORE) ? (_stepM = HOME) : (_stepM == LOADM && (_map = _preview->getMap()) != NULL) ? (_previewMode = false ,_stepM = LOADG)
   : (_stepM == LOADPREVIOUS && (_map = _preview->getMap()) != NULL && _map->getSize() >= 10) ? (_previewMode = false, _isLaunch = true, _isSave = true)
   : (_stepM == ONLINE) ? (_stepM = SERVER, _isSelect = 0) : 0;
+ if (_stepM == WAITSERVER && _network != NULL && _network->getPlayers().size() > 0)
+  {
+    _map = new Map(30, _engine);
+    _isLaunch = true;
+    _isSave = false;
+  }
+  if (_stepM == WAITCLIENT && _network)
+    {
+      delete _network;
+      _network = NULL;
+      _stepM = CLIENT;
+      _err.clear();
+    }
 }
 
 void  Menu::select1()
@@ -896,12 +918,12 @@ void  Menu::select1()
   stepM k;
 
   k = STEP1;
-  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && Function::convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, k = LOADM,_stepM = STEP1)
-  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, k = LOADM, _previewMode = false)
+  (_stepM == STEP1) ? (_stepM = LOADPREVIOUS, _isSave = true) : (_stepM == STEP12 && Function::convToInt(_sizeMap) >= 10) ? (_stepM = STEP1) : (_stepM == LOADM) ? (_previewMode = false, _preview->clearMap(), k = LOADM,_stepM = STEP1)
+  : (_stepM == LOADPREVIOUS) ? (_stepM = STEP1, _preview->clearMap(), k = LOADM, _previewMode = false)
   : (_stepM == HOME) ? (_stepM = ONLINE) : (_stepM == ONLINE) ? (_stepM = CLIENT, _isSelect = 0) : 0;
   if (k != LOADM && _stepM == STEP1)
    startGenerator();
- if (_stepM == SERVER)
+  if (_stepM == SERVER)
   {
     try
     {
@@ -915,12 +937,13 @@ void  Menu::select1()
       _err = tmp->what();
     }
   }
-  else if (_stepM == WAITSERVER && _network != NULL)
-  {
-    _map = new Map(30, _engine);
-    _isLaunch = true;
-    _isSave = false;
-  }
+  else if (_stepM == WAITSERVER && _network)
+    {
+      delete _network;
+      _network = NULL;
+      _stepM = SERVER;
+      _err.clear();
+    }
 }
 
 void  Menu::select2()
@@ -956,6 +979,11 @@ void  Menu::select3()
   : (_stepM == OPTION) ? (_stepM = HOME) : 0;
   if (_stepM == ONLINE)
     _err = "";
+}
+
+void  Menu::select4()
+{
+  (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : (_stepM == STEP1) ? (_stepM = HOME) : 0;
 }
 
 void  Menu::createMap()
@@ -1008,11 +1036,6 @@ void  Menu::generateMap()
 {
   _map = new Map(getMapSize(), _engine);
   pthread_mutex_unlock(_sc->getMutex());
-}
-
-void  Menu::select4()
-{
-  (_stepM == STEP11) ? (_stepM = STEP1) : (_stepM == HOME) ? (_exit = true) : (_stepM == STEP1) ? (_stepM = HOME) : 0;
 }
 
 bool  Menu::isSave() const

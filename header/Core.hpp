@@ -58,7 +58,7 @@ public:
   Sound     *getSound() const;
   void      endingGame(const Death);
   bool      playerDraw(const std::pair<float, float>&, const std::pair<float, float>&) const;
-
+  Networking *getNetworking();
 private:
   bool      checkKey(const std::vector<key> &);
 

@@ -34,8 +34,6 @@ void  Core::reset()
   std::map<std::pair<float, float>, Bombs *>::const_iterator it2;
 
   _bombs.clear();
-  for (std::vector<Player *>::iterator it = _player.begin(); it != _player.end(); ++it)
-    delete (*it);
   _player.clear();
   for (size_t i(0); i != _other.size(); i++)
     delete _other[i];
@@ -103,6 +101,7 @@ bool	Core::initialize()
 {
   _shader = _cam->getShader();
   _clock = _cam->getClock();
+  _networking = _menu->getNetwork();
   if (!drawFloor() || !drawChar() || !drawBot(_nb_bot))
     return (false);
   if (_players == 2 && _width <= 10 && _height <= 10)
@@ -116,7 +115,6 @@ bool	Core::initialize()
     _cam->setPlayer(_players);
   }
   std::cout << "Load done!" << std::endl;
-  _networking = _menu->getNetwork();
   if (_networking)
   {
     _players = 1;
@@ -145,8 +143,13 @@ bool	Core::drawFloor()
 
 bool   Core::makeChar(const std::pair<float, float> &pos, const int screen)
 {
-  Player *chara = create<Player>();
+  Player *chara;
 
+  if (!_networking || _networking->isServer())
+    chara = create<Player>();
+  else
+    chara = create<NetworkOwnPlayer>();
+  chara->setCore(this);
   chara->setId(screen);
   if (chara->initialize() == false)
     return (false);
@@ -167,6 +170,7 @@ bool   Core::makeBot(const std::pair<float, float>& pos, const int id)
   chara->setId(id);
   if (chara->initialize() == false)
     return (false);
+  chara->setCore(this);
   chara->setPos(pos);
   chara->setMap(_map);
   chara->setBombs(&_bombs);
@@ -237,7 +241,14 @@ bool	Core::update()
       return (false);
     _clock = _cam->getClock();
     if (_networking)
-      _networking->refreshGame();
+    {
+      try {
+        _networking->refreshGame();
+      }
+      catch (...) {
+        return (false);
+      }
+    }
     if (!checkKey(k))
       return (false);
     FPS();
@@ -270,7 +281,7 @@ bool	Core::update()
       _hud->setScreen(2);
     _hud->update(_player[0]);
     _particles->update();
-    if (_hud->getTimer() <= 0 && _networking == NULL)
+    if (_hud->getTimer() <= 0 && (_networking == NULL || _networking->isServer()))
     {
       if (_mapFiller == NULL)
         _mapFiller = new MapFiller(_map, _loader, &_player);
@@ -411,8 +422,6 @@ void  Core::checkAlive()
   int num;
 
   num = 0;
-  if (_networking)
-    return;
   if (_players == 2)
   {
     if (!_player[0]->isAlive() && !_player[1]->isAlive())
@@ -520,5 +529,10 @@ std::map<std::pair<float, float>, Bombs *> *Core::getBombs()
 Sound   *Core::getSound() const
 {
   return (_sound);
+}
+
+Networking  *Core::getNetworking()
+{
+  return (_networking);
 }
 
