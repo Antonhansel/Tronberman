@@ -20,7 +20,7 @@ PlayerType Mybot::getType() const
     return (IA);
 }
 
-bool      Mybot::lineSafe(int x, int y, int m_x, int m_y) const
+bool      Mybot::lineSafe(const int x, const int y, const int m_x, const int m_y) const
 {
   AObject *tmp;
 
@@ -38,7 +38,7 @@ bool      Mybot::lineSafe(int x, int y, int m_x, int m_y) const
   return true;
 }
 
-bool      Mybot::isSafe(int x, int y) const
+bool      Mybot::isSafe(const int x, const int y) const
 {
   if (!lineSafe(x, y, 0, 1))
       return false;
@@ -53,7 +53,7 @@ bool      Mybot::isSafe(int x, int y) const
   return true;
 }
 
-void      Mybot::moveTo(int x, int y, int move_x, int move_y)
+void      Mybot::moveTo(const int x, const int y, const int move_x, const int move_y)
 {
   if (_checkMove2(x + move_x, y + move_y))
   {
@@ -62,7 +62,7 @@ void      Mybot::moveTo(int x, int y, int move_x, int move_y)
   }
 }
 
-bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
+bool     Mybot::setObjDef(const int x, const int y, const int rec, enum dir last)
 {
   int     inc;
 
@@ -99,7 +99,7 @@ bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
   return false;
 }
 
-int     Mybot::setObjDef(int x, int y)
+int     Mybot::setObjDef(const int x, const int y)
 {
   int     inc;
   int     ret;
@@ -134,7 +134,7 @@ int     Mybot::setObjDef(int x, int y)
   return ret;
 }
 
-int     Mybot::setObjOff(int x, int y)
+int     Mybot::setObjOff(const int x, const int y)
 {
   int     inc;
   int     ret;
@@ -226,22 +226,22 @@ void    Mybot::update(gdl::Clock const &clock, gdl::Input &input)
   }
 }
 
-void    Mybot::setSeeRange(int seerange)
+void    Mybot::setSeeRange(const int seerange)
 {
   _seerange = seerange;
 }
 
-void    Mybot::setRec(int rec)
+void    Mybot::setRec(const int rec)
 {
   _rec = rec;
 }
 
-void    Mybot::setAction(int action)
+void    Mybot::setAction(const int action)
 {
   _action = action;
 }
 
-void    Mybot::setFreqBombs(int freq_bombs)
+void    Mybot::setFreqBombs(const int freq_bombs)
 {
   _freq_bombs = freq_bombs;
 }

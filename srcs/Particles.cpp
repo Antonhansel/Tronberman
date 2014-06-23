@@ -10,7 +10,7 @@
 
 #include "Particles.hpp"
 
-Particles::Particles(Loader *loader, glm::vec3 &vec)
+Particles::Particles(Loader *loader, glm::vec3 const &vec)
 {
 	_loader = loader;
 	  for (int i = 0; i < NUM_PARTICLES; i++)
@@ -102,7 +102,7 @@ int 	Particles::getFuel() const
 	return (_fuel);
 }
 
-void 	Particles::newSpeed (float dest[3])
+void 	Particles::newSpeed(float dest[3])
 {
   float    x;
   float    y;

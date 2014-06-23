@@ -39,18 +39,18 @@ class CubeAnim
 public:
 	CubeAnim(Camera *, Loader *);
 	~CubeAnim();
-	bool 	makeCube(int x, int y, int z);
-	float 	getEquation(int) const;
-	void 	changeVolum(float) const;
+	bool 	makeCube(const int, const int, const int );
+	float 	getEquation(const int) const;
+	void 	changeVolum(const float) const;
 	void 	rotate();
 	bool 	genSpiral();
 	void 	update();
 	void 	draw(gdl::AShader &, type&);
 	bool 	getStatus() const;
-	void 	stopIntro(bool);
+	void 	stopIntro(const bool);
 	bool 	initIntro();
 	bool 	initFmod();
-	void 	changeMusic(int);
+	void 	changeMusic(const int);
 	bool 	loadSound(const std::string &);
 	void 	getPaths(const char *);
 	bool    checkName(const char *) const;

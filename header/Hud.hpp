@@ -36,19 +36,19 @@ public:
 	void	updateFPS(const int);
 	void	draw(const Player *);
 	void	drawFPS() const;
-	void 	setScreen(int);
-	bool	setClock(gdl::Clock &);
+	void 	setScreen(const int);
+	bool	setClock(gdl::Clock const &);
 	void	resetClock();
 	float	getTimer() const;
-	void 	setTimer(const float &);
+	void 	setTimer(const float);
 	void	displaySaving(const bool);	
 	void	drawDeath(const Death);
-	void 		setPause(const bool);
+	void 	setPause(const bool);
 
 private:
 	std::string convertToString(const int, const std::string &);
 	std::string convertToStringN(const int, const std::string &);
-	void 		delGeometry(std::vector<Geometry *> &);
+	void 		delGeometry(std::vector<Geometry *> const &);
 	void		drawPlayer1();
 	void		drawPlayer2();
 	void		updatePlayer1(const Player *);

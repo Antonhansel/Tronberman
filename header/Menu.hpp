@@ -70,7 +70,7 @@ public:
   void      chooseStep();
   void      manageEventInput();
   void      getInputNb(std::string &, const size_t, const int, const int);
-  void      getInputAddr(std::string &, size_t);
+  void      getInputAddr(std::string &, const size_t);
   void      home();
   bool      initLogo();
   void      drawLogo();

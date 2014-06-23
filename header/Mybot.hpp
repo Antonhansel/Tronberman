@@ -19,19 +19,19 @@ public:
   Mybot();
   ~Mybot();
   void    update(gdl::Clock const &clock, gdl::Input &input);
-  void    setSeeRange(int);
-  void    setRec(int);
-  void    setAction(int);
-  void    setFreqBombs(int);
+  void    setSeeRange(const int);
+  void    setRec(const int);
+  void    setAction(const int);
+  void    setFreqBombs(const int);
   PlayerType getType() const;
 
 private:
-  bool    lineSafe(int, int, int, int) const;
-  bool    isSafe(int, int) const;
-  bool    setObjDef(int, int, int, enum dir);
-  int     setObjDef(int, int);
-  int     setObjOff(int, int);
-  void    moveTo(int, int, int, int);
+  bool    lineSafe(const int, const int, const int, const int) const;
+  bool    isSafe(const int, const int) const;
+  bool    setObjDef(const int, const int, const int, enum dir);
+  int     setObjDef(const int, const int);
+  int     setObjOff(const int, const int);
+  void    moveTo(const int, const int, const int, const int);
   int     my_rand();
 
   int     _x_obj;

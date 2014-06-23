@@ -10,7 +10,7 @@
 
 #include "Map.hpp"
 
-Map::Map(int size)
+Map::Map(const int size)
 {
     _size_x = size;
     _size_y = size;
@@ -21,7 +21,7 @@ Map::Map(int size)
     _engine = NULL;
 }
 
-Map::Map(int size, ParticleEngine *engine)
+Map::Map(const int size, ParticleEngine *engine)
 {
     _state = false;
     _engine = engine;
@@ -34,7 +34,7 @@ Map::Map(int size, ParticleEngine *engine)
     _state = true;
 }
 
-Map::Map(int size, bool m, ParticleEngine *engine)
+Map::Map(const int size, const bool m, ParticleEngine *engine)
 {
     _size_x = size;
     _size_y = size;
@@ -45,7 +45,7 @@ Map::Map(int size, bool m, ParticleEngine *engine)
         _outline();
 }
 
-Map::Map(int size, std::string &name) : _name(name)
+Map::Map(const int size, std::string &name) : _name(name)
 {
     _size_x = size;
     _size_y = size;
@@ -60,7 +60,7 @@ Map::~Map()
     }
 }
 
-AObject     *Map::getCase(int x, int y) const
+AObject     *Map::getCase(const int x, const int y) const
 {
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return NULL;
@@ -81,7 +81,7 @@ void    Map::genereteName()
   _name += ".xml";
 }
 
-void Map::addCube(int x, int y, AObject *obj)
+void Map::addCube(const int x, const int y, AObject *obj)
 {
     std::pair<float, float>     pos;
 
@@ -95,7 +95,7 @@ void Map::addCube(int x, int y, AObject *obj)
     _map[x * _size_x + y] = obj;
 }
 
-void Map::deleteCube(int x, int y)
+void Map::deleteCube(const int x, const int y)
 {
     if (x < 0 || x >= _size_x || y < 0 || y >= _size_y)
         return;
@@ -105,7 +105,7 @@ void Map::deleteCube(int x, int y)
     _map[x * _size_x + y] = NULL;
 }
 
-void Map::addCube(int x, int y, type blockType)
+void Map::addCube(const int x, const int y, const type blockType)
 {
     std::pair<float, float>     pos;
     AObject *tmp;
@@ -151,7 +151,7 @@ void    Map::_drawWall()
     }
 }
 
-void    Map::_deleteSide(int x, int y)
+void    Map::_deleteSide(const int x, const int y)
 {
     AObject *tmp;
 
@@ -166,7 +166,7 @@ void    Map::_deleteSide(int x, int y)
     }
 }
 
-bool    Map::check_pos(int x, int y) const
+bool    Map::check_pos(const int x, const int y) const
 {
     std::vector<std::pair<int, int> >::const_iterator it;
 
@@ -192,7 +192,7 @@ std::pair<int, int>     Map::getSpawn()
     return (std::make_pair(x, y));
 }
 
-void    Map::setSpawn(int nb)
+void    Map::setSpawn(const int nb)
 {
     int   x;
     int   y;
@@ -226,7 +226,7 @@ int     Map::getSize() const
     return (_size_x);
 }
 
-void     Map::setSize(int sizeX)
+void     Map::setSize(const int sizeX)
 {
     _size_x = sizeX;
     _size_y = sizeX;
@@ -255,7 +255,7 @@ std::string     Map::getName() const
     return (_name);
 }
 
-void            Map::setName(std::string &name)
+void            Map::setName(std::string const &name)
 {
     _name = name;
 }

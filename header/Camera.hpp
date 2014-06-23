@@ -23,20 +23,21 @@ public:
   ~Camera();
   void 			                setPlayer(const int);
   BasicShader               &getShader();
-  void                      changeFocus(AObject *, int);
+  void                      changeFocus(AObject *, const int);
   std::pair<float, float>   genPos(Player *, Player *) const;
   void 			                stopContext();
   bool 			                initScene();
   void 			                flushContext();
   void 			                update();
   int                       genSplit(Player *, Player *);
-  void 			                moveCamera(const vec3, vec3, const vec3, const int);
+  void 			                moveCamera(const vec3, const vec3, const vec3, const int);
   Clock 		                &getClock();
   Input 		                &getInput();
   void                      setMode();
   void                      tiltMode();
   void                      previewMode(const bool);
   bool                      isSplit() const;
+
 private:
   float         _tilt;
   int           _mode;

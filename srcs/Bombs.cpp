@@ -78,7 +78,7 @@ void  Bombs::removeExplosion()
   std::vector< std::pair<double, AObject*> >::iterator it2;
   std::pair<float, float>     pos;
 
-  for (it2 = _explosion.begin(); it2 != _explosion.end(); )
+  for (it2 = _explosion.begin(); it2 != _explosion.end();)
   {
     if (_time - (*it2).first > 0.2)
     {
@@ -256,7 +256,7 @@ int   Bombs::checkBonus(int resume, const std::pair<float, float> &check)
 
 int   Bombs::checkBomb(int resume, const std::pair<float, float> &check)
 {
-  std::map<std::pair<float, float>, Bombs *>::iterator it;
+  std::map<std::pair<float, float>, Bombs *>::const_iterator it;
 
   if ((it = _bombsM->find(check)) != _bombsM->end())
   {
@@ -268,30 +268,6 @@ int   Bombs::checkBomb(int resume, const std::pair<float, float> &check)
 
 int   Bombs::checkLaser(int resume, const std::pair<float, float> &check)
 {
-  /*for (std::map<int, Player *>::iterator it = _playerTab->begin(); it != _playerTab->end(); )
-    {
-      pos = (*it).second->getPos();
-      pos.first = ((int)(pos.first));
-      pos.second = ((int)(pos.second));
-      std::cout << "pos.first = " << pos.first << " && check.first = " << check.first << std::endl;
-      std::cout << "pos.second = " << pos.second << " && check.second = " << check.second << std::endl;
-      if (pos.first == check.first && pos.second == check.second)
-      {
-        std::cout << "TOUCHER\n";
-        if ((*it).second->getLife() == 0)
-        {
-          std::cout << "DEAD\n";
-          //_playerTab->erase(it++);
-          //it = _playerTab->begin();
-          ++it;
-        }
-        else
-        {
-         (*it).second->setLife((*it).second->getLife() - 1);
-        }
-      }
-      else
-        ++it;
-    }*/
+    (void)check;
     return (resume);
 }

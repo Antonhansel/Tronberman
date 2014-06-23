@@ -16,7 +16,7 @@
 class Floor : public AObject
 {
 public:
-	Floor(float width, float height, float speed);
+	Floor(const float width, const float height, const float speed);
 	~Floor();
 	bool		initialize();
 	void		update(gdl::Clock const &clock, gdl::Input &input);

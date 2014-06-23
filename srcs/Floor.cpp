@@ -10,7 +10,7 @@
 
 #include "Floor.hpp"
 
-Floor::Floor(float width, float height, float speed)
+Floor::Floor(const float width, const float height, const float speed)
 {
 	_width = width;
 	_height = height;

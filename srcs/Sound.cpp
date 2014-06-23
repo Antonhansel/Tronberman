@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Tue Apr  29 16:48:25 2014 Antonin Ribeaud
-// Last update Sat May 10 22:42:06 2014 Mehdi Chouag
+// Last update Mon Jun 23 17:39:22 2014 Mehdi Chouag
 */
 
 #include "Sound.hpp"
@@ -13,71 +13,33 @@
 Sound::Sound()
 {
   _fx = true;
-  _music = new sf::Music;
-  _soundEffect[BOMB_S] = &Sound::bomb;
-  _soundEffect[BONUS_S] = &Sound::bonus;
-  _soundEffect[PBOMB_S] = &Sound::putBombs;
-  _soundEffect[DEATH_S] = &Sound::death;
-  _soundEffect[HIT_S] = &Sound::hit;
-  _effect[BOMB_S] = new sf::Music;
-  _effect[BONUS_S] = new sf::Music;
-  _effect[PBOMB_S] = new sf::Music;
-  _effect[DEATH_S] = new sf::Music;
-  _effect[HIT_S] = new sf::Music;
-  _effect[BOMB_S]->openFromFile("./ressources/sounds/bomb.wav");
-  _effect[BONUS_S]->openFromFile("./ressources/sounds/bonus.wav");
-  _effect[PBOMB_S]->openFromFile("./ressources/sounds/pbombs.wav");
-  _effect[DEATH_S]->openFromFile("./ressources/sounds/death.wav");
-  _effect[HIT_S]->openFromFile("./ressources/sounds/hit.wav");
+  FMOD_System_Create(&system);
+  FMOD_System_Init(system, 1, FMOD_INIT_NORMAL, NULL);
+  FMOD_System_CreateSound(system, "./ressources/sounds/bomb.wav", FMOD_CREATESAMPLE, 0, &_effect[BOMB_S]);
+  FMOD_System_CreateSound(system, "./ressources/sounds/bonus.wav", FMOD_CREATESAMPLE, 0, &_effect[BONUS_S]);
+  FMOD_System_CreateSound(system, "./ressources/sounds/pbomb.wav", FMOD_CREATESAMPLE, 0, &_effect[PBOMB_S]);
+  FMOD_System_CreateSound(system, "./ressources/sounds/death.wav", FMOD_CREATESAMPLE, 0, &_effect[DEATH_S]);
+  FMOD_System_CreateSound(system, "./ressources/sounds/hit.wav", FMOD_CREATESAMPLE, 0, &_effect[HIT_S]);
 }
 
 Sound::~Sound()
 {
-  delete _effect[BOMB_S];
-  delete _effect[BONUS_S];
-  delete _effect[PBOMB_S];
-  delete _effect[DEATH_S];
-  delete _effect[HIT_S];
-  delete _music;
+  FMOD_Sound_Release(_effect[BOMB_S]);
+  FMOD_Sound_Release(_effect[BONUS_S]);
+  FMOD_Sound_Release(_effect[PBOMB_S]);
+  FMOD_Sound_Release(_effect[DEATH_S]);
+  FMOD_Sound_Release(_effect[HIT_S]);
+  FMOD_System_Close(system);
+  FMOD_System_Release(system);
 }
 
 void	Sound::playSound(const TypeSound type, const int volume)
 {
   if (_fx)
-    (this->*_soundEffect[type])(volume);
+    FMOD_System_PlaySound(system, FMOD_CHANNEL_FREE, _effect[type], 0, NULL);
 }
 
-void	Sound::bomb(const int volume)
-{
-  _effect[BOMB_S]->setVolume(volume);
-  _effect[BOMB_S]->play();
-}
-
-void	Sound::bonus(const int volume)
-{
-  _effect[BONUS_S]->setVolume(volume);
-  _effect[BONUS_S]->play();
-}
-
-void  Sound::putBombs(const int volume)
-{
-  _effect[PBOMB_S]->setVolume(volume);
-  _effect[PBOMB_S]->play();
-}
-
-void  Sound::death(const int volume)
-{
-  _effect[DEATH_S]->setVolume(volume);
-  _effect[DEATH_S]->play();
-}
-
-void  Sound::hit(const int volume)
-{
-  _effect[HIT_S]->setVolume(volume);
-  _effect[HIT_S]->play();
-}
-
-void  Sound::setEffect(const bool effect)
+void	Sound::setEffect(const bool effect)
 {
   _fx = effect;
 }

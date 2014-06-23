@@ -16,7 +16,7 @@
 class Background : public AObject
 {
 public:
-	Background(float width, float height, float speed);
+	Background(const float, const float, const float);
 	~Background();
 	bool		initialize();
 	void		update(gdl::Clock const &clock, gdl::Input &input);

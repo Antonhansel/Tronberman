@@ -11,7 +11,6 @@
 #ifndef _AINPUT_HPP_  
 # define _AINPUT_HPP_
 
-# include <linux/joystick.h>
 # include <fstream>
 # include <map>
 # include "Input.hh"
@@ -41,10 +40,10 @@ public:
 	AInput(gdl::Input &, inputType);
 	~AInput();
 	const std::vector<key> 	&getInput();
-	void	setInput(gdl::Input &);
+	void	setInput(gdl::Input const &);
 	void	createMenuKey();
 	void	setMode(const bool);
-	static bool	getKey(const std::vector<key> &, key);
+	static bool	getKey(const std::vector<key> &, const key);
 
 private:
 	void	createPlayer1Key();

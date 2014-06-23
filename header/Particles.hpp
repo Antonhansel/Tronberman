@@ -52,7 +52,7 @@ private:
 	debrisData       _debris[NUM_DEBRIS];
 	std::pair<float, float> _pos;
 public:
-	Particles(Loader *loader, glm::vec3 &);
+	Particles(Loader *loader, glm::vec3 const &);
 	~Particles();
 	void 	draw(gdl::AShader &shader);
 	void 	update();

@@ -4,7 +4,7 @@
 ## Login   <ribeau_a@epitech.net>
 ##
 ## Started on  Mon Apr 28 17:02:54 2014 ribeaud antonin
-## Last update Thu May 29 10:47:31 2014 ribeaud antonin
+## Last update Mon Jun 23 17:59:24 2014 Mehdi Chouag
 ##
 
 NAME		=	bomberman
@@ -50,7 +50,7 @@ CXX 		= g++
 CXXFLAGS	+=	-I ./header -I ./bomberlib -Wall -I./bomberlib/protobuf
 LDFLAGS		+=	-L ./bomberlib/ -Wl,--no-as-needed -Wl,--rpath=./bomberlib \
 	-lfmodex64 -ldl -lGLU -lGL -lgdl_gl -lSDL2 -lGLEW -lpthread -lrt -lfbxsdk \
-	-lsfml-audio -pthread \
+	-pthread \
 	-I./bomberlib/protobuf -L./bomberlib/protobuf -lprotobuf
 
 # Debug and profiling flags
