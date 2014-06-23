@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Mon Apr  28 13:35:37 2014 Antonin Ribeaud
-// Last update Sat May 10 22:11:27 2014 Mehdi Chouag
+// Last update Mon Jun 23 17:31:03 2014 Mehdi Chouag
 */
 
 #ifndef SOUND_HPP_
@@ -13,8 +13,8 @@
 
 # include <iostream>
 # include <map>
-# include <SFML/Audio/Music.hpp>
-# include <SFML/Audio.hpp>
+# include <fmod.h>
+
 
 enum TypeSound 
   {  
@@ -35,18 +35,10 @@ public:
   void  setEffect(const bool);
 
 private:
-  void	bomb(const int);
-  void	bonus(const int);
-  void  putBombs(const int);
-  void	walk(const int);
-  void	death(const int);
-  void  hit(const int);
-
-private:
   bool                                      _fx;
-  sf::Music			                            *_music;
-  sf::Music			                            *_effect[6];
-  std::map<TypeSound, void(Sound::*)(int)>  _soundEffect;
+  FMOD_SYSTEM				    *system;
+  FMOD_SOUND				    *_effect[6];
+
 };
 
 #endif
