@@ -5,7 +5,7 @@
 ** Login   <ribeau_a@epitech.net>
 **
 ** Started on  Fri May  02 10:46:24 2014 Antonin Ribeaud
-// Last update Wed May 14 01:48:25 2014 Mehdi Chouag
+// Last update Mon Jun 23 17:45:52 2014 Mehdi Chouag
 */
 
 #include "Hud.hpp"
@@ -284,7 +284,7 @@ void	Hud::drawSaving()
 {
 	int	col;
 
-	col = 800;
+	col = (_camera->isSplit()) ? 400 : 800;
 	for (std::vector<Geometry *>::const_iterator it = _save.begin(); it != _save.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
@@ -296,8 +296,8 @@ void	Hud::drawSaving()
 void 	Hud::drawPause()
 {
 	int	col;
-	col = 800;
 
+        col = (_camera->isSplit()) ? 400 : 800;
 	for (std::vector<Geometry *>::const_iterator it = _pauseText.begin(); it != _pauseText.end(); ++it)
 	{
 		_transformation = glm::translate(glm::mat4(1), glm::vec3(col, 300, 0));
