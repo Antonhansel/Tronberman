@@ -196,6 +196,7 @@ bool    Player::_onBomb(const float x, const float y)
 void    Player::update(const gdl::Clock &clock, gdl::Input &input)
 {
   std::vector<key> k;
+  int   n;
 
   if (_isAlive == true)
   {
@@ -229,8 +230,10 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
       _input = new AInput(input, KEY2);
     _input->setInput(input);
     k = _input->getInput();
-    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
+    n = 0;
+    for (std::vector<key>::iterator it = k.begin(); it != k.end() && n == 0; ++it)
     {
+      n++;
       if (_input && !AInput::getKey(k, NONE))
       {
         if (_input && AInput::getKey(k, PBOMB))
