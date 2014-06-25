@@ -187,6 +187,7 @@ std::pair<int, int>     Map::getSpawn()
     {
         x = _spawns.begin()->first;
         y = _spawns.begin()->second;
+        _deleteSide(x, y);
         _spawns.erase(_spawns.begin());
     }
     return (std::make_pair(x, y));
@@ -212,7 +213,6 @@ void    Map::setSpawn(int nb)
                 y--;
         }
         _spawns.push_back(std::make_pair(x, y));
-        _deleteSide(x, y);
     }
     for (int i = 0; i < _size_x *_size_x; i++)
     {

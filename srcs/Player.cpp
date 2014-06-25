@@ -110,7 +110,7 @@ void    Player::setSpeed(float speed)
 bool    Player::_checkMove2(float x, float y)
 {
   AObject *cas = _map->getCase(x, y);
-  if (!cas || cas->getType() == BONUSV || cas->getType() == BONUSB || cas->getType() == BONUSR)
+  if (!cas || cas->getType() > 8)
     return (true);
   else
     return (false);

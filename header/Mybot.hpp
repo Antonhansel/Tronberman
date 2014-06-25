@@ -4,13 +4,15 @@
 # include "Player.hpp"
 # include "Map.hpp"
 # include "Bonus.hpp"
+#include <iostream>
+#include <fstream>
 
 enum dir
 {
-  LEFT,
-  UP,
-  RIGHT,
-  DOWN
+  LEFT = 0,
+  UP = 1,
+  RIGHT = 2,
+  DOWN = 3
 };
 
 class Mybot : public Player

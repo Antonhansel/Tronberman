@@ -7,9 +7,9 @@ Mybot::Mybot()
   _dep = 1;
   _modelpath = "./ressources/assets/anim/bomberman_white_run.FBX";
   _seerange = 8;
-  _freq_bombs = 10;
+  _freq_bombs = 50;
   _action = 4;
-  _rec = 6;
+  _rec = 2;
 }
 
 Mybot::~Mybot()
@@ -70,7 +70,7 @@ bool     Mybot::setObjDef(int x, int y, int rec, enum dir last)
   inc = (rand() + _id) % 4;
   if (isSafe(x, y))
     return true;
-  if (rec > 3)
+  if (rec > _rec)
     return false;
   for (int i = 0; i < 4; i++)
   {
@@ -139,29 +139,29 @@ int     Mybot::setObjOff(int x, int y)
   int     inc;
   int     ret;
 
-  ret = 4;
   srand(time(NULL));
   inc = rand() % _action;
+  ret = 4;
   for (int i = 0; i < 4; i++)
   {
      if (_checkMove2(x, y) && rand() % (_freq_bombs+_id) < _id)
        spawnBomb();
-    if (isSafe(x + 1, y) && _checkMove2(x + 1, y) && inc % _action == 0)
+    if (isSafe(x + 1, y) && _checkMove2(x + 1, y) && inc % _action == LEFT)
     {
       moveTo(x, y, 1, 0);
       ret = LEFT;
     }
-    else if (isSafe(x - 1, y) && _checkMove2(x - 1, y) && inc % _action == 1)
+    else if (isSafe(x - 1, y) && _checkMove2(x - 1, y) && inc % _action == RIGHT)
     {
       moveTo(x, y, -1, 0);
       ret = RIGHT;
     }
-    else if (isSafe(x, y + 1) && _checkMove2(x, y + 1) && inc % _action == 2)
+    else if (isSafe(x, y + 1) && _checkMove2(x, y + 1) && inc % _action == UP)
     {
       moveTo(x, y, 0, 1);
       ret = UP;
     }
-    else if (isSafe(x, y - 1) && _checkMove2(x, y - 1) && inc % _action == 3)
+    else if (isSafe(x, y - 1) && _checkMove2(x, y - 1) && inc % _action == DOWN)
     {
       moveTo(x, y, 0, -1);
       ret = DOWN;
@@ -173,7 +173,7 @@ int     Mybot::setObjOff(int x, int y)
 
 void    Mybot::update(gdl::Clock const &clock, gdl::Input &input)
 {
-  float trans = static_cast<float>(clock.getElapsed()) * _speed /4;
+  float trans = static_cast<float>(clock.getElapsed()) * _speed /3;
   AObject                                 *tmp;
   int     x;
   int     y;
