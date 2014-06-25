@@ -38,7 +38,7 @@ void    AObject::setAbsPos(const std::pair<float, float> &pos)
   _transformationDirty = true;
 }
 
-void    AObject::setAbsPos(float x, float y)
+void    AObject::setAbsPos(const float x, const float y)
 {
   _position = glm::vec3(x, 0, y);
   _pos.first = x;
@@ -71,7 +71,7 @@ void 		AObject::scale(glm::vec3 const& scale)
   _scale *= scale;
 }
 
-void		AObject::setType(type Type)
+void		AObject::setType(const type Type)
 {
   _type = Type;
 }

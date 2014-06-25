@@ -33,17 +33,17 @@ CubeAnim::~CubeAnim()
   FMOD_System_Release(system);
 }
 
-void 		CubeAnim::changeVolum(float vol) const
+void 		CubeAnim::changeVolum(const float vol) const
 {
   FMOD_Channel_SetVolume(canal, vol);
 }
 
-void 		CubeAnim::stopIntro(bool status)
+void 		CubeAnim::stopIntro(const bool status)
 {
   _stopintro = status;
 }
 
-void  CubeAnim::changeMusic(int i)
+void  CubeAnim::changeMusic(const int i)
 {
   if (i == 1)
   {
@@ -89,7 +89,7 @@ void 		CubeAnim::draw(gdl::AShader &shader, type &LastType)
   }
 }
 
-bool		CubeAnim::makeCube(int x, int y, int z)
+bool		CubeAnim::makeCube(const int x, const int y, const int z)
 {
   AObject	*cube = create<Cube>();
   std::pair<float, float> pos;
@@ -184,7 +184,7 @@ void    CubeAnim::getPaths(const char * path)
     return (true);
   }
 
-  float		CubeAnim::getEquation(int i) const
+  float		CubeAnim::getEquation(const int i) const
   {
     float		y;
     int		coef;

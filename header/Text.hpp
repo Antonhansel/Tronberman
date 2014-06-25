@@ -39,8 +39,8 @@ public:
   std::vector<gdl::Geometry *> putstr(const char *, const int, const bool);
   void  draw(const std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, const int);
   void  modifyWord(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const std::vector<std::pair<bool, std::string> > &);
-  void  addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, int, const std::string &);
-  void  addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, int, const std::pair<int, int> &, const std::string&, const bool);
+  void  addNb(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > *, const int, const std::string &);
+  void  addText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, const int, const std::pair<int, int> &, const std::string&, const bool);
   void  deleteText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &, const std::pair<int, std::pair<int, int> > &);
   void  deleteAllText(std::map<std::pair<int, std::pair<int, int> >, std::vector<gdl::Geometry *> > &) ;
 };

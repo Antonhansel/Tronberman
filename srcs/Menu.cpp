@@ -241,7 +241,7 @@ void    Menu::changeOption()
   }
 }
 
-void    Menu::getInputAddr(std::string &s, size_t size)
+void    Menu::getInputAddr(std::string &s, const size_t size)
 {
   std::vector<key>  ret;
 

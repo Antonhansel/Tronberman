@@ -95,7 +95,7 @@ void 	Camera::flushContext()
   _context.flush();
 }
 
-void 	Camera::moveCamera(const vec3 vec1, vec3 vec2, const vec3 vec3, const int screen)
+void 	Camera::moveCamera(const vec3 vec1, const vec3 vec2, const vec3 vec3, const int screen)
 {
   if (screen == 3)
   {
@@ -107,7 +107,6 @@ void 	Camera::moveCamera(const vec3 vec1, vec3 vec2, const vec3 vec3, const int 
   {
   if (_tilt != 0)
   {
-    //vec2.z += _tilt/10;
     _tilt -= 1;
   }
   if (_players == 1)
@@ -161,7 +160,7 @@ std::pair<float, float>  Camera::genPos(Player *player1, Player *player2) const
   return (pos);
 }
 
-void  Camera::changeFocus(AObject *cur_char, int screen)
+void  Camera::changeFocus(AObject *cur_char, const int screen)
 {
   moveCamera(glm::vec3(cur_char->getPos().first, 13, -10 + cur_char->getPos().second),
   glm::vec3(cur_char->getPos().first, 0, cur_char->getPos().second), glm::vec3(0, 1, 0), screen);
@@ -204,5 +203,5 @@ int  Camera::genSplit(Player *player1, Player *player2)
 
 bool  Camera::isSplit() const
 {
-  return ((_players == 2) ? true :  false);
+  return ((_players == 2) ? true : false);
 }

@@ -107,7 +107,7 @@ void    Player::setSpeed(float speed)
   _speedActiv = 10;
 }
 
-bool    Player::_checkMove2(float x, float y)
+bool    Player::_checkMove2(const float x, const float y)
 {
   AObject *cas = _map->getCase(x, y);
   if (!cas || cas->getType() > 8)
@@ -116,7 +116,7 @@ bool    Player::_checkMove2(float x, float y)
     return (false);
 }
 
-AObject    *Player::_checkMove(float x, float y)
+AObject    *Player::_checkMove(const float x, const float y)
 {
   AObject *tmp;
   tmp = NULL;
@@ -180,7 +180,7 @@ AObject    *Player::_checkMove(float x, float y)
   return (tmp);
 }
 
-bool    Player::_onBomb(float x, float y)
+bool    Player::_onBomb(const float x, const float y)
 {
   std::pair<float, float>   pos;
   AObject *tmp;
@@ -196,6 +196,7 @@ bool    Player::_onBomb(float x, float y)
 void    Player::update(const gdl::Clock &clock, gdl::Input &input)
 {
   std::vector<key> k;
+  int   n;
 
   if (_isAlive == true)
   {
@@ -211,7 +212,7 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
     glm::vec3                               rotation = glm::vec3(0);
     AObject                                 *tmp;
     int                                     numHumans = 0;
-    std::pair<float,float> (Player::*moveFct)(float &);
+    std::pair<float,float> (Player::*moveFct)(const float);
 
     _shield += clock.getElapsed();
     for (std::vector<Player *>::iterator i = _playermap->begin(); i != _playermap->end(); ++i)
@@ -229,8 +230,10 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
       _input = new AInput(input, KEY2);
     _input->setInput(input);
     k = _input->getInput();
-    for (std::vector<key>::iterator it = k.begin(); it != k.end(); ++it)
+    n = 0;
+    for (std::vector<key>::iterator it = k.begin(); it != k.end() && n == 0; ++it)
     {
+      n++;
       if (_input && !AInput::getKey(k, NONE))
       {
         if (_input && AInput::getKey(k, PBOMB))
@@ -258,7 +261,7 @@ void    Player::update(const gdl::Clock &clock, gdl::Input &input)
         }
         rotate(rotation);
         tmp = _checkMove(i.first, i.second);
-        if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _onBomb(i.first, i.second)/*|| _checkMove2(i.first, i.second)*/)
+        if (!tmp || (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9)) || _onBomb(i.first, i.second))
         {
           if (tmp && (tmp->getType() <= 12 && tmp->getType() >= 9))
             _consumeBonus(tmp);
@@ -284,28 +287,28 @@ void Player::_consumeBonus(AObject *tmp)
     _map->deleteCube(tmp->getPos().first, tmp->getPos().second);
 }
 
-std::pair<float, float>    Player::up(float &trans)
+std::pair<float, float>    Player::up(const float trans)
 {
   std::pair<float, float> i(0, trans);
 
   return (i);
 }
 
-std::pair<float, float>    Player::down(float &trans)
+std::pair<float, float>    Player::down(const float trans)
 {
   std::pair<float, float> i(0, -trans);
 
   return (i);
 }
 
-std::pair<float, float>    Player::right(float &trans)
+std::pair<float, float>    Player::right(const float trans)
 {
   std::pair<float, float> i(-trans, 0);
 
   return (i);
 }
 
-std::pair<float, float>    Player::left(float &trans)
+std::pair<float, float>    Player::left(const float trans)
 {
   std::pair<float, float> i(trans, 0);
 
@@ -336,12 +339,12 @@ int     Player::getStock() const
   return (_stock);
 }
 
-void  Player::setStock(int stock)
+void  Player::setStock(const int stock)
 {
   _stock = stock;
 }
 
-void  Player::setId(int id)
+void  Player::setId(const int id)
 {
   _id = id;
   if (_id == 1 || _id == 0)
@@ -365,12 +368,12 @@ void  Player::setBombs(std::map<std::pair<float, float>, Bombs *>  *bombs)
   _bombs = bombs;
 }
 
-void  Player::setRange(int range)
+void  Player::setRange(const int range)
 {
   _range = range;
 }
 
-void    Player::setLife(int newLife)
+void    Player::setLife(const int newLife)
 {
   _life = newLife;
   _shield = 0;
@@ -386,7 +389,7 @@ bool    Player::getBegin() const
   return (_begin);
 }
 
-void    Player::setBegin(bool begin)
+void    Player::setBegin(const bool begin)
 {
   _begin = begin;
 }
@@ -396,7 +399,7 @@ float    Player::getShield() const
   return (_shield);
 }
 
-void    Player::setShield(float s)
+void    Player::setShield(const float s)
 {
   _shield = s;
 }
@@ -411,7 +414,7 @@ void    Player::setIsAlive()
   _isAlive = false;
 }
 
-void    Player::setScore(int newScore)
+void    Player::setScore(const int newScore)
 {
   _score = newScore;
 }

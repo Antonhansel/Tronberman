@@ -99,8 +99,8 @@ public:
   void 			scale(glm::vec3 const& scale);
   void      setPos(const std::pair<float, float>&);
   void      setAbsPos(const std::pair<float, float>&);
-  void			setAbsPos(float, float);
-  void			setType(type);
+  void			setAbsPos(const float, const float);
+  void			setType(const type);
   glm::mat4 		getTransformation();
   type			getType() const;
   void  setParticle(ParticleEngine *particles);

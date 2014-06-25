@@ -13,7 +13,7 @@
 Hud::Hud(Camera *cam, Loader *loader) :
 	Text(cam, loader)
 {
-        _saving = false;
+	_saving = false;
 	_save = this->putstr("SAVING...", 50, false);
 	_drawPlayer[1] = &Hud::drawPlayer1;
 	_drawPlayer[2] = &Hud::drawPlayer2;
@@ -35,7 +35,7 @@ Hud::Hud(Camera *cam, Loader *loader) :
 	_pause = false;
 }
 
-void	Hud::setScreen(int screen)
+void	Hud::setScreen(const int screen)
 {
 	(screen == 1) ? (_timerDouble = true) : (_timerDouble = false);
 }
@@ -240,7 +240,7 @@ Hud::~Hud()
 	delGeometry(_affFPS);
 }
 
-void	Hud::delGeometry(std::vector<Geometry *> &v)
+void	Hud::delGeometry(std::vector<Geometry *> const &v)
 {
 	for (size_t i(0); i != v.size(); i++)
 		delete v[i];
@@ -254,7 +254,7 @@ void	Hud::updateRep()
 		_col1 = 1600;
 }
 
-bool 	Hud::setClock(gdl::Clock &c)
+bool 	Hud::setClock(gdl::Clock const &c)
 {
 	if (_timer > 0)
 	{
@@ -275,7 +275,7 @@ float 	Hud::getTimer() const
 	return (_timer);
 }
 
-void	Hud::setTimer(const float &timer)
+void	Hud::setTimer(const float timer)
 {
 	_timer = timer;
 }

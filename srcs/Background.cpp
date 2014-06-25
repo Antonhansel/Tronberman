@@ -10,7 +10,7 @@
 
 #include "Background.hpp"
 
-Background::Background(float width, float height, float speed)
+Background::Background(const float width, const float height, const float speed)
 {
 	_width = width;
 	_height = height;
@@ -62,6 +62,4 @@ bool	Background::initialize()
 }
 
 Background::~Background()
-{
-
-}
+{}

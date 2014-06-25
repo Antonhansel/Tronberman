@@ -51,14 +51,14 @@ protected:
   float         _speed;
   Map           *_map;
   int           _player;
-  AObject       *_checkMove(float y, float x);
-  bool          _checkMove2(float y, float x);
-  bool          _onBomb(float y, float x);
+  AObject       *_checkMove(const float, const float);
+  bool          _checkMove2(const float, const float);
+  bool          _onBomb(const float, const float);
   float         _x;
   int           _life;
   bool          _begin;
   AInput        *_input;
-  std::map<key, std::pair<float, float> (Player::*)(float &)>   _key;
+  std::map<key, std::pair<float, float> (Player::*)(const float)>   _key;
   float         _shield;
   double        _timer;
   bool          _isAlive;
@@ -106,10 +106,10 @@ public:
   void    dir(dirr);
   dirr    dir() const;
 private:
-  std::pair<float, float> up(float &);
-  std::pair<float, float> right(float &);
-  std::pair<float, float> left(float &);
-  std::pair<float, float> down(float &);
+  std::pair<float, float> up(const float);
+  std::pair<float, float> right(const float);
+  std::pair<float, float> left(const float);
+  std::pair<float, float> down(const float);
   std::map<std::pair<float, float>, Bombs *>  *_bombs;
   float                                        _speedActiv;
 };

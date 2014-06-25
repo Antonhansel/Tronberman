@@ -29,7 +29,7 @@ const std::vector<key>	&AInput::getInput()
 	return (in);
 }
 
-void	AInput::setInput(gdl::Input &input)
+void	AInput::setInput(gdl::Input const &input)
 {
 	_input = input;
 }
@@ -110,7 +110,7 @@ void	AInput::setMode(const bool nMod)
 	(this->*_ptrFunct[_type])();
 }
 
-bool	AInput::getKey(const std::vector<key> &vk, key k)
+bool	AInput::getKey(const std::vector<key> &vk, const key k)
 {
 	for (std::vector<key>::const_iterator it = vk.begin(); it != vk.end(); ++it)
 	{

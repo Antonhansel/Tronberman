@@ -93,6 +93,8 @@ void  Core::setSave(Saving *saving)
 
 Core::~Core()
 {
+  if (_ainput != NULL)
+    delete _ainput;
   delete _sound;
   delete _hud;
 }
@@ -114,7 +116,6 @@ bool	Core::initialize()
     _screen = 0;
     _cam->setPlayer(_players);
   }
-  std::cout << "Load done!" << std::endl;
   if (_networking)
   {
     _players = 1;
@@ -206,7 +207,7 @@ bool    Core::drawBot(const int nb)
       if (makeBot(_map->getSpawn(), i + 2) == false)
         return (false);
   }
-  return true;
+  return (true);
 }
 
 void  Core::FPS()
@@ -467,6 +468,7 @@ void  Core::endingGame(const Death type)
 void	Core::draw()
 {
   std::pair<float, float> pos;
+  
   if (_players == 2)
     _screen = _cam->genSplit(_player[0], _player[1]);
   if (_screen == 0)
@@ -535,4 +537,3 @@ Networking  *Core::getNetworking()
 {
   return (_networking);
 }
-

@@ -16,23 +16,23 @@ class AObject;
 class Map
 {
 public:
-  Map(int);
-  Map(int, std::string &);
-  Map(int, bool, ParticleEngine * = NULL);
+  Map(const int);
+  Map(const int, std::string &);
+  Map(const int, const bool, ParticleEngine * = NULL);
   ~Map();
-  Map(int, ParticleEngine *);
-  AObject     *getCase(int, int) const;
+  Map(const int, ParticleEngine *);
+  AObject     *getCase(const int, const int) const;
   AObject     *getCase(std::pair<int, int> *) const;
-  void        setSpawn(int nb);
+  void        setSpawn(const int);
   std::pair<int, int>   getSpawn();
   std::string     getName() const;
-  void            setName(std::string &);
-  void            addCube(int, int, type);
-  void            addCube(int, int, AObject *);
-  void            deleteCube(int, int);
-  bool    check_pos(int x, int y) const;
+  void            setName(std::string const &);
+  void            addCube(const int, const int, const type);
+  void            addCube(const int, const int, AObject *);
+  void            deleteCube(const int, const int);
+  bool    check_pos(const int, const int) const;
   int     getSize() const;
-  void    setSize(int);
+  void    setSize(const int);
   void    setMap(AObject **);
   void    setSpawn(std::vector<std::pair<int, int> > &);
   void    genereteName();
